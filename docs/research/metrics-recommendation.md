@@ -115,4 +115,4 @@ TTR is still fine if you:
 >
 > Add TTR as a secondary metric because it's widely known and easy to explain in a paper, but note its text-length limitation. Use JSD to formally test for distributional shifts between time periods.
 
-See `research/METRICS-RESEARCH.md` for the full detailed comparison of all 16 metrics.
+See [`metrics.md`](metrics.md) for the full detailed comparison of all 16 metrics.

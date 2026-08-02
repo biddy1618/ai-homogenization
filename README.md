@@ -48,20 +48,23 @@ Research project measuring the **homogenizing effect of AI on online written out
 
 ```
 project-ai-homogenization/
-├── README.md
-├── papers/                    # Reference papers
-├── data/                      # Raw and processed datasets
-│   ├── raw/
-│   ├── processed/
-│   └── interim/
-├── notebooks/                 # Exploratory analysis
-├── src/                       # Production code
-│   ├── collection/            # Web scraping & data gathering
-│   ├── processing/            # Data cleaning & preparation
-│   ├── metrics/               # Homogenization measures
-│   └── analysis/              # Regression & statistical models
-├── reports/                   # Figures, tables, write-ups
-└── requirements.txt
+├── README.md                  # This file
+├── requirements.txt
+├── src/                       # Pipeline code
+│   ├── parse_posts.py         #   Posts.xml → answers.parquet (extract + clean)
+│   ├── text_clean.py          #   Strip code/math/HTML from answer bodies
+│   ├── metrics.py             #   TTR, MTLD, pairwise TF-IDF cosine
+│   ├── pipeline.py            #   Per-quarter metrics (raw + length-controlled)
+│   ├── plot.py                #   Trend plots
+│   ├── lc_sensitivity.py      #   Length-control window sensitivity check
+│   └── validate_cleaning.py   #   Cleaning QA checks
+├── artifacts/                 # Committed outputs (plots + metric CSVs)
+├── data/                      # Local-only heavy data (gitignored)
+└── docs/
+    ├── meetings.md            # Running client meeting log (newest first)
+    ├── workplan.md            # Work plan
+    ├── papers/                # Reference papers (PDFs)
+    └── research/              # Background research notes
 ```
 
 ---
