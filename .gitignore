@@ -2,7 +2,8 @@
 __pycache__/
 *.pyc
 
-# Stack Exchange data dumps (kept local, never committed)
-data/
+# Stack Exchange data dumps (kept local, never committed) — root-level only, so
+# artifacts/<corpus>/data/ metric CSVs are still committed
+/data/
 *.7z
 *.xml

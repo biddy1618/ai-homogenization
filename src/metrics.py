@@ -8,11 +8,18 @@ Primary:
 
 Secondary:
   - TTR (Type-Token Ratio) — simple lexical diversity baseline.
+
+Length-robust surface hardening (independent estimators of lexical diversity):
+  - Yule's K / Yule's I — vocabulary concentration / diversity.
+  - HD-D — hypergeometric diversity (length-robust successor to TTR).
+  - MATTR — moving-average TTR over a fixed sliding window.
 """
 
 from __future__ import annotations
 
+import math
 import re
+from collections import Counter
 
 import numpy as np
 from sklearn.feature_extraction.text import TfidfVectorizer
@@ -29,6 +36,77 @@ def ttr(tokens: list[str]) -> float:
     if not tokens:
         return float("nan")
     return len(set(tokens)) / len(tokens)
+
+
+def yule_k(tokens: list[str]) -> float:
+    """Yule's K — vocabulary concentration (higher = more repetitive/homogeneous).
+
+    K = 10^4 * (sum_r r^2 * V_r - N) / N^2, where V_r is the number of types that
+    occur exactly r times and N is the token count. Length-robust above ~200 tokens.
+    """
+    n = len(tokens)
+    if n == 0:
+        return float("nan")
+    freqs = Counter(tokens)
+    m2 = sum(r * r for r in freqs.values())
+    return 1e4 * (m2 - n) / (n * n)
+
+
+def yule_i(tokens: list[str]) -> float:
+    """Yule's I — vocabulary diversity (higher = more diverse); inverse of K's scale."""
+    n = len(tokens)
+    if n == 0:
+        return float("nan")
+    freqs = Counter(tokens)
+    m2 = sum(r * r for r in freqs.values())
+    denom = m2 - n
+    if denom <= 0:
+        return float("nan")
+    return (n * n) / denom
+
+
+def hdd(tokens: list[str], sample_size: int = 42) -> float:
+    """HD-D — hypergeometric diversity (length-robust successor to TTR).
+
+    Expected type-token ratio for random samples of ``sample_size`` tokens: for each
+    type, the probability it appears in the sample contributes 1/sample_size.
+    Returns NaN if the text is shorter than ``sample_size``.
+    """
+    n = len(tokens)
+    if n < sample_size:
+        return float("nan")
+    freqs = Counter(tokens)
+    ln_c_all = _ln_choose(n, sample_size)
+    total = 0.0
+    for f in freqs.values():
+        if n - f < sample_size:
+            p_absent = 0.0
+        else:
+            p_absent = math.exp(_ln_choose(n - f, sample_size) - ln_c_all)
+        total += (1.0 - p_absent) / sample_size
+    return total
+
+
+def _ln_choose(n: int, k: int) -> float:
+    return math.lgamma(n + 1) - math.lgamma(k + 1) - math.lgamma(n - k + 1)
+
+
+def mattr(tokens: list[str], window: int = 50) -> float:
+    """MATTR — moving-average type-token ratio over a sliding ``window`` of tokens.
+
+    Length-comparable because every window is the same size. Falls back to plain TTR
+    when the text is shorter than the window.
+    """
+    n = len(tokens)
+    if n == 0:
+        return float("nan")
+    if n <= window:
+        return ttr(tokens)
+    ratios = []
+    for start in range(n - window + 1):
+        w = tokens[start:start + window]
+        ratios.append(len(set(w)) / window)
+    return float(np.mean(ratios))
 
 
 def _mtld_pass(tokens: list[str], threshold: float) -> float:

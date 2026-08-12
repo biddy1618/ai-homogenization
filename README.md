@@ -53,18 +53,25 @@ project-ai-homogenization/
 ├── src/                       # Pipeline code
 │   ├── parse_posts.py         #   Posts.xml → answers.parquet (extract + clean)
 │   ├── text_clean.py          #   Strip code/math/HTML from answer bodies
-│   ├── metrics.py             #   TTR, MTLD, pairwise TF-IDF cosine
-│   ├── pipeline.py            #   Per-quarter metrics (raw + length-controlled)
-│   ├── plot.py                #   Trend plots
+│   ├── metrics.py             #   TTR, MTLD, Yule, HD-D, MATTR, pairwise TF-IDF cosine
+│   ├── pipeline.py            #   Per-quarter lexical/surface metrics (raw + length-controlled)
 │   ├── lc_sensitivity.py      #   Length-control window sensitivity check
+│   ├── semantic.py            #   LSA (TF-IDF→SVD) pairwise cosine, centroid var, eff. dim
+│   ├── semantic_bert.py       #   Sentence-BERT/MiniLM (ONNX) semantic spread metrics
+│   ├── topics.py              #   LDA topic mix + pre/post-ChatGPT JSD
+│   ├── topics_bert.py         #   Dynamic BERTopic + within-topic similarity (topic-shift test)
+│   ├── plot.py                #   Trend plots
 │   └── validate_cleaning.py   #   Cleaning QA checks
-├── artifacts/                 # Committed outputs (plots + metric CSVs)
+├── artifacts/                 # Committed outputs, per corpus (data/ CSVs + plots/ PNGs)
+│   ├── cross-validated/
+│   └── philosophy/
 ├── data/                      # Local-only heavy data (gitignored)
 └── docs/
-    ├── meetings.md            # Running client meeting log (newest first)
-    ├── workplan.md            # Work plan
-    ├── papers/                # Reference papers (PDFs)
-    └── research/              # Background research notes
+    ├── status.md             # Running project status / what's done (newest at top)
+    ├── meetings.md           # Running client meeting log (newest first)
+    ├── papers/               # Reference papers (PDFs)
+    ├── research/             # Current findings (critical-review, next-steps, oral-briefing)
+    └── archived/             # Superseded/background docs (see INDEX.md)
 ```
 
 ---

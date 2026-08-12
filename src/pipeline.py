@@ -19,7 +19,7 @@ import numpy as np
 import pandas as pd
 from tqdm import tqdm
 
-from metrics import mean_pairwise_cosine, mtld, ttr, tokenize
+from metrics import hdd, mattr, mean_pairwise_cosine, mtld, ttr, tokenize, yule_i, yule_k
 
 
 def compute_quarterly(
@@ -46,6 +46,10 @@ def compute_quarterly(
         # Raw (length-uncontrolled) metrics.
         mtld_vals = [mtld(tk) for tk in tokenized]
         ttr_vals = [ttr(tk) for tk in tokenized]
+        yule_k_vals = [yule_k(tk) for tk in tokenized]
+        yule_i_vals = [yule_i(tk) for tk in tokenized]
+        hdd_vals = [hdd(tk) for tk in tokenized]
+        mattr_vals = [mattr(tk) for tk in tokenized]
 
         # Length-controlled: keep answers with >= lc_window tokens and truncate
         # each to exactly lc_window, so every answer contributes the same amount
@@ -53,6 +57,10 @@ def compute_quarterly(
         lc_tokens = [tk[:lc_window] for tk in tokenized if len(tk) >= lc_window]
         lc_ttr_vals = [ttr(tk) for tk in lc_tokens]
         lc_mtld_vals = [mtld(tk, min_tokens=lc_window) for tk in lc_tokens]
+        lc_yule_k_vals = [yule_k(tk) for tk in lc_tokens]
+        lc_yule_i_vals = [yule_i(tk) for tk in lc_tokens]
+        lc_hdd_vals = [hdd(tk) for tk in lc_tokens]
+        lc_mattr_vals = [mattr(tk) for tk in lc_tokens]
         lc_texts = [" ".join(tk) for tk in lc_tokens]
 
         records.append(
@@ -64,9 +72,17 @@ def compute_quarterly(
                 "mean_len": float(np.mean([len(tk) for tk in tokenized])),
                 "mean_mtld": float(np.nanmean(mtld_vals)),
                 "mean_ttr": float(np.nanmean(ttr_vals)),
+                "mean_yule_k": float(np.nanmean(yule_k_vals)),
+                "mean_yule_i": float(np.nanmean(yule_i_vals)),
+                "mean_hdd": float(np.nanmean(hdd_vals)),
+                "mean_mattr": float(np.nanmean(mattr_vals)),
                 "mean_pairwise_cosine": mean_pairwise_cosine(texts, seed=seed),
                 "lc_mtld": float(np.nanmean(lc_mtld_vals)) if lc_mtld_vals else float("nan"),
                 "lc_ttr": float(np.nanmean(lc_ttr_vals)) if lc_ttr_vals else float("nan"),
+                "lc_yule_k": float(np.nanmean(lc_yule_k_vals)) if lc_yule_k_vals else float("nan"),
+                "lc_yule_i": float(np.nanmean(lc_yule_i_vals)) if lc_yule_i_vals else float("nan"),
+                "lc_hdd": float(np.nanmean(lc_hdd_vals)) if lc_hdd_vals else float("nan"),
+                "lc_mattr": float(np.nanmean(lc_mattr_vals)) if lc_mattr_vals else float("nan"),
                 "lc_pairwise_cosine": (
                     mean_pairwise_cosine(lc_texts, seed=seed)
                     if len(lc_texts) >= 2
