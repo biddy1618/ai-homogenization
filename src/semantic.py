@@ -103,7 +103,7 @@ def compute_quarterly(df: pd.DataFrame, sample: int = 800, lc_window: int = 100,
     return pd.DataFrame(records).sort_values("quarter").reset_index(drop=True)
 
 
-def plot_metrics(df: pd.DataFrame, output: Path) -> None:
+def plot_metrics(df: pd.DataFrame, output: Path, corpus: str = "Cross Validated") -> None:
     quarters = df["quarter"].tolist()
     x = list(range(len(quarters)))
     marker_x = quarters.index(CHATGPT_QUARTER) if CHATGPT_QUARTER in quarters else None
@@ -131,7 +131,7 @@ def plot_metrics(df: pd.DataFrame, output: Path) -> None:
     axes[-1].set_xticks(x)
     axes[-1].set_xticklabels(quarters, rotation=90, fontsize=6)
     axes[-1].set_xlabel("Quarter")
-    fig.suptitle("Cross Validated — semantic homogenization (LSA embeddings)", fontsize=13)
+    fig.suptitle(f"{corpus} — semantic homogenization (LSA embeddings)", fontsize=13)
     fig.tight_layout()
     output.parent.mkdir(parents=True, exist_ok=True)
     fig.savefig(output, dpi=150)
@@ -145,6 +145,7 @@ def main() -> None:
     ap.add_argument("--plot", type=Path, default=Path("artifacts/semantic_trends.png"))
     ap.add_argument("--sample", type=int, default=800)
     ap.add_argument("--lc-window", type=int, default=100)
+    ap.add_argument("--corpus", default="Cross Validated")
     args = ap.parse_args()
 
     df = pd.read_parquet(args.input)
@@ -153,7 +154,7 @@ def main() -> None:
     result.to_csv(args.output, index=False)
     print(f"Wrote {len(result)} quarters -> {args.output}")
     print(result.to_string(index=False))
-    plot_metrics(result, args.plot)
+    plot_metrics(result, args.plot, corpus=args.corpus)
 
 
 if __name__ == "__main__":

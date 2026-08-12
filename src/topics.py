@@ -108,7 +108,7 @@ def prepost_jsd(weights, n_topics: int) -> float:
     return jensen_shannon(pre / pre_n, post / post_n)
 
 
-def plot_metrics(df: pd.DataFrame, n_topics: int, output: Path) -> None:
+def plot_metrics(df: pd.DataFrame, n_topics: int, output: Path, corpus: str = "Cross Validated") -> None:
     quarters = df["quarter"].tolist()
     x = list(range(len(quarters)))
     marker_x = quarters.index(CHATGPT_QUARTER) if CHATGPT_QUARTER in quarters else None
@@ -141,7 +141,7 @@ def plot_metrics(df: pd.DataFrame, n_topics: int, output: Path) -> None:
     axes[-1].set_xticks(x)
     axes[-1].set_xticklabels(quarters, rotation=90, fontsize=6)
     axes[-1].set_xlabel("Quarter")
-    fig.suptitle("Cross Validated — topic diversity and drift over time (LDA)", fontsize=13)
+    fig.suptitle(f"{corpus} — topic diversity and drift over time (LDA)", fontsize=13)
     fig.tight_layout()
     output.parent.mkdir(parents=True, exist_ok=True)
     fig.savefig(output, dpi=150)
@@ -155,6 +155,7 @@ def main() -> None:
     ap.add_argument("--plot", type=Path, default=Path("artifacts/topic_trends.png"))
     ap.add_argument("--n-topics", type=int, default=15)
     ap.add_argument("--sample", type=int, default=800)
+    ap.add_argument("--corpus", default="Cross Validated")
     args = ap.parse_args()
 
     df = pd.read_parquet(args.input)
@@ -171,7 +172,7 @@ def main() -> None:
     print(f"\nPre vs post-ChatGPT topic-distribution JSD: {jsd:.4f} (0=identical, 1=disjoint)")
     print(result[["quarter", "topic_entropy", "doc_entropy"]].to_string(index=False))
 
-    plot_metrics(result, args.n_topics, args.plot)
+    plot_metrics(result, args.n_topics, args.plot, corpus=args.corpus)
 
 
 if __name__ == "__main__":
