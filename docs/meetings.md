@@ -4,6 +4,36 @@ Running log of client meetings, newest entry first.
 
 ---
 
+## 2026-08-16 (async update — no live meeting)
+
+Tried to meet Thu; Mark was stuck in transit, so we agreed to a Monday call and I sent an
+email update in the meantime.
+
+- **Next call:** Google Meet, **Mon 9 PM Mark's time (7 AM mine)** — offered to push to 6 AM.
+- **Sent:** short email + 2 plots (Sentence-BERT semantic similarity over time for **Cross
+  Validated** and **Philosophy SE**, ChatGPT launch marked) + repo link.
+- **Framing:** "semantic *similarity* trends" (softened from "homogenization"); trends point to
+  answers becoming more similar over time; flagged one nuance to discuss on Monday. Asked Mark
+  to form his own read from the plots first.
+- **Held back for the call:** the within-topic plot (the topic-composition caveat).
+
+### Monday agenda (sent)
+
+- New data source — Philosophy SE — homogenization-trend plots
+- Semantic metrics applied to both sources — what they tell us
+- Topic drift — is there any within-source topic drift
+
+---
+
+## 2026-08-12 (async — analysis + repo delivery)
+
+- Pushed the full analysis to `github.com/biddy1618/ai-homogenization` (main): dynamic BERTopic
+  + within-topic confound test, semantic (LSA + Sentence-BERT) metrics, artifacts reorganized
+  per corpus, docs added (status, oral-briefing, next-steps), week-1 docs archived, plot-title
+  fixes. Nothing outstanding to send.
+
+---
+
 ## 2026-07-22
 
 ### Action Items
