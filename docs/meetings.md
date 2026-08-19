@@ -4,6 +4,23 @@ Running log of client meetings, newest entry first.
 
 ---
 
+## 2026-08-20 (reschedule + interim work)
+
+Monday call didn't happen (timezone back-and-forth). Rescheduled and **confirmed for
+Wednesday 9 PM Mark's time**. Doing extra analysis on our side in the meantime.
+
+- **Next call:** Google Meet, **Wed 9 PM Mark's time** (confirmed).
+- **New hypotheses raised to Mark (to investigate before the call):** group answers by
+  **score/votes** — do low-scored answers homogenize differently than high-scored ones? — plus
+  a couple of related segmentation tests.
+- **Plan (from brainstorm, see `docs/research/next-steps.md`):**
+  - *Bucket A (defensible, cheap, before the call):* P1 length-controlled within-topic;
+    P3 bootstrap CIs; P2 segment by score + author tenure.
+  - *Bucket B (bigger, to align on with Mark):* known-AI anchor, perplexity/burstiness,
+    per-tag parsing, third corpus.
+
+---
+
 ## 2026-08-16 (async update — no live meeting)
 
 Tried to meet Thu; Mark was stuck in transit, so we agreed to a Monday call and I sent an

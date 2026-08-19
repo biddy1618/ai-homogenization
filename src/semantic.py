@@ -69,6 +69,31 @@ def spread_metrics(v: np.ndarray) -> dict:
             "eff_dim": eff_dim}
 
 
+def bootstrap_pairwise_samples(v: np.ndarray, n_boot: int, rng) -> np.ndarray | None:
+    """Bootstrap distribution of mean pairwise cosine for the rows of ``v``.
+
+    Resamples rows with replacement, then averages cosine only over pairs of *distinct*
+    original rows: ``(||S||^2 - sum c_i^2) / (n^2 - sum c_i^2)`` with ``S = sum c_i v_i``.
+    Excluding the duplicated identical pairs removes the naive-bootstrap upward bias
+    (~1/n), which is large for the small within-topic clusters. Each replicate is O(n*d).
+    Degenerate replicates (all draws identical) are ``nan``; returns ``None`` if ``n < 2``.
+    """
+    n = len(v)
+    if n < 2 or n_boot < 1:
+        return None
+    idx = rng.integers(0, n, size=(n_boot, n))
+    counts = np.zeros((n_boot, n))
+    np.add.at(counts, (np.repeat(np.arange(n_boot), n), idx.ravel()), 1.0)
+    sums = counts @ v
+    ss = np.einsum("bd,bd->b", sums, sums)
+    sumsq = np.einsum("bn,bn->b", counts, counts)     # sum c_i^2 per replicate
+    den = n * n - sumsq
+    with np.errstate(invalid="ignore", divide="ignore"):
+        out = (ss - sumsq) / den
+    out[den <= 0] = np.nan
+    return out
+
+
 def compute_quarterly(df: pd.DataFrame, sample: int = 800, lc_window: int = 100,
                       min_answers: int = 30, fit_sample: int = 30000,
                       seed: int = 42) -> pd.DataFrame:

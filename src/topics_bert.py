@@ -30,8 +30,10 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
-from semantic import spread_metrics
+from metrics import tokenize
+from semantic import spread_metrics, bootstrap_pairwise_samples
 from semantic_bert import load_model, embed_texts
+from embed_cache import load_cache, save_cache, cached_embed
 
 CHATGPT_QUARTER = "2022Q4"
 
@@ -96,14 +98,23 @@ def topic_summary(shares: pd.DataFrame, labels: dict[int, str], sizes: dict[int,
     return pd.DataFrame(rows).sort_values("delta", ascending=False).reset_index(drop=True)
 
 
-def within_topic_similarity(quarters: np.ndarray, topics: np.ndarray, emb: np.ndarray
-                            ) -> pd.DataFrame:
-    """Overall vs topic-conditioned pairwise cosine per quarter (the confound test)."""
+def within_topic_similarity(quarters: np.ndarray, topics: np.ndarray, emb: np.ndarray,
+                            n_boot: int = 0, ci: float = 0.95, rng=None) -> pd.DataFrame:
+    """Overall vs topic-conditioned pairwise cosine per quarter (the confound test).
+
+    With ``n_boot`` > 0, also returns percentile-bootstrap CIs: the overall line resamples
+    the quarter's answers; the within-topic line resamples *within each topic* (stratified)
+    and recombines with the same size weights.
+    """
+    alpha = 1.0 - ci
     records = []
     for quarter in sorted(set(quarters)):
         qidx = np.where(quarters == quarter)[0]
         overall = spread_metrics(emb[qidx])["pairwise_cosine"]
         num, den = 0.0, 0
+        boot_overall = bootstrap_pairwise_samples(emb[qidx], n_boot, rng) if n_boot else None
+        boot_num = np.zeros(n_boot) if n_boot else None
+        boot_den = 0
         for t in set(topics[qidx]):
             if t == -1:
                 continue
@@ -113,9 +124,28 @@ def within_topic_similarity(quarters: np.ndarray, topics: np.ndarray, emb: np.nd
             pc = spread_metrics(emb[tidx])["pairwise_cosine"]
             num += pc * len(tidx)
             den += len(tidx)
+            if n_boot:
+                s = bootstrap_pairwise_samples(emb[tidx], n_boot, rng)
+                if s is not None:
+                    s = np.where(np.isfinite(s), s, pc)   # degenerate replicates -> point est
+                    boot_num += s * len(tidx)
+                    boot_den += len(tidx)
         within = num / den if den else float("nan")
-        records.append({"quarter": quarter, "n": len(qidx),
-                        "overall_cosine": overall, "within_topic_cosine": within})
+        rec = {"quarter": quarter, "n": len(qidx),
+               "overall_cosine": overall, "within_topic_cosine": within}
+        if n_boot:
+            if boot_overall is not None:
+                rec["overall_cosine_lo"] = float(np.nanpercentile(boot_overall, 100 * alpha / 2))
+                rec["overall_cosine_hi"] = float(np.nanpercentile(boot_overall, 100 * (1 - alpha / 2)))
+            else:
+                rec["overall_cosine_lo"] = rec["overall_cosine_hi"] = float("nan")
+            if boot_den:
+                bw = boot_num / boot_den
+                rec["within_topic_cosine_lo"] = float(np.nanpercentile(bw, 100 * alpha / 2))
+                rec["within_topic_cosine_hi"] = float(np.nanpercentile(bw, 100 * (1 - alpha / 2)))
+            else:
+                rec["within_topic_cosine_lo"] = rec["within_topic_cosine_hi"] = float("nan")
+        records.append(rec)
     return pd.DataFrame(records).sort_values("quarter").reset_index(drop=True)
 
 
@@ -160,7 +190,7 @@ def plot_topics_over_time(shares: pd.DataFrame, summary: pd.DataFrame, labels: d
     print(f"Saved figure -> {output}")
 
 
-def plot_within_topic(wts: pd.DataFrame, output: Path, corpus: str) -> None:
+def plot_within_topic(wts: pd.DataFrame, output: Path, corpus: str, note: str = "") -> None:
     quarters = wts["quarter"].tolist()
     x = list(range(len(quarters)))
     marker_x = quarters.index(CHATGPT_QUARTER) if CHATGPT_QUARTER in quarters else None
@@ -170,6 +200,12 @@ def plot_within_topic(wts: pd.DataFrame, output: Path, corpus: str) -> None:
             label="overall pairwise cosine (unconditioned)")
     ax.plot(x, wts["within_topic_cosine"], marker="o", ms=3, color="tab:blue",
             label="within-topic pairwise cosine (topic-controlled)")
+    if "overall_cosine_lo" in wts.columns:
+        ax.fill_between(x, wts["overall_cosine_lo"], wts["overall_cosine_hi"],
+                        color="tab:red", alpha=0.2)
+    if "within_topic_cosine_lo" in wts.columns:
+        ax.fill_between(x, wts["within_topic_cosine_lo"], wts["within_topic_cosine_hi"],
+                        color="tab:blue", alpha=0.2)
     ax.set_ylabel("mean pairwise cosine\n(higher = more homogeneous)")
     ax.grid(True, alpha=0.3)
     ax.legend(fontsize=8, loc="best")
@@ -179,7 +215,7 @@ def plot_within_topic(wts: pd.DataFrame, output: Path, corpus: str) -> None:
     ax.set_xticks(x)
     ax.set_xticklabels(quarters, rotation=90, fontsize=6)
     ax.set_xlabel("Quarter")
-    fig.suptitle(f"{corpus} — within-topic vs overall similarity (topic-shift confound test)",
+    fig.suptitle(f"{corpus} — within-topic vs overall similarity (topic-shift confound test){note}",
                  fontsize=13)
     fig.tight_layout()
     output.parent.mkdir(parents=True, exist_ok=True)
@@ -195,19 +231,35 @@ def main() -> None:
     ap.add_argument("--cache-dir", type=Path, default=Path("data/models"))
     ap.add_argument("--sample", type=int, default=800, help="Max answers per quarter")
     ap.add_argument("--min-cluster-size", type=int, default=150)
+    ap.add_argument("--lc-window", type=int, default=100, help="Length-control token window")
     ap.add_argument("--top-k", type=int, default=10)
     ap.add_argument("--corpus", default="Cross Validated")
+    ap.add_argument("--emb-cache-dir", type=Path, default=Path("data/embeddings"),
+                    help="Folder for the persistent id-keyed embedding cache")
+    ap.add_argument("--no-emb-cache", action="store_true", help="Bypass the embedding cache")
+    ap.add_argument("--bootstrap", type=int, default=1000,
+                    help="Bootstrap resamples for within-topic/overall CIs (0 = off)")
+    ap.add_argument("--ci", type=float, default=0.95, help="Confidence level for the CIs")
     ap.add_argument("--seed", type=int, default=42)
     args = ap.parse_args()
 
     df = pd.read_parquet(args.input)
     sampled = sample_corpus(df, args.sample, min_answers=30, seed=args.seed)
+    ids = sampled["id"].tolist()
     texts = sampled["text"].tolist()
     quarters = sampled["quarter"].to_numpy()
     print(f"Embedding {len(texts):,} answers ({len(set(quarters))} quarters)...")
 
+    if args.no_emb_cache:
+        raw_cache = lc_cache = None
+    else:
+        tag = args.input.stem
+        raw_path = args.emb_cache_dir / f"{tag}_minilm_raw.npz"
+        lc_path = args.emb_cache_dir / f"{tag}_minilm_lc{args.lc_window}.npz"
+        raw_cache, lc_cache = load_cache(raw_path), load_cache(lc_path)
+
     model = load_model(args.cache_dir)
-    emb = embed_texts(model, texts)
+    emb = cached_embed(model, ids, texts, embed_texts, raw_cache)
 
     print(f"Clustering (min_cluster_size={args.min_cluster_size})...")
     topic_model, topics = fit_topics(texts, emb, args.min_cluster_size, args.seed)
@@ -222,7 +274,9 @@ def main() -> None:
 
     shares = topic_shares(quarters, topics)
     summary = topic_summary(shares, labels, sizes)
-    wts = within_topic_similarity(quarters, topics, emb)
+    boot_rng = np.random.default_rng(args.seed + 1)
+    wts = within_topic_similarity(quarters, topics, emb,
+                                  n_boot=args.bootstrap, ci=args.ci, rng=boot_rng)
 
     args.data_dir.mkdir(parents=True, exist_ok=True)
     shares.to_csv(args.data_dir / "6_topics_over_time.csv", index=False)
@@ -235,6 +289,32 @@ def main() -> None:
     plot_topics_over_time(shares, summary, labels,
                           args.plots_dir / "6a_topics_over_time.png", args.top_k, args.corpus)
     plot_within_topic(wts, args.plots_dir / "6b_within_topic_similarity.png", args.corpus)
+
+    # P1: length-controlled within-topic — same topic assignments, but embeddings of the
+    # first lc_window tokens (answers shorter than the window are excluded, matching the
+    # length-control convention in semantic_bert.py). Closes the raw-embedding caveat.
+    tokenized = [tokenize(t) for t in texts]
+    lc_mask = np.array([len(tk) >= args.lc_window for tk in tokenized])
+    if int(lc_mask.sum()) >= 2:
+        lc_ids = [i for i, tk in zip(ids, tokenized) if len(tk) >= args.lc_window]
+        lc_texts = [" ".join(tk[:args.lc_window]) for tk in tokenized if len(tk) >= args.lc_window]
+        print(f"Length-controlled within-topic on {int(lc_mask.sum()):,} answers "
+              f"(>= {args.lc_window} tokens)...")
+        emb_lc = cached_embed(model, lc_ids, lc_texts, embed_texts, lc_cache)
+        wts_lc = within_topic_similarity(quarters[lc_mask], topics[lc_mask], emb_lc,
+                                         n_boot=args.bootstrap, ci=args.ci, rng=boot_rng)
+        wts_lc.to_csv(args.data_dir / "6_within_topic_similarity_lc.csv", index=False)
+        print(f"Wrote CSV -> {args.data_dir / '6_within_topic_similarity_lc.csv'}")
+        plot_within_topic(wts_lc, args.plots_dir / "6c_within_topic_similarity_lc.png",
+                          args.corpus, note=" — length-controlled (first 100 tokens)")
+    else:
+        print("Not enough answers >= lc-window tokens for length-controlled within-topic.")
+
+    if not args.no_emb_cache:
+        save_cache(raw_path, raw_cache)
+        save_cache(lc_path, lc_cache)
+        print(f"Embedding cache -> {args.emb_cache_dir} "
+              f"({len(raw_cache):,} raw / {len(lc_cache):,} lc vectors)")
 
 
 if __name__ == "__main__":

@@ -128,9 +128,12 @@ does **not** reappear once topic is fixed. The emergent post-2023 topics are ord
 subject-matter (survival/causal-inference/multilevel models on CV; Bayesian puzzles,
 consciousness, indeterminism on Philosophy), **not** an LLM/assistant cluster.
 **Verdict: the modest recent convergence is largely a topic-composition effect, not
-within-topic style homogenization.** Caveats: this within-topic test used **raw** (not
-length-controlled) embeddings, and HDBSCAN left ~52–55% of answers as outliers (excluded);
-the length-controlled within-topic re-run is the remaining loose end (see §5).
+within-topic style homogenization.** Caveats: HDBSCAN left ~52–55% of answers as outliers
+(excluded). The length-control loose end is now **closed** (2026-08-20): re-running the
+within-topic test on length-controlled embeddings (first 100 tokens, `6c_*` /
+`6_within_topic_similarity_lc.csv`) gives the **same flat-to-declining** within-topic cosine
+in both corpora (CV ~0.354→0.315; Philosophy ~0.40→0.37) — the result is not a text-length
+artifact.
 
 **Q7. Even if the convergence is real, can we attribute it to ChatGPT?**
 Not causally. We have (a) a correlation in time, (b) a plausible ~1-year adoption lag,

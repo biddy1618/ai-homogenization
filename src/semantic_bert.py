@@ -28,7 +28,8 @@ import pandas as pd
 from tqdm import tqdm
 
 from metrics import tokenize
-from semantic import spread_metrics
+from semantic import spread_metrics, bootstrap_pairwise_samples
+from embed_cache import load_cache, save_cache, cached_embed
 
 CHATGPT_QUARTER = "2022Q4"
 MODEL_NAME = "sentence-transformers/all-MiniLM-L6-v2"
@@ -58,8 +59,20 @@ def embed_texts(model, texts: list[str], batch_size: int = 256) -> np.ndarray:
     return vecs / norms
 
 
+def bootstrap_pairwise_ci(v: np.ndarray, n_boot: int, ci: float, rng) -> tuple[float, float]:
+    """Percentile-bootstrap CI for mean pairwise cosine (see semantic.bootstrap_pairwise_samples)."""
+    pc = bootstrap_pairwise_samples(v, n_boot, rng)
+    if pc is None:
+        return float("nan"), float("nan")
+    alpha = 1.0 - ci
+    return (float(np.nanpercentile(pc, 100 * alpha / 2)),
+            float(np.nanpercentile(pc, 100 * (1 - alpha / 2))))
+
+
 def compute_quarterly(df: pd.DataFrame, model, sample: int = 800, lc_window: int = 100,
-                      min_answers: int = 30, seed: int = 42) -> pd.DataFrame:
+                      min_answers: int = 30, seed: int = 42, n_boot: int = 0,
+                      ci: float = 0.95, raw_cache: dict | None = None,
+                      lc_cache: dict | None = None) -> pd.DataFrame:
     rng = np.random.default_rng(seed)
     records: list[dict] = []
 
@@ -70,21 +83,33 @@ def compute_quarterly(df: pd.DataFrame, model, sample: int = 800, lc_window: int
         if volume > sample:
             group = group.iloc[rng.choice(volume, size=sample, replace=False)]
 
+        ids = group["id"].tolist()
         texts = group["text"].tolist()
-        raw = spread_metrics(embed_texts(model, texts))
+        raw_emb = cached_embed(model, ids, texts, embed_texts, raw_cache)
+        raw = spread_metrics(raw_emb)
 
         tokenized = [tokenize(t) for t in texts]
-        lc_texts = [" ".join(tk[:lc_window]) for tk in tokenized if len(tk) >= lc_window]
-        if len(lc_texts) >= 2:
-            lc = spread_metrics(embed_texts(model, lc_texts))
+        lc_data = [(i, " ".join(tk[:lc_window])) for i, tk in zip(ids, tokenized)
+                   if len(tk) >= lc_window]
+        if len(lc_data) >= 2:
+            lc_ids = [i for i, _ in lc_data]
+            lc_emb = cached_embed(model, lc_ids, [t for _, t in lc_data], embed_texts, lc_cache)
+            lc = spread_metrics(lc_emb)
         else:
+            lc_emb = None
             lc = {"pairwise_cosine": float("nan"), "centroid_variance": float("nan"),
                   "eff_dim": float("nan")}
 
         rec = {"quarter": quarter, "volume": volume, "n_sample": len(group),
-               "n_lc": len(lc_texts)}
+               "n_lc": len(lc_data)}
         rec.update({f"sem_{k}": v for k, v in raw.items()})
         rec.update({f"lc_sem_{k}": v for k, v in lc.items()})
+        if n_boot:
+            lo, hi = bootstrap_pairwise_ci(raw_emb, n_boot, ci, rng)
+            rec["sem_pairwise_cosine_lo"], rec["sem_pairwise_cosine_hi"] = lo, hi
+            llo, lhi = (bootstrap_pairwise_ci(lc_emb, n_boot, ci, rng)
+                        if lc_emb is not None else (float("nan"), float("nan")))
+            rec["lc_sem_pairwise_cosine_lo"], rec["lc_sem_pairwise_cosine_hi"] = llo, lhi
         records.append(rec)
 
     return pd.DataFrame(records).sort_values("quarter").reset_index(drop=True)
@@ -107,6 +132,10 @@ def plot_metrics(df: pd.DataFrame, output: Path, corpus: str = "Cross Validated"
     for ax, (raw, lc, label, c_raw, c_lc) in zip(axes, panels):
         ax.plot(x, df[raw], marker="o", ms=3, color=c_raw, label="raw")
         ax.plot(x, df[lc], marker="o", ms=3, color=c_lc, label="length-controlled (100 tok)")
+        if f"{raw}_lo" in df.columns:
+            ax.fill_between(x, df[f"{raw}_lo"], df[f"{raw}_hi"], color=c_raw, alpha=0.2)
+        if f"{lc}_lo" in df.columns:
+            ax.fill_between(x, df[f"{lc}_lo"], df[f"{lc}_hi"], color=c_lc, alpha=0.2)
         ax.set_ylabel(label, fontsize=9)
         ax.grid(True, alpha=0.3)
         ax.legend(fontsize=7, loc="best")
@@ -118,7 +147,9 @@ def plot_metrics(df: pd.DataFrame, output: Path, corpus: str = "Cross Validated"
     axes[-1].set_xticks(x)
     axes[-1].set_xticklabels(quarters, rotation=90, fontsize=6)
     axes[-1].set_xlabel("Quarter")
-    fig.suptitle(f"{corpus} — semantic homogenization (Sentence-BERT / MiniLM)", fontsize=13)
+    ci_note = "  (shaded = bootstrap CI)" if "sem_pairwise_cosine_lo" in df.columns else ""
+    fig.suptitle(f"{corpus} — semantic homogenization (Sentence-BERT / MiniLM){ci_note}",
+                 fontsize=13)
     fig.tight_layout()
     output.parent.mkdir(parents=True, exist_ok=True)
     fig.savefig(output, dpi=150)
@@ -133,12 +164,35 @@ def main() -> None:
     ap.add_argument("--cache-dir", type=Path, default=Path("data/models"))
     ap.add_argument("--sample", type=int, default=800)
     ap.add_argument("--lc-window", type=int, default=100)
+    ap.add_argument("--bootstrap", type=int, default=1000,
+                    help="Bootstrap resamples for the pairwise-cosine CI (0 = off)")
+    ap.add_argument("--ci", type=float, default=0.95, help="Confidence level for the CI")
+    ap.add_argument("--emb-cache-dir", type=Path, default=Path("data/embeddings"),
+                    help="Folder for the persistent id-keyed embedding cache")
+    ap.add_argument("--no-emb-cache", action="store_true", help="Bypass the embedding cache")
     ap.add_argument("--corpus", default="Cross Validated")
     args = ap.parse_args()
 
     model = load_model(args.cache_dir)
     df = pd.read_parquet(args.input)
-    result = compute_quarterly(df, model, sample=args.sample, lc_window=args.lc_window)
+
+    if args.no_emb_cache:
+        raw_cache = lc_cache = None
+    else:
+        tag = args.input.stem
+        raw_path = args.emb_cache_dir / f"{tag}_minilm_raw.npz"
+        lc_path = args.emb_cache_dir / f"{tag}_minilm_lc{args.lc_window}.npz"
+        raw_cache, lc_cache = load_cache(raw_path), load_cache(lc_path)
+
+    result = compute_quarterly(df, model, sample=args.sample, lc_window=args.lc_window,
+                               n_boot=args.bootstrap, ci=args.ci,
+                               raw_cache=raw_cache, lc_cache=lc_cache)
+
+    if not args.no_emb_cache:
+        save_cache(raw_path, raw_cache)
+        save_cache(lc_path, lc_cache)
+        print(f"Embedding cache -> {args.emb_cache_dir} "
+              f"({len(raw_cache):,} raw / {len(lc_cache):,} lc vectors)")
     args.output.parent.mkdir(parents=True, exist_ok=True)
     result.to_csv(args.output, index=False)
     print(f"Wrote {len(result)} quarters -> {args.output}")

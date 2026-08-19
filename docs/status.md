@@ -28,8 +28,9 @@ ChatGPT marker: 2022Q4. `data/` is gitignored; committed outputs live in `artifa
 | 2 | Length-control window sweep | `lc_sensitivity.py` | ✅ done | Null is robust to 50/100/150/200-token windows |
 | 3 | LSA semantic (TF-IDF→SVD cosine, centroid var, eff. dim) | `semantic.py` | ✅ done | Raw rise is a **length artifact**; flat under length control |
 | 4 | LDA topics + pre/post JSD | `topics.py` | ✅ done | JSD ≈ 0.008–0.009 (topic mix ≈ unchanged) |
-| 5 | Sentence-BERT/MiniLM (cosine, centroid var, eff. dim) | `semantic_bert.py` | ✅ done | Small **length-robust convergence 2023Q4–2026Q1** (the one live signal) |
-| 6 | Dynamic BERTopic + **within-topic** similarity | `topics_bert.py` | ✅ done | Within-topic cosine **flat-to-declining** → signal is mostly topic-composition |
+| 5 | Sentence-BERT/MiniLM (cosine, centroid var, eff. dim) | `semantic_bert.py` | ✅ done | Small **length-robust convergence 2023Q4–2026Q1** (the one live signal); **bootstrap 95% CIs** (2026-08-20): recent rise CI-separated from the 2016–22 trough — CV stays below early-history, Philosophy reaches series highs |
+| 6 | Dynamic BERTopic + **within-topic** similarity | `topics_bert.py` | ✅ done | Within-topic cosine **flat-to-declining** → signal is mostly topic-composition; holds under length control (`6c`, 2026-08-20); 95% bootstrap CI bands added, within-topic band brackets a flat line (2026-08-20) |
+| 7 | Homogenization by **answer score** (within-quarter median split) | `segment_score.py` | ✅ done | Recent uptick is **broad-based across quality tiers**, NOT concentrated in low-score answers — argues against a low-effort/templated mechanism (`7_score_segments`, 2026-08-20) |
 
 ## Headline finding (current)
 
@@ -59,11 +60,13 @@ metric background (`metrics.md`, `metrics-recommendation.md`), the superseded
 
 ## Open threads / next actions (see next-steps.md for detail)
 
-- **P1** Length-controlled within-topic similarity (this run used raw embeddings) — closes the
-  main caveat, cheap, decisive.
-- **P2** Per-tag / per-topic trends — NOTE: needs a parsing change (answers carry no tags; must
-  parse questions' `Tags` + join on `ParentId`).
-- **P3** Bootstrap CIs + change-point test; reduce the ~52–55% HDBSCAN outliers.
+- **P1** Length-controlled within-topic similarity — ✅ done (2026-08-20); within-topic stays
+  flat under length control, with bootstrap CI bands.
+- **P2** Segment by covariate: **P2a score = ✅ done** (`segment_score.py`; recent uptick is
+  broad-based across score tiers). **P2b tenure = blocked** (`answers.parquet` lacks
+  `OwnerUserId`; needs a `parse_posts.py` change). Per-tag still needs `Tags`+`ParentId` parsing.
+- **P3** Bootstrap CIs — ✅ done (families 5, 6, 7); change-point test + reduce the ~52–55%
+  HDBSCAN outliers still open.
 - **P4** Second encoder + known-AI anchor. **P5** Third natural-prose corpus.
 
 ## Pending action items (from meetings.md)
