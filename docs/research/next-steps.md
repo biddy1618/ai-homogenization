@@ -97,7 +97,7 @@ within-topic style, group by tags/categories, add a natural-prose corpus).*
 - **Also:** Reduce HDBSCAN outliers (currently ~52–55% unassigned) — lower `min_cluster_size`
   or use `approximate_predict` to assign outliers — so within-topic uses most of the data.
 
-## Priority 4 — Known-AI anchor + encoder robustness — Bucket B
+## Priority 4 — Known-AI anchor + encoder robustness — Bucket B — ✅ CLIENT-GREENLIT (2026-08-20)
 - **What:** (a) **Known-AI anchor** — generate ChatGPT answers to a *sample of the same
   questions*, embed them with the same MiniLM model, and measure whether human answers move
   *toward the AI centroid* over time. This directly tests "are people writing more like the
@@ -110,17 +110,21 @@ within-topic style, group by tags/categories, add a natural-prose corpus).*
 - **Effort:** Medium. Anchor needs an LLM to generate answers for a sample (API or local);
   second encoder must avoid the Windows/torch issue (prefer another fastembed/ONNX model).
 
-## Priority 5 — A third, more natural-prose corpus on the same topics
-- **What:** Add a corpus of natural-language posts covering similar subject matter, to test
-  whether the pattern generalizes beyond Stack Exchange's terse, technical style.
-- **Candidates:**
-  - **Reddit** — r/AskStatistics, r/askphilosophy, r/askscience (natural prose, same topics;
-    Pushshift/API access, but note API/licensing constraints).
-  - **Other Stack Exchange sites** with more prose — English Language & Usage, Writing,
-    Academia — as low-friction drop-ins to the existing pipeline.
+## Priority 5 — More sites + high/low-cognitive-load comparison — ✅ CLIENT-GREENLIT (2026-08-20)
+- **Client's headline ask (2026-08-20):** run the semantic pairwise-cosine analysis on **2+ more
+  sites** beyond Cross Validated + Philosophy, then **bucket sources into high vs low cognitive
+  load** and compare the *degree* of homogenization between the two buckets.
+  - **High cognitive load:** Stack Exchange network (CV + Philosophy done; more SE sites are
+    low-friction drop-ins — English Language & Usage, Writing, Academia).
+  - **Low cognitive load:** Twitter, Reddit, Yelp, TripAdvisor, Goodreads book reviews, movie
+    reviews (see `docs/archived/data-sources-low-cog.md`).
+  - **Deliverable framing:** does low-cog casual writing homogenize *more* than high-cog expert
+    writing? That contrast is the story Mark wants, on top of the per-site significance test (P3).
+- **What (original):** Add a corpus of natural-language posts covering similar subject matter, to
+  test whether the pattern generalizes beyond Stack Exchange's terse, technical style.
 - **Why:** Stack Exchange answers are atypically structured; a prose corpus is a stronger test
-  of "did everyday writing homogenize." Also gives an independent third replication.
-- **Effort:** SE sites = low (pipeline reuse). Reddit = higher (new ingest + licensing).
+  of "did everyday writing homogenize." Also gives independent replication + the cog-load contrast.
+- **Effort:** SE sites = low (pipeline reuse). Reddit / review sites = higher (new ingest + licensing).
 
 ---
 

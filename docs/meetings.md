@@ -4,6 +4,57 @@ Running log of client meetings, newest entry first.
 
 ---
 
+## 2026-08-20 (live call with Mark — held)
+
+The confirmed Wednesday 9 PM (Mark's time) call happened — Aug 19 Mark's time / Aug 20 mine.
+Walked Mark through the interim Bucket A analysis; he zeroed in on the semantic pairwise-cosine
+result and set the direction for the next sprint.
+
+### What I showed
+- **Surface/lexical** (answer count, avg length, TF-IDF, lexical diversity) — still "opposite of
+  expected": no surface homogenization.
+- **Semantic pairwise cosine + centroid variance** — upward trend = *indication* of
+  homogenization, on **both** Cross Validated and Philosophy SE.
+- **Bootstrap 95% CIs** — trend is not statistical noise. Flagged the caveat myself: the y-axis is
+  zoomed (0.05–0.10), so the magnitude is small — don't overstate.
+- **Length control** (first 100 tokens) — results unchanged.
+- **Topic-share over time** — no single topic dominating (only a minor "hazard" bump).
+- **Within-topic vs overall cosine** — convergence is **across** topics, not within → a
+  topic-composition effect.
+- **Score split** — high- and low-score answers homogenize similarly (not a low-effort artifact).
+
+### My framing (kept consistent)
+Metrics **indicate** homogenization but do **not prove** it; still checking whether it's an
+artifact / some other cause. Mark leaned more affirmative ("this is showing homogenization as we
+hypothesized") — worth re-hedging next time so the claim doesn't get ahead of the evidence.
+
+### Action items
+
+| # | Owner | Item | Status |
+|---|-------|------|--------|
+| 1 | Dauren | Run the semantic pairwise-cosine analysis on **2+ more sites** (beyond CV + Philosophy) | Next |
+| 2 | Dauren | Add a **statistical-significance** test for the increase, across all sites | Next |
+| 3 | Dauren | **Bucket sources into high vs low cognitive load** and compare the degree of homogenization | Next |
+| 4 | Dauren | **Older-GPT generated-text comparison** (generate replies w/ early GPT, check similarity) — my idea, Mark endorsed | Next |
+| 5 | Dauren | Pursue other hypotheses at discretion, but prioritize 1–4 | Ongoing |
+| 6 | Dauren | Check if companies object to data usage for research | Pending (carried) |
+| 7 | Dauren | Review papers for data-sharing / referencing best practices | Pending (carried) |
+
+### Candidate sources (raised on the call)
+- **Low cognitive load:** Twitter, Reddit, Yelp, TripAdvisor, Goodreads book reviews, movie reviews.
+- **High cognitive load:** Stack Exchange network (CV + Philosophy done; more SE sites available).
+
+### Decisions / steer
+- **Primary metric going forward:** semantic pairwise cosine similarity across distinct answer
+  pairs (MiniLM embeddings).
+- Headline Mark wants: **expand breadth** (more sites) + **add rigor** (significance) + the
+  **high- vs low-cognitive-load** comparison.
+
+### Next call
+- **Aug 26 (Mark's time) / Aug 27 (mine), ~9 PM Mark's time.**
+
+---
+
 ## 2026-08-20 (reschedule + interim work)
 
 Monday call didn't happen (timezone back-and-forth). Rescheduled and **confirmed for

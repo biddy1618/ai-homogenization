@@ -1,7 +1,7 @@
 # Project Status — AI Homogenization
 
 *Running "what's done / current state / open threads" tracker. Newest state at top.*
-*Last updated: 2026-08-12.*
+*Last updated: 2026-08-21 (after the 2026-08-20 client call).*
 
 ---
 
@@ -60,14 +60,23 @@ metric background (`metrics.md`, `metrics-recommendation.md`), the superseded
 
 ## Open threads / next actions (see next-steps.md for detail)
 
-- **P1** Length-controlled within-topic similarity — ✅ done (2026-08-20); within-topic stays
-  flat under length control, with bootstrap CI bands.
-- **P2** Segment by covariate: **P2a score = ✅ done** (`segment_score.py`; recent uptick is
-  broad-based across score tiers). **P2b tenure = blocked** (`answers.parquet` lacks
-  `OwnerUserId`; needs a `parse_posts.py` change). Per-tag still needs `Tags`+`ParentId` parsing.
-- **P3** Bootstrap CIs — ✅ done (families 5, 6, 7); change-point test + reduce the ~52–55%
-  HDBSCAN outliers still open.
-- **P4** Second encoder + known-AI anchor. **P5** Third natural-prose corpus.
+*Post 2026-08-20 client call — Mark's steer: broaden the site coverage, add significance, and
+compare homogenization by cognitive load. Client-agreed priorities first, then leftovers.*
+
+- **[client] Expand to 2+ more sites** — repeat the semantic pairwise-cosine analysis beyond
+  Cross Validated + Philosophy (P5; more Stack Exchange sites are low-friction drop-ins).
+- **[client] High- vs low-cognitive-load comparison** — bucket sources (high: Stack Exchange;
+  low: Twitter / Reddit / Yelp / TripAdvisor / Goodreads / movie reviews) and compare the degree
+  of homogenization between buckets. NEW cross-corpus framing, and Mark's headline ask.
+- **[client] Statistical significance of the increase** — per-site significance + a formal
+  change-point / interrupted-time-series test around 2022Q4/2023Q4 (P3; bootstrap CIs already done).
+- **[client] Older-GPT generated-text comparison** — greenlit: generate replies with an early GPT
+  and measure similarity / drift toward the AI centroid (P4 known-AI anchor).
+- **Done (Bucket A, pre-call):** P1 length-controlled within-topic (flat), P2a score segmentation
+  (broad-based across tiers), P3 bootstrap CIs (families 5/6/7).
+- **Still open / deferred:** P2b tenure (blocked — `answers.parquet` lacks `OwnerUserId`); per-tag
+  trends (needs `Tags`+`ParentId` parsing); reduce ~52–55% HDBSCAN outliers; second encoder (P4b);
+  perplexity / burstiness (P6).
 
 ## Pending action items (from meetings.md)
 
