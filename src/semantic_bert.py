@@ -148,11 +148,17 @@ def plot_metrics(df: pd.DataFrame, output: Path, corpus: str = "Cross Validated"
     axes[-1].set_xticklabels(quarters, rotation=90, fontsize=6)
     axes[-1].set_xlabel("Quarter")
     ci_note = "  (shaded = bootstrap CI)" if "sem_pairwise_cosine_lo" in df.columns else ""
-    fig.suptitle(f"{corpus} — semantic homogenization (Sentence-BERT / MiniLM){ci_note}",
-                 fontsize=13)
+    fig.suptitle(f"{corpus} \u2014 Are answers becoming more alike in meaning? "
+                 f"(Sentence-BERT / MiniLM){ci_note}", fontsize=13)
+    if "n_sample" in df.columns:
+        n_max, n_med = int(df["n_sample"].max()), int(df["n_sample"].median())
+        foot = (f"Each quarter: pairwise cosine over a random sample of up to {n_max} answers "
+                f"(median {n_med}/quarter). 'Length-controlled' truncates each answer to its "
+                "first 100 tokens before embedding, to rule out a length artifact.")
+        fig.text(0.5, -0.01, foot, ha="center", va="top", fontsize=8, color="dimgray", wrap=True)
     fig.tight_layout()
     output.parent.mkdir(parents=True, exist_ok=True)
-    fig.savefig(output, dpi=150)
+    fig.savefig(output, dpi=150, bbox_inches="tight")
     print(f"Saved figure -> {output}")
 
 

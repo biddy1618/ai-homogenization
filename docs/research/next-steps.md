@@ -51,6 +51,11 @@ within-topic style, group by tags/categories, add a natural-prose corpus).*
      trend lines), or *real* SE tags which **require new parsing**: answers carry no tags;
      tags live on questions (PostTypeId=1). Extend `parse_posts.py` to capture questions'
      `Tags` + each answer's `ParentId`, then join answer→question to inherit tags.
+     - **✅ Effectively addressed via family 11 (2026-08-26).** We added `ParentId` to
+       `parse_posts.py` and built the **same-question** control (`same_question.py`): the
+       strongest possible "same topic" grouping (identical question), no clustering, **zero
+       dropped outliers**. Within-question similarity is **flat/ns in 4/5 corpora** →
+       topic-composition. Full `Tags` parsing is now optional (only for per-tag breakdowns).
 - **Why:** The most likely place a *real* localized homogenization would show up; score and
   tenure are directly client-motivated and nearly free.
 - **Effort:** Score/tenure = low (data on hand); tag = medium (parsing).
@@ -94,10 +99,12 @@ within-topic style, group by tags/categories, add a natural-prose corpus).*
   version inflates the band by ~1/n from duplicate resampled pairs, which is severe for the
   small (~10-answer) within-topic clusters. Same helper now backs the family-5 CIs.
 - **Still open:** change-point / ITS test (formal break date); reduce HDBSCAN outliers.
-- **Also:** Reduce HDBSCAN outliers (currently ~52–55% unassigned) — lower `min_cluster_size`
-  or use `approximate_predict` to assign outliers — so within-topic uses most of the data.
+  - **✅ ITS done (2026-08-26)** — `significance.py` (family 8): segmented regression +
+    Mann-Kendall + bootstrap around 2022Q4. Also drove families 10/11 (MK-post on the
+    within-topic / within-question metric), which is where the topic-composition call comes from.
 
-## Priority 4 — Known-AI anchor + encoder robustness — Bucket B — ✅ CLIENT-GREENLIT (2026-08-20)
+## Priority 4 — Known-AI anchor + encoder robustness — Bucket B — ▶ NEXT UP (2026-08-26)
+**This is the "GPT-generated-answer test" to run next**, before the orthogonal-metrics pass.
 - **What:** (a) **Known-AI anchor** — generate ChatGPT answers to a *sample of the same
   questions*, embed them with the same MiniLM model, and measure whether human answers move
   *toward the AI centroid* over time. This directly tests "are people writing more like the
@@ -110,7 +117,11 @@ within-topic style, group by tags/categories, add a natural-prose corpus).*
 - **Effort:** Medium. Anchor needs an LLM to generate answers for a sample (API or local);
   second encoder must avoid the Windows/torch issue (prefer another fastembed/ONNX model).
 
-## Priority 5 — More sites + high/low-cognitive-load comparison — ✅ CLIENT-GREENLIT (2026-08-20)
+## Priority 5 — More sites + high/low-cognitive-load comparison — ✅ DONE (2026-08-26)
+**Result:** added Economics (high-cog), Seasoned Advice + Travel (low-cog) → **5 corpora**
+(family 9, `cog_load_compare.py`). The recent rise is **widespread across cog-load tiers**
+(low-cog Travel rises too) — no clean high/low split, and once topic is held constant
+(families 10/11) the within-topic rise is ns in 4/5. Below is the original scope for reference.
 - **Client's headline ask (2026-08-20):** run the semantic pairwise-cosine analysis on **2+ more
   sites** beyond Cross Validated + Philosophy, then **bucket sources into high vs low cognitive
   load** and compare the *degree* of homogenization between the two buckets.
@@ -139,6 +150,9 @@ within-topic style, group by tags/categories, add a natural-prose corpus).*
 - **Why:** An *intrinsic*, content-level signal independent of pairwise/embedding similarity —
   different failure mode, complementary evidence. (Basis of detectors like GPTZero.)
 - **Effort:** Medium. Needs a small LM; use an **ONNX GPT-2** to avoid the Windows/torch issue.
+- **Now folded into the orthogonal-metrics pass** — see
+  `docs/research/homogenization-metrics-literature.md` (perplexity/compression/n-gram/Vendi).
+  Runs **after** the P4 GPT-answer anchor test.
 
 ## New angles (cheap, paper-aligned)
 - **Answer-order / anchoring:** within a question, do *later* answers converge toward the
@@ -162,12 +176,15 @@ within-topic style, group by tags/categories, add a natural-prose corpus).*
 ---
 
 ## Recommended sequence
-**Bucket A — now, before the next client call (all reuse existing code):**
-1. **P1** length-controlled within-topic — cheap, could settle the signal immediately.
-2. **P3** bootstrap CIs (+ change-point, outlier fix) — turns "read by eye" into "significant or not".
-3. **P2** score buckets + author-tenure buckets — client-requested, nearly free.
+**Done (as of 2026-08-26):** P1 length-controlled within-topic (flat) · P2a score segments
+(broad-based) · P3 bootstrap CIs **+ ITS/Mann-Kendall** (family 8) · P5 more sites +
+cognitive-load compare (family 9, 5 corpora) · topic controls families 10/11 (**same-question**
+gold standard) → aggregate rise is **topic-composition** in 4/5 corpora.
 
-**Bucket B — propose to the client, pick a direction together:**
-4. **P4** known-AI anchor (drift toward real ChatGPT output) + second encoder.
-5. **P6** perplexity / burstiness (intrinsic AI-likeness).
-6. **P2 real tags** (parse questions) and **P5** third corpus for external validity.
+**Next, in order:**
+1. **P4 — GPT-generated-answer anchor test** (drift toward real AI output) + second encoder.
+   Needs an API key / model choice; confirm design with the client first.
+2. **Orthogonal-metrics pass** (the 4 points: predictability/perplexity, compression, n-gram
+   diversity, Vendi) for convergent validity — see `homogenization-metrics-literature.md`.
+3. **Leftovers:** probe the Philosophy within-question exception; P2b tenure + real `Tags`
+   parsing; reduce HDBSCAN outliers.

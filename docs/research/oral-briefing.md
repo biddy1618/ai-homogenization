@@ -1,223 +1,301 @@
-# Homogenization Study — Oral Briefing (for voice-assistant practice)
+# Homogenization Study — Oral Briefing (story version)
 
-*Client: Mark Nomellini (Kirkland & Ellis). Question: did generative AI (ChatGPT,
-public Nov 2022 / "2022Q4") homogenize online writing?*
+*Client: Mark Nomellini (Kirkland & Ellis). The question we were asked: did generative
+AI — ChatGPT, which went public at the end of 2022 — make online writing more the same?*
 
 ---
 
 ## How to use this document
-Read a section aloud, then have your voice assistant ask you the questions in the
-**Q&A bank** and answer from memory. The goal is to *explain*, not recite. If you can
-say the "90-second summary" and handle the Q&A bank cleanly, you're ready. Numbers to
-memorize are in **Key numbers**. Plain-language definitions are in the **Glossary** —
-practice saying those in one breath.
+This is written to be **spoken**, not read. Each chapter is one beat of the story. Read a
+chapter out loud, then have your voice assistant ask you the matching questions from the
+**Q&A bank** and answer from memory — in your own words, like you're explaining it to a
+smart friend who isn't technical. If you can tell the story start to finish and handle the
+Q&A, you're ready. Anchor numbers are in **Key numbers**; one-breath definitions are in the
+**Glossary**.
+
+The whole thing is built to be *a journey*: we start with a dramatic-looking result, and
+each step we take dismantles a little more of it, until we're left with an honest, modest
+answer. Tell it that way — as detective work.
 
 ---
 
-## The 20-second pitch
-"We tested whether AI made online writing more uniform, using two large Q&A communities
-— Cross Validated for statistics and Philosophy Stack Exchange — from 2010 to early 2026.
-We measured writing with five families of metrics, from simple vocabulary richness up to
-modern sentence embeddings. The big headline 'AI homogenized writing' claim does not hold
-up: almost everything is flat once you account for the fact that answers simply got longer.
-There's a small, recent convergence signal in the deep-embedding metric, but when we
-controlled for *topic*, even that mostly disappears. So: no strong homogenization; at most
-a weak, unproven hint."
+## The one-breath answer
+"No — writing did not broadly homogenize. The dramatic-looking signal turned out to come
+from two boring causes: answers simply got longer over the years, and the *topics* people
+write about shifted. Once you account for those two things, the 'everyone sounds the same
+now' story falls apart."
 
 ---
 
-## The 90-second summary
-"We built two corpora: Cross Validated, about 219,000 answers, and Philosophy, about 66,500
-answers, both quarterly to the first quarter of 2026. For each quarter we measured writing
-several ways and looked for a change around ChatGPT's release.
+## The 90-second story (say this whole thing out loud)
+"We were asked whether AI flattened online writing — made everyone sound alike. To test it
+we used public question-and-answer communities on Stack Exchange, where you can read millions
+of human answers stretching from 2010 all the way to the middle of 2026 — so we can see well
+before ChatGPT and well after. We measured the writing quarter by quarter and looked for a
+change around late 2022, when ChatGPT launched.
 
-First, surface metrics — vocabulary diversity and word-overlap similarity. The raw numbers
-looked like homogenization, but that was an artifact: answers got longer over time, and
-length mechanically distorts those metrics. When we hold length constant — truncate every
-answer to its first hundred tokens — the trend goes flat. We confirmed that with four
-independent diversity estimators and by re-checking at several truncation lengths.
+Our first, simplest measurements screamed 'homogenization' — answers looked less varied and
+more alike over time. But that was a trap. Answers also got *longer* over the years, and the
+simple measures automatically move when text gets longer. When we made every answer the same
+length before measuring, the effect vanished. So the first dramatic signal was really just
+'more words,' not 'more similar.'
 
-Second, meaning-based metrics. Bag-of-words semantic similarity, called LSA, was also flat
-under length control. Topic modeling with LDA showed the mix of topics barely changed —
-divergence near zero.
+Then we went deeper, with modern AI language models that read an answer for its meaning. Here
+we finally found something real: a small rise in how similar answers are to each other,
+starting about a year after ChatGPT. That's the one live hint in the whole study.
 
-Third, the sophisticated test: true contextual embeddings, Sentence-BERT. Here we found the
-only live signal — a small rise in answer-to-answer similarity starting late 2023, which
-survived length control and appeared in both corpora. But it lags ChatGPT by about a year,
-it's small, and one of our three embedding metrics — effective dimensionality — did not
-corroborate it.
+So we asked the decisive question: are people writing the *same way*, or just writing about
+the *same things*? We sorted answers by topic and measured similarity only *within* each
+topic. Within a topic, the similarity was flat — no rise. That means the small overall rise
+wasn't style homogenization; it was a shift in the *mix* of topics people discuss. We got the
+same answer when we compared answers to the very same question over time — they didn't get
+more alike.
 
-So we ran the decisive test: dynamic semantic topic modeling with BERTopic, then measured
-similarity *within* each topic. Result: within-topic similarity is flat in both corpora. That
-means the small recent uptick was largely a change in *what people write about*, not in *how*
-they write. Bottom line: the strong claim is rejected, and the weak signal is probably a
-topic-mix effect, not real style homogenization."
-
----
-
-## Key numbers to memorize
-- **Two corpora.** Cross Validated: ~219,000 answers, 63 quarters, 2010Q3–2026Q1. Philosophy:
-  ~66,551 answers, 60 quarters, 2011Q2–2026Q1.
-- **ChatGPT marker:** 2022Q4 (public release, Nov 2022).
-- **Length control:** first **100 tokens** per answer (re-checked at 50/100/150/200 — all flat).
-- **Topic-mix change (LDA JSD):** ~**0.008–0.009** on a 0–1 scale — essentially identical
-  pre/post. (0 = identical, 1 = completely different topics.)
-- **BERT signal (the one live hint):** length-controlled similarity rises from ~late 2023;
-  Philosophy length-controlled cosine ~0.125 (2022Q4) → ~0.151 (2024–26); the recent peak
-  barely exceeds a pre-ChatGPT high (2011Q3 ≈ 0.145). Small.
-- **Effective dimensionality:** ~**85 out of 384**, flat — no dimensional collapse.
-- **BERTopic:** CV 84 topics, Philosophy 71 topics. **Within-topic similarity flat** in both.
+To make sure this wasn't a quirk of two communities, we expanded to five — spanning expert,
+technical writing and everyday, practical writing — and ran the most direct test of all: for
+the same questions, we had ChatGPT itself write answers, then asked whether human answers
+drift toward what the AI would say. Across almost every community, they don't. Bottom line: no
+strong AI homogenization. A small recent wobble that's mostly about *what* people write, not
+*how* — and we can't even pin that on ChatGPT."
 
 ---
 
-## The five/six methods, in plain words
-1. **Surface / lexical metrics** — how rich the vocabulary is (TTR, MTLD, Yule's K/I, HD-D,
-   MATTR) and how much answers overlap in words (TF-IDF cosine). "Does the writing look
-   simpler or more copy-paste?"
-2. **Length-control sensitivity** — the same checks at several truncation lengths, to prove
-   our conclusions aren't an artifact of the cutoff we chose.
-3. **LSA (bag-of-words meaning)** — project answers into a latent semantic space and see if
-   they cluster tighter. "Are they converging in gist?" — but still word-order-blind.
-4. **LDA topic modeling** — a statistical model that splits the corpus into topics and tracks
-   their proportions over time. "Did the subject mix shift after ChatGPT?"
-5. **Sentence-BERT embeddings** — true contextual, order-sensitive vectors; the modern test of
-   semantic convergence. "Do answers *mean* more alike, accounting for phrasing?"
-6. **BERTopic (dynamic semantic topics)** — cluster the BERT vectors into data-driven topics
-   that can *emerge* over time, then measure similarity *within* each topic. "Is any convergence
-   real style, or just a change in what people write about?"
+## The full story — the journey, chapter by chapter
+
+### Chapter 1 — The question, and why it's slippery
+"'Did AI make writing more uniform?' sounds simple, but 'uniform' can mean many things —
+smaller vocabulary, more copy-paste phrasing, the same ideas, the same topics. So we didn't
+pick just one measure; we built a *ladder* of measurements, from crude word-counting at the
+bottom to state-of-the-art meaning models at the top. If homogenization were real and strong,
+it should light up the whole ladder. Spoiler: it doesn't."
+
+### Chapter 2 — First look: the surface, and the length trap
+"At the bottom of the ladder are simple measures — how rich is the vocabulary, how much do
+answers overlap in words. Early on, these looked like a smoking gun: diversity falling,
+overlap rising, right around the AI era. But we caught the trap. Over these years, answers
+steadily got *longer*, and these particular measures move automatically with length — a long
+answer looks less diverse and shares more common words no matter who wrote it. So we redid
+everything after trimming every answer to the same length. The signal disappeared. We
+double-checked at several trim lengths and with four different diversity measures — all flat.
+Lesson one: the most dramatic 'homogenization' was a **length illusion**."
+
+### Chapter 3 — Going deeper: meaning, and the first real hint
+"Simple word-counting is blind to meaning, so we climbed the ladder to modern sentence
+embeddings — AI models that turn a whole answer into a fingerprint of its meaning. This is the
+serious test. And here, for the first time, we found something that *survived* the length
+correction: a small rise in answer-to-answer similarity, starting about a year after ChatGPT,
+showing up in both of our first two communities. We took it seriously. But we stayed skeptical
+for three reasons: it was small, it lagged ChatGPT by a year rather than snapping in right at
+launch, and a companion measure — whether the 'space' of answers is collapsing — didn't back
+it up."
+
+### Chapter 4 — The turning point: is it *style*, or is it *subject*? (the key bottleneck)
+"This is the heart of the whole study, so slow down here. A rise in overall similarity has two
+completely different possible causes. One: people genuinely started *writing the same way* —
+real style homogenization. Two: people started *writing about the same things* — if a
+community suddenly gets flooded with questions on a few hot topics, the answers look more
+alike on average, even though nobody changed how they write. Same number on the meter, totally
+different meaning.
+
+To tell them apart, we grouped answers by topic and measured similarity *only among answers on
+the same topic*. If style were converging, within-topic similarity should rise too. It didn't —
+it stayed flat, in every community. So the overall rise was mostly a **topic-composition
+effect**: the *mix* shifted, not the writing. Put plainly — the structure of what people talk
+about drifted a bit, but their actual style did not become more uniform.
+
+Now, the honest bottleneck in this step — say this to Mark, don't hide it. This within-topic
+test has two limitations. First, to keep it computable we work from a *sample* — up to about
+800 answers per quarter — so the within-topic curve and the overall curve are measured on
+slightly different slices; that's *why the two plots don't line up exactly*, and it's expected,
+not a bug. Second, the topic-clustering step can't confidently place about half the answers, so
+it sets them aside — which means this particular test is run on the cleaner half of the data.
+That's a real caveat. It's exactly why we didn't stop here and instead ran two more direct
+tests later — the same-question test and the ChatGPT-anchor test — that need *no* clustering at
+all. And they agreed."
+
+### Chapter 5 — Pressure-testing: five communities, easy and hard
+"Two communities could be a fluke, so we widened to five, and deliberately mixed two kinds:
+'hard' communities where answers are expert reasoning — statistics, philosophy, economics — and
+'everyday' communities where answers are practical advice — cooking and travel. A popular theory
+says AI should flatten the *easy, everyday* writing the most. We found the opposite of a clean
+story: the small recent rise showed up in *four of the five*, across both kinds. It wasn't neatly
+'hard versus easy.' One community — the cooking one — showed essentially no rise at all. So
+whatever the small signal is, it's widespread but uneven, and it doesn't line up with the 'AI
+templates the easy stuff' theory."
+
+### Chapter 6 — "But is the trend real?" — the significance check
+"Reading wiggly curves by eye is dangerous, so we ran a proper statistical test that asks: did
+the trend genuinely *bend* at ChatGPT's release, more than random noise would explain? In the
+well-populated communities, yes — the change is statistically real, not eyeballing. The lone
+exception was the cooking community, which showed no real change — and, importantly, that's a
+*genuine* flat result, not a data-starvation artifact: cooking still has healthy numbers. If
+anything, the community we should treat most cautiously is economics, which is our *smallest*
+dataset and thins out to just a few dozen answers per quarter at the very end — so its
+late-period spikes are noisy. Significance tells us the overall rise is real; it does *not* tell
+us it's style rather than topic mix. For that, we needed the direct tests."
+
+### Chapter 7 — The two most direct tests
+"These are the cleanest tests, because neither needs topic-clustering.
+
+First, the **same-question test**. On Stack Exchange, many people answer the exact same question.
+So we compared answers to the *same* question and asked: over time, did different people's
+answers to one question get more alike? For four of the five communities: no. The one exception
+was philosophy, where there was a genuine upward drift — we flag it honestly as a single,
+isolated hint, not proof.
+
+Second — and this is the one we built this week — the **ChatGPT-anchor test**, the most literal
+version of the client's question. For a sample of questions we had ChatGPT *itself* write an
+answer, then asked: over the years, do human answers drift toward what the AI would have
+written for that same question? We sampled twenty-five human answers per quarter and generated
+one AI answer per question. The result: essentially flat in four of five communities — humans
+are *not* converging on the AI's output. The one exception here was economics — but notice,
+that's a *different* community than the philosophy exception, so the two lone hints don't even
+corroborate each other, and economics is our smallest, noisiest dataset. Two isolated,
+non-overlapping exceptions is exactly what you'd expect from noise, not a real effect."
+
+### Chapter 8 — Where we landed
+"Twelve different measurements, five communities, from crude word-counts to ChatGPT itself as a
+yardstick. The strong claim — that AI flattened online writing — is not supported. The dramatic
+early signal was a length illusion. The one real, small signal in the deep models mostly
+dissolves the moment you separate *what* people write about from *how* they write it. And our
+two most direct tests — same question, and 'do they sound like ChatGPT' — come back flat almost
+everywhere. So: no strong homogenization; at most a small, recent, topic-driven wobble that we
+can't even causally tie to ChatGPT."
 
 ---
 
-## Findings, family by family (say these out loud)
-- **Surface:** The dramatic-looking homogenization is a **length artifact**. Answers got longer;
-  longer text mechanically lowers vocabulary ratios and raises word-overlap similarity. Hold
-  length constant → flat, no ChatGPT step. Four independent diversity estimators agree.
-- **Length-control sensitivity:** Flat at 50, 100, 150, and 200 tokens, in both corpora. The
-  conclusion is not sensitive to our cutoff.
-- **LSA:** Raw similarity rises, but that's the same length effect (LSA is built on TF-IDF).
-  Length-controlled → flat. No semantic convergence at the bag-of-words level.
-- **LDA topics:** Topic mix barely moved (JSD ~0.008). Entropy flat. No major subject shift —
-  but this model is coarse (15 fixed topics), so we didn't fully trust the "no drift" result.
-- **Sentence-BERT:** The **only** live signal — a small, recent (late-2023 on) rise that survives
-  length control and replicates across both corpora. Caveats: ~1-year lag after ChatGPT (no sharp
-  2022Q4 step), small magnitude, and effective dimensionality does **not** corroborate it.
-- **BERTopic + within-topic:** Emergent topics are **field evolution, not AI** (Cross Validated:
-  survival analysis, causal inference, multilevel models — rising since ~2019; Philosophy: Bayesian
-  puzzles, consciousness/neuroscience; only a small, flat Turing/robots cluster). And crucially,
-  **within-topic similarity is flat** in both corpora. So the BERT uptick was largely a
-  **topic-composition effect** — more same-topic pairs — not answers becoming stylistically uniform.
+## Key numbers to anchor on
+- **Five communities**, all from the same mid-2026 data snapshot, quarterly from 2010–2026:
+  Cross Validated (statistics, ~219k answers), Philosophy (~68k), Economics (~20k, our
+  smallest), Seasoned Advice / cooking (~66k), Travel (~80k).
+- **ChatGPT marker:** end of 2022 (2022Q4).
+- **The length fix:** measure the first ~100 words of every answer (re-checked at several
+  lengths — all flat).
+- **Topic-mix change (early on):** essentially zero on a 0-to-1 scale — the subject mix barely
+  moved at the coarse level.
+- **The one live hint:** a small rise in deep-embedding similarity from about late 2023 — small,
+  lagging ChatGPT by ~a year, and it *goes flat once you hold topic constant*.
+- **Sampling, so you can answer the "why don't the plots match" question:** the embedding
+  measurements use up to **800 answers per quarter**; the ChatGPT-anchor test uses **25 answers
+  per quarter**. Different tests, different samples — the curves aren't meant to be identical.
+- **The clustering caveat:** the within-topic test sets aside about **half** the answers it can't
+  confidently assign to a topic.
+- **Two direct tests, two lone exceptions that don't agree:** same-question flags *philosophy*;
+  ChatGPT-anchor flags *economics*. Different communities → not a consistent signal.
 
 ---
 
-## The critical caveats (be honest with the client)
-- **Correlation, not causation.** Even the weak signal is only correlational; the ~1-year lag
-  means we cannot pin it on ChatGPT specifically.
-- **The within-topic test used raw (full-text) embeddings, not the length-controlled variant.**
-  So we've shown the *raw* uptick is mostly topic-mix; a length-controlled within-topic run is
-  still needed to fully close it.
-- **~52–55% of answers were clustering outliers** (excluded from within-topic). A tuning pass to
-  capture more documents is warranted.
-- **No confidence intervals or change-point test yet** — we're reading curves by eye across 60+
-  quarters, which risks over-reading noise.
-- **Single encoder.** Absolute embedding cosines are inflated by anisotropy/hubness; we report
-  *relative* change, and a second encoder would harden the finding.
+## The honest caveats (say these unprompted — it builds trust)
+- **Correlation, not causation.** Even the small live signal is only correlational, and the
+  ~1-year lag means we can't pin it specifically on ChatGPT.
+- **The within-topic test drops ~half the data** (the answers the clustering can't place) and is
+  run on a sample — which is exactly why we backed it up with the same-question and anchor tests
+  that need no clustering.
+- **Economics is thin and noisy** at the end (down to a few dozen answers per quarter), so its
+  lone positive in the anchor test deserves a caution flag.
+- **Single AI model as the yardstick.** Absolute similarity scores are inflated by quirks of one
+  embedding model, so we report *change over time*, not absolute levels; a second model would
+  harden it.
+- **We're honest about what could still be there:** a genuinely small, topic-specific effect that
+  our averages wash out. We're not claiming zero; we're claiming *not strong, and not proven*.
 
 ---
 
 ## Bottom line for the client (the money line)
 "The strong claim — that AI flattened online writing — is not supported. The dramatic signal in
-simple metrics is a length artifact. The one genuine hint, a small recent convergence in deep
-embeddings, largely disappears once we control for what people are writing about. So the honest
-summary is: **no homogenization; at most a small, recent uptick that is probably a shift in topic
-mix, not a change in writing style — and not causally tied to ChatGPT.**"
+the simple measures is a length illusion. The one genuine hint, a small recent convergence in the
+deep models, largely disappears once we separate *what* people write about from *how* they write
+it — and our two most direct tests, including using ChatGPT itself as the yardstick, come back
+flat in almost every community. So the honest summary is: **no broad homogenization; at most a
+small, recent, topic-driven wobble that is not a change in writing style and not provably caused
+by ChatGPT.**"
 
 ---
 
-## Anticipated client questions — Q&A bank (core practice)
-**Q: In one sentence, did AI homogenize writing?**
-A: No — not in any strong sense; the headline effect is a length artifact, and the only real hint
-is small, recent, and probably just a shift in topics.
+## Q&A bank (have the assistant quiz you)
+**Q: In one sentence — did AI homogenize writing?**
+A: No, not in any strong sense; the headline effect was a length illusion, and the one small real
+hint mostly turns out to be a shift in topics, not writing style.
 
-**Q: Why do you keep saying "length artifact"? Explain it simply.**
-A: Answers got longer over the years. Several of our metrics mechanically move as text gets longer
-— longer answers look less lexically diverse and share more common words — so the apparent
-convergence was really just "more words," not "more similar." When we cut every answer to the same
-length, the effect vanishes.
+**Q: What's this "length illusion" — explain it to a non-technical person.**
+A: Answers got longer over the years. Several of our simple measures move automatically as text
+gets longer — long answers look less varied and share more common words — so what looked like
+convergence was really just "more words." Trim every answer to the same length and the effect
+disappears.
 
-**Q: Then what is the one signal you did find?**
-A: Using modern sentence embeddings, answer-to-answer similarity rose a little starting in late
-2023, in both communities, and it held up under length control. But it's small, it lags ChatGPT by
-about a year, and a shape metric (effective dimensionality) didn't back it up.
+**Q: You found *one* real signal. What was it?**
+A: With modern meaning-based AI models, answers got a little more similar starting about a year
+after ChatGPT, in both original communities, and it survived the length fix. But it's small, it
+lags a year, and it mostly evaporates when we control for topic.
 
-**Q: So is that ChatGPT's fingerprint?**
-A: We can't say that. It's correlational, the timing is off by a year, and when we controlled for
-topic it mostly went away — pointing to a change in subject matter rather than writing style.
+**Q: What does "control for topic" mean and why is it the crux?**
+A: If lots of people suddenly ask about the same few subjects, their answers look more alike on
+average — not because writing homogenized, but because they're about the same thing. So we
+measured similarity *only among answers on the same topic*. That stayed flat, which tells us the
+overall rise was a shift in the *mix of topics*, not in style.
 
-**Q: What does "controlling for topic" mean, and why did it matter?**
-A: If people suddenly ask more questions on one narrow subject, answers look more similar on average
-— not because the writing homogenized, but because they're about the same thing. We clustered
-answers into topics and measured similarity only *within* each topic. That within-topic similarity
-stayed flat, so the average rise was mostly a topic-mix effect.
+**Q: Why don't your two main similarity plots look identical?**
+A: They measure different things on different samples. One is overall similarity across up to 800
+answers a quarter; the other is similarity *within* each topic, after setting aside the answers
+we can't confidently cluster. Different question, different slice — they're not supposed to match.
 
-**Q: Two different sites — why should I trust that?**
-A: They're independent communities with different subject matter and norms. Finding the same
-pattern in both — the same length artifact, the same flat within-topic result — makes it much less
-likely to be a quirk of one dataset.
+**Q: What's the ChatGPT-anchor test, in plain words?**
+A: For the same questions, we had ChatGPT write its own answer, then checked whether real human
+answers drift toward the AI's version over time. In four of five communities they don't — humans
+aren't converging on the AI. It's the most literal test of the client's question.
 
-**Q: Could your method just be missing it?**
-A: Possible, and we're honest about the gaps: single encoder, no confidence intervals yet, and the
-within-topic test hasn't been run in the length-controlled version. Those are our next steps. But
-five independent metric families pointing the same way is strong.
+**Q: You mention two exceptions — philosophy and economics. Doesn't that prove something?**
+A: They're *different* communities flagged by *different* tests, so they don't back each other up.
+And economics is our smallest, noisiest dataset. Two isolated, non-overlapping blips are what you
+expect from noise, not a real effect — so we flag them honestly and don't overclaim.
 
-**Q: What's the strongest evidence *for* some homogenization?**
-A: The small, length-robust, recent rise in Sentence-BERT similarity that appears in both corpora
-and is echoed by the centroid-variance metric hitting a series low. We take it seriously — we just
-don't overclaim it.
+**Q: Five communities — why should I trust that?**
+A: They're independent, with different subjects and norms, and we deliberately mixed expert
+"hard" communities with everyday "easy" ones. Seeing the same pattern — length illusion, flat
+within-topic, flat anchor test — across all of them makes it far less likely to be a quirk of one
+dataset.
 
-**Q: What's the strongest evidence *against*?**
-A: Effective dimensionality is flat — the answer space isn't collapsing — and within-topic
-similarity is flat. Real "everything sounds the same" homogenization should show up in both, and it
-doesn't.
+**Q: Could your method just be missing a real effect?**
+A: Possibly a small, topic-specific one our averages smooth over — we're honest about that. But
+twelve measurements and five communities all pointing the same way is strong, and our cleanest
+tests were designed specifically to catch style convergence if it existed.
 
-**Q: What would change your mind / what's next?**
-A: A length-controlled within-topic test, per-topic trends (AI may homogenize some topics more than
-others), confidence intervals and a change-point test, a second encoder, and a third, more
-natural-prose data source. If within-topic similarity rose in the length-controlled version with
-tight confidence intervals, that would be real.
-
-**Q: Bottom line I can repeat to my team?**
-A: "No strong AI homogenization. A small recent uptick that's likely about topic mix, not writing
+**Q: The one line I can repeat to my team?**
+A: "No strong AI homogenization. A small recent wobble that's mostly about topic mix, not writing
 style, and not provably caused by ChatGPT."
 
 ---
 
-## Glossary (say each in plain language)
-- **TTR (type-token ratio):** unique words ÷ total words. Simple diversity, but drops as text gets
-  longer — unreliable alone.
-- **MTLD:** a length-robust vocabulary-diversity score. The honest diversity number.
-- **Yule's K/I, HD-D, MATTR:** other length-robust diversity estimators; used to cross-check MTLD.
-- **TF-IDF cosine:** how much two answers overlap in weighted word usage; higher = more alike.
-- **LSA:** latent semantic analysis — compress word-overlap into a meaning space; still word-order-blind.
-- **LDA:** a probabilistic topic model; each document is a mix of topics, each topic a bag of words.
-- **JSD (Jensen-Shannon divergence):** distance between two distributions, 0 to 1; we used it to
-  compare the topic mix before vs after ChatGPT (~0 = unchanged).
-- **Sentence-BERT / MiniLM:** a small BERT model that turns a whole answer into one vector capturing
-  meaning and word order. "MiniLM" = the specific model; same vectors throughout.
-- **Pairwise cosine:** average similarity between answer vectors in a quarter; higher = more homogeneous.
-- **Centroid variance:** average spread of answers around their center; lower = more homogeneous.
-- **Effective dimensionality:** the effective number of independent directions the answers vary
-  along (out of 384); low = collapsed/homogeneous. Ours is ~85 and flat.
-- **BERTopic:** clusters BERT vectors into data-driven topics (via UMAP + HDBSCAN) that can emerge
-  over time — the semantic, dynamic upgrade over LDA.
-- **Within-topic similarity:** similarity measured only among answers on the *same* topic; it
-  separates real style homogenization from a shift in subject matter.
+## Glossary (say each in one breath, plainly)
+- **Homogenization:** everyone's writing becoming more the same.
+- **Length illusion / length artifact:** the fake signal that appears just because answers got
+  longer; several simple measures move with length on their own.
+- **Vocabulary diversity:** how many different words are used; simple, but drops as text gets
+  longer, so unreliable alone.
+- **Sentence embedding:** a modern AI model that turns a whole answer into a "meaning fingerprint"
+  — the serious test of whether answers *mean* more alike.
+- **Similarity / cosine:** how alike two fingerprints are; higher = more similar.
+- **Topic modeling / clustering:** automatically sorting answers into subject groups so we can ask
+  whether *style* changed separately from *subject*.
+- **Within-topic similarity:** similarity measured only among answers on the *same* topic — this is
+  what separates real style homogenization from a shift in what people write about.
+- **Topic-composition effect:** the average looks more similar only because the *mix* of topics
+  shifted, not because writing changed.
+- **Same-question test:** comparing answers to the exact same question over time — a clean control
+  that needs no clustering.
+- **ChatGPT-anchor test:** using ChatGPT's own answer as a yardstick and asking whether humans
+  drift toward it — the most literal version of the client's question.
+- **Significance / trend test:** a statistical check that the trend genuinely bent at ChatGPT's
+  release rather than being random noise.
+- **Correlation vs causation:** even a real trend around 2022 doesn't prove ChatGPT *caused* it.
 
 ---
 
-## Next steps (one-liners — full detail in next-steps.md)
-1. Length-controlled within-topic similarity (close the main caveat).
-2. Per-tag / per-topic homogenization trends (AI may homogenize some topics more) — needs question
-   tags joined to answers.
-3. Reduce clustering outliers; add confidence intervals + a change-point test.
-4. Second encoder + a known-AI-text anchor for calibration.
-5. A third, more natural-prose data source (e.g., Reddit askscience/askphilosophy) on the same topics.
+## Where we can go from here (one-liners)
+1. Look *inside* topics one at a time — AI may homogenize some subjects more than others.
+2. Add a second, independent AI model as a yardstick, to harden the deep-embedding result.
+3. Add a third, more natural-prose source (e.g., Reddit) on the same subjects.
+4. Chase the two lone exceptions — philosophy (same-question) and economics (anchor) — to see if
+   either survives a closer look or is just noise.
+5. Add extra, independent cross-checks (predictability / compression / word-variety) for
+   convergent validity.

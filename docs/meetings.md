@@ -4,6 +4,32 @@ Running log of client meetings, newest entry first.
 
 ---
 
+## 2026-08-26 (interim work — pre-call)
+
+Work done on our side since the Aug-20 call, ahead of the Aug-26/27 call. No client contact.
+
+### Progress on the action items
+- **Item 1 (more sites) — done.** Added Economics, Seasoned Advice, Travel → **5 corpora**.
+- **Item 2 (significance) — done.** ITS/segmented regression + Mann-Kendall + bootstrap (family 8).
+- **Item 3 (cognitive load) — done.** High vs low compare (family 9): the rise is **widespread**
+  (4/5 sites, incl. low-cog Travel) — no clean high/low split.
+- **New topic controls.** Overall-vs-within MK-post (family 10) and the gold-standard
+  **same-question** control (family 11, `ParentId`, zero dropped outliers): within-topic rise is
+  **ns in 4/5 corpora** → the aggregate rise is **topic-composition**, not style homogenization.
+  **Philosophy** is the lone exception (within-question up-trend) — flagged to probe, not claim.
+
+### Decision — next sequence
+1. **GPT-generated-answer anchor test (item 4) first** — generate AI answers for the same
+   questions, measure whether human answers drift toward the AI centroid over time.
+2. **Then** an orthogonal-metrics pass (predictability/perplexity, compression, n-gram diversity,
+   Vendi) for convergent validity — see `docs/research/homogenization-metrics-literature.md`.
+
+### Reminder to self
+Re-hedge with Mark: metrics **indicate**, and the aggregate rise now looks like a topic-mix effect
+— don't let "homogenization confirmed" get ahead of the evidence.
+
+---
+
 ## 2026-08-20 (live call with Mark — held)
 
 The confirmed Wednesday 9 PM (Mark's time) call happened — Aug 19 Mark's time / Aug 20 mine.
@@ -32,10 +58,10 @@ hypothesized") — worth re-hedging next time so the claim doesn't get ahead of 
 
 | # | Owner | Item | Status |
 |---|-------|------|--------|
-| 1 | Dauren | Run the semantic pairwise-cosine analysis on **2+ more sites** (beyond CV + Philosophy) | Next |
-| 2 | Dauren | Add a **statistical-significance** test for the increase, across all sites | Next |
-| 3 | Dauren | **Bucket sources into high vs low cognitive load** and compare the degree of homogenization | Next |
-| 4 | Dauren | **Older-GPT generated-text comparison** (generate replies w/ early GPT, check similarity) — my idea, Mark endorsed | Next |
+| 1 | Dauren | Run the semantic pairwise-cosine analysis on **2+ more sites** (beyond CV + Philosophy) | ✅ Done (5 corpora) |
+| 2 | Dauren | Add a **statistical-significance** test for the increase, across all sites | ✅ Done (family 8) |
+| 3 | Dauren | **Bucket sources into high vs low cognitive load** and compare the degree of homogenization | ✅ Done (family 9) |
+| 4 | Dauren | **Older-GPT generated-text comparison** (generate replies w/ early GPT, check similarity) — my idea, Mark endorsed | Next (up now) |
 | 5 | Dauren | Pursue other hypotheses at discretion, but prioritize 1–4 | Ongoing |
 | 6 | Dauren | Check if companies object to data usage for research | Pending (carried) |
 | 7 | Dauren | Review papers for data-sharing / referencing best practices | Pending (carried) |

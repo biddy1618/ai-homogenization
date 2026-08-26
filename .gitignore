@@ -2,6 +2,10 @@
 __pycache__/
 *.pyc
 
+# Secrets — API keys etc. Never commit.
+.secrets/
+*.key
+
 # Stack Exchange data dumps (kept local, never committed) — root-level only, so
 # artifacts/<corpus>/data/ metric CSVs are still committed
 /data/

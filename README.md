@@ -63,14 +63,14 @@ project-ai-homogenization/
 │   ├── plot.py                #   Trend plots
 │   └── validate_cleaning.py   #   Cleaning QA checks
 ├── artifacts/                 # Committed outputs, per corpus (data/ CSVs + plots/ PNGs)
-│   ├── cross-validated/
-│   └── philosophy/
+│   ├── cross-validated/       #   (5 corpora: + philosophy, economics, seasoned-advice, travel)
+│   └── ...
 ├── data/                      # Local-only heavy data (gitignored)
 └── docs/
     ├── status.md             # Running project status / what's done (newest at top)
     ├── meetings.md           # Running client meeting log (newest first)
     ├── papers/               # Reference papers (PDFs)
-    ├── research/             # Current findings (critical-review, next-steps, oral-briefing)
+    ├── research/             # Findings + methods (critical-review, next-steps, oral-briefing, homogenization-metrics-literature)
     └── archived/             # Superseded/background docs (see INDEX.md)
 ```
 

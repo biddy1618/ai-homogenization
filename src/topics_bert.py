@@ -190,7 +190,8 @@ def plot_topics_over_time(shares: pd.DataFrame, summary: pd.DataFrame, labels: d
     print(f"Saved figure -> {output}")
 
 
-def plot_within_topic(wts: pd.DataFrame, output: Path, corpus: str, note: str = "") -> None:
+def plot_within_topic(wts: pd.DataFrame, output: Path, corpus: str, note: str = "",
+                      footnote: str = "") -> None:
     quarters = wts["quarter"].tolist()
     x = list(range(len(quarters)))
     marker_x = quarters.index(CHATGPT_QUARTER) if CHATGPT_QUARTER in quarters else None
@@ -215,11 +216,14 @@ def plot_within_topic(wts: pd.DataFrame, output: Path, corpus: str, note: str = 
     ax.set_xticks(x)
     ax.set_xticklabels(quarters, rotation=90, fontsize=6)
     ax.set_xlabel("Quarter")
-    fig.suptitle(f"{corpus} — within-topic vs overall similarity (topic-shift confound test){note}",
-                 fontsize=13)
+    fig.suptitle(f"{corpus} \u2014 Real style change, or just a shift in topics? "
+                 f"(within-topic vs overall){note}", fontsize=13)
+    if footnote:
+        fig.text(0.5, -0.01, footnote, ha="center", va="top", fontsize=8,
+                 color="dimgray", wrap=True)
     fig.tight_layout()
     output.parent.mkdir(parents=True, exist_ok=True)
-    fig.savefig(output, dpi=150)
+    fig.savefig(output, dpi=150, bbox_inches="tight")
     print(f"Saved figure -> {output}")
 
 
@@ -286,9 +290,15 @@ def main() -> None:
     print("\nTop 10 emergent topics (post - pre ChatGPT share gain):")
     print(summary.head(10).to_string(index=False))
 
+    wt_foot = (f"Random sample of up to {args.sample} answers/quarter; {n_topics} data-driven "
+               f"topics via HDBSCAN. {n_outlier:,}/{len(topics):,} "
+               f"({100 * n_outlier / len(topics):.0f}%) are topic-outliers, excluded from the "
+               "within-topic line. Flat within-topic while overall rises = a topic-mix shift, "
+               "not style homogenization.")
     plot_topics_over_time(shares, summary, labels,
                           args.plots_dir / "6a_topics_over_time.png", args.top_k, args.corpus)
-    plot_within_topic(wts, args.plots_dir / "6b_within_topic_similarity.png", args.corpus)
+    plot_within_topic(wts, args.plots_dir / "6b_within_topic_similarity.png", args.corpus,
+                      footnote=wt_foot)
 
     # P1: length-controlled within-topic — same topic assignments, but embeddings of the
     # first lc_window tokens (answers shorter than the window are excluded, matching the
@@ -306,7 +316,8 @@ def main() -> None:
         wts_lc.to_csv(args.data_dir / "6_within_topic_similarity_lc.csv", index=False)
         print(f"Wrote CSV -> {args.data_dir / '6_within_topic_similarity_lc.csv'}")
         plot_within_topic(wts_lc, args.plots_dir / "6c_within_topic_similarity_lc.png",
-                          args.corpus, note=" — length-controlled (first 100 tokens)")
+                          args.corpus, note=" \u2014 length-controlled (first 100 tokens)",
+                          footnote=wt_foot)
     else:
         print("Not enough answers >= lc-window tokens for length-controlled within-topic.")
 
