@@ -1,7 +1,7 @@
 # Project Status — AI Homogenization
 
 *Running "what's done / current state / open threads" tracker. Newest state at top.*
-*Last updated: 2026-09-07 (scaled to 26 corpora; families 8 & 9 run across all sites).*
+*Last updated: 2026-09-07 (26-corpus deliverable emailed to Mark; arXiv is the next data source).*
 
 ---
 
@@ -122,11 +122,14 @@ GPT-generated-answer anchor test (item 4), then the orthogonal-metrics research.
 ## Pending action items (from meetings.md)
 
 *From the 2026-09-07 call:*
-- **Email Mark the plots** (Gmail), as self-explanatory as possible.
-- **Send methodology notes** with the plots — use the correct **18/26 significant (raw)** count,
-  not the 21/26 said on the call.
-- **List high- vs low-cognitive-load sources** for Mark.
-- **Try arXiv** as the next (external) data source.
+- **[done — 2026-09-07] Email Mark the plots** (Gmail) — sent a zipped bundle: 26 family-5
+  similarity-trend plots + 26 family-8 per-site slope plots (high/low folders), significance
+  forest, cognitive-load comparison.
+- **[done — 2026-09-07] Send methodology notes** — plain-English notes with the correct **18/26
+  significant (raw)** count (20/26 length-controlled), how-to-read guidance, and the affirmative
+  "ChatGPT may be driving topic-level homogenization" framing.
+- **[done — 2026-09-07] List high- vs low-cognitive-load sources** — included in the notes.
+- **[NEXT — tentatively Fri] Try arXiv** as the next (external) data source.
 
 *Carried:*
 - Check whether companies object to data usage for research.

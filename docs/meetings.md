@@ -34,12 +34,22 @@ cosine/qtr; and the topic-composition caveat from families 6/10/11 still stands.
 
 | # | Owner | Item | Status |
 |---|-------|------|--------|
-| 1 | Dauren | **Email Mark the plots** (to Gmail), as self-explanatory as possible | Open |
-| 2 | Dauren | **Send methodology notes** with the plots — use the correct 18/26 count | Open |
-| 3 | Dauren | **List which sources are high vs low cognitive load** (for Mark) | Open |
-| 4 | Dauren | **Try arXiv** as the next data source (high-cog scientific papers) — Mark endorsed | Next |
+| 1 | Dauren | **Email Mark the plots** (to Gmail), as self-explanatory as possible | ✅ Done — sent zipped bundle 2026-09-07 |
+| 2 | Dauren | **Send methodology notes** with the plots — use the correct 18/26 count | ✅ Done (2026-09-07) |
+| 3 | Dauren | **List which sources are high vs low cognitive load** (for Mark) | ✅ Done — in the notes (2026-09-07) |
+| 4 | Dauren | **Try arXiv** as the next data source (high-cog scientific papers) — Mark endorsed | Next (tentatively Fri) |
 | 5 | Dauren | Check if companies object to data usage for research | Pending (carried) |
 | 6 | Dauren | Review papers for data-sharing / referencing best practices | Pending (carried) |
+
+### Deliverable sent (2026-09-07)
+- Emailed Mark's Gmail a **zipped bundle**: 26 family-5 similarity-trend plots + 26 family-8
+  per-site slope plots (split high/low cognitive load), the significance forest, and the
+  cognitive-load comparison, plus plain-English methodology notes (how-to-read + high/low list).
+- Framing softened per Dauren to an affirmative stance: **"ChatGPT may be driving a real,
+  topic-level homogenization"** (topical/subject-matter, not a uniform writing style), keeping the
+  "timing, not proof" and "significant ≠ big" caveats. Correct **18/26 raw (20/26 length-controlled)**
+  count used. Committed + pushed (`be1d7cb`, reframed in `c110328`).
+
 
 ### Steer
 - Stack Exchange breadth is essentially exhausted; next is **external corpora**, starting with
