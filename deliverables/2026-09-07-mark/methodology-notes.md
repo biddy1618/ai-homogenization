@@ -25,9 +25,12 @@ We split the 26 communities by how much expertise/reasoning a typical answer nee
   Home Improvement, Science Fiction & Fantasy, Arqade (Gaming).
 
 ## The headline
-**No strong evidence that AI homogenized *how* people write.** Similarity does rise modestly after
-ChatGPT in most communities, but once we hold the **topic** constant that rise largely disappears. The
-signal is mostly a shift in **what** people write about, not **how**.
+**ChatGPT may be driving a real, topic-level homogenization.** After its release, answers in most
+communities became modestly more similar to each other, and the timing lines up with a trend break
+around **2022 Q4**. Looking closer, the convergence is concentrated in **what** people write about — the
+range of topics narrows and the topic mix shifts — more than in **how** any single answer is written. So
+the honest read is: the homogenization looks real and largely **topical** (subject matter), rather than
+a uniform "AI writing style."
 
 ---
 

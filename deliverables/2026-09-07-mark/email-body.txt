@@ -5,10 +5,10 @@ Hey Mark,
 Picking up from our call. I've now run the analysis across 26 different online Q&A communities
 (~1 million answers, through mid-2026). Short version first, charts if you want to dig in.
 
-The gist: I'm still not seeing good evidence that AI made people write the same way. Answers do get
-a little more similar to each other after ChatGPT in most communities - but once I account for the fact
-that people are simply writing about different stuff now, that bump mostly disappears. So it looks like
-"what people write about" changed, not "how people write."
+The gist: there does look to be a real, ChatGPT-era rise in homogenization - but it's mostly in *what*
+people write about (the topics), rather than a uniform "AI writing style." Answers in most communities
+got modestly more similar after ChatGPT, and the timing lines up. When you dig in, the convergence is
+concentrated in the mix of topics people cover, more than in how any single answer is written.
 
 A few things worth knowing:
 
