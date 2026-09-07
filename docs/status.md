@@ -1,7 +1,7 @@
 # Project Status — AI Homogenization
 
 *Running "what's done / current state / open threads" tracker. Newest state at top.*
-*Last updated: 2026-08-27 (anchor test done; pre Aug-27 call with Mark).*
+*Last updated: 2026-09-07 (scaled to 26 corpora; families 8 & 9 run across all sites).*
 
 ---
 
@@ -11,7 +11,9 @@ Measuring whether generative AI (ChatGPT, public 2022Q4) made online writing mor
 homogeneous. Method: per-quarter diversity metrics on Stack Exchange answers, five metric
 families, raw **and** length-controlled, replicated across two corpora.
 
-## Corpora (5, from the latest SE dump `20260630`, data through 2026Q2)
+## Corpora (26, from the latest SE dump `20260630`, data through 2026Q2)
+
+**Core 5** (full family 1–12 analysis; parquets carry `parent_id`):
 
 | Corpus | Cog-load | Answers | Parquet |
 |---|---|---|---|
@@ -21,7 +23,14 @@ families, raw **and** length-controlled, replicated across two corpora.
 | Seasoned Advice (cooking) | low | ~66k | `data/processed/cooking_answers.parquet` |
 | Travel SE | low | ~80k | `data/processed/travel_answers.parquet` |
 
-ChatGPT marker: 2022Q4. All parquets now carry `parent_id` (enables family 11). `data/` is
+**+21 expansion sites** (2026-09-07, via `add_sites.py`; families 5 + 8/9 only): **high-cog** —
+Cryptography, Law, History, Computer Science, Biology, Astronomy, Chemistry, Electrical
+Engineering, Physics, Software Engineering, English L&U; **low-cog** — Bicycles, Gardening, RPG,
+Board Games, Personal Finance & Money, Photography, The Workplace, Home Improvement, Sci-Fi &
+Fantasy, Arqade (Gaming). Volume+timeframe gated (all end 2026Q2, recent median ≥40/qtr); manifest
+in `artifacts/sites_manifest.csv`. **26 corpora total: 14 high-cog + 12 low-cog.**
+
+ChatGPT marker: 2022Q4. All core parquets carry `parent_id` (enables family 11). `data/` is
 gitignored; committed outputs live in `artifacts/<corpus>/{data,plots}/` (+ consolidated `artifacts/*_all.csv`).
 
 ## Metric families — status
@@ -35,8 +44,8 @@ gitignored; committed outputs live in `artifacts/<corpus>/{data,plots}/` (+ cons
 | 5 | Sentence-BERT/MiniLM (cosine, centroid var, eff. dim) | `semantic_bert.py` | ✅ done | Small **length-robust convergence 2023Q4–2026Q1** (the one live signal); **bootstrap 95% CIs** (2026-08-20): recent rise CI-separated from the 2016–22 trough — CV stays below early-history, Philosophy reaches series highs |
 | 6 | Dynamic BERTopic + **within-topic** similarity | `topics_bert.py` | ✅ done | Within-topic cosine **flat-to-declining** → signal is mostly topic-composition; holds under length control (`6c`, 2026-08-20); 95% bootstrap CI bands added, within-topic band brackets a flat line (2026-08-20) |
 | 7 | Homogenization by **answer score** (within-quarter median split) | `segment_score.py` | ✅ done | Recent uptick is **broad-based across quality tiers**, NOT concentrated in low-score answers — argues against a low-effort/templated mechanism (`7_score_segments`, 2026-08-20) |
-| 8 | **Significance / ITS** (segmented regression + Mann-Kendall + bootstrap) | `significance.py` | ✅ done | Post-ChatGPT rise is a significant **slope-change** in well-powered corpora — but see families 6/10/11 (`8_significance`, `8_its`) |
-| 9 | High- vs low-**cognitive-load** comparison | `cog_load_compare.py` | ✅ done | Rise is **widespread (4/5 sites)**, NOT a clean high/low split (low-cog Travel also rises) — no cog-load explanation (`9_cog_load_comparison`) |
+| 8 | **Significance / ITS** (segmented regression + Mann-Kendall + bootstrap) | `significance.py` | ✅ done | `--all` mode runs all **26 corpora** → `8_significance_all.csv` + forest summary (`8_significance_all.png`) + per-corpus ITS plots (`8_its`). **18/26 show a significant post-ChatGPT slope-increase** (20/26 under length control) — but see families 6/10/11: significant ≠ homogenization |
+| 9 | High- vs low-**cognitive-load** comparison | `cog_load_compare.py` | ✅ done | Now across all **26 corpora** with a readable high/low **bucket-mean ±1SE** plot (faint per-site lines behind). High- and low-cog tracks **overlap** → cognitive load does not explain the rise; confirms "no clean split" at scale (`9_cog_load_comparison`) |
 | 10 | Overall vs within-topic **MK-post** test | `within_vs_overall.py` | ✅ done | Within-topic MK-post **ns in all 5** while aggregate rises → topic-composition (`10_within_vs_overall`) |
 | 11 | **Same-question** topic control (`ParentId`) — gold standard | `same_question.py` | ✅ done | Field-standard control, **zero dropped outliers**: 4/5 corpora show **no** within-question rise → composition; **Philosophy** is the lone exception (within-Q MK-post p=0.0002) (`11_same_question`) |
 | 12 | **GPT-anchor** drift (do humans drift toward ChatGPT's own answer?) — client item 4 | `anchor_test.py` | ✅ done | Most literal test of the client's question. Sampled 25 human answers/qtr vs 1 gpt-4o-mini answer/question. Human-vs-AI cosine **flat in 4/5** (CV slightly *down*, Philosophy/Seasoned Advice/Travel MK-post ns); **Economics** is the lone rise (MK-post τ+0.43 p=0.027) — smallest/noisiest site. The two lone exceptions (Philosophy in #11, Economics in #12) are *different* sites → noise, not corroboration (`12_anchor_drift`) |
@@ -50,8 +59,9 @@ gitignored; committed outputs live in `artifacts/<corpus>/{data,plots}/` (+ cons
   similarity — **largely disappears once topic is held constant** (families 6/10, and now the
   gold-standard **same-question** control family 11). So most of it is a shift in *what people
   write about* after 2023, not homogenization of *style*. Replicated across **5 corpora**.
-- The **ITS slope-change** (family 8) is statistically significant in 4/5 sites — but that is on
-  the *aggregate* metric; the direct topic-held-constant tests (6/10/11/12) attribute the bend to
+- The **ITS slope-change** (family 8) is now significant in **18/26 sites** (20/26 under length
+  control) — a broad, modest, cognitive-load-independent rise — but that is on the *aggregate*
+  metric; the direct topic-held-constant tests (6/10/11/12, on the core 5) attribute the bend to
   topic mix, not style. Significant ≠ homogenization.
 - The **GPT-anchor test** (family 12, the most literal version of the client's question) is
   **flat in 4/5**; only Economics (smallest/noisiest) rises. The two lone exceptions
@@ -81,10 +91,14 @@ metric background (`metrics.md`, `metrics-recommendation.md`), the superseded
 *Client items 1–3 from the 2026-08-20 call are now **done**; the agreed next sequence is the
 GPT-generated-answer anchor test (item 4), then the orthogonal-metrics research.*
 
-- **[done] Expand to 2+ more sites** — added Economics, Seasoned Advice, Travel (5 corpora total).
-- **[done] High- vs low-cognitive-load comparison** — family 9: rise is widespread, no clean split.
-- **[done] Statistical significance** — family 8 ITS/Mann-Kendall + bootstrap; plus families 10/11
-  showing the aggregate rise is topic-composition once topic is held constant.
+- **[done] Expand to 2+ more sites** — added Economics, Seasoned Advice, Travel (5 corpora).
+- **[done — 2026-09-07] Scale to 26 corpora** — `add_sites.py` batch added 21 more SE sites
+  (family 5), volume+timeframe gated, parallel download/compute; then ran families 8 & 9 across
+  all 26. Note: the topic-held-constant controls (6/10/11/12) still cover only the core 5.
+- **[done] High- vs low-cognitive-load comparison** — family 9, now all 26 corpora with a
+  readable bucket-mean plot: high/low tracks overlap, no cog-load split.
+- **[done] Statistical significance** — family 8 ITS/Mann-Kendall + bootstrap, now `--all` over
+  26 (18/26 significant) + summary/ITS plots; families 10/11 attribute the rise to topic-mix.
 - **[done — client item 4] GPT-generated-answer anchor test** — family 12: generated gpt-4o-mini
   answers per question, measured whether human answers drift toward the AI answer over time.
   Flat in 4/5 (Economics lone rise, smallest/noisiest); does not corroborate the Philosophy #11
@@ -92,8 +106,10 @@ GPT-generated-answer anchor test (item 4), then the orthogonal-metrics research.
 - **[NEXT] Orthogonal-metrics research (the 4 points)** — predictability (distilgpt2-ONNX /
   n-gram perplexity), compression ratio, n-gram diversity, Vendi Score; for convergent validity.
   See `docs/research/homogenization-metrics-literature.md`.
-- **Deferred:** P2b tenure (needs `OwnerUserId` parsing); per-tag trends (needs `Tags` parsing);
-  reduce HDBSCAN outliers; second encoder; probe the Philosophy within-question exception.
+- **Deferred:** family 13 `topic_decomposition.py` (within/between-topic decomposition of the
+  aggregate cosine) — code written, not yet run; ≥5 external non-SE corpora (Reddit/arXiv/HN);
+  P2b tenure (needs `OwnerUserId` parsing); per-tag trends (needs `Tags` parsing); reduce HDBSCAN
+  outliers; second encoder; probe the Philosophy within-question exception.
 
 ## Pending action items (from meetings.md)
 
