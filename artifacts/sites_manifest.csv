@@ -1,0 +1,22 @@
+key,domain,slug,corpus,cog_load,n_answers,first_quarter,last_quarter,recent_median_vol,status,n_quarters,recent_median_sample
+bicycles,bicycles.stackexchange.com,bicycles,Bicycles,low,51679,2010Q3,2026Q2,222.0,ok,64,222.0
+gardening,gardening.stackexchange.com,gardening,Gardening,low,26596,2010Q3,2026Q2,92.0,ok,61,92.0
+rpg,rpg.stackexchange.com,rpg,Role-playing Games,low,116061,2010Q3,2026Q2,448.5,ok,64,448.5
+boardgames,boardgames.stackexchange.com,boardgames,Board Games,low,25938,2010Q3,2026Q2,78.0,ok,63,78.0
+money,money.stackexchange.com,money,Personal Finance & Money,low,75036,2009Q4,2026Q2,185.0,ok,67,185.0
+photo,photo.stackexchange.com,photo,Photography,low,68423,2010Q3,2026Q2,158.0,ok,64,158.0
+workplace,workplace.stackexchange.com,workplace,The Workplace,low,114298,2012Q1,2026Q2,287.0,ok,57,287.0
+diy,diy.stackexchange.com,diy,Home Improvement,low,150790,2010Q3,2026Q2,921.0,ok,64,800.0
+scifi,scifi.stackexchange.com,scifi,Science Fiction & Fantasy,low,138097,2011Q1,2026Q2,597.5,ok,62,597.5
+gaming,gaming.stackexchange.com,gaming,Arqade (Gaming),low,167267,2009Q3,2026Q2,388.5,ok,64,388.5
+crypto,crypto.stackexchange.com,crypto,Cryptography,high,39206,2011Q1,2026Q2,187.0,ok,60,187.0
+law,law.stackexchange.com,law,Law,high,48251,2015Q2,2026Q2,412.0,ok,45,412.0
+history,history.stackexchange.com,history,History,high,29420,2011Q2,2026Q2,110.0,ok,59,110.0
+cs,cs.stackexchange.com,cs,Computer Science,high,58725,2008Q4,2026Q2,156.5,ok,58,156.5
+biology,biology.stackexchange.com,biology,Biology,high,33182,2011Q2,2026Q2,83.5,ok,59,83.5
+astronomy,astronomy.stackexchange.com,astronomy,Astronomy,high,21980,2013Q3,2026Q2,145.5,ok,52,145.5
+chemistry,chemistry.stackexchange.com,chemistry,Chemistry,high,55040,2012Q2,2026Q2,222.5,ok,57,222.5
+electronics,electronics.stackexchange.com,electronics,Electrical Engineering,high,357990,2009Q3,2026Q2,2574.0,ok,67,800.0
+physics,physics.stackexchange.com,physics,Physics,high,366564,2010Q3,2026Q2,2172.0,ok,63,800.0
+softwareengineering,softwareengineering.stackexchange.com,softwareengineering,Software Engineering,high,182162,2008Q3,2026Q2,262.0,ok,72,262.0
+english,english.stackexchange.com,english,English Language & Usage,high,300557,2009Q2,2026Q2,595.5,ok,64,595.5
