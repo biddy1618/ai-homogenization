@@ -49,6 +49,7 @@ gitignored; committed outputs live in `artifacts/<corpus>/{data,plots}/` (+ cons
 | 10 | Overall vs within-topic **MK-post** test | `within_vs_overall.py` | ✅ done | Within-topic MK-post **ns in all 5** while aggregate rises → topic-composition (`10_within_vs_overall`) |
 | 11 | **Same-question** topic control (`ParentId`) — gold standard | `same_question.py` | ✅ done | Field-standard control, **zero dropped outliers**: 4/5 corpora show **no** within-question rise → composition; **Philosophy** is the lone exception (within-Q MK-post p=0.0002) (`11_same_question`) |
 | 12 | **GPT-anchor** drift (do humans drift toward ChatGPT's own answer?) — client item 4 | `anchor_test.py` | ✅ done | Most literal test of the client's question. Sampled 25 human answers/qtr vs 1 gpt-4o-mini answer/question. Human-vs-AI cosine **flat in 4/5** (CV slightly *down*, Philosophy/Seasoned Advice/Travel MK-post ns); **Economics** is the lone rise (MK-post τ+0.43 p=0.027) — smallest/noisiest site. The two lone exceptions (Philosophy in #11, Economics in #12) are *different* sites → noise, not corroboration (`12_anchor_drift`) |
+| 13 | **Within- vs between-topic decomposition** (global K-means, K=50, no dropped outliers) | `topic_decomposition.py` | ✅ done (core 5) | Positively locates the rise: it lives in **between-topic** pairs (≈ overall); **within-topic is weak/flat**. **Effective # of topics drops** + **composition JSD rises** after ChatGPT → topic-level homogenization. The between-topic "convergence" is mostly **anisotropy** (mean-centred `mc_between` line flat) (`13_topic_decomposition`) |
 
 ## Headline finding (current)
 
@@ -59,6 +60,11 @@ gitignored; committed outputs live in `artifacts/<corpus>/{data,plots}/` (+ cons
   similarity — **largely disappears once topic is held constant** (families 6/10, and now the
   gold-standard **same-question** control family 11). So most of it is a shift in *what people
   write about* after 2023, not homogenization of *style*. Replicated across **5 corpora**.
+- **Positively confirmed (family 13, core 5):** decomposing the aggregate cosine, the rise lives in
+  **between-topic** pairs while **within-topic is flat**, and **topic diversity shrinks** +
+  **composition drifts** after ChatGPT. So the mechanism is topic-level (what people write about),
+  matching Mark's "AI homogenises *topics*, not within-topic *style*" framing — though the
+  "topics converging" piece is mostly an embedding-anisotropy artifact.
 - The **ITS slope-change** (family 8) is now significant in **18/26 sites** (20/26 under length
   control) — a broad, modest, cognitive-load-independent rise — but that is on the *aggregate*
   metric; the direct topic-held-constant tests (6/10/11/12, on the core 5) attribute the bend to
@@ -103,15 +109,25 @@ GPT-generated-answer anchor test (item 4), then the orthogonal-metrics research.
   answers per question, measured whether human answers drift toward the AI answer over time.
   Flat in 4/5 (Economics lone rise, smallest/noisiest); does not corroborate the Philosophy #11
   exception. Most literal test of the client's question → no drift toward the AI.
+- **[NEXT — client-directed, 2026-09-07] arXiv corpus** — add arXiv (high-cog scientific papers)
+  as the first **external, non-SE** source; vet volume + time-range alignment like the SE sites.
 - **[NEXT] Orthogonal-metrics research (the 4 points)** — predictability (distilgpt2-ONNX /
   n-gram perplexity), compression ratio, n-gram diversity, Vendi Score; for convergent validity.
   See `docs/research/homogenization-metrics-literature.md`.
-- **Deferred:** family 13 `topic_decomposition.py` (within/between-topic decomposition of the
-  aggregate cosine) — code written, not yet run; ≥5 external non-SE corpora (Reddit/arXiv/HN);
-  P2b tenure (needs `OwnerUserId` parsing); per-tag trends (needs `Tags` parsing); reduce HDBSCAN
-  outliers; second encoder; probe the Philosophy within-question exception.
+- **Deferred:** ≥5 external non-SE corpora (Reddit/arXiv/HN — arXiv is the client-directed next);
+  extend family 13 decomposition from the core 5 to all 26; P2b tenure (needs `OwnerUserId`
+  parsing); per-tag trends (needs `Tags` parsing); reduce HDBSCAN outliers; second encoder; probe
+  the Philosophy within-question exception.
 
 ## Pending action items (from meetings.md)
 
+*From the 2026-09-07 call:*
+- **Email Mark the plots** (Gmail), as self-explanatory as possible.
+- **Send methodology notes** with the plots — use the correct **18/26 significant (raw)** count,
+  not the 21/26 said on the call.
+- **List high- vs low-cognitive-load sources** for Mark.
+- **Try arXiv** as the next (external) data source.
+
+*Carried:*
 - Check whether companies object to data usage for research.
 - Review papers for data-sharing / referencing best practices.

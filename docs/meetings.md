@@ -4,6 +4,85 @@ Running log of client meetings, newest entry first.
 
 ---
 
+## 2026-09-07 (live call with Mark — held)
+
+Screen-shared the 26-corpus expansion with the family-8 significance forest plot and the family-9
+cognitive-load comparison. Mark wants the plots + methodology emailed to review.
+
+### What I showed
+- **26 Stack Exchange corpora** now (up from 5), each gated for sufficient recent volume and
+  aligned time range (all end 2026Q2). Noted SE is trending *less* active over time, so I kept
+  only sites with enough posts/quarter. External sources (arXiv, Reddit) not yet in — downloading
+  + volume/timeframe vetting takes time.
+- **Family 8 forest plot** — per-site post-ChatGPT slope change in semantic pairwise cosine;
+  blue = high cognitive load, orange = low; filled marker = statistically significant.
+- **Family 9** — high vs low cognitive-load bucket means: both rise slightly, indistinguishable.
+
+### Mark's takeaways
+- Most sites show a significant upward slope-change (answers getting more alike after ChatGPT).
+- **No** high- vs low-cognitive-load difference — indistinguishable.
+
+### ⚠️ Correction for the follow-up material
+On the call I eyeballed "5 sites don't show a significant increase," so Mark concluded **21/26**
+significant. The actual count from `artifacts/8_significance_all.csv` is **18/26 significant (raw)**
+— i.e. **8 do not**: Seasoned Advice, Gardening, Board Games, Personal Finance & Money, Photography,
+Physics, Astronomy, English L&U. Under length control it's **20/26**. Use the correct numbers in the
+methodology notes. (Reminders to include: significance ≠ magnitude — effects are small ~0.001–0.003
+cosine/qtr; and the topic-composition caveat from families 6/10/11 still stands.)
+
+### Action items
+
+| # | Owner | Item | Status |
+|---|-------|------|--------|
+| 1 | Dauren | **Email Mark the plots** (to Gmail), as self-explanatory as possible | Open |
+| 2 | Dauren | **Send methodology notes** with the plots — use the correct 18/26 count | Open |
+| 3 | Dauren | **List which sources are high vs low cognitive load** (for Mark) | Open |
+| 4 | Dauren | **Try arXiv** as the next data source (high-cog scientific papers) — Mark endorsed | Next |
+| 5 | Dauren | Check if companies object to data usage for research | Pending (carried) |
+| 6 | Dauren | Review papers for data-sharing / referencing best practices | Pending (carried) |
+
+### Steer
+- Stack Exchange breadth is essentially exhausted; next is **external corpora**, starting with
+  **arXiv** (easiest high-cog after SE — they publish paper dumps). Mark reviews the emailed plots
+  + notes, then comes back with questions.
+
+---
+
+## 2026-08-29 (live call with Mark — held)
+
+*Reconstructed from memory (no transcript/recording).* Set the breadth sprint that led to the
+26-corpus expansion.
+
+### What we agreed
+- **Expand family 5 to ~20 corpora total** — **10 high** + **10 low** cognitive load — to test the
+  homogenization signal at breadth. (This drove the 20-site expansion; now **26 total**.)
+- **If time: investigate how topic drift occurs** — characterize *how* the topic mix shifts over
+  time, not just detect that it does.
+- **Explain the family-5 increase.** The topic controls (families 6/10) and the same-question
+  control (family 11) did **not** show a within-topic rise — but that alone does **not** prove the
+  aggregate rise is *caused* by topic drift; it remains a hypothesis. Dig deeper to positively
+  attribute the mechanism.
+- **Mark's emphasis (key framing):** AI may homogenize **which topics** people write about
+  (across/between topics) **without** homogenizing **style within a topic** — and that is exactly
+  our signal: aggregate/among-answer cosine rises while within-question cosine stays flat → a
+  topic-composition effect, not within-topic style convergence. This is the reading to carry forward.
+
+### Action items
+
+| # | Owner | Item | Status |
+|---|-------|------|--------|
+| 1 | Dauren | Run **family 5 on ~20 corpora** (10 high + 10 low cog) | ✅ Done (26 total, 2026-09-07) |
+| 2 | Dauren | **Significance + cognitive-load** plots across all sites (families 8/9) | ✅ Done (2026-09-07) |
+| 3 | Dauren | If time: **investigate the topic-drift mechanism** (e.g. family 13 within/between decomposition) | Open |
+| 4 | Dauren | **Explain the family-5 increase** — positively attribute (topic-composition vs other), not just infer | Open |
+
+### Steer / reading to carry forward
+"AI homogenizes topics, not within-topic style" is the working interpretation — supported by
+within-question being flat while the aggregate rises. Keep hedging: the topic-drift mechanism is a
+**hypothesis** until positively shown (family 13 is the intended tool).
+
+---
+
 ## 2026-08-26 (interim work — pre-call)
 
 Work done on our side since the Aug-20 call, ahead of the Aug-26/27 call. No client contact.

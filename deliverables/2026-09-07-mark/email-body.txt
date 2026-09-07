@@ -1,0 +1,37 @@
+Subject: Quick update on the AI "sameness" question — with charts
+
+Hey Mark,
+
+Picking up from our call. I've now run the analysis across 26 different online Q&A communities
+(~1 million answers, through mid-2026). Short version first, charts if you want to dig in.
+
+The gist: I'm still not seeing good evidence that AI made people write the same way. Answers do get
+a little more similar to each other after ChatGPT in most communities - but once I account for the fact
+that people are simply writing about different stuff now, that bump mostly disappears. So it looks like
+"what people write about" changed, not "how people write."
+
+A few things worth knowing:
+
+- Out of 26 communities, 18 show a real (statistically significant) uptick in similarity. That means
+  8 do NOT - a bit more than the ~5 I eyeballed on the call. Cooking (Seasoned Advice) actually drifts
+  slightly down.
+
+- The "high brainpower" communities (stats, law, physics...) and the "everyday" ones (cooking, travel,
+  gaming...) move basically the same. So the idea that AI flattens the easy stuff the most doesn't hold up.
+
+I attached the charts you were most interested in - the per-community similarity trends - plus a short
+notes file that explains how to read everything (and lists which communities are "high" vs "everyday").
+You don't need to read all of it; the notes point you to the two or three charts that actually matter.
+
+Happy to jump on a call and walk through it.
+
+- Dauren
+
+What's attached:
+- family5-similarity-trends\  -> one chart per community: "are answers getting more alike?"
+    (split into high- and low-cognitive-load folders)
+- family8-significance-trends\ -> the same per community, but with a before/after trend line and the
+    slope change drawn in (the statistical version; split into high/low folders too)
+- 01_significance_by_site...   -> the big summary: which communities rose, which didn't
+- 02_cognitive_load_comparison... -> high- vs low-cognitive-load, side by side
+- methodology-notes            -> plain-English "how to read the charts" + the full community list
