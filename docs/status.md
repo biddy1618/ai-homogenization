@@ -1,7 +1,8 @@
 # Project Status — AI Homogenization
 
 *Running "what's done / current state / open threads" tracker. Newest state at top.*
-*Last updated: 2026-09-07 (26-corpus deliverable emailed to Mark; arXiv is the next data source).*
+*Last updated: 2026-09-14 (3 external corpora landed — HN, PubMed, arXiv-CS; Mark opened two new
+workstreams: an academic paper and a live homogenization tracker over Google search results).*
 
 ---
 
@@ -32,6 +33,21 @@ in `artifacts/sites_manifest.csv`. **26 corpora total: 14 high-cog + 12 low-cog.
 
 ChatGPT marker: 2022Q4. All core parquets carry `parent_id` (enables family 11). `data/` is
 gitignored; committed outputs live in `artifacts/<corpus>/{data,plots}/` (+ consolidated `artifacts/*_all.csv`).
+
+**+3 external, non-SE corpora** (2026-09-13, via `external_sources.py`; families **5 + 8 only** —
+no topic control yet):
+
+| Corpus | Cog-load | Docs | Timeframe | Unit | Harvester |
+|---|---|---|---|---|---|
+| Hacker News | high | ~39k | 2016Q1–2026Q2 (42q) | comments | Algolia `search_by_date` |
+| PubMed (oncology) | high | ~34k | 2016Q1–2026Q2 (42q) | abstracts | eutils esearch/efetch |
+| arXiv (Computer Science) | high | ~64k | 2016Q1–2026Q2 (42q) | abstracts | OAI-PMH `set=cs` |
+
+All three **replicate the significant post-ChatGPT aggregate rise** and it **survives length
+control**: HN slope-change +0.00101/qtr (p=4.5e-9), PubMed +0.00080 (p=9e-4), arXiv-CS +0.00105
+(p=0.0014). **HN is the cleanest** (flat before, sharp rise after); PubMed and arXiv-CS both had a
+significant *pre-trend* (the change is an acceleration, not a clean break). ⚠️ Topic controls
+(families 6/10/11/13) are **not** run on any external → aggregate-only, same hedge as SE. Committed `d4e626f`.
 
 ## Metric families — status
 
@@ -109,27 +125,42 @@ GPT-generated-answer anchor test (item 4), then the orthogonal-metrics research.
   answers per question, measured whether human answers drift toward the AI answer over time.
   Flat in 4/5 (Economics lone rise, smallest/noisiest); does not corroborate the Philosophy #11
   exception. Most literal test of the client's question → no drift toward the AI.
-- **[NEXT — client-directed, 2026-09-07] arXiv corpus** — add arXiv (high-cog scientific papers)
-  as the first **external, non-SE** source; vet volume + time-range alignment like the SE sites.
+- **[done — 2026-09-13] External corpora (HN, PubMed, arXiv-CS)** — 3 non-SE sources landed via
+  `external_sources.py`, families 5 + 8. All replicate the significant aggregate post-ChatGPT rise
+  (survives length control); HN cleanest, PubMed/arXiv accelerate a pre-trend.
+- **[NEXT — client, 2026-09-14] Add MORE external sources** beyond the three (broaden the
+  replication; candidates from the reachability probe / prior platform research).
+- **[NEXT — client, 2026-09-14] Topic control on the externals** — run families 6/10/11 (or 13)
+  on HN/PubMed/arXiv so the within-topic vs topic-composition question is answered off-SE, before
+  the paper claims replication. (Not a Mark action item, but required to keep the honest framing.)
+- **[NEW workstream — client, 2026-09-14] Academic paper** — outline first: motivation →
+  methodology → results → criticisms (self-critical). Mark will send ideas after reviewing data.
+- **[NEW workstream — client, 2026-09-14] Homogenization tracker** — a live/open-source tool
+  measuring homogenization on key websites (daily/weekly) via **information-gain across the top
+  Google search results**, driven by randomized domain-specific queries. Two sub-tasks: (a)
+  brainstorm the tracker implementation; (b) propose how to compute the homogenization metric over
+  Google top results.
 - **[NEXT] Orthogonal-metrics research (the 4 points)** — predictability (distilgpt2-ONNX /
   n-gram perplexity), compression ratio, n-gram diversity, Vendi Score; for convergent validity.
   See `docs/research/homogenization-metrics-literature.md`.
-- **Deferred:** ≥5 external non-SE corpora (Reddit/arXiv/HN — arXiv is the client-directed next);
-  extend family 13 decomposition from the core 5 to all 26; P2b tenure (needs `OwnerUserId`
-  parsing); per-tag trends (needs `Tags` parsing); reduce HDBSCAN outliers; second encoder; probe
-  the Philosophy within-question exception.
+- **Deferred:** extend family 13 decomposition from the core 5 to all 26; P2b tenure (needs
+  `OwnerUserId` parsing); per-tag trends (needs `Tags` parsing); reduce HDBSCAN outliers; second
+  encoder; probe the Philosophy within-question exception.
 
 ## Pending action items (from meetings.md)
 
-*From the 2026-09-07 call:*
-- **[done — 2026-09-07] Email Mark the plots** (Gmail) — sent a zipped bundle: 26 family-5
-  similarity-trend plots + 26 family-8 per-site slope plots (high/low folders), significance
-  forest, cognitive-load comparison.
-- **[done — 2026-09-07] Send methodology notes** — plain-English notes with the correct **18/26
-  significant (raw)** count (20/26 length-controlled), how-to-read guidance, and the affirmative
-  "ChatGPT may be driving topic-level homogenization" framing.
-- **[done — 2026-09-07] List high- vs low-cognitive-load sources** — included in the notes.
-- **[NEXT — tentatively Fri] Try arXiv** as the next (external) data source.
+*From the 2026-09-14 call:*
+- **[open] Email the external results** (HN + PubMed + arXiv-CS) to Mark for review.
+- **[open] Add more external data sources** beyond the current three.
+- **[open] Develop a paper outline** — motivation, methodology, results, criticisms.
+- **[open] Brainstorm the homogenization-tracker implementation** for key websites.
+- **[open] Propose how to compute homogenization metrics across Google top search results.**
+- **[open — Mark] Mark reviews the data + sends ideas** for paper development.
+
+*From the 2026-09-07 call (all done):*
+- **[done] Emailed Mark the 26-corpus plots + methodology notes** (correct 18/26 raw / 20/26 LC).
+- **[done] Listed high- vs low-cognitive-load sources** in the notes.
+- **[done — 2026-09-13] Tried arXiv** — landed via OAI-PMH (plus HN + PubMed).
 
 *Carried:*
 - Check whether companies object to data usage for research.

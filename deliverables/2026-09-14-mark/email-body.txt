@@ -1,0 +1,33 @@
+Subject: AI "sameness" — it holds up outside Stack Exchange (arXiv, PubMed, Hacker News)
+
+Hey Mark,
+
+Quick follow-up from this morning. I took the same method we used on the Stack Exchange
+communities and ran it on three totally different platforms: arXiv (CS papers), PubMed (cancer
+abstracts), and Hacker News (tech-forum comments).
+
+The gist: the ChatGPT-era rise in "sameness" shows up on all three. After ChatGPT (late 2022),
+answers/abstracts became measurably more similar to each other, and it holds up even after we
+control for answers just getting longer.
+
+A few notes:
+
+- Hacker News is the cleanest - flat for years, then a clear turn upward right after ChatGPT.
+- arXiv and PubMed were already slowly converging beforehand, and ChatGPT looks like it sped that
+  up rather than starting it (so read those two as "acceleration," not a clean break).
+- Same honest caveat as before: this is the overall/aggregate rise. I haven't yet re-run the
+  "topic" control on these three, so I can't yet say whether it's people writing in the same
+  *style* vs. writing about the same *topics*. That's the next step.
+
+Attached: two charts per source (a similarity trend and a before/after slope version), plus a
+one-page highlights file that explains how to read them.
+
+Happy to walk through it whenever.
+
+- Dauren
+
+What's attached:
+- hacker-news\            -> similarity-trend.png + slope-break.png
+- pubmed-oncology\        -> similarity-trend.png + slope-break.png
+- arxiv-computer-science\ -> similarity-trend.png + slope-break.png
+- highlights.md           -> one-page "what it shows + how to read the charts"

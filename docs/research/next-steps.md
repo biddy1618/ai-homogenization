@@ -181,10 +181,41 @@ within-topic style, group by tags/categories, add a natural-prose corpus).*
 cognitive-load compare (family 9, 5 corpora) · topic controls families 10/11 (**same-question**
 gold standard) → aggregate rise is **topic-composition** in 4/5 corpora.
 
-**Next, in order:**
-1. **P4 — GPT-generated-answer anchor test** (drift toward real AI output) + second encoder.
-   Needs an API key / model choice; confirm design with the client first.
-2. **Orthogonal-metrics pass** (the 4 points: predictability/perplexity, compression, n-gram
+**Done (2026-09-13):** first **external, non-SE** corpora — Hacker News, PubMed (oncology),
+arXiv (CS), families 5 + 8. All three replicate the significant aggregate post-ChatGPT rise
+(survives length control); HN cleanest, PubMed/arXiv accelerate a pre-trend. Topic control not
+yet run off-SE.
+
+**Next, in order (post 2026-09-14 call with Mark):**
+1. **Email the external results to Mark** for review (item 1).
+2. **Topic control on the externals** — run families 6/10/11 (or 13) on HN/PubMed/arXiv so the
+   within-topic vs topic-composition question is answered off Stack Exchange *before* the paper
+   claims replication. (Keeps the honest hedge; not a Mark item but a prerequisite.)
+3. **Add more external data sources** beyond the three (item 2) — broaden replication.
+4. **Paper outline** (item 3) — motivation → methodology → results → criticisms; Mark sends ideas.
+5. **Homogenization tracker** (items 4–5) — brainstorm a live/open-source tool measuring
+   homogenization on key websites (daily/weekly) via **information-gain across the top Google
+   search results**, using randomized domain-specific queries; and propose how to compute the
+   metric over Google top results. See the new "Homogenization tracker" note below.
+6. **Orthogonal-metrics pass** (the 4 points: predictability/perplexity, compression, n-gram
    diversity, Vendi) for convergent validity — see `homogenization-metrics-literature.md`.
-3. **Leftovers:** probe the Philosophy within-question exception; P2b tenure + real `Tags`
-   parsing; reduce HDBSCAN outliers.
+7. **Leftovers:** probe the Philosophy within-question exception; P2b tenure + real `Tags`
+   parsing; reduce HDBSCAN outliers; second encoder.
+
+---
+
+## Homogenization tracker (new, 2026-09-14 — Mark)
+A live/ongoing tool that measures homogenization on **key websites** over time, ideally
+**open source** so trends are publicly verifiable.
+- **Signal:** **information-gain score across the top search results** for a query — how much
+  *new* information each successive result adds vs how much it repeats the others. Low marginal
+  information gain = homogeneous. (Pairs naturally with our pairwise-cosine / Vendi machinery.)
+- **Sampling:** **randomized, domain-specific queries**, sampled **daily or weekly** depending
+  on workload, to build a time series per domain.
+- **Source:** **Google top search results** as the primary measurement surface (rationale: search
+  favours optimized/keyword-rich, often AI-generated content; Google increasingly synthesizes
+  sources into one standard answer — both plausibly diversity-reducing).
+- **Open questions to resolve:** how to fetch Google results reliably/legally (SerpAPI vs direct
+  scraping vs Programmable Search); which "information gain" estimator (embedding-based marginal
+  novelty, Vendi over the result set, n-gram overlap, or perplexity/compression); query-set design
+  per domain; storage + a public dashboard.

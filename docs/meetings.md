@@ -4,6 +4,57 @@ Running log of client meetings, newest entry first.
 
 ---
 
+## 2026-09-14 (live call with Mark — held, 07:00)
+
+Status update on the three external (non-Stack-Exchange) sources.
+Recording/notes: <https://tldv.io/app/meetings/6aa755071fda0f00134fc840>
+
+### What I showed / findings
+- **Homogenization signal replicates across all three external platforms** — PubMed cancer
+  abstracts, arXiv Computer Science, and Hacker News comments — matching the Stack Exchange
+  pattern. Abstract similarity **accelerates significantly after the ChatGPT launch**.
+- Analysis is on the **abstract portion only** (not full papers) for PubMed/arXiv; HN uses
+  comment text.
+- Both **scientific terminology and stylistic patterns** trend the same way.
+- Consistent with the 26 SE corpora shown on 2026-09-07.
+
+### New direction — two workstreams opened
+1. **Academic paper.** Mark wants a paper drafted covering **motivation → methodology → results
+   → criticisms (self-critical analysis)**. Mark will review the data and send ideas for the paper.
+2. **Homogenization tracker (new product idea).** A live/ongoing tool that measures homogenization
+   on **key websites**, likely **daily or weekly** depending on workload:
+   - Measure via **information-gain scores across the top search results** for a query.
+   - Use **randomized, domain-specific queries** to sample homogenization over time.
+   - **Google top search results** proposed as the primary measurement source.
+   - Ideally **open source** so the trend is publicly verifiable.
+   - Context for *why Google*: search favours optimized/keyword-rich (often AI-generated)
+     content, crowding out original human perspectives, and Google increasingly synthesizes
+     sources into one standard answer — all plausibly diversity-reducing.
+
+### Action items
+
+| # | Owner | Item | Status |
+|---|-------|------|--------|
+| 1 | Dauren | **Email the homogenization results** (3 externals) to Mark for review | Open |
+| 2 | Dauren | **Add more external data sources** beyond the current three (HN/PubMed/arXiv) | Open |
+| 3 | Dauren | **Develop a paper outline** — motivation, methodology, results, criticisms | Open |
+| 4 | Dauren | **Brainstorm the homogenization-tracker implementation** for key websites | Open |
+| 5 | Dauren | **Propose solutions for computing homogenization metrics across Google search results** | Open |
+| 6 | Mark | **Review the data + send Dauren ideas** for paper development | Open (Mark) |
+
+### Side discussion (context, not action)
+AI safety/goals (models lack goals unless given; guardrails limit dangerous behaviour; an
+internet-connected agent *could* attempt attacks if tasked), benchmark chatter (Chinese models
+reportedly leading recent benchmarks), and the AI-investment-bubble risk. No deliverable.
+
+### Note to self
+The three externals ran **families 5 + 8 only** (aggregate similarity + ITS significance). **No
+topic control** (families 6/10/11/13) has been run off Stack Exchange yet — so when emailing
+results (item 1), keep the same honest hedge: this is the *aggregate* rise; the within-topic /
+topic-composition question is still untested on the externals.
+
+---
+
 ## 2026-09-07 (live call with Mark — held)
 
 Screen-shared the 26-corpus expansion with the family-8 significance forest plot and the family-9
