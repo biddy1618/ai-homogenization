@@ -187,16 +187,13 @@ arXiv (CS), families 5 + 8. All three replicate the significant aggregate post-C
 yet run off-SE.
 
 **Next, in order (post 2026-09-14 call with Mark):**
-1. **Email the external results to Mark** for review (item 1).
+1. **Email the external results to Mark** for review (item 1) — done via `deliverables/2026-09-14-mark`.
 2. **Topic control on the externals** — run families 6/10/11 (or 13) on HN/PubMed/arXiv so the
    within-topic vs topic-composition question is answered off Stack Exchange *before* the paper
    claims replication. (Keeps the honest hedge; not a Mark item but a prerequisite.)
-3. **Add more external data sources** beyond the three (item 2) — broaden replication.
-4. **Paper outline** (item 3) — motivation → methodology → results → criticisms; Mark sends ideas.
-5. **Homogenization tracker** (items 4–5) — brainstorm a live/open-source tool measuring
-   homogenization on key websites (daily/weekly) via **information-gain across the top Google
-   search results**, using randomized domain-specific queries; and propose how to compute the
-   metric over Google top results. See the new "Homogenization tracker" note below.
+3. **Add more external data sources** beyond the three (item 2) — see **Workstream A** below.
+4. **Paper** (item 3) — motivation → methodology → results → criticisms — see **Workstream B** below.
+5. **Homogenization tracker** (items 4–5) — Google-search info-gain tool — see **Workstream C** below.
 6. **Orthogonal-metrics pass** (the 4 points: predictability/perplexity, compression, n-gram
    diversity, Vendi) for convergent validity — see `homogenization-metrics-literature.md`.
 7. **Leftovers:** probe the Philosophy within-question exception; P2b tenure + real `Tags`
@@ -204,18 +201,139 @@ yet run off-SE.
 
 ---
 
-## Homogenization tracker (new, 2026-09-14 — Mark)
-A live/ongoing tool that measures homogenization on **key websites** over time, ideally
-**open source** so trends are publicly verifiable.
-- **Signal:** **information-gain score across the top search results** for a query — how much
-  *new* information each successive result adds vs how much it repeats the others. Low marginal
-  information gain = homogeneous. (Pairs naturally with our pairwise-cosine / Vendi machinery.)
-- **Sampling:** **randomized, domain-specific queries**, sampled **daily or weekly** depending
-  on workload, to build a time series per domain.
-- **Source:** **Google top search results** as the primary measurement surface (rationale: search
-  favours optimized/keyword-rich, often AI-generated content; Google increasingly synthesizes
-  sources into one standard answer — both plausibly diversity-reducing).
-- **Open questions to resolve:** how to fetch Google results reliably/legally (SerpAPI vs direct
-  scraping vs Programmable Search); which "information gain" estimator (embedding-based marginal
-  novelty, Vendi over the result set, n-gram overlap, or perplexity/compression); query-set design
-  per domain; storage + a public dashboard.
+## Workstream A — More external data sources (2026-09-14 — Mark)
+
+**Goal:** broaden the replication beyond the current three (Hacker News, PubMed-oncology,
+arXiv-CS) so the paper rests on a diverse, cross-domain base rather than three tech/science
+platforms. Same pipeline throughout: harvest → drop-in `answers.parquet` schema (`id`,
+`creation_date`, `quarter`, `score`, `text`, `token_count`, `parent_id`) → family 5 + 8, then the
+topic control. Vet per-quarter volume + coverage-to-2026Q2 **before** any bulk pull (standing rule).
+
+### Reachability (from the 2026-09-13 probe — recheck before use)
+- **Reachable now:** arXiv (API + OAI-PMH), Hacker News (Algolia + Firebase), PubMed eutils,
+  archive.org, Kaggle homepage (dataset *download* still needs a token).
+- **Blocked:** Reddit JSON (403 — needs a registered OAuth app), Hugging Face (403).
+
+### Tier 1 — trivial (reuse an existing harvester, ~an hour each)
+- **More arXiv fields** via the same OAI-PMH `set=`: **math**, **q-bio**, **physics**, **econ**,
+  **stat**. Crucial value: these are **less LLM-confounded than CS**, so they test whether the
+  arXiv rise is "papers *about* AI" vs a general writing effect. A low-AI field (e.g. math) that
+  *still* rises would be strong evidence; one that stays flat would localize the CS signal.
+- **More PubMed branches** via the same eutils `term=`: **cardiology**, **neurology**, a
+  **general-medicine** slice, or an all-fields sample. Tests whether the oncology pre-trend
+  (structured-abstract standardization) generalizes or is field-specific.
+
+### Tier 2 — new ingest, high value (a day or so each)
+- **Legal opinions — CourtListener API** (`courtlistener.com/api/rest`). High-cog, dated, runs to
+  present, and **directly relevant to Mark** (judicial writing). Good homogenization candidate
+  (citation/boilerplate conventions). Check auth + rate limits.
+- **SEC filings — EDGAR** (`sec.gov` full-text + submissions API). 10-K **risk-factor** sections
+  are famously templated/boilerplate → a strong homogenization signal, dated, free, no auth.
+  Corporate-prose counterpoint to academic/forum text.
+- **Wikipedia** — talk-page comments or article revision diffs (dumps + API). Collaborative prose,
+  huge, dated; a different register again.
+- **GitHub** — commit messages or PR/issue text via the API (auth'd). Developer prose, dated;
+  a fourth register, though noisy.
+
+### Tier 3 — blocked / awkward (only if specifically wanted)
+- **Reddit** — richest low-cog prose but needs an OAuth app (live JSON is 403); alternative is an
+  archive.org / academic-torrent Pushshift dump (older vintage, may not reach 2026Q2).
+- **Product/review datasets** (Amazon/Yelp/Goodreads) — mostly **stop ~2023**, so they can't reach
+  2026Q2 and can't show the post-ChatGPT tail; excluded for now.
+
+**Suggested pick for the next batch:** 1 less-confounded arXiv field (**math** or **q-bio**) +
+**SEC EDGAR risk factors** + **CourtListener** — gives a low-AI science control, a corporate-
+boilerplate case, and a legal case Mark will care about, all with clean dated coverage to 2026Q2.
+
+---
+
+## Workstream B — The paper (2026-09-14 — Mark)
+
+**Goal:** a self-contained paper: **motivation → methodology → results → criticisms**. Mark will
+review the data and send framing ideas; the outline should be ready for him to react to. Most
+figures already exist — the paper is mostly assembly + honest narrative, not new computation.
+
+### Working title
+*"Did generative AI homogenize online writing? A multi-corpus, topic-controlled analysis
+(2009–2026)."*
+
+### Proposed section outline
+1. **Motivation / introduction.** The public worry ("everything sounds like ChatGPT"); why it
+   matters (epistemic diversity, search, legal/scientific record); the behavioural-economics prior
+   from the README (more options → default to the existing; weaker preferences → status-quo bias).
+   State the precise question: *aggregate* similarity vs *within-topic* style vs *topic composition*.
+2. **Data.** The 26 Stack Exchange communities + the external sources (HN, PubMed, arXiv, and the
+   Workstream-A additions). Table of size/timespan/cog-load/register. Public, dated, to 2026Q2.
+3. **Methodology.** The metric families as a layered design: surface/lexical (length artifact) →
+   LSA → contextual embeddings (Sentence-BERT) → **length control** (first-100-token) → **topic
+   controls** (BERTopic within-topic 6, MK-post 10, **same-question** 11, decomposition 13) →
+   **significance** (ITS/segmented regression + Mann-Kendall + bootstrap, family 8) → the **GPT
+   anchor** test (family 12). Emphasize *what each control rules out.*
+4. **Results.** (a) The surface rise is a **length artifact**. (b) A small **contextual-embedding**
+   rise is real and significant in most corpora (18/26 SE + all 3 externals), survives length
+   control. (c) But it is **largely topic-composition**: within-topic / same-question similarity is
+   flat once topic is held constant (SE); topic diversity shrinks + mix drifts (family 13). (d) The
+   **anchor test** finds no drift toward actual AI output in 4/5. (e) Cognitive load doesn't split it.
+5. **Criticisms / limitations (self-critical).** Anisotropy/hubness inflating cosines;
+   significance ≠ magnitude (huge-N tight CIs); timing ≠ causation (~1yr lag, no clean 2022Q4 step
+   in several); pre-trends (PubMed/arXiv were already converging); topic control **not yet run on
+   the externals**; single encoder; ~50% HDBSCAN outliers in family 6; SE's atypical structured
+   style; the Philosophy (within-Q) and Economics (anchor) lone exceptions.
+6. **Conclusion.** Honest headline: *no broad style homogenization; a real but modest, largely
+   topical convergence — worth monitoring (motivates the tracker), not a settled finding.*
+
+### To decide with Mark
+- **Audience/venue:** academic (e.g. a CS/computational-social-science workshop or arXiv preprint)
+  vs a **law-review / policy** angle vs a general-audience essay. Changes tone + which caveats lead.
+- **Framing tension:** Mark leans to the affirmative "AI may drive real topic-level homogenization";
+  the data supports *topic-level*, not *style*. The paper must hold both without overclaiming.
+- **Scope:** SE-only + externals as robustness, or externals as a co-equal contribution.
+
+### Immediate next action
+Draft the **outline as a doc** (`docs/research/paper-outline.md`) with the section skeleton +
+which existing figure/CSV backs each claim, for Mark to mark up. (Create on request.)
+
+---
+
+## Workstream C — Homogenization tracker over Google search (2026-09-14 — Mark)
+
+A live/ongoing, ideally **open-source** tool that measures homogenization on **key websites** over
+time so trends are publicly verifiable — the forward-looking companion to the retrospective study.
+
+### Core idea
+For a given query, pull the **top N Google results**, and score how much the set **repeats itself**
+vs adds new information. Low marginal information gain across results = homogeneous. Track per
+domain over time (daily/weekly) to get a homogenization time series with a clear "since when."
+
+### Metric options (evaluate 2–3 for convergent validity, reuse our machinery)
+- **Embedding redundancy:** mean pairwise cosine of the N result texts (our family-5 metric).
+- **Marginal novelty / information gain:** rank results, measure how much each *new* result adds
+  beyond those above it (embedding distance to the running set, or KL/entropy of new n-grams).
+- **Vendi Score:** effective number of "distinct" results = exp(Shannon entropy of the similarity
+  matrix eigenvalues) — one clean diversity number per query (see the metrics-literature doc).
+- **Compression ratio / n-gram overlap:** cheap, model-free baselines.
+
+### Data-fetch options (the hard/legal part — decide first)
+- **SerpAPI / Serper.dev / Zenserp** (paid, ToS-clean, reliable) — fastest MVP.
+- **Google Programmable Search / Custom Search JSON API** (official, quota-limited, not identical
+  to organic top results).
+- **Direct scraping** — brittle + against Google ToS; avoid for an open, reputable tool.
+- Consider also measuring **Google's AI Overview / synthesized answer** vs the organic results
+  (Mark's point that Google increasingly collapses sources into one answer).
+
+### Query design
+Curated **randomized, domain-specific query sets** per vertical (e.g. health, finance, legal,
+cooking, travel) so the signal is comparable to our cog-load buckets; rotate queries to avoid
+personalization/caching bias; log locale + timestamp.
+
+### MVP → v1
+1. **MVP:** 1 provider (SerpAPI), ~50 queries across 3 domains, fetch top-10, compute pairwise
+   cosine + Vendi, store JSONL, one matplotlib time-series. Prove the signal moves.
+2. **v1:** scheduled runs (cron/GitHub Actions), a small DB, a public dashboard + open-source repo
+   so anyone can reproduce; add the AI-Overview-vs-organic comparison.
+
+### Open questions to resolve with Mark
+Provider + budget; legality/ToS stance for an open tool; which metric(s) to headline; domain +
+query list; cadence vs cost; hosting for the public dashboard; how to separate "results are
+similar because the *topic* is narrow" from "results are similar because content *homogenized*"
+(the same topic-vs-style caveat as the main study — bake the control in from day one).

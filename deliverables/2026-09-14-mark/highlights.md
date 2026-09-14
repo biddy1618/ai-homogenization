@@ -59,8 +59,15 @@ Each folder (`hacker-news`, `pubmed-oncology`, `arxiv-computer-science`) has two
 
 ## What's next
 
-- Run the **topic control** on these three sources (so we can say whether it's style or subject
-  matter, like we did for Stack Exchange).
-- **Add more external sources** to broaden the picture.
-- Start the **paper outline** (motivation → methodology → results → criticisms) once you send
-  your ideas.
+- **Topic control on these three sources** — re-run the "is it style or subject matter?" check
+  (like we did for Stack Exchange) so we can say whether it's people writing in the same *style*
+  or just about the same *topics*.
+- **A few more external sources** — to broaden the picture beyond tech/science. Good candidates:
+  a less "AI-heavy" arXiv field (e.g. math) as a control, plus **legal opinions** (CourtListener)
+  and **SEC company filings** (10-K risk sections are famously boilerplate).
+- **The paper** — I'll draft an outline (motivation → methodology → results → criticisms) for you
+  to react to; send over any framing ideas whenever.
+- **The Google tracker** — start scoping the live/open-source tool that measures homogenization
+  across top Google search results (info-gain across the top results, randomized queries per topic).
+
+*Plan: pin these down over the weekend and start executing next week.*
