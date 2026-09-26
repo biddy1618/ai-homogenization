@@ -1,0 +1,19 @@
+date,category,query,n_results,mean_pairwise_cosine,vendi,distinct_ratio,mean_marginal_novelty
+2026-09-26,medical,what are the symptoms of iron deficiency,9,0.707092,2.9625,0.3292,0.23073
+2026-09-26,medical,how to lower blood pressure naturally,8,0.293354,6.03,0.7538,0.582054
+2026-09-26,medical,is intermittent fasting healthy,8,0.694027,2.8872,0.3609,0.259719
+2026-09-26,legal,how to form an llc,8,0.62652,3.4529,0.4316,0.297215
+2026-09-26,legal,what is a power of attorney,7,0.531959,3.8199,0.5457,0.36584
+2026-09-26,legal,tenant rights eviction notice,7,0.60713,3.3142,0.4735,0.322375
+2026-09-26,howto,how to unclog a drain,6,0.599036,3.1154,0.5192,0.333437
+2026-09-26,howto,how to write a cover letter,8,0.611494,3.4879,0.436,0.343348
+2026-09-26,howto,how to improve credit score,7,0.691967,2.7565,0.3938,0.26029
+2026-09-26,product,best wireless earbuds,7,0.638984,3.1929,0.4561,0.314173
+2026-09-26,product,best budget laptop,8,0.596604,3.7487,0.4686,0.357397
+2026-09-26,product,best robot vacuum,8,0.676251,3.0256,0.3782,0.244325
+2026-09-26,finance,how to start investing,8,0.25176,6.3501,0.7938,0.628604
+2026-09-26,finance,roth ira vs traditional ira,6,0.614106,2.9097,0.4849,0.296606
+2026-09-26,finance,how does refinancing a mortgage work,8,0.593937,3.3976,0.4247,0.300785
+2026-09-26,tech,what is retrieval augmented generation,7,0.819067,1.9538,0.2791,0.113178
+2026-09-26,tech,how to speed up a slow computer,8,0.589421,3.7526,0.4691,0.354107
+2026-09-26,news,is ai going to replace jobs,7,0.717505,2.6132,0.3733,0.228068

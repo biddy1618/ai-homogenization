@@ -1,0 +1,2 @@
+date,category,query,n_results,mean_pairwise_cosine,vendi,distinct_ratio,mean_marginal_novelty
+2026-09-26,medical,what are the symptoms of iron deficiency,9,0.707092,2.9625,0.3292,0.23073

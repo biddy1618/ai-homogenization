@@ -1,0 +1,2 @@
+date,category,query,n_results,mean_pairwise_cosine,vendi,distinct_ratio,mean_marginal_novelty
+2026-09-26,finance,how does refinancing a mortgage work,8,0.593937,3.3976,0.4247,0.300785

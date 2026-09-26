@@ -1,0 +1,2 @@
+date,category,query,n_results,mean_pairwise_cosine,vendi,distinct_ratio,mean_marginal_novelty
+2026-09-26,news,is ai going to replace jobs,7,0.717505,2.6132,0.3733,0.228068

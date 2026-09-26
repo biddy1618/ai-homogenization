@@ -1,0 +1,2 @@
+date,category,query,n_results,mean_pairwise_cosine,vendi,distinct_ratio,mean_marginal_novelty
+2026-09-26,medical,is intermittent fasting healthy,8,0.694027,2.8872,0.3609,0.259719

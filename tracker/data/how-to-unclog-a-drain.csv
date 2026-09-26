@@ -1,0 +1,2 @@
+date,category,query,n_results,mean_pairwise_cosine,vendi,distinct_ratio,mean_marginal_novelty
+2026-09-26,howto,how to unclog a drain,6,0.599036,3.1154,0.5192,0.333437

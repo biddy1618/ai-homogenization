@@ -1,0 +1,2 @@
+date,category,query,n_results,mean_pairwise_cosine,vendi,distinct_ratio,mean_marginal_novelty
+2026-09-26,legal,how to form an llc,8,0.62652,3.4529,0.4316,0.297215
