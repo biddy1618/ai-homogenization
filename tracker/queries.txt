@@ -1,0 +1,30 @@
+# Homogenization tracker — query panel (MVP seed set)
+#
+# Format:   category | query text        (lines starting with # are ignored)
+# Keep this panel FROZEN once tracking starts, so the time series stays comparable.
+# ~18 queries x weekly ≈ 78 searches/month — well within the SerpAPI free tier (250/mo).
+
+medical | what are the symptoms of iron deficiency
+medical | how to lower blood pressure naturally
+medical | is intermittent fasting healthy
+
+legal | how to form an llc
+legal | what is a power of attorney
+legal | tenant rights eviction notice
+
+howto | how to unclog a drain
+howto | how to write a cover letter
+howto | how to improve credit score
+
+product | best wireless earbuds
+product | best budget laptop
+product | best robot vacuum
+
+finance | how to start investing
+finance | roth ira vs traditional ira
+finance | how does refinancing a mortgage work
+
+tech | what is retrieval augmented generation
+tech | how to speed up a slow computer
+
+news | is ai going to replace jobs
