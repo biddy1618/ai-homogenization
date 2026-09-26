@@ -1,0 +1,2 @@
+date,category,query,n_results,mean_pairwise_cosine,vendi,distinct_ratio,mean_marginal_novelty
+2026-09-26,health_fitness,best exercises for lower back pain,7,0.678778,2.8731,0.4104,0.279004

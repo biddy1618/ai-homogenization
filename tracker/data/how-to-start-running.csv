@@ -1,0 +1,2 @@
+date,category,query,n_results,mean_pairwise_cosine,vendi,distinct_ratio,mean_marginal_novelty
+2026-09-26,health_fitness,how to start running,8,0.563716,3.9334,0.4917,0.383083

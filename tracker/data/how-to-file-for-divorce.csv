@@ -1,0 +1,2 @@
+date,category,query,n_results,mean_pairwise_cosine,vendi,distinct_ratio,mean_marginal_novelty
+2026-09-26,legal,how to file for divorce,9,0.59773,3.8765,0.4307,0.356958

@@ -1,0 +1,2 @@
+date,category,query,n_results,mean_pairwise_cosine,vendi,distinct_ratio,mean_marginal_novelty
+2026-09-26,health_fitness,how to lose belly fat,7,0.611671,3.2873,0.4696,0.304267

@@ -17,3 +17,30 @@ date,category,query,n_results,mean_pairwise_cosine,vendi,distinct_ratio,mean_mar
 2026-09-26,tech,what is retrieval augmented generation,7,0.819067,1.9538,0.2791,0.113178
 2026-09-26,tech,how to speed up a slow computer,8,0.589421,3.7526,0.4691,0.354107
 2026-09-26,news,is ai going to replace jobs,7,0.717505,2.6132,0.3733,0.228068
+2026-09-26,medical,what causes migraines,8,0.602138,3.3308,0.4164,0.275772
+2026-09-26,legal,how to file for divorce,9,0.59773,3.8765,0.4307,0.356958
+2026-09-26,howto,how to tie a tie,6,0.658792,2.7534,0.4589,0.281052
+2026-09-26,product,best running shoes,7,0.562618,3.7099,0.53,0.378672
+2026-09-26,finance,how to build an emergency fund,8,0.589139,3.7416,0.4677,0.342794
+2026-09-26,tech,what is a vpn,8,0.829027,1.9618,0.2452,0.121129
+2026-09-26,tech,what is two factor authentication,8,0.831529,1.9324,0.2416,0.131833
+2026-09-26,health_fitness,how to lose belly fat,7,0.611671,3.2873,0.4696,0.304267
+2026-09-26,health_fitness,how much water should i drink a day,9,0.477466,4.7027,0.5225,0.38487
+2026-09-26,health_fitness,best exercises for lower back pain,7,0.678778,2.8731,0.4104,0.279004
+2026-09-26,health_fitness,how to start running,8,0.563716,3.9334,0.4917,0.383083
+2026-09-26,food_cooking,how to cook rice,4,0.505785,2.8052,0.7013,0.415673
+2026-09-26,food_cooking,easy chicken dinner recipes,6,0.656689,2.7699,0.4616,0.28562
+2026-09-26,food_cooking,how to make pizza dough,7,0.63899,3.1624,0.4518,0.315421
+2026-09-26,food_cooking,how long to boil an egg,6,0.570744,3.3611,0.5602,0.384766
+2026-09-26,travel,best time to visit japan,7,0.761847,2.2551,0.3222,0.157229
+2026-09-26,travel,how to pack for a long flight,8,0.453702,4.8243,0.603,0.454174
+2026-09-26,travel,is travel insurance worth it,8,0.718697,2.6623,0.3328,0.234563
+2026-09-26,home_garden,how to get rid of ants,6,0.68343,2.6198,0.4366,0.270312
+2026-09-26,home_garden,how often to water succulents,5,0.680601,2.4882,0.4976,0.300591
+2026-09-26,home_garden,how to clean a washing machine,7,0.658674,2.9588,0.4227,0.294721
+2026-09-26,home_garden,how to grow tomatoes,7,0.534482,3.8266,0.5467,0.346221
+2026-09-26,science,how do vaccines work,8,0.711549,2.7886,0.3486,0.246341
+2026-09-26,science,what causes climate change,9,0.716586,2.8792,0.3199,0.228186
+2026-09-26,science,how far away is the moon,8,0.378629,5.5473,0.6934,0.516191
+2026-09-26,news,are electric cars better for the environment,9,0.639102,3.552,0.3947,0.29542
+2026-09-26,news,how does inflation affect the economy,8,0.10353,7.3013,0.9127,0.745025

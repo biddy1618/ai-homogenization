@@ -1,0 +1,2 @@
+date,category,query,n_results,mean_pairwise_cosine,vendi,distinct_ratio,mean_marginal_novelty
+2026-09-26,travel,best time to visit japan,7,0.761847,2.2551,0.3222,0.157229

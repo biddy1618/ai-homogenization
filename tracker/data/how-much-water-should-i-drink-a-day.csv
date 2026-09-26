@@ -1,0 +1,2 @@
+date,category,query,n_results,mean_pairwise_cosine,vendi,distinct_ratio,mean_marginal_novelty
+2026-09-26,health_fitness,how much water should i drink a day,9,0.477466,4.7027,0.5225,0.38487

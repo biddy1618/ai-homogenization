@@ -1,0 +1,2 @@
+date,category,query,n_results,mean_pairwise_cosine,vendi,distinct_ratio,mean_marginal_novelty
+2026-09-26,food_cooking,how to cook rice,4,0.505785,2.8052,0.7013,0.415673
