@@ -1,7 +1,10 @@
 # Project Status — AI Homogenization
 
 *Running "what's done / current state / open threads" tracker. Newest state at top.*
-*Last updated: 2026-09-14 (3 external corpora landed — HN, PubMed, arXiv-CS; Mark opened two new
+*Last updated: 2026-09-26 (topic control now run on all 3 externals — within-topic **flat** under
+BERTopic, matching SE; paper DRAFT v0.1 written; live tracker built and running weekly on GitHub
+Actions, first 45-query snapshot committed).*
+*Prev: 2026-09-14 (3 external corpora landed — HN, PubMed, arXiv-CS; Mark opened two new
 workstreams: an academic paper and a live homogenization tracker over Google search results).*
 
 ---
@@ -46,8 +49,10 @@ no topic control yet):
 All three **replicate the significant post-ChatGPT aggregate rise** and it **survives length
 control**: HN slope-change +0.00101/qtr (p=4.5e-9), PubMed +0.00080 (p=9e-4), arXiv-CS +0.00105
 (p=0.0014). **HN is the cleanest** (flat before, sharp rise after); PubMed and arXiv-CS both had a
-significant *pre-trend* (the change is an acceleration, not a clean break). ⚠️ Topic controls
-(families 6/10/11/13) are **not** run on any external → aggregate-only, same hedge as SE. Committed `d4e626f`.
+significant *pre-trend* (the change is an acceleration, not a clean break). ✅ **Topic control now
+run on all 3 externals (2026-09-26)** — families 6 (BERTopic) + 13 (decomposition): within-topic is
+**flat** under BERTopic in all three (HN's K-means within-topic bump did **not** survive BERTopic), so
+the rise is **topic-composition**, matching SE. Committed `d4e626f` (harvest) + `23b7a8d` (topic control).
 
 ## Metric families — status
 
@@ -96,6 +101,9 @@ significant *pre-trend* (the change is an acceleration, not a clean break). ⚠�
 
 **Current (main tree):**
 - `docs/status.md` — this running status tracker.
+- `docs/research/project-briefing.md` — **whole-project anchor** (what/why/findings/paper/tracker + glossary + Q&A bank); read-cold reference.
+- `docs/research/paper-draft.md` — **paper draft v0.1** (motivation → data → methodology → results → real-world consequences → criticisms → conclusion).
+- `docs/research/tracker-plan.md` — **live tracker** implementation, roadmap, sustainability + Mark handover checklist.
 - `docs/research/critical-review.md` — self-critique of the findings (updated with the within-topic result).
 - `docs/research/next-steps.md` — forward roadmap (P1–P5).
 - `docs/research/oral-briefing.md` — voice-assistant practice script (pitch, Q&A bank, glossary).
@@ -130,16 +138,17 @@ GPT-generated-answer anchor test (item 4), then the orthogonal-metrics research.
   (survives length control); HN cleanest, PubMed/arXiv accelerate a pre-trend.
 - **[NEXT — client, 2026-09-14] Add MORE external sources** beyond the three (broaden the
   replication; candidates from the reachability probe / prior platform research).
-- **[NEXT — client, 2026-09-14] Topic control on the externals** — run families 6/10/11 (or 13)
-  on HN/PubMed/arXiv so the within-topic vs topic-composition question is answered off-SE, before
-  the paper claims replication. (Not a Mark action item, but required to keep the honest framing.)
-- **[NEW workstream — client, 2026-09-14] Academic paper** — outline first: motivation →
-  methodology → results → criticisms (self-critical). Mark will send ideas after reviewing data.
-- **[NEW workstream — client, 2026-09-14] Homogenization tracker** — a live/open-source tool
-  measuring homogenization on key websites (daily/weekly) via **information-gain across the top
-  Google search results**, driven by randomized domain-specific queries. Two sub-tasks: (a)
-  brainstorm the tracker implementation; (b) propose how to compute the homogenization metric over
-  Google top results.
+- **[done — 2026-09-26] Topic control on the externals** — families 6 (BERTopic) + 13
+  (decomposition) run on HN/PubMed/arXiv. Within-topic **flat** under BERTopic in all three →
+  topic-composition, matching SE (HN's K-means within-topic bump did not survive BERTopic).
+  Committed `23b7a8d`.
+- **[in progress — workstream B] Academic paper** — DRAFT v0.1 written (`paper-draft.md`):
+  motivation → data → methodology → results → real-world consequences → criticisms → conclusion.
+  Awaiting Mark's framing input.
+- **[in progress — workstream C] Homogenization tracker** — BUILT and running: weekly GitHub
+  Action → SerpAPI top-10 → MiniLM embed → Vendi + pairwise-cosine + marginal-novelty → results
+  committed to `tracker/data/`. Phases 1–2 done (MVP + production hardening); first 45-query
+  snapshot committed. See `tracker-plan.md`. Next: phase 3 full-page (scraping API) + dashboard.
 - **[NEXT] Orthogonal-metrics research (the 4 points)** — predictability (distilgpt2-ONNX /
   n-gram perplexity), compression ratio, n-gram diversity, Vendi Score; for convergent validity.
   See `docs/research/homogenization-metrics-literature.md`.
@@ -151,10 +160,12 @@ GPT-generated-answer anchor test (item 4), then the orthogonal-metrics research.
 
 *From the 2026-09-14 call:*
 - **[open] Email the external results** (HN + PubMed + arXiv-CS) to Mark for review.
-- **[open] Add more external data sources** beyond the current three.
-- **[open] Develop a paper outline** — motivation, methodology, results, criticisms.
-- **[open] Brainstorm the homogenization-tracker implementation** for key websites.
-- **[open] Propose how to compute homogenization metrics across Google top search results.**
+- **[open] Add more external data sources** beyond the current three (Workstream A).
+- **[done — 2026-09-26] Develop a paper outline** — went further: full DRAFT v0.1 (`paper-draft.md`).
+- **[done — 2026-09-26] Brainstorm the homogenization-tracker implementation** — built + running
+  (`tracker/`, `tracker-plan.md`).
+- **[done — 2026-09-26] Propose how to compute homogenization metrics across Google top results** —
+  implemented: Vendi score + mean pairwise cosine + marginal novelty over the top-N SERP.
 - **[open — Mark] Mark reviews the data + sends ideas** for paper development.
 
 *From the 2026-09-07 call (all done):*
