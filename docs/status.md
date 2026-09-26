@@ -12,8 +12,11 @@ workstreams: an academic paper and a live homogenization tracker over Google sea
 ## One-liner
 
 Measuring whether generative AI (ChatGPT, public 2022Q4) made online writing more
-homogeneous. Method: per-quarter diversity metrics on Stack Exchange answers, five metric
-families, raw **and** length-controlled, replicated across two corpora.
+homogeneous. Method: per-quarter diversity/similarity metrics with a layered battery of
+controls (length, topic, significance, a known-AI anchor) — **13 metric families**, replicated
+across **26 Stack Exchange communities + 3 external non-SE corpora** (Hacker News, PubMed
+oncology, arXiv CS). Honest headline: **not broad *style* homogenization, but real *topic-level*
+homogenization** — the rise is mostly in *what* people write about, not *how*.
 
 ## Corpora (26, from the latest SE dump `20260630`, data through 2026Q2)
 
@@ -65,7 +68,7 @@ the rise is **topic-composition**, matching SE. Committed `d4e626f` (harvest) + 
 | 5 | Sentence-BERT/MiniLM (cosine, centroid var, eff. dim) | `semantic_bert.py` | ✅ done | Small **length-robust convergence 2023Q4–2026Q1** (the one live signal); **bootstrap 95% CIs** (2026-08-20): recent rise CI-separated from the 2016–22 trough — CV stays below early-history, Philosophy reaches series highs |
 | 6 | Dynamic BERTopic + **within-topic** similarity | `topics_bert.py` | ✅ done | Within-topic cosine **flat-to-declining** → signal is mostly topic-composition; holds under length control (`6c`, 2026-08-20); 95% bootstrap CI bands added, within-topic band brackets a flat line (2026-08-20) |
 | 7 | Homogenization by **answer score** (within-quarter median split) | `segment_score.py` | ✅ done | Recent uptick is **broad-based across quality tiers**, NOT concentrated in low-score answers — argues against a low-effort/templated mechanism (`7_score_segments`, 2026-08-20) |
-| 8 | **Significance / ITS** (segmented regression + Mann-Kendall + bootstrap) | `significance.py` | ✅ done | `--all` mode runs all **26 corpora** → `8_significance_all.csv` + forest summary (`8_significance_all.png`) + per-corpus ITS plots (`8_its`). **18/26 show a significant post-ChatGPT slope-increase** (20/26 under length control) — but see families 6/10/11: significant ≠ homogenization |
+| 8 | **Significance / ITS** (segmented regression + Mann-Kendall + bootstrap) | `significance.py` | ✅ done | `--all` mode runs all **26 corpora** → `8_significance_all.csv` + forest summary (`8_significance_all.png`) + per-corpus ITS plots (`8_its`). **18/26 show a significant post-ChatGPT slope-increase** (20/26 under length control) — but see families 6/10/11: significant ≠ *style* homogenization (it's topic-level) |
 | 9 | High- vs low-**cognitive-load** comparison | `cog_load_compare.py` | ✅ done | Now across all **26 corpora** with a readable high/low **bucket-mean ±1SE** plot (faint per-site lines behind). High- and low-cog tracks **overlap** → cognitive load does not explain the rise; confirms "no clean split" at scale (`9_cog_load_comparison`) |
 | 10 | Overall vs within-topic **MK-post** test | `within_vs_overall.py` | ✅ done | Within-topic MK-post **ns in all 5** while aggregate rises → topic-composition (`10_within_vs_overall`) |
 | 11 | **Same-question** topic control (`ParentId`) — gold standard | `same_question.py` | ✅ done | Field-standard control, **zero dropped outliers**: 4/5 corpora show **no** within-question rise → composition; **Philosophy** is the lone exception (within-Q MK-post p=0.0002) (`11_same_question`) |
@@ -74,13 +77,17 @@ the rise is **topic-composition**, matching SE. Committed `d4e626f` (harvest) + 
 
 ## Headline finding (current)
 
-- The "AI homogenized writing" claim is **not supported**. The big surface convergence is a
-  length artifact (answers got longer); it vanishes under length control and never appears in
-  Philosophy (already verbose).
-- The **only** surviving signal — a small recent (2023Q4→2026Q2) rise in contextual-embedding
-  similarity — **largely disappears once topic is held constant** (families 6/10, and now the
-  gold-standard **same-question** control family 11). So most of it is a shift in *what people
-  write about* after 2023, not homogenization of *style*. Replicated across **5 corpora**.
+- **We do not conclude "no homogenization."** The strong popular claim — that AI homogenized
+  *writing style* ("everyone sounds like ChatGPT") — is **not supported**; but there **is** real
+  **topic-level** homogenization (see below). The big surface convergence is a length artifact
+  (answers got longer); it vanishes under length control and never appears in Philosophy (already
+  verbose).
+- The surviving signal — a small recent (2023Q4→2026Q2) rise in contextual-embedding
+  similarity — **largely disappears once topic is held constant** (families 6/10, the
+  gold-standard **same-question** control family 11, and the decomposition family 13). So most of
+  it is a shift in *what people write about* after 2023, not homogenization of *style*. Replicated
+  across the **core 5 SE corpora** and, via topic control (families 6 + 13), **all 3 external
+  corpora** (within-topic flat under BERTopic in HN/PubMed/arXiv).
 - **Positively confirmed (family 13, core 5):** decomposing the aggregate cosine, the rise lives in
   **between-topic** pairs while **within-topic is flat**, and **topic diversity shrinks** +
   **composition drifts** after ChatGPT. So the mechanism is topic-level (what people write about),
@@ -89,13 +96,14 @@ the rise is **topic-composition**, matching SE. Committed `d4e626f` (harvest) + 
 - The **ITS slope-change** (family 8) is now significant in **18/26 sites** (20/26 under length
   control) — a broad, modest, cognitive-load-independent rise — but that is on the *aggregate*
   metric; the direct topic-held-constant tests (6/10/11/12, on the core 5) attribute the bend to
-  topic mix, not style. Significant ≠ homogenization.
+  topic mix, not style. Significant ≠ *style* homogenization.
 - The **GPT-anchor test** (family 12, the most literal version of the client's question) is
   **flat in 4/5**; only Economics (smallest/noisiest) rises. The two lone exceptions
   (Philosophy in #11, Economics in #12) fall on *different* sites and don't corroborate → noise.
-- Honest one-liner for the client: *"Writing did not broadly homogenize; the small recent
-  uptick is mostly a topic-mix effect, not AI-driven style convergence — worth monitoring, not
-  a finding to claim."*
+- Honest one-liner for the client: *"No broad **style** homogenization, but real **topic-level**
+  homogenization — the convergence is mostly in *what* people write about, not *how*. A real (if
+  subtler) effect worth monitoring, not a null result."* (Matches `project-briefing.md` and
+  `paper-draft.md`; we do **not** claim "no homogenization.")
 
 ## Deliverables / docs
 
