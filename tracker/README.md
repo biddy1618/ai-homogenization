@@ -16,7 +16,9 @@ For each query in [`queries.txt`](queries.txt):
    - **`mean_marginal_novelty`** — how much new info each ranked result adds beyond the
      ones above it (lower = you stop learning sooner as you scroll).
 4. Append one row per query to committed CSVs in [`data/`](data) — a combined `runs.csv`
-   plus one file per query. **Git is the datastore; no database needed.**
+   plus one file per query. The raw top-N SERP is saved under `data/raw/<date>/` and a
+   per-run provenance row to `data/_runs_meta.csv`. **Git is the datastore; no database
+   needed.** Re-runs are idempotent per `(date, query)` (pass `--force` to overwrite).
 
 ## Run it locally
 
@@ -35,8 +37,9 @@ GitHub-hosted runner and commits the new rows. Add your key as a repository secr
 
 ## Cost / quota
 
-~18 queries × weekly ≈ **78 searches/month** — inside the SerpAPI **free tier** (250/mo).
-One query = one search credit, regardless of how many results come back.
+~45 queries × weekly ≈ **195–225 searches/month** — inside the SerpAPI **free tier**
+(250/mo), with headroom for manual runs. One query = one search credit, regardless of how
+many results come back.
 
 ## Notes / next steps
 

@@ -1,30 +1,63 @@
-# Homogenization tracker — query panel (MVP seed set)
+# Homogenization tracker — query panel (v0.2)
 #
 # Format:   category | query text        (lines starting with # are ignored)
 # Keep this panel FROZEN once tracking starts, so the time series stays comparable.
-# ~18 queries x weekly ≈ 78 searches/month — well within the SerpAPI free tier (250/mo).
+# ~45 queries x weekly ≈ 195–225 searches/month — within the SerpAPI free tier (250/mo),
+# with headroom for occasional manual runs.
 
 medical | what are the symptoms of iron deficiency
 medical | how to lower blood pressure naturally
 medical | is intermittent fasting healthy
+medical | what causes migraines
 
 legal | how to form an llc
 legal | what is a power of attorney
 legal | tenant rights eviction notice
+legal | how to file for divorce
 
 howto | how to unclog a drain
 howto | how to write a cover letter
 howto | how to improve credit score
+howto | how to tie a tie
 
 product | best wireless earbuds
 product | best budget laptop
 product | best robot vacuum
+product | best running shoes
 
 finance | how to start investing
 finance | roth ira vs traditional ira
 finance | how does refinancing a mortgage work
+finance | how to build an emergency fund
 
 tech | what is retrieval augmented generation
 tech | how to speed up a slow computer
+tech | what is a vpn
+tech | what is two factor authentication
+
+health_fitness | how to lose belly fat
+health_fitness | how much water should i drink a day
+health_fitness | best exercises for lower back pain
+health_fitness | how to start running
+
+food_cooking | how to cook rice
+food_cooking | easy chicken dinner recipes
+food_cooking | how to make pizza dough
+food_cooking | how long to boil an egg
+
+travel | best time to visit japan
+travel | how to pack for a long flight
+travel | is travel insurance worth it
+
+home_garden | how to get rid of ants
+home_garden | how often to water succulents
+home_garden | how to clean a washing machine
+home_garden | how to grow tomatoes
+
+science | how do vaccines work
+science | what causes climate change
+science | how far away is the moon
 
 news | is ai going to replace jobs
+news | are electric cars better for the environment
+news | how does inflation affect the economy

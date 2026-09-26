@@ -12,8 +12,10 @@ compute three diversity metrics per query per run:
                             lower = you stop learning sooner as you read down the page.
 
 Rows are appended to committed CSVs under ``tracker/data/`` (a combined ``runs.csv`` plus
-one file per query), so the time series is versioned in git — no database needed. Built to
-run weekly on a GitHub-hosted runner against the SerpAPI free tier (250 searches/month).
+one file per query); the raw top-N SERP is saved under ``tracker/data/raw/<date>/`` and a
+per-run provenance row to ``_runs_meta.csv``. The time series is versioned in git — no
+database needed. Re-runs are idempotent per (date, query). Built to run weekly on a
+GitHub-hosted runner against the SerpAPI free tier (250 searches/month).
 
 Setup: set the ``SERPAPI_KEY`` environment variable (a GitHub Actions secret in CI). Free
 key at https://serpapi.com/ .
@@ -39,6 +41,7 @@ from pathlib import Path
 import numpy as np
 
 SERPAPI_ENDPOINT = "https://serpapi.com/search.json"
+TRACKER_VERSION = "0.2"
 
 # Same model + GCS mirror as src/semantic_bert.py, inlined so the tracker stays a lean,
 # standalone tool (CI needs only numpy + fastembed, not the full analysis stack).
@@ -183,6 +186,62 @@ def _append_row(path: Path, row: dict) -> None:
         w.writerow(row)
 
 
+def _existing_keys(combined: Path) -> set[tuple[str, str]]:
+    """(date, query) pairs already recorded, so re-runs are idempotent."""
+    keys: set[tuple[str, str]] = set()
+    if combined.exists():
+        with combined.open(newline="", encoding="utf-8") as f:
+            for row in csv.DictReader(f):
+                keys.add((row["date"], row["query"]))
+    return keys
+
+
+def _save_raw(out_dir: Path, run_date: str, query: str, results: list[dict]) -> None:
+    """Persist the raw top-N SERP so metrics can be recomputed and phase-3 has the URLs."""
+    raw_dir = out_dir / "raw" / run_date
+    raw_dir.mkdir(parents=True, exist_ok=True)
+    payload = [
+        {"position": r["position"], "title": r["title"], "link": r["link"],
+         "domain": urllib.parse.urlparse(r["link"]).netloc, "snippet": r["snippet"]}
+        for r in results
+    ]
+    (raw_dir / f"{slugify(query)}.json").write_text(
+        json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
+
+
+def _code_sha() -> str:
+    import subprocess
+    try:
+        return subprocess.check_output(
+            ["git", "rev-parse", "--short", "HEAD"], stderr=subprocess.DEVNULL, text=True
+        ).strip()
+    except Exception:  # noqa: BLE001
+        return "unknown"
+
+
+META_FIELDS = ["run_date", "run_ts_utc", "tracker_version", "model", "engine", "num",
+               "gl", "hl", "device", "location", "n_queries", "n_ok", "n_skipped", "code_sha"]
+
+
+def _write_meta(out_dir: Path, run_date: str, args, n_queries: int, n_ok: int, n_skipped: int) -> None:
+    """One provenance row per run, so any methodology change is annotated in the data."""
+    path = out_dir / "_runs_meta.csv"
+    row = {
+        "run_date": run_date,
+        "run_ts_utc": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+        "tracker_version": TRACKER_VERSION, "model": MODEL_NAME, "engine": args.engine,
+        "num": args.num, "gl": args.gl, "hl": args.hl, "device": args.device,
+        "location": args.location or "", "n_queries": n_queries, "n_ok": n_ok,
+        "n_skipped": n_skipped, "code_sha": _code_sha(),
+    }
+    is_new = not path.exists()
+    with path.open("a", newline="", encoding="utf-8") as f:
+        w = csv.DictWriter(f, fieldnames=META_FIELDS)
+        if is_new:
+            w.writeheader()
+        w.writerow(row)
+
+
 def main() -> None:
     ap = argparse.ArgumentParser(description="Homogenization tracker (MVP)")
     ap.add_argument("--queries", type=Path, default=Path("tracker/queries.txt"))
@@ -201,6 +260,7 @@ def main() -> None:
     ap.add_argument("--key-file", type=Path, default=Path(".secrets/serp_api_key.txt"),
                     help="Fallback file holding the SerpAPI key when SERPAPI_KEY is unset")
     ap.add_argument("--limit", type=int, default=0, help="Process only the first N queries (0 = all)")
+    ap.add_argument("--force", action="store_true", help="Re-record queries already saved for this date")
     ap.add_argument("--sleep", type=float, default=1.0, help="Seconds between queries (throughput guard)")
     args = ap.parse_args()
 
@@ -222,17 +282,24 @@ def main() -> None:
     model = load_model(args.model_cache)
     args.out_dir.mkdir(parents=True, exist_ok=True)
     combined = args.out_dir / "runs.csv"
+    done = set() if args.force else _existing_keys(combined)
 
-    used = 0
+    used = n_ok = n_skipped = 0
     for i, (category, query) in enumerate(queries, 1):
+        if (run_date, query) in done:  # idempotent: skip before spending a credit
+            print(f"[{i}/{len(queries)}] skip {query!r}: already recorded for {run_date}", flush=True)
+            n_skipped += 1
+            continue
         try:
             results = fetch_serp(query, api_key, args.num, args.gl, args.hl,
                                  args.engine, args.device, args.location)
             used += 1
         except Exception as e:  # noqa: BLE001
             print(f"[{i}/{len(queries)}] SKIP {query!r}: {e}", flush=True)
+            n_skipped += 1
             continue
 
+        _save_raw(args.out_dir, run_date, query, results)
         texts, positions = [], []
         for r in results:
             text = f"{r['title']}. {r['snippet']}".strip()
@@ -243,6 +310,7 @@ def main() -> None:
         n = len(texts)
         if n < args.min_results:
             print(f"[{i}/{len(queries)}] SKIP {query!r}: only {n} usable results", flush=True)
+            n_skipped += 1
             continue
 
         v = embed_texts(model, texts)
@@ -256,12 +324,14 @@ def main() -> None:
         }
         _append_row(combined, row)
         _append_row(args.out_dir / f"{slugify(query)}.csv", row)
+        n_ok += 1
         print(f"[{i}/{len(queries)}] {query!r}: n={n} cos={row['mean_pairwise_cosine']:.3f} "
               f"vendi={vendi:.2f} novelty={row['mean_marginal_novelty']:.3f}", flush=True)
         time.sleep(args.sleep)
 
-    print(f"\nDone → {combined} (+ per-query CSVs in {args.out_dir}). "
-          f"Used ~{used} SerpAPI searches (free tier = 250/month).")
+    _write_meta(args.out_dir, run_date, args, len(queries), n_ok, n_skipped)
+    print(f"\nDone → {combined} (+ per-query CSVs, raw/, _runs_meta.csv in {args.out_dir}). "
+          f"Recorded {n_ok}, skipped {n_skipped}. Used ~{used} SerpAPI searches (free tier = 250/month).")
 
 
 if __name__ == "__main__":
