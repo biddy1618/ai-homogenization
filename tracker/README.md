@@ -32,8 +32,16 @@ Only `numpy` + `fastembed` are required (`pip install numpy fastembed`).
 ## Automation
 
 [`.github/workflows/tracker.yml`](../.github/workflows/tracker.yml) runs it **weekly** on a
-GitHub-hosted runner and commits the new rows. Add your key as a repository secret named
-`SERPAPI_KEY` (Settings → Secrets and variables → Actions).
+GitHub-hosted runner, rebuilds the dashboard, and commits the new rows. Add your key as a
+repository secret named `SERP_API_KEY` (Settings → Secrets and variables → Actions).
+
+## Dashboard
+
+[`dashboard/build.py`](dashboard/build.py) generates a self-contained
+[`dashboard/index.html`](dashboard/index.html) from `data/runs.csv` — the data is embedded, so it
+renders on GitHub Pages *and* by simply opening the file (no server needed). Rebuild locally with
+`python tracker/dashboard/build.py`. To publish it, enable **GitHub Pages** (Settings → Pages →
+deploy from `main`); it will be served at `…/tracker/dashboard/`.
 
 ## Cost / quota
 

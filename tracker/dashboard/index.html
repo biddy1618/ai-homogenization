@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Homogenization Tracker</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<style>
+  :root { --bg:#0f1115; --card:#181b22; --fg:#e8eaed; --muted:#9aa0aa; --accent:#5aa9e6; }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--bg); color:var(--fg);
+         font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif; }
+  header { padding:24px 20px 8px; }
+  h1 { margin:0 0 4px; font-size:22px; }
+  .sub { color:var(--muted); font-size:14px; }
+  .wrap { max-width:1000px; margin:0 auto; padding:0 16px 48px; }
+  .kpis { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:12px; margin:16px 0; }
+  .kpi { background:var(--card); border-radius:12px; padding:14px 16px; }
+  .kpi .label { color:var(--muted); font-size:12px; text-transform:uppercase; letter-spacing:.04em; }
+  .kpi .value { font-size:20px; margin-top:4px; }
+  .kpi .value small { color:var(--muted); font-size:13px; }
+  .card { background:var(--card); border-radius:12px; padding:16px; margin:16px 0; }
+  .card h2 { margin:0 0 4px; font-size:16px; }
+  .card p { margin:0 0 12px; color:var(--muted); font-size:13px; }
+  footer { color:var(--muted); font-size:12px; text-align:center; padding:16px; }
+  a { color:var(--accent); }
+</style>
+</head>
+<body>
+<header class="wrap">
+  <h1>Homogenization Tracker</h1>
+  <div class="sub" id="sub"></div>
+</header>
+<div class="wrap">
+  <div class="kpis" id="kpis"></div>
+
+  <div class="card">
+    <h2>How repetitive are the top results, by query</h2>
+    <p>Vendi score = the effective number of <em>distinct</em> results among the top ~10.
+       Lower = more homogeneous. Latest run.</p>
+    <canvas id="leaderboard" height="520"></canvas>
+  </div>
+
+  <div class="card">
+    <h2>Diversity over time</h2>
+    <p>Mean Vendi per run — overall and by category. Populates as weekly runs accumulate.</p>
+    <canvas id="timeseries" height="320"></canvas>
+  </div>
+</div>
+<footer>
+  Generated from <code>tracker/data/runs.csv</code>. Snippet-level (Google top-10 via SerpAPI),
+  MiniLM embeddings. Forward-looking companion to the AI-homogenization study.
+</footer>
+
+<script>
+const DATA = {"dates": ["2026-09-26"], "latest": "2026-09-26", "n_queries": 45, "cats": ["finance", "food_cooking", "health_fitness", "home_garden", "howto", "legal", "medical", "news", "product", "science", "tech", "travel"], "overall": [3.437], "series": {"finance": [4.1], "food_cooking": [3.025], "health_fitness": [3.699], "home_garden": [2.973], "howto": [3.028], "legal": [3.616], "medical": [3.803], "news": [4.489], "product": [3.419], "science": [3.738], "tech": [2.4], "travel": [3.247]}, "leaderboard": [{"query": "what is two factor authentication", "category": "tech", "vendi": 1.93, "n": 8}, {"query": "what is retrieval augmented generation", "category": "tech", "vendi": 1.95, "n": 7}, {"query": "what is a vpn", "category": "tech", "vendi": 1.96, "n": 8}, {"query": "best time to visit japan", "category": "travel", "vendi": 2.26, "n": 7}, {"query": "how often to water succulents", "category": "home_garden", "vendi": 2.49, "n": 5}, {"query": "is ai going to replace jobs", "category": "news", "vendi": 2.61, "n": 7}, {"query": "how to get rid of ants", "category": "home_garden", "vendi": 2.62, "n": 6}, {"query": "is travel insurance worth it", "category": "travel", "vendi": 2.66, "n": 8}, {"query": "how to tie a tie", "category": "howto", "vendi": 2.75, "n": 6}, {"query": "how to improve credit score", "category": "howto", "vendi": 2.76, "n": 7}, {"query": "easy chicken dinner recipes", "category": "food_cooking", "vendi": 2.77, "n": 6}, {"query": "how do vaccines work", "category": "science", "vendi": 2.79, "n": 8}, {"query": "how to cook rice", "category": "food_cooking", "vendi": 2.81, "n": 4}, {"query": "best exercises for lower back pain", "category": "health_fitness", "vendi": 2.87, "n": 7}, {"query": "what causes climate change", "category": "science", "vendi": 2.88, "n": 9}, {"query": "is intermittent fasting healthy", "category": "medical", "vendi": 2.89, "n": 8}, {"query": "roth ira vs traditional ira", "category": "finance", "vendi": 2.91, "n": 6}, {"query": "how to clean a washing machine", "category": "home_garden", "vendi": 2.96, "n": 7}, {"query": "what are the symptoms of iron deficiency", "category": "medical", "vendi": 2.96, "n": 9}, {"query": "best robot vacuum", "category": "product", "vendi": 3.03, "n": 8}, {"query": "how to unclog a drain", "category": "howto", "vendi": 3.12, "n": 6}, {"query": "how to make pizza dough", "category": "food_cooking", "vendi": 3.16, "n": 7}, {"query": "best wireless earbuds", "category": "product", "vendi": 3.19, "n": 7}, {"query": "how to lose belly fat", "category": "health_fitness", "vendi": 3.29, "n": 7}, {"query": "tenant rights eviction notice", "category": "legal", "vendi": 3.31, "n": 7}, {"query": "what causes migraines", "category": "medical", "vendi": 3.33, "n": 8}, {"query": "how long to boil an egg", "category": "food_cooking", "vendi": 3.36, "n": 6}, {"query": "how does refinancing a mortgage work", "category": "finance", "vendi": 3.4, "n": 8}, {"query": "how to form an llc", "category": "legal", "vendi": 3.45, "n": 8}, {"query": "how to write a cover letter", "category": "howto", "vendi": 3.49, "n": 8}, {"query": "are electric cars better for the environment", "category": "news", "vendi": 3.55, "n": 9}, {"query": "best running shoes", "category": "product", "vendi": 3.71, "n": 7}, {"query": "how to build an emergency fund", "category": "finance", "vendi": 3.74, "n": 8}, {"query": "best budget laptop", "category": "product", "vendi": 3.75, "n": 8}, {"query": "how to speed up a slow computer", "category": "tech", "vendi": 3.75, "n": 8}, {"query": "what is a power of attorney", "category": "legal", "vendi": 3.82, "n": 7}, {"query": "how to grow tomatoes", "category": "home_garden", "vendi": 3.83, "n": 7}, {"query": "how to file for divorce", "category": "legal", "vendi": 3.88, "n": 9}, {"query": "how to start running", "category": "health_fitness", "vendi": 3.93, "n": 8}, {"query": "how much water should i drink a day", "category": "health_fitness", "vendi": 4.7, "n": 9}, {"query": "how to pack for a long flight", "category": "travel", "vendi": 4.82, "n": 8}, {"query": "how far away is the moon", "category": "science", "vendi": 5.55, "n": 8}, {"query": "how to lower blood pressure naturally", "category": "medical", "vendi": 6.03, "n": 8}, {"query": "how to start investing", "category": "finance", "vendi": 6.35, "n": 8}, {"query": "how does inflation affect the economy", "category": "news", "vendi": 7.3, "n": 8}]};
+
+const PALETTE = ["#5aa9e6","#e6a15a","#7ac77a","#c77ab0","#e6d15a","#5ae6c1","#e65a5a","#9a8ae6",
+                 "#8ae65a","#e68a5a","#5a7ae6","#b0b0b0"];
+const catColor = {};
+DATA.cats.forEach((c,i)=> catColor[c] = PALETTE[i % PALETTE.length]);
+
+// --- subtitle + KPIs
+document.getElementById("sub").textContent =
+  `Latest run ${DATA.latest} · ${DATA.n_queries} queries · ${DATA.dates.length} run(s) to date`;
+
+const lb = DATA.leaderboard;
+const mostHom = lb[0], mostDiv = lb[lb.length-1];
+const overallLatest = DATA.overall[DATA.overall.length-1];
+const kpis = [
+  ["Most homogeneous", `${mostHom.query}`, `Vendi ${mostHom.vendi} of ${mostHom.n}`],
+  ["Most diverse", `${mostDiv.query}`, `Vendi ${mostDiv.vendi} of ${mostDiv.n}`],
+  ["Mean Vendi (latest)", overallLatest.toFixed(2), `across ${DATA.n_queries} queries`],
+];
+document.getElementById("kpis").innerHTML = kpis.map(k =>
+  `<div class="kpi"><div class="label">${k[0]}</div>
+   <div class="value">${k[1]} <small>${k[2]}</small></div></div>`).join("");
+
+// --- leaderboard (horizontal bar, sorted most→least homogeneous)
+new Chart(document.getElementById("leaderboard"), {
+  type: "bar",
+  data: {
+    labels: lb.map(d => d.query),
+    datasets: [{
+      label: "Vendi (effective distinct results)",
+      data: lb.map(d => d.vendi),
+      backgroundColor: lb.map(d => catColor[d.category]),
+    }],
+  },
+  options: {
+    indexAxis: "y",
+    plugins: { legend: { display:false },
+      tooltip: { callbacks: { afterLabel: (c)=> DATA.leaderboard[c.dataIndex].category } } },
+    scales: {
+      x: { beginAtZero:true, grid:{color:"#262a33"}, ticks:{color:"#9aa0aa"} },
+      y: { grid:{display:false}, ticks:{color:"#e8eaed", font:{size:11}} },
+    },
+  },
+});
+
+// --- time series (overall + per category)
+const tsDatasets = [{
+  label: "Overall", data: DATA.overall, borderColor:"#ffffff", backgroundColor:"#ffffff",
+  borderWidth:3, tension:.25, pointRadius:3,
+}].concat(DATA.cats.map(c => ({
+  label: c, data: DATA.series[c], borderColor: catColor[c], backgroundColor: catColor[c],
+  borderWidth:1.5, tension:.25, pointRadius:2,
+})));
+new Chart(document.getElementById("timeseries"), {
+  type: "line",
+  data: { labels: DATA.dates, datasets: tsDatasets },
+  options: {
+    plugins: { legend: { labels:{color:"#e8eaed", boxWidth:12, font:{size:11}} } },
+    scales: {
+      x: { grid:{color:"#262a33"}, ticks:{color:"#9aa0aa"} },
+      y: { grid:{color:"#262a33"}, ticks:{color:"#9aa0aa"}, title:{display:true,text:"mean Vendi",color:"#9aa0aa"} },
+    },
+  },
+});
+</script>
+</body>
+</html>
