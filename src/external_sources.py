@@ -80,13 +80,16 @@ def http_get(url: str, timeout: int = 60, retries: int = 5) -> bytes:
     last = None
     for attempt in range(retries):
         try:
-            req = urllib.request.Request(url, headers={"User-Agent": USER_AGENT})
+            req = urllib.request.Request(
+                url, headers={"User-Agent": USER_AGENT, "Accept": "application/xml, text/xml, */*"}
+            )
             with urllib.request.urlopen(req, timeout=timeout) as r:
                 return r.read()
         except urllib.error.HTTPError as e:
             last = e
             retry_after = e.headers.get("Retry-After") if e.headers else None
-            if e.code in (429, 503):
+            # arXiv OAI flow-control sometimes 302-redirects to a 406 page instead of a clean 503
+            if e.code in (429, 503, 406):
                 wait = float(retry_after) if retry_after and retry_after.isdigit() else max(backoff, 20.0) * (attempt + 1)
                 print(f"    {e.code}; backing off {wait:.0f}s", flush=True)
                 time.sleep(wait)
@@ -273,7 +276,7 @@ _OAI = "{http://www.openarchives.org/OAI/2.0/}"
 _ARX = "{http://arxiv.org/OAI/arXiv/}"
 
 
-def harvest_arxiv(cat: str, quarters: list[str], target: int, page_delay: float = 3.0,
+def harvest_arxiv(cat: str, quarters: list[str], target: int, page_delay: float = 8.0,
                   max_pages: int = 20) -> list[dict]:
     """OAI-PMH harvest. ``cat`` is the OAI set (e.g. 'cs'); if it names a subcategory
     (e.g. 'cs.CL') we keep only records whose PRIMARY category matches."""
