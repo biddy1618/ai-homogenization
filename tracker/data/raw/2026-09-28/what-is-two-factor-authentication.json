@@ -1,0 +1,58 @@
+[
+  {
+    "position": 1,
+    "title": "What Is Two-Factor Authentication (2FA)?",
+    "link": "https://www.microsoft.com/en-us/security/business/security-101/what-is-two-factor-authentication-2fa",
+    "domain": "www.microsoft.com",
+    "snippet": "Two-factor authentication strengthens sign-in security by requiring two distinct forms of identity verification. Using 2FA helps prevent ..."
+  },
+  {
+    "position": 2,
+    "title": "Use Two-Factor Authentication To Protect Your Accounts",
+    "link": "https://consumer.ftc.gov/articles/use-two-factor-authentication-protect-your-accounts",
+    "domain": "consumer.ftc.gov",
+    "snippet": "Using two-factor authentication is like using two locks on your door — and is much more secure. Even if a hacker knows your username and password, they can't ..."
+  },
+  {
+    "position": 3,
+    "title": "Multi-factor authentication",
+    "link": "https://en.wikipedia.org/wiki/Multi-factor_authentication",
+    "domain": "en.wikipedia.org",
+    "snippet": "Multi-factor authentication (MFA), also known as two-factor authentication (2FA), is an electronic authentication method in which a user is granted access ..."
+  },
+  {
+    "position": 4,
+    "title": "What is 2FA (Two-Factor Authentication)?",
+    "link": "https://www.ibm.com/think/topics/2fa",
+    "domain": "www.ibm.com",
+    "snippet": "Two-factor authentication (2FA) verifies a user's identity by asking for two pieces of proof, such as an online account password and a one-time passcode."
+  },
+  {
+    "position": 5,
+    "title": "Two-factor authentication (2FA): how it works [Guide]",
+    "link": "https://www.cisco.com/site/us/en/learn/topics/security/what-is-two-factor-authentication.html",
+    "domain": "www.cisco.com",
+    "snippet": "Two-factor authentication (2FA) is a security method that requires users to verify their identity with exactly two factors before they are granted access."
+  },
+  {
+    "position": 6,
+    "title": "What is Two-Factor Authentication and Why Does it Matter?",
+    "link": "https://www.uschamber.com/co/run/technology/two-factor-authentication",
+    "domain": "www.uschamber.com",
+    "snippet": "2FA is a security method that checks two types of proof to verify that a person is who they claim to be. Cloud applications often confirm ..."
+  },
+  {
+    "position": 7,
+    "title": "What is Two-Factor Authentication (2fa)?",
+    "link": "https://www.onespan.com/topics/two-factor-authentication",
+    "domain": "www.onespan.com",
+    "snippet": "Two-factor Authentication or 2FA is a user identity verification method, where two of the three possible factors of authentication are combined in order to ..."
+  },
+  {
+    "position": 8,
+    "title": "What is two-factor authentication? | 2-step verification ...",
+    "link": "https://www.cloudflare.com/learning/access-management/what-is-two-factor-authentication/",
+    "domain": "www.cloudflare.com",
+    "snippet": "Two-factor authentication, or 2-step verification, is a way to authenticate users that is much stronger than a password alone."
+  }
+]

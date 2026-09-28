@@ -1,2 +1,3 @@
 date,category,query,n_results,mean_pairwise_cosine,vendi,distinct_ratio,mean_marginal_novelty
 2026-09-26,home_garden,how to grow tomatoes,7,0.534482,3.8266,0.5467,0.346221
+2026-09-28,home_garden,how to grow tomatoes,8,0.582751,3.7025,0.4628,0.315165

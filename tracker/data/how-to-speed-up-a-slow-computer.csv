@@ -1,2 +1,3 @@
 date,category,query,n_results,mean_pairwise_cosine,vendi,distinct_ratio,mean_marginal_novelty
 2026-09-26,tech,how to speed up a slow computer,8,0.589421,3.7526,0.4691,0.354107
+2026-09-28,tech,how to speed up a slow computer,8,0.556712,3.9563,0.4945,0.347288
