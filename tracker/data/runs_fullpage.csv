@@ -1,0 +1,73 @@
+date,category,query,n_results,n_fullpage,mean_pairwise_cosine,vendi,distinct_ratio,mean_marginal_novelty
+2026-09-26,news,are electric cars better for the environment,9,3,0.64746,3.4597,0.3844,0.29395
+2026-09-26,health_fitness,best exercises for lower back pain,7,7,0.324348,4.2157,0.6022,0.424815
+2026-09-26,product,best running shoes,7,3,0.401227,4.1455,0.5922,0.465779
+2026-09-26,travel,best time to visit japan,7,5,0.499313,3.7074,0.5296,0.406325
+2026-09-26,food_cooking,easy chicken dinner recipes,6,2,0.555818,3.3846,0.5641,0.399004
+2026-09-26,science,how do vaccines work,8,6,0.557825,3.7183,0.4648,0.347923
+2026-09-26,news,how does inflation affect the economy,8,6,0.084463,7.6078,0.951,0.817861
+2026-09-26,science,how far away is the moon,8,4,0.343401,5.777,0.7221,0.547421
+2026-09-26,food_cooking,how long to boil an egg,6,4,0.36441,4.0538,0.6756,0.504323
+2026-09-26,health_fitness,how much water should i drink a day,9,3,0.332719,5.5404,0.6156,0.487903
+2026-09-26,home_garden,how often to water succulents,5,2,0.639418,2.6867,0.5373,0.327309
+2026-09-26,finance,how to build an emergency fund,8,7,0.651163,3.2367,0.4046,0.290565
+2026-09-26,home_garden,how to clean a washing machine,7,5,0.341201,4.5903,0.6558,0.535685
+2026-09-26,food_cooking,how to cook rice,4,1,0.432027,3.0064,0.7516,0.466479
+2026-09-26,legal,how to file for divorce,9,7,0.468159,4.5343,0.5038,0.42096
+2026-09-26,home_garden,how to get rid of ants,6,2,0.408058,3.3878,0.5646,0.451389
+2026-09-26,home_garden,how to grow tomatoes,7,6,0.299205,4.076,0.5823,0.468804
+2026-09-26,health_fitness,how to lose belly fat,7,6,0.393119,3.4321,0.4903,0.340468
+2026-09-26,food_cooking,how to make pizza dough,7,4,0.332673,3.2611,0.4659,0.344023
+2026-09-26,travel,how to pack for a long flight,8,3,0.32647,5.8457,0.7307,0.579155
+2026-09-26,health_fitness,how to start running,8,3,0.281533,5.4559,0.682,0.545847
+2026-09-26,howto,how to tie a tie,6,5,0.36282,3.3914,0.5652,0.400356
+2026-09-26,travel,is travel insurance worth it,8,7,0.547495,3.8482,0.481,0.36368
+2026-09-26,science,what causes climate change,9,4,0.605023,3.7261,0.414,0.310692
+2026-09-26,medical,what causes migraines,8,4,0.531255,4.0109,0.5014,0.358124
+2026-09-26,tech,what is a vpn,8,8,0.628817,3.4051,0.4256,0.339943
+2026-09-26,tech,what is two factor authentication,8,7,0.721999,2.7119,0.339,0.219819
+2026-09-28,news,are electric cars better for the environment,8,4,0.597055,3.6481,0.456,0.312686
+2026-09-28,product,best budget laptop,8,2,0.435176,4.3731,0.5466,0.42216
+2026-09-28,health_fitness,best exercises for lower back pain,7,5,0.684937,2.8537,0.4077,0.259223
+2026-09-28,product,best robot vacuum,7,2,0.458121,3.6617,0.5231,0.42035
+2026-09-28,product,best running shoes,8,4,0.400116,4.5754,0.5719,0.450325
+2026-09-28,travel,best time to visit japan,7,7,0.112566,6.6017,0.9431,0.795596
+2026-09-28,product,best wireless earbuds,7,4,0.311606,4.6559,0.6651,0.537856
+2026-09-28,food_cooking,easy chicken dinner recipes,6,3,0.248884,3.8714,0.6452,0.493464
+2026-09-28,science,how do vaccines work,8,5,0.451335,4.4518,0.5565,0.437936
+2026-09-28,news,how does inflation affect the economy,9,6,0.481179,4.9919,0.5547,0.419957
+2026-09-28,finance,how does refinancing a mortgage work,8,5,0.615683,3.4651,0.4331,0.299233
+2026-09-28,science,how far away is the moon,7,5,0.292801,5.4476,0.7782,0.599732
+2026-09-28,food_cooking,how long to boil an egg,6,4,0.285775,3.8389,0.6398,0.480009
+2026-09-28,health_fitness,how much water should i drink a day,9,3,0.41602,5.5595,0.6177,0.464289
+2026-09-28,home_garden,how often to water succulents,5,3,0.637041,2.6924,0.5385,0.33411
+2026-09-28,finance,how to build an emergency fund,7,6,0.585195,3.1022,0.4432,0.327121
+2026-09-28,home_garden,how to clean a washing machine,6,5,0.177848,4.381,0.7302,0.588751
+2026-09-28,food_cooking,how to cook rice,5,1,0.459645,3.4347,0.6869,0.446286
+2026-09-28,legal,how to file for divorce,9,6,0.402231,5.4381,0.6042,0.498913
+2026-09-28,legal,how to form an llc,9,9,0.446388,5.2571,0.5841,0.444881
+2026-09-28,home_garden,how to get rid of ants,7,3,0.320109,3.6883,0.5269,0.387076
+2026-09-28,home_garden,how to grow tomatoes,8,7,0.282589,4.2372,0.5297,0.409421
+2026-09-28,howto,how to improve credit score,7,6,0.518922,3.9583,0.5655,0.433801
+2026-09-28,health_fitness,how to lose belly fat,8,7,0.596562,3.589,0.4486,0.339745
+2026-09-28,medical,how to lower blood pressure naturally,8,6,0.616218,3.4062,0.4258,0.305107
+2026-09-28,food_cooking,how to make pizza dough,7,3,0.349064,3.5941,0.5134,0.381402
+2026-09-28,travel,how to pack for a long flight,8,6,0.277022,6.2497,0.7812,0.665768
+2026-09-28,tech,how to speed up a slow computer,8,4,0.460767,4.635,0.5794,0.437245
+2026-09-28,finance,how to start investing,5,3,0.435175,3.5611,0.7122,0.445018
+2026-09-28,health_fitness,how to start running,9,4,0.486596,4.4015,0.4891,0.40458
+2026-09-28,howto,how to tie a tie,7,6,0.408602,2.7751,0.3964,0.277141
+2026-09-28,howto,how to unclog a drain,6,4,0.377016,3.8445,0.6407,0.494996
+2026-09-28,howto,how to write a cover letter,8,5,0.610414,3.5758,0.447,0.336666
+2026-09-28,news,is ai going to replace jobs,7,4,0.579084,3.3698,0.4814,0.33436
+2026-09-28,medical,is intermittent fasting healthy,8,6,0.561476,3.9358,0.492,0.373294
+2026-09-28,travel,is travel insurance worth it,9,5,0.342362,5.5029,0.6114,0.500429
+2026-09-28,finance,roth ira vs traditional ira,6,2,0.692422,2.5646,0.4274,0.234297
+2026-09-28,legal,tenant rights eviction notice,8,3,0.541208,4.1259,0.5157,0.376172
+2026-09-28,medical,what are the symptoms of iron deficiency,8,6,0.615592,3.5272,0.4409,0.303258
+2026-09-28,science,what causes climate change,9,6,0.5971,3.8098,0.4233,0.314367
+2026-09-28,medical,what causes migraines,8,6,0.453199,4.1646,0.5206,0.422327
+2026-09-28,legal,what is a power of attorney,8,8,0.532903,3.7494,0.4687,0.349543
+2026-09-28,tech,what is a vpn,9,8,0.505037,4.5317,0.5035,0.405964
+2026-09-28,tech,what is retrieval augmented generation,9,8,0.528275,3.7678,0.4186,0.336131
+2026-09-28,tech,what is two factor authentication,8,7,0.548409,3.2143,0.4018,0.304554

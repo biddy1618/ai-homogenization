@@ -11,3 +11,6 @@ __pycache__/
 /data/
 *.7z
 *.xml
+
+# Tracker page-text cache (local scratch for full-page recompute; not committed)
+tracker/data/pagecache/
