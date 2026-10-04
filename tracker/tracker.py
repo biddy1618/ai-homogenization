@@ -41,7 +41,14 @@ from pathlib import Path
 import numpy as np
 
 SERPAPI_ENDPOINT = "https://serpapi.com/search.json"
-TRACKER_VERSION = "0.2"
+TRACKER_VERSION = "0.3"
+
+# Video result types are dropped: their pages carry no article text to full-page-scrape, so
+# they only add noise to the diversity metric. (Social/forum results are kept — they're real
+# text answers; they just fall back to snippet when full-page extraction is thin.)
+BLOCKLIST = {
+    "youtube.com", "youtu.be", "m.youtube.com", "vimeo.com", "dailymotion.com", "tiktok.com",
+}
 
 # Same model + GCS mirror as src/semantic_bert.py, inlined so the tracker stays a lean,
 # standalone tool (CI needs only numpy + fastembed, not the full analysis stack).
@@ -75,6 +82,14 @@ def embed_texts(model, texts: list[str], batch_size: int = 256) -> np.ndarray:
 def slugify(text: str) -> str:
     s = re.sub(r"[^a-z0-9]+", "-", text.lower()).strip("-")
     return s[:60] or "query"
+
+
+def _blocked(url: str) -> bool:
+    """True if the result's domain is a non-article type (video/social) we skip."""
+    host = urllib.parse.urlparse(url).netloc.lower()
+    if host.startswith("www."):
+        host = host[4:]
+    return any(host == d or host.endswith("." + d) for d in BLOCKLIST)
 
 
 def read_queries(path: Path) -> list[tuple[str, str]]:
@@ -299,6 +314,7 @@ def main() -> None:
             n_skipped += 1
             continue
 
+        results = [r for r in results if not _blocked(r.get("link", ""))]
         _save_raw(args.out_dir, run_date, query, results)
         texts, positions = [], []
         for r in results:

@@ -31,7 +31,7 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install "numpy==2.5.1" "fastembed==0.8.0" "onnxruntime==1.28.0"
+          pip install "numpy==2.5.1" "fastembed==0.8.0" "onnxruntime==1.28.0" "beautifulsoup4>=4.12"
 
       - name: Run tracker
         env:
@@ -40,6 +40,11 @@ jobs:
           python tracker/tracker.py
           --queries tracker/queries.txt --out-dir tracker/data
           --location "United States" --device desktop --num 10
+
+      - name: Full-page recompute
+        env:
+          SCRAPING_ROBOT_API_KEY: ${{ secrets.SCRAPING_ROBOT_API_KEY }}
+        run: python tracker/fullpage.py --provider scrapingrobot --date "$(date -u +%Y-%m-%d)"
 
       - name: Build dashboard
         run: python tracker/dashboard/build.py

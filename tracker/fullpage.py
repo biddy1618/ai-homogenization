@@ -21,6 +21,7 @@ from __future__ import annotations
 
 import argparse
 import csv
+import gzip
 import hashlib
 import json
 import os
@@ -50,29 +51,49 @@ FIELDS = ["date", "category", "query", "n_results", "n_fullpage",
           "mean_pairwise_cosine", "vendi", "distinct_ratio", "mean_marginal_novelty"]
 
 
-def fetch_page_text(url: str, api_key: str | None = None, timeout: int = 20,
-                    max_tokens: int = 1000) -> str | None:
+def _get_html(url: str, provider: str, api_key: str | None, timeout: int) -> bytes | None:
+    """Raw HTML bytes for ``url`` via the provider. None = failure (retry); b'' = non-HTML."""
+    if provider == "scrapingrobot":
+        body = json.dumps({"url": url, "render": False}).encode()
+        req = urllib.request.Request("https://api.scrapingrobot.com/?token=" + api_key,
+                                     data=body, headers={"Content-Type": "application/json"})
+        with urllib.request.urlopen(req, timeout=timeout) as r:
+            raw = r.read()
+        if raw[:2] == b"\x1f\x8b":
+            raw = gzip.decompress(raw)
+        d = json.loads(raw)
+        if d.get("status") != "SUCCESS":
+            return None
+        return (d.get("result") or "").encode("utf-8", "ignore")
+    fetch_url = url
+    if provider == "scraperapi":
+        fetch_url = "https://api.scraperapi.com/?" + urllib.parse.urlencode({"api_key": api_key, "url": url})
+    req = urllib.request.Request(fetch_url, headers={"User-Agent": UA, "Accept": "text/html,*/*"})
+    with urllib.request.urlopen(req, timeout=timeout) as r:
+        if "html" not in r.headers.get("Content-Type", "").lower():
+            return b""  # non-HTML (PDF, etc.)
+        return r.read(2_000_000)
+
+
+def fetch_page_text(url: str, provider: str = "none", api_key: str | None = None,
+                    timeout: int = 20, max_tokens: int = 1000) -> str | None:
     """Capped main-text of a page (cached by TARGET url), or None on failure/non-HTML.
 
-    If ``api_key`` is set, the page is fetched through ScraperAPI (residential/rotating proxies),
-    which works from blocked datacenter IPs (VDI / CI runner). The cache is keyed by the target
-    url, so a page already fetched directly is reused without spending an API credit."""
+    ``provider`` routes the fetch: 'none' (direct, only works from an unblocked IP), 'scraperapi'
+    (GET-wrapped proxy), or 'scrapingrobot' (POST + gzip JSON). The cache is keyed by the target
+    url, so a page already fetched is reused without spending a credit."""
     key = CACHE / (hashlib.sha1(url.encode()).hexdigest() + ".txt")
     if key.exists():
         return key.read_text(encoding="utf-8") or None
-    fetch_url = url
-    if api_key:
-        fetch_url = "https://api.scraperapi.com/?" + urllib.parse.urlencode(
-            {"api_key": api_key, "url": url})
     try:
-        req = urllib.request.Request(fetch_url, headers={"User-Agent": UA, "Accept": "text/html,*/*"})
-        with urllib.request.urlopen(req, timeout=timeout) as r:
-            if "html" not in r.headers.get("Content-Type", "").lower():
-                CACHE.mkdir(parents=True, exist_ok=True)
-                key.write_text("", encoding="utf-8")  # cache the "not usable" verdict
-                return None
-            raw = r.read(2_000_000)
+        raw = _get_html(url, provider, api_key, timeout)
     except Exception:  # noqa: BLE001  — transient; don't cache, allow a later retry
+        return None
+    if raw is None:
+        return None
+    if raw == b"":  # non-HTML — cache the "not usable" verdict
+        CACHE.mkdir(parents=True, exist_ok=True)
+        key.write_text("", encoding="utf-8")
         return None
     soup = BeautifulSoup(raw, "html.parser")
     for tag in soup(["script", "style", "noscript", "nav", "header", "footer", "aside", "form"]):
@@ -99,20 +120,21 @@ def main() -> None:
     ap.add_argument("--min-results", type=int, default=3)
     ap.add_argument("--sleep", type=float, default=0.5, help="Seconds between page fetches")
     ap.add_argument("--model-cache", type=Path, default=Path("data/models"))
-    ap.add_argument("--provider", choices=["none", "scraperapi"], default="none",
+    ap.add_argument("--provider", choices=["none", "scraperapi", "scrapingrobot"], default="none",
                     help="Route fetches through a scraping API (works from blocked datacenter IPs)")
-    ap.add_argument("--key-file", type=Path, default=Path(".secrets/scraper_api_key.txt"))
+    ap.add_argument("--key-file", type=Path, default=None, help="Override the provider's default key file")
     ap.add_argument("--force", action="store_true")
     args = ap.parse_args()
 
     api_key = None
-    if args.provider == "scraperapi":
-        api_key = os.environ.get("SCRAPER_API_KEY")
-        if not api_key and args.key_file.exists():
-            api_key = args.key_file.read_text(encoding="utf-8").strip()
+    if args.provider != "none":
+        env = {"scraperapi": "SCRAPER_API_KEY", "scrapingrobot": "SCRAPING_ROBOT_API_KEY"}[args.provider]
+        default_file = {"scraperapi": ".secrets/scraper_api_key.txt",
+                        "scrapingrobot": ".secrets/scraping_robot_api_key.txt"}[args.provider]
+        kf = args.key_file or Path(default_file)
+        api_key = os.environ.get(env) or (kf.read_text(encoding="utf-8").strip() if kf.exists() else None)
         if not api_key:
-            sys.exit("ERROR: --provider scraperapi needs a key in .secrets/scraper_api_key.txt "
-                     "or the SCRAPER_API_KEY env var (free key at https://scraperapi.com/).")
+            sys.exit(f"ERROR: --provider {args.provider} needs the {env} env var or {default_file}.")
 
     if not RUNS.exists():
         sys.exit(f"{RUNS} not found")
@@ -146,7 +168,8 @@ def main() -> None:
             texts, positions, n_fp = [], [], 0
             for r in results:
                 link = r.get("link", "")
-                page = fetch_page_text(link, api_key, timeout=60 if api_key else 20) if link else None
+                page = fetch_page_text(link, args.provider, api_key,
+                                       timeout=90 if api_key else 20) if link else None
                 time.sleep(args.sleep)
                 if page and len(page.split()) >= 20:
                     txt, is_fp = page, True

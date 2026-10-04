@@ -1,63 +1,58 @@
-# Homogenization tracker — query panel (v0.2)
+# Homogenization tracker — query panel (v0.3)
 #
 # Format:   category | query text        (lines starting with # are ignored)
-# Keep this panel FROZEN once tracking starts, so the time series stays comparable.
-# ~45 queries x weekly ≈ 195–225 searches/month — within the SerpAPI free tier (250/mo),
-# with headroom for occasional manual runs.
+# FROZEN panel: 5 high-stakes knowledge domains x 9 specific, informational questions.
+# Informational intent -> Google returns ARTICLE pages (good full-page coverage) and the
+# Vendi metric is meaningful. Commercial / "best X" queries were dropped (shopping/social
+# results don't scrape and aren't information). ~45 queries x weekly ≈ 1,550 ScrapingRobot
+# fetches/month (fits the 5,000 free tier) + ~195 SerpAPI/month (fits 250 free).
 
-medical | what are the symptoms of iron deficiency
-medical | how to lower blood pressure naturally
-medical | is intermittent fasting healthy
-medical | what causes migraines
+health | what are the symptoms of iron deficiency
+health | how to lower blood pressure naturally
+health | what causes migraines
+health | is intermittent fasting healthy
+health | how much water should you drink a day
+health | what are the early signs of diabetes
+health | how does the immune system fight infection
+health | what causes high cholesterol
+health | how much sleep do adults need
 
-legal | how to form an llc
-legal | what is a power of attorney
-legal | tenant rights eviction notice
-legal | how to file for divorce
-
-howto | how to unclog a drain
-howto | how to write a cover letter
-howto | how to improve credit score
-howto | how to tie a tie
-
-product | best wireless earbuds
-product | best budget laptop
-product | best robot vacuum
-product | best running shoes
-
-finance | how to start investing
+finance | how does compound interest work
+finance | what is a good credit score
 finance | roth ira vs traditional ira
 finance | how does refinancing a mortgage work
 finance | how to build an emergency fund
+finance | what is a 401k and how does it work
+finance | how does inflation affect your savings
+finance | how do index funds work
+finance | what is the difference between stocks and bonds
 
-tech | what is retrieval augmented generation
-tech | how to speed up a slow computer
-tech | what is a vpn
-tech | what is two factor authentication
-
-health_fitness | how to lose belly fat
-health_fitness | how much water should i drink a day
-health_fitness | best exercises for lower back pain
-health_fitness | how to start running
-
-food_cooking | how to cook rice
-food_cooking | easy chicken dinner recipes
-food_cooking | how to make pizza dough
-food_cooking | how long to boil an egg
-
-travel | best time to visit japan
-travel | how to pack for a long flight
-travel | is travel insurance worth it
-
-home_garden | how to get rid of ants
-home_garden | how often to water succulents
-home_garden | how to clean a washing machine
-home_garden | how to grow tomatoes
+law | what is a power of attorney
+law | what are tenant rights during eviction
+law | how does the probate process work
+law | what is the difference between a will and a trust
+law | how does a class action lawsuit work
+law | what happens during a divorce proceeding
+law | what is an llc and how is it taxed
+law | what are your rights if arrested
+law | how does copyright protect creators
 
 science | how do vaccines work
 science | what causes climate change
-science | how far away is the moon
+science | how do hurricanes form
+science | why is the sky blue
+science | how do black holes form
+science | what causes earthquakes
+science | how does photosynthesis work
+science | are electric cars better for the environment
+science | what is dark matter
 
-news | is ai going to replace jobs
-news | are electric cars better for the environment
-news | how does inflation affect the economy
+tech | what is a vpn and how does it work
+tech | how does two factor authentication work
+tech | what is retrieval augmented generation
+tech | how does end-to-end encryption work
+tech | is ai going to replace jobs
+tech | how does facial recognition work
+tech | what is the difference between http and https
+tech | how does cloud storage work
+tech | what is a large language model
