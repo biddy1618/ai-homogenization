@@ -1,3 +1,0 @@
-date,category,query,n_results,mean_pairwise_cosine,vendi,distinct_ratio,mean_marginal_novelty
-2026-09-26,travel,is travel insurance worth it,8,0.718697,2.6623,0.3328,0.234563
-2026-09-28,travel,is travel insurance worth it,9,0.683399,3.0743,0.3416,0.231984

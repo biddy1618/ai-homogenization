@@ -1,0 +1,2 @@
+date,category,query,n_results,mean_pairwise_cosine,vendi,distinct_ratio,mean_marginal_novelty
+2026-10-04,health,what causes high cholesterol,7,0.541408,3.6975,0.5282,0.372733

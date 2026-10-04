@@ -1,0 +1,2 @@
+date,category,query,n_results,mean_pairwise_cosine,vendi,distinct_ratio,mean_marginal_novelty
+2026-10-04,law,what is an llc and how is it taxed,8,0.658092,3.1472,0.3934,0.254451

@@ -1,3 +1,0 @@
-date,category,query,n_results,mean_pairwise_cosine,vendi,distinct_ratio,mean_marginal_novelty
-2026-09-26,howto,how to improve credit score,7,0.691967,2.7565,0.3938,0.26029
-2026-09-28,howto,how to improve credit score,7,0.684218,2.838,0.4054,0.261526

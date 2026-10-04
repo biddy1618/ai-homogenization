@@ -1,3 +1,0 @@
-date,category,query,n_results,mean_pairwise_cosine,vendi,distinct_ratio,mean_marginal_novelty
-2026-09-26,tech,what is a vpn,8,0.829027,1.9618,0.2452,0.121129
-2026-09-28,tech,what is a vpn,9,0.762397,2.4076,0.2675,0.164634

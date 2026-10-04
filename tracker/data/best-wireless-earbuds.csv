@@ -1,3 +1,0 @@
-date,category,query,n_results,mean_pairwise_cosine,vendi,distinct_ratio,mean_marginal_novelty
-2026-09-26,product,best wireless earbuds,7,0.638984,3.1929,0.4561,0.314173
-2026-09-28,product,best wireless earbuds,7,0.64902,3.0787,0.4398,0.304983

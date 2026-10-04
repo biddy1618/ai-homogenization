@@ -1,3 +1,0 @@
-date,category,query,n_results,mean_pairwise_cosine,vendi,distinct_ratio,mean_marginal_novelty
-2026-09-26,science,how far away is the moon,8,0.378629,5.5473,0.6934,0.516191
-2026-09-28,science,how far away is the moon,7,0.393509,4.8931,0.699,0.526257

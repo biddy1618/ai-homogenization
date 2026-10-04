@@ -1,3 +1,2 @@
 date,category,query,n_results,mean_pairwise_cosine,vendi,distinct_ratio,mean_marginal_novelty
-2026-09-26,tech,what is retrieval augmented generation,7,0.819067,1.9538,0.2791,0.113178
-2026-09-28,tech,what is retrieval augmented generation,9,0.837446,1.9477,0.2164,0.10062
+2026-10-04,tech,what is retrieval augmented generation,7,0.853137,1.7489,0.2498,0.096262

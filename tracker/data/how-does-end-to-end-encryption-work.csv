@@ -1,0 +1,2 @@
+date,category,query,n_results,mean_pairwise_cosine,vendi,distinct_ratio,mean_marginal_novelty
+2026-10-04,tech,how does end-to-end encryption work,6,0.689344,2.553,0.4255,0.218781

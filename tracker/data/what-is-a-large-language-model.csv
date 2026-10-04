@@ -1,0 +1,2 @@
+date,category,query,n_results,mean_pairwise_cosine,vendi,distinct_ratio,mean_marginal_novelty
+2026-10-04,tech,what is a large language model,6,0.524408,3.5959,0.5993,0.388402

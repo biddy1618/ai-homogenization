@@ -1,0 +1,2 @@
+date,category,query,n_results,mean_pairwise_cosine,vendi,distinct_ratio,mean_marginal_novelty
+2026-10-04,tech,how does two factor authentication work,7,0.791487,2.0864,0.2981,0.15633

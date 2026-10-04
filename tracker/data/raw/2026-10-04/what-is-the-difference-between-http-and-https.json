@@ -1,0 +1,65 @@
+[
+  {
+    "position": 1,
+    "title": "https",
+    "link": "https://en.wikipedia.org/wiki/HTTPS",
+    "domain": "en.wikipedia.org",
+    "snippet": "HTTPS URLs begin with \"https://\" and use port 443 by default, whereas HTTP URLs begin with \"http://\" and use port 80 by default. HTTP is not encrypted"
+  },
+  {
+    "position": 2,
+    "title": "What is HTTPS? | Learning Center",
+    "link": "https://www.cloudflare.com/learning/ssl/what-is-https/",
+    "domain": "www.cloudflare.com",
+    "snippet": "Hypertext transfer protocol secure (HTTPS) is the secure version of HTTP, which is the primary protocol used to send data between a web browser and a website."
+  },
+  {
+    "position": 3,
+    "title": "HTTPS encryption on the web",
+    "link": "https://transparencyreport.google.com/https?hl=en",
+    "domain": "transparencyreport.google.com",
+    "snippet": "HTTPS helps keep your browsing safe by securely connecting your browser or app with the websites you visit. HTTPS relies on encryption technology—SSL or TLS—to ..."
+  },
+  {
+    "position": 4,
+    "title": "THE 17 GOALS - Sustainable Development Goals",
+    "link": "https://sdgs.un.org/goals",
+    "domain": "sdgs.un.org",
+    "snippet": "At its heart are the 17 Sustainable Development Goals (SDGs), which are an urgent call for action by all countries - developed and developing - in a global ..."
+  },
+  {
+    "position": 5,
+    "title": "Sanctions List Search",
+    "link": "https://sanctionssearch.ofac.treas.gov/",
+    "domain": "sanctionssearch.ofac.treas.gov",
+    "snippet": "The Sanctions List Search tool uses approximate string matching to identify possible matches between word or character strings as entered into Sanctions List ..."
+  },
+  {
+    "position": 6,
+    "title": "Zoom: One platform to connect",
+    "link": "https://www.zoom.com/",
+    "domain": "www.zoom.com",
+    "snippet": "Modernize workflows with Zoom's trusted collaboration tools: including video meetings, Zoom Chat, VoIP phone, webinars, whiteboard, contact center, ..."
+  },
+  {
+    "position": 7,
+    "title": "World Bank Open Data | Data",
+    "link": "https://data.worldbank.org/",
+    "domain": "data.worldbank.org",
+    "snippet": "Data 360. The World Bank open data site is expanding to Data360, a newly curated collection of data, analytics, and tools to foster development."
+  },
+  {
+    "position": 8,
+    "title": "What Is HyperText Transfer Protocol Secure (HTTPS)?",
+    "link": "https://www.fortinet.com/resources/cyberglossary/what-is-https",
+    "domain": "www.fortinet.com",
+    "snippet": "The main difference between HTTP and HTTPS is that HTTPS has the additional SSL/TLS layer to ensure all data being transferred is encrypted and secure."
+  },
+  {
+    "position": 9,
+    "title": "IUCN Red List of Threatened Species",
+    "link": "https://www.iucnredlist.org/",
+    "domain": "www.iucnredlist.org",
+    "snippet": "What is The IUCN Red List? Established in 1964, The International Union for Conservation of Nature's Red List of Threatened Species has evolved to become the ..."
+  }
+]

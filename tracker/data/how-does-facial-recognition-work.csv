@@ -1,0 +1,2 @@
+date,category,query,n_results,mean_pairwise_cosine,vendi,distinct_ratio,mean_marginal_novelty
+2026-10-04,tech,how does facial recognition work,8,0.718818,2.7029,0.3379,0.210403

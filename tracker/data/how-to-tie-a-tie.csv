@@ -1,3 +1,0 @@
-date,category,query,n_results,mean_pairwise_cosine,vendi,distinct_ratio,mean_marginal_novelty
-2026-09-26,howto,how to tie a tie,6,0.658792,2.7534,0.4589,0.281052
-2026-09-28,howto,how to tie a tie,7,0.666597,2.895,0.4136,0.261878

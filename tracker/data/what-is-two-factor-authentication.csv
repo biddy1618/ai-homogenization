@@ -1,3 +1,0 @@
-date,category,query,n_results,mean_pairwise_cosine,vendi,distinct_ratio,mean_marginal_novelty
-2026-09-26,tech,what is two factor authentication,8,0.831529,1.9324,0.2416,0.131833
-2026-09-28,tech,what is two factor authentication,8,0.812322,1.964,0.2455,0.127872

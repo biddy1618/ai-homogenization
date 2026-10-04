@@ -1,91 +1,46 @@
 date,category,query,n_results,mean_pairwise_cosine,vendi,distinct_ratio,mean_marginal_novelty
-2026-09-26,medical,what are the symptoms of iron deficiency,9,0.707092,2.9625,0.3292,0.23073
-2026-09-26,medical,how to lower blood pressure naturally,8,0.293354,6.03,0.7538,0.582054
-2026-09-26,medical,is intermittent fasting healthy,8,0.694027,2.8872,0.3609,0.259719
-2026-09-26,legal,how to form an llc,8,0.62652,3.4529,0.4316,0.297215
-2026-09-26,legal,what is a power of attorney,7,0.531959,3.8199,0.5457,0.36584
-2026-09-26,legal,tenant rights eviction notice,7,0.60713,3.3142,0.4735,0.322375
-2026-09-26,howto,how to unclog a drain,6,0.599036,3.1154,0.5192,0.333437
-2026-09-26,howto,how to write a cover letter,8,0.611494,3.4879,0.436,0.343348
-2026-09-26,howto,how to improve credit score,7,0.691967,2.7565,0.3938,0.26029
-2026-09-26,product,best wireless earbuds,7,0.638984,3.1929,0.4561,0.314173
-2026-09-26,product,best budget laptop,8,0.596604,3.7487,0.4686,0.357397
-2026-09-26,product,best robot vacuum,8,0.676251,3.0256,0.3782,0.244325
-2026-09-26,finance,how to start investing,8,0.25176,6.3501,0.7938,0.628604
-2026-09-26,finance,roth ira vs traditional ira,6,0.614106,2.9097,0.4849,0.296606
-2026-09-26,finance,how does refinancing a mortgage work,8,0.593937,3.3976,0.4247,0.300785
-2026-09-26,tech,what is retrieval augmented generation,7,0.819067,1.9538,0.2791,0.113178
-2026-09-26,tech,how to speed up a slow computer,8,0.589421,3.7526,0.4691,0.354107
-2026-09-26,news,is ai going to replace jobs,7,0.717505,2.6132,0.3733,0.228068
-2026-09-26,medical,what causes migraines,8,0.602138,3.3308,0.4164,0.275772
-2026-09-26,legal,how to file for divorce,9,0.59773,3.8765,0.4307,0.356958
-2026-09-26,howto,how to tie a tie,6,0.658792,2.7534,0.4589,0.281052
-2026-09-26,product,best running shoes,7,0.562618,3.7099,0.53,0.378672
-2026-09-26,finance,how to build an emergency fund,8,0.589139,3.7416,0.4677,0.342794
-2026-09-26,tech,what is a vpn,8,0.829027,1.9618,0.2452,0.121129
-2026-09-26,tech,what is two factor authentication,8,0.831529,1.9324,0.2416,0.131833
-2026-09-26,health_fitness,how to lose belly fat,7,0.611671,3.2873,0.4696,0.304267
-2026-09-26,health_fitness,how much water should i drink a day,9,0.477466,4.7027,0.5225,0.38487
-2026-09-26,health_fitness,best exercises for lower back pain,7,0.678778,2.8731,0.4104,0.279004
-2026-09-26,health_fitness,how to start running,8,0.563716,3.9334,0.4917,0.383083
-2026-09-26,food_cooking,how to cook rice,4,0.505785,2.8052,0.7013,0.415673
-2026-09-26,food_cooking,easy chicken dinner recipes,6,0.656689,2.7699,0.4616,0.28562
-2026-09-26,food_cooking,how to make pizza dough,7,0.63899,3.1624,0.4518,0.315421
-2026-09-26,food_cooking,how long to boil an egg,6,0.570744,3.3611,0.5602,0.384766
-2026-09-26,travel,best time to visit japan,7,0.761847,2.2551,0.3222,0.157229
-2026-09-26,travel,how to pack for a long flight,8,0.453702,4.8243,0.603,0.454174
-2026-09-26,travel,is travel insurance worth it,8,0.718697,2.6623,0.3328,0.234563
-2026-09-26,home_garden,how to get rid of ants,6,0.68343,2.6198,0.4366,0.270312
-2026-09-26,home_garden,how often to water succulents,5,0.680601,2.4882,0.4976,0.300591
-2026-09-26,home_garden,how to clean a washing machine,7,0.658674,2.9588,0.4227,0.294721
-2026-09-26,home_garden,how to grow tomatoes,7,0.534482,3.8266,0.5467,0.346221
-2026-09-26,science,how do vaccines work,8,0.711549,2.7886,0.3486,0.246341
-2026-09-26,science,what causes climate change,9,0.716586,2.8792,0.3199,0.228186
-2026-09-26,science,how far away is the moon,8,0.378629,5.5473,0.6934,0.516191
-2026-09-26,news,are electric cars better for the environment,9,0.639102,3.552,0.3947,0.29542
-2026-09-26,news,how does inflation affect the economy,8,0.10353,7.3013,0.9127,0.745025
-2026-09-28,medical,what are the symptoms of iron deficiency,8,0.704734,2.8376,0.3547,0.242916
-2026-09-28,medical,how to lower blood pressure naturally,8,0.699205,2.745,0.3431,0.228169
-2026-09-28,medical,is intermittent fasting healthy,8,0.730234,2.6415,0.3302,0.23227
-2026-09-28,medical,what causes migraines,8,0.630038,3.3391,0.4174,0.308094
-2026-09-28,legal,how to form an llc,9,0.544549,4.369,0.4854,0.365263
-2026-09-28,legal,what is a power of attorney,8,0.748154,2.3038,0.288,0.144562
-2026-09-28,legal,tenant rights eviction notice,8,0.594364,3.6762,0.4595,0.31777
-2026-09-28,legal,how to file for divorce,9,0.556077,4.2041,0.4671,0.361975
-2026-09-28,howto,how to unclog a drain,6,0.610426,3.0823,0.5137,0.320329
-2026-09-28,howto,how to write a cover letter,8,0.608032,3.6193,0.4524,0.343027
-2026-09-28,howto,how to improve credit score,7,0.684218,2.838,0.4054,0.261526
-2026-09-28,howto,how to tie a tie,7,0.666597,2.895,0.4136,0.261878
-2026-09-28,product,best wireless earbuds,7,0.64902,3.0787,0.4398,0.304983
-2026-09-28,product,best budget laptop,8,0.567945,3.8584,0.4823,0.349635
-2026-09-28,product,best robot vacuum,7,0.657755,3.0247,0.4321,0.297375
-2026-09-28,product,best running shoes,8,0.599813,3.661,0.4576,0.337605
-2026-09-28,finance,how to start investing,5,0.54859,3.0643,0.6129,0.359046
-2026-09-28,finance,roth ira vs traditional ira,6,0.702322,2.5285,0.4214,0.253264
-2026-09-28,finance,how does refinancing a mortgage work,8,0.654653,3.2365,0.4046,0.27909
-2026-09-28,finance,how to build an emergency fund,7,0.589754,3.3953,0.485,0.3371
-2026-09-28,tech,what is retrieval augmented generation,9,0.837446,1.9477,0.2164,0.10062
-2026-09-28,tech,how to speed up a slow computer,8,0.556712,3.9563,0.4945,0.347288
-2026-09-28,tech,what is a vpn,9,0.762397,2.4076,0.2675,0.164634
-2026-09-28,tech,what is two factor authentication,8,0.812322,1.964,0.2455,0.127872
-2026-09-28,health_fitness,how to lose belly fat,8,0.656532,3.1081,0.3885,0.272112
-2026-09-28,health_fitness,how much water should i drink a day,9,0.463568,5.0715,0.5635,0.440196
-2026-09-28,health_fitness,best exercises for lower back pain,7,0.617625,3.2205,0.4601,0.284299
-2026-09-28,health_fitness,how to start running,9,0.610985,3.8089,0.4232,0.322946
-2026-09-28,food_cooking,how to cook rice,5,0.524661,3.1915,0.6383,0.408181
-2026-09-28,food_cooking,easy chicken dinner recipes,6,0.474236,3.9541,0.659,0.470718
-2026-09-28,food_cooking,how to make pizza dough,7,0.644171,3.0939,0.442,0.29744
-2026-09-28,food_cooking,how long to boil an egg,6,0.553705,3.4286,0.5714,0.414814
-2026-09-28,travel,best time to visit japan,7,0.148537,6.4774,0.9253,0.7706
-2026-09-28,travel,how to pack for a long flight,8,0.492884,4.43,0.5537,0.397786
-2026-09-28,travel,is travel insurance worth it,9,0.683399,3.0743,0.3416,0.231984
-2026-09-28,home_garden,how to get rid of ants,7,0.615863,3.3248,0.475,0.336058
-2026-09-28,home_garden,how often to water succulents,5,0.660832,2.5446,0.5089,0.264766
-2026-09-28,home_garden,how to clean a washing machine,6,0.496507,3.5683,0.5947,0.386119
-2026-09-28,home_garden,how to grow tomatoes,8,0.582751,3.7025,0.4628,0.315165
-2026-09-28,science,how do vaccines work,8,0.603802,3.5519,0.444,0.336025
-2026-09-28,science,what causes climate change,9,0.722024,2.8031,0.3115,0.205079
-2026-09-28,science,how far away is the moon,7,0.393509,4.8931,0.699,0.526257
-2026-09-28,news,is ai going to replace jobs,7,0.713537,2.6535,0.3791,0.238528
-2026-09-28,news,are electric cars better for the environment,8,0.64428,3.3247,0.4156,0.302484
-2026-09-28,news,how does inflation affect the economy,9,0.586959,3.8737,0.4304,0.307658
+2026-10-04,health,what are the symptoms of iron deficiency,8,0.769025,2.2937,0.2867,0.161393
+2026-10-04,health,how to lower blood pressure naturally,7,0.454875,4.2804,0.6115,0.425512
+2026-10-04,health,what causes migraines,7,0.616651,3.1672,0.4525,0.282091
+2026-10-04,health,is intermittent fasting healthy,8,0.723939,2.6856,0.3357,0.221852
+2026-10-04,health,how much water should you drink a day,8,0.650996,3.222,0.4028,0.272107
+2026-10-04,health,what are the early signs of diabetes,8,0.715336,2.6947,0.3368,0.202184
+2026-10-04,health,how does the immune system fight infection,9,0.454606,5.3733,0.597,0.481049
+2026-10-04,health,what causes high cholesterol,7,0.541408,3.6975,0.5282,0.372733
+2026-10-04,health,how much sleep do adults need,7,0.720616,2.5432,0.3633,0.20295
+2026-10-04,finance,how does compound interest work,6,0.887021,1.5602,0.26,0.083837
+2026-10-04,finance,what is a good credit score,7,0.607092,3.3874,0.4839,0.349938
+2026-10-04,finance,roth ira vs traditional ira,4,0.795607,1.7835,0.4459,0.188957
+2026-10-04,finance,how does refinancing a mortgage work,8,0.611973,3.5544,0.4443,0.324978
+2026-10-04,finance,how to build an emergency fund,7,0.637592,3.0817,0.4402,0.293327
+2026-10-04,finance,what is a 401k and how does it work,8,0.758479,2.2366,0.2796,0.170855
+2026-10-04,finance,how does inflation affect your savings,8,0.240808,6.7009,0.8376,0.701153
+2026-10-04,finance,how do index funds work,6,0.754753,2.2304,0.3717,0.203169
+2026-10-04,finance,what is the difference between stocks and bonds,7,0.656621,2.9556,0.4222,0.286609
+2026-10-04,law,what is a power of attorney,8,0.59012,3.7728,0.4716,0.331909
+2026-10-04,law,what are tenant rights during eviction,9,0.569895,4.168,0.4631,0.344816
+2026-10-04,law,how does the probate process work,7,0.738875,2.4083,0.344,0.194304
+2026-10-04,law,what is the difference between a will and a trust,7,0.749671,2.3276,0.3325,0.191453
+2026-10-04,law,how does a class action lawsuit work,9,0.697518,3.0056,0.334,0.269265
+2026-10-04,law,what happens during a divorce proceeding,9,0.434176,5.5673,0.6186,0.496538
+2026-10-04,law,what is an llc and how is it taxed,8,0.658092,3.1472,0.3934,0.254451
+2026-10-04,law,what are your rights if arrested,8,0.478286,4.77,0.5963,0.477448
+2026-10-04,law,how does copyright protect creators,8,0.718573,2.7427,0.3428,0.233764
+2026-10-04,science,how do vaccines work,8,0.541937,3.9616,0.4952,0.342243
+2026-10-04,science,what causes climate change,8,0.63451,3.2939,0.4117,0.300525
+2026-10-04,science,how do hurricanes form,5,0.660952,2.586,0.5172,0.318826
+2026-10-04,science,why is the sky blue,5,0.752482,2.1447,0.4289,0.220275
+2026-10-04,science,how do black holes form,6,0.588781,3.252,0.542,0.374204
+2026-10-04,science,what causes earthquakes,5,0.646927,2.6255,0.5251,0.324505
+2026-10-04,science,how does photosynthesis work,7,0.720193,2.5669,0.3667,0.222105
+2026-10-04,science,are electric cars better for the environment,8,0.641543,2.8935,0.3617,0.253672
+2026-10-04,science,what is dark matter,6,0.677121,2.6887,0.4481,0.258663
+2026-10-04,tech,what is a vpn and how does it work,8,0.844343,1.8665,0.2333,0.125249
+2026-10-04,tech,how does two factor authentication work,7,0.791487,2.0864,0.2981,0.15633
+2026-10-04,tech,what is retrieval augmented generation,7,0.853137,1.7489,0.2498,0.096262
+2026-10-04,tech,how does end-to-end encryption work,6,0.689344,2.553,0.4255,0.218781
+2026-10-04,tech,is ai going to replace jobs,8,0.669957,3.0721,0.384,0.272148
+2026-10-04,tech,how does facial recognition work,8,0.718818,2.7029,0.3379,0.210403
+2026-10-04,tech,what is the difference between http and https,9,0.183491,6.6805,0.7423,0.616334
+2026-10-04,tech,how does cloud storage work,6,0.773275,2.11,0.3517,0.162296
+2026-10-04,tech,what is a large language model,6,0.524408,3.5959,0.5993,0.388402

@@ -1,0 +1,44 @@
+[
+  {
+    "position": 1,
+    "title": "What is cloud storage and how does it work?",
+    "link": "https://backup.education/showthread.php?tid=2291",
+    "domain": "backup.education",
+    "snippet": "Basically, cloud storage refers to saving your data on remote servers accessed via the internet rather than on your local hard drive. So, ..."
+  },
+  {
+    "position": 2,
+    "title": "What is Cloud Storage? Cloud Storage Definition",
+    "link": "https://www.techtarget.com/it-infrastructure/definition/cloud-storage",
+    "domain": "www.techtarget.com",
+    "snippet": "Cloud storage is a service model in which data is transmitted and stored on remote storage systems, where it is maintained, managed, ..."
+  },
+  {
+    "position": 3,
+    "title": "What is 'the cloud' and do I need it? | Cyber safety tips",
+    "link": "https://beconnected.esafety.gov.au/topic-library/articles-and-tips/what-is-the-cloud-and-do-i-need-it",
+    "domain": "beconnected.esafety.gov.au",
+    "snippet": "The cloud is an online storage service. Somewhere you can create or store back-up copies of things like word documents, spreadsheets, photos ..."
+  },
+  {
+    "position": 4,
+    "title": "What REALLY is cloud storage and how does it work?",
+    "link": "https://blog.cubbit.io/what-is-cloud-storage-and-how-does-it-work/",
+    "domain": "blog.cubbit.io",
+    "snippet": "They physically store the information and allow you to upload and access your content by means of a simple internet connection and without the ..."
+  },
+  {
+    "position": 5,
+    "title": "How does cloud storage work?",
+    "link": "https://www.quora.com/How-does-cloud-storage-work",
+    "domain": "www.quora.com",
+    "snippet": "How does cloud storage work?"
+  },
+  {
+    "position": 7,
+    "title": "What is \"The Cloud\"? I understand it's internet storage, but ...",
+    "link": "https://www.reddit.com/r/explainlikeimfive/comments/42ze63/eli5_what_is_the_cloud_i_understand_its_internet/",
+    "domain": "www.reddit.com",
+    "snippet": "The cloud is a concept. It is run by whoever you store your data with. If you own the server, you own the cloud. If Apple does, then Apple does."
+  }
+]

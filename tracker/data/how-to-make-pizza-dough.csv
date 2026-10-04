@@ -1,3 +1,0 @@
-date,category,query,n_results,mean_pairwise_cosine,vendi,distinct_ratio,mean_marginal_novelty
-2026-09-26,food_cooking,how to make pizza dough,7,0.63899,3.1624,0.4518,0.315421
-2026-09-28,food_cooking,how to make pizza dough,7,0.644171,3.0939,0.442,0.29744

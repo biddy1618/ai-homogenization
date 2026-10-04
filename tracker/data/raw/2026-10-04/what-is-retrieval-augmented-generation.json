@@ -1,0 +1,51 @@
+[
+  {
+    "position": 1,
+    "title": "What is Retrieval-Augmented Generation (RAG)? | Glossary",
+    "link": "https://www.hpe.com/in/en/what-is/rag.html",
+    "domain": "www.hpe.com",
+    "snippet": "Retrieval-Augmented Generation (RAG) improves natural language interpretation and production by combining retrieval-based and generative models."
+  },
+  {
+    "position": 2,
+    "title": "What is RAG (Retrieval-Augmented Generation)?",
+    "link": "https://www.azion.com/en/learning/ai/what-is-rag/",
+    "domain": "www.azion.com",
+    "snippet": "Retrieval-Augmented Generation (RAG) is a technique that combines information retrieval with large language models (LLMs) to generate accurate, up-to-date ..."
+  },
+  {
+    "position": 3,
+    "title": "What is RAG (Retrieval-Augmented Generation)",
+    "link": "https://searchatlas.com/blog/what-is-rag/",
+    "domain": "searchatlas.com",
+    "snippet": "Retrieval-Augmented Generation (RAG) is an AI framework that combines information retrieval with generative language models to produce accurate ..."
+  },
+  {
+    "position": 4,
+    "title": "Understanding RAG (Retrieval-Augmented Generation) in ...",
+    "link": "https://builder.aws.com/content/3JRW7DNbMGyPyaO1bpSG9dKXte0/understanding-rag-retrieval-augmented-generation-in-5-minutes",
+    "domain": "builder.aws.com",
+    "snippet": "Retrieval-Augmented Generation (RAG)—how it turns LLMs into an \"open-book exam,\" fixes hallucinations, and bridges the gap between static AI ..."
+  },
+  {
+    "position": 5,
+    "title": "An introduction to RAG: Retrieval Augmented Generation ...",
+    "link": "https://eagerworks.com/blog/retrieval-augmented-generation",
+    "domain": "eagerworks.com",
+    "snippet": "RAG, short for Retrieval-Augmented Generation, is a pioneering approach within the field of Natural Language Processing (NLP) that transforms ..."
+  },
+  {
+    "position": 6,
+    "title": "Retrieval-augmented generation",
+    "link": "https://www.thoughtworks.com/en-br/insights/decoder/r/retrieval-augmented-generation",
+    "domain": "www.thoughtworks.com",
+    "snippet": "Retrieval-augmented generation (RAG) is a technique that improves the quality of outputs from large language models (LLMs) used in Generative AI (GenAI) and ..."
+  },
+  {
+    "position": 7,
+    "title": "What is Retrieval-Augmented Generation",
+    "link": "https://www.eimt.edu.eu/what-is-retrieval-augmented-generation",
+    "domain": "www.eimt.edu.eu",
+    "snippet": "Retrieval-Augmented Generation (RAG) is a technique that lets large language models pull in information from external, up-to-date sources ..."
+  }
+]

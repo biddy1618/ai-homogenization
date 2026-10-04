@@ -1,0 +1,2 @@
+date,category,query,n_results,mean_pairwise_cosine,vendi,distinct_ratio,mean_marginal_novelty
+2026-10-04,tech,what is a vpn and how does it work,8,0.844343,1.8665,0.2333,0.125249

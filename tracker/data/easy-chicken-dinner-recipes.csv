@@ -1,3 +1,0 @@
-date,category,query,n_results,mean_pairwise_cosine,vendi,distinct_ratio,mean_marginal_novelty
-2026-09-26,food_cooking,easy chicken dinner recipes,6,0.656689,2.7699,0.4616,0.28562
-2026-09-28,food_cooking,easy chicken dinner recipes,6,0.474236,3.9541,0.659,0.470718

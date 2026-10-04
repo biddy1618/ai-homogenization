@@ -1,3 +1,0 @@
-date,category,query,n_results,mean_pairwise_cosine,vendi,distinct_ratio,mean_marginal_novelty
-2026-09-26,travel,how to pack for a long flight,8,0.453702,4.8243,0.603,0.454174
-2026-09-28,travel,how to pack for a long flight,8,0.492884,4.43,0.5537,0.397786

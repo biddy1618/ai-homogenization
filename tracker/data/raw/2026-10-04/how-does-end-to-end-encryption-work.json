@@ -1,0 +1,44 @@
+[
+  {
+    "position": 1,
+    "title": "ELI5: what is end to end encryption and the whole bill ...",
+    "link": "https://www.reddit.com/r/explainlikeimfive/comments/gbeqel/eli5_what_is_end_to_end_encryption_and_the_whole/",
+    "domain": "www.reddit.com",
+    "snippet": "If anyone could help me learn this in the most basic way possible, it'll be really helpful for one of my uni classes. Thanks"
+  },
+  {
+    "position": 2,
+    "title": "End-to-End Encryption | Technology Glossary Definitions",
+    "link": "https://www.g2.com/glossary/end-to-end-encryption-definition",
+    "domain": "www.g2.com",
+    "snippet": "How does end-to-end encryption work? With end-to-end encryption, the sender and intended recipient are the only people who can access the data."
+  },
+  {
+    "position": 3,
+    "title": "On the virtues and pitfalls of end-to-end encryption",
+    "link": "https://iapp.org/news/a/on-the-virtues-and-pitfalls-of-end-to-end-encryption",
+    "domain": "iapp.org",
+    "snippet": "End-to-end Encryption works by keeping data encrypted at all times between two or more parties. Only the parties involved in the conversation ..."
+  },
+  {
+    "position": 4,
+    "title": "What is end-to-end encryption and how does it work",
+    "link": "https://www.facebook.com/groups/494596534740263/posts/1607439300122642/",
+    "domain": "www.facebook.com",
+    "snippet": "This is accomplished by encrypting the data at the sender's end and decrypting it at the recipient's end, with no intermediate decryption by ..."
+  },
+  {
+    "position": 5,
+    "title": "End-To-End encryption (E2EE)",
+    "link": "https://www.urban-vpn.com/glossary/end-to-end-encryption/",
+    "domain": "www.urban-vpn.com",
+    "snippet": "Messages and files are encrypted before leaving the phone or computer, and they are not decoded until they arrive at their destination. As a result, hackers ..."
+  },
+  {
+    "position": 6,
+    "title": "In an end to end encryption how does the other end gets ...",
+    "link": "https://www.quora.com/In-an-end-to-end-encryption-how-does-the-other-end-gets-the-key-to-decode-the-encrypted-data",
+    "domain": "www.quora.com",
+    "snippet": "In an end to end encryption how does the other end gets the key to decode the encrypted data?"
+  }
+]

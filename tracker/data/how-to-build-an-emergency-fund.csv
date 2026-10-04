@@ -1,3 +1,2 @@
 date,category,query,n_results,mean_pairwise_cosine,vendi,distinct_ratio,mean_marginal_novelty
-2026-09-26,finance,how to build an emergency fund,8,0.589139,3.7416,0.4677,0.342794
-2026-09-28,finance,how to build an emergency fund,7,0.589754,3.3953,0.485,0.3371
+2026-10-04,finance,how to build an emergency fund,7,0.637592,3.0817,0.4402,0.293327

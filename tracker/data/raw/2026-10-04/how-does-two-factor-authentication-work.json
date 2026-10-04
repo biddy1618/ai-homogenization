@@ -1,0 +1,51 @@
+[
+  {
+    "position": 1,
+    "title": "What is Two Factor Authentication and How Does It Work",
+    "link": "https://skillogic.com/blog/what-is-two-factor-authentication-and-how-does-it-work/",
+    "domain": "skillogic.com",
+    "snippet": "Two-Factor Authentication is a security process that requires users to verify their identity using two different factors, typically something ..."
+  },
+  {
+    "position": 2,
+    "title": "Two-factor authentication: What is it and how does it work?",
+    "link": "https://www.linkedin.com/pulse/two-factor-authentication-what-how-does-work-auditeste-usa",
+    "domain": "www.linkedin.com",
+    "snippet": "Two-factor authentication is a login validation protocol that can be adopted in any digital application, especially when logging into websites, ..."
+  },
+  {
+    "position": 3,
+    "title": "What is two-factor authentication (2FA)?",
+    "link": "https://in.norton.com/blog/how-to/importance-two-factor-authentication",
+    "domain": "in.norton.com",
+    "snippet": "Two-factor authentication adds an extra step – and an extra level of security — when you log into a website, online bank account, credit card portal, or other ..."
+  },
+  {
+    "position": 4,
+    "title": "Get Organized: How to Make Two-Factor Authentication ...",
+    "link": "https://www.pcmag.com/news/get-organized-how-to-make-two-factor-authentication-work-for-you",
+    "domain": "www.pcmag.com",
+    "snippet": "Two-factor authentication simply means there's another barrier beyond username and password that you need to pass to get access to your account."
+  },
+  {
+    "position": 5,
+    "title": "What Is Multifactor Authentication?",
+    "link": "https://www.sbtpartners.com/two-factor-authentication-and-your-security/",
+    "domain": "www.sbtpartners.com",
+    "snippet": "MFA protocols call for a combination of three general factors: Something the user knows, such as usernames and passwords, a passphrase, or PIN."
+  },
+  {
+    "position": 6,
+    "title": "ELI5: How Two-Factor Authentication is secure when you ...",
+    "link": "https://www.reddit.com/r/explainlikeimfive/comments/cwm4oh/eli5_how_twofactor_authentication_is_secure_when/",
+    "domain": "www.reddit.com",
+    "snippet": "Two-Factor Authentication is secure if the person setting up the 2FA is the owner of the account. Just like a password is more secure if the ..."
+  },
+  {
+    "position": 7,
+    "title": "Two-Factor Authentication How To",
+    "link": "https://www.cityofdubuque.org/DocumentCenter/View/46789/Two-factor-Authentication-How-To-",
+    "domain": "www.cityofdubuque.org",
+    "snippet": "Two-factor authentication (2FA), is a security process where users provide two different authentication factors to verify themselves."
+  }
+]

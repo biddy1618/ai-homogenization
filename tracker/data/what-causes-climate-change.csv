@@ -1,3 +1,2 @@
 date,category,query,n_results,mean_pairwise_cosine,vendi,distinct_ratio,mean_marginal_novelty
-2026-09-26,science,what causes climate change,9,0.716586,2.8792,0.3199,0.228186
-2026-09-28,science,what causes climate change,9,0.722024,2.8031,0.3115,0.205079
+2026-10-04,science,what causes climate change,8,0.63451,3.2939,0.4117,0.300525

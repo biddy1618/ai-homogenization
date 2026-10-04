@@ -1,0 +1,2 @@
+date,category,query,n_results,mean_pairwise_cosine,vendi,distinct_ratio,mean_marginal_novelty
+2026-10-04,law,what happens during a divorce proceeding,9,0.434176,5.5673,0.6186,0.496538

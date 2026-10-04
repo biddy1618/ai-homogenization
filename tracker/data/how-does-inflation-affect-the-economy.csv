@@ -1,3 +1,0 @@
-date,category,query,n_results,mean_pairwise_cosine,vendi,distinct_ratio,mean_marginal_novelty
-2026-09-26,news,how does inflation affect the economy,8,0.10353,7.3013,0.9127,0.745025
-2026-09-28,news,how does inflation affect the economy,9,0.586959,3.8737,0.4304,0.307658

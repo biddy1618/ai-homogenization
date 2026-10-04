@@ -1,3 +1,2 @@
 run_date,run_ts_utc,tracker_version,model,engine,num,gl,hl,device,location,n_queries,n_ok,n_skipped,code_sha
-2026-09-26,2026-09-26T17:46:15Z,0.2,sentence-transformers/all-MiniLM-L6-v2,google,10,us,en,desktop,United States,45,27,18,cb8d8e9
-2026-09-28,2026-09-28T14:12:54Z,0.2,sentence-transformers/all-MiniLM-L6-v2,google,10,us,en,desktop,United States,45,45,0,57aa702
+2026-10-04,2026-10-04T16:30:02Z,0.3,sentence-transformers/all-MiniLM-L6-v2,google,10,us,en,desktop,United States,45,45,0,08bd613

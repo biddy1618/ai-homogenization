@@ -1,0 +1,2 @@
+date,category,query,n_results,mean_pairwise_cosine,vendi,distinct_ratio,mean_marginal_novelty
+2026-10-04,health,what are the early signs of diabetes,8,0.715336,2.6947,0.3368,0.202184

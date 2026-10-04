@@ -1,0 +1,2 @@
+date,category,query,n_results,mean_pairwise_cosine,vendi,distinct_ratio,mean_marginal_novelty
+2026-10-04,health,how does the immune system fight infection,9,0.454606,5.3733,0.597,0.481049

@@ -1,0 +1,58 @@
+[
+  {
+    "position": 1,
+    "title": "How Does Facial Recognition Work? Complete Guide",
+    "link": "https://hyperverge.co/blog/how-does-facial-recognition-work/",
+    "domain": "hyperverge.co",
+    "snippet": "It works by detecting a face in an image, analyzing its geometry to create a unique digital template, and comparing that template to stored data ..."
+  },
+  {
+    "position": 2,
+    "title": "How Does Facial Recognition Work? | Face Detection ...",
+    "link": "https://multicorewareinc.com/how-does-facial-recognition-work/",
+    "domain": "multicorewareinc.com",
+    "snippet": "Facial recognition is a technology that identifies and verifies a human face by analyzing the facial features of an individual through images, ..."
+  },
+  {
+    "position": 3,
+    "title": "Face Surveillance and Biometrics",
+    "link": "https://epic.org/issues/surveillance-oversight/face-surveillance/",
+    "domain": "epic.org",
+    "snippet": "Facial recognition uses algorithms to match a picture of an unknown individual to a gallery of identified images based on facial features like the distance"
+  },
+  {
+    "position": 4,
+    "title": "How does facial recognition work? - IONOS",
+    "link": "https://www.ionos.com/digitalguide/websites/web-development/facial-recognition-systems/",
+    "domain": "www.ionos.com",
+    "snippet": "Facial recognition is an algorithmic process that identifies individuals or verifies their identity using unique biometric facial features."
+  },
+  {
+    "position": 5,
+    "title": "How Does Facial Recognition Technology Work",
+    "link": "https://indatalabs.com/blog/how-does-facial-recognition-work",
+    "domain": "indatalabs.com",
+    "snippet": "Recognition is a way to identify a human face for identification or verification purposes. At this stage, your facial coordinates are compared ..."
+  },
+  {
+    "position": 6,
+    "title": "How Facial Recognition Works: Purpose, Use, and Benefits",
+    "link": "https://swiftlane.com/blog/how-facial-recognition-works/",
+    "domain": "swiftlane.com",
+    "snippet": "Face recognition works by identifying a single person uniquely from a large pool of registered faces. Face Identification or verification mean ..."
+  },
+  {
+    "position": 7,
+    "title": "How Does Facial Recognition Work? A 5-Step Guide",
+    "link": "https://www.vouched.id/learn/blog/how-does-facial-recognition-work",
+    "domain": "www.vouched.id",
+    "snippet": "How Facial Recognition Works · Step 1: Capture an Image · Step 2: Detect the Face · Step 3: Create a Faceprint · Step 4: Match the Faceprint."
+  },
+  {
+    "position": 8,
+    "title": "Facial recognition | Apple Wiki - Fandom",
+    "link": "https://apple.fandom.com/wiki/Facial_recognition",
+    "domain": "apple.fandom.com",
+    "snippet": "Facial recognition is a biometric security system capable of identifying or verifying a person from a digital image or a video frame from a video source."
+  }
+]

@@ -1,0 +1,2 @@
+date,category,query,n_results,mean_pairwise_cosine,vendi,distinct_ratio,mean_marginal_novelty
+2026-10-04,finance,what is a 401k and how does it work,8,0.758479,2.2366,0.2796,0.170855
