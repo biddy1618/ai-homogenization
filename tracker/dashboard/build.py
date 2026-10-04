@@ -18,6 +18,7 @@ from pathlib import Path
 from statistics import mean
 
 DATA = Path("tracker/data/runs.csv")
+FULL = Path("tracker/data/runs_fullpage.csv")
 OUT = Path("tracker/dashboard/index.html")
 
 
@@ -31,7 +32,7 @@ def load_rows() -> list[dict]:
     return rows
 
 
-def build_payload(rows: list[dict]) -> dict:
+def build_payload(rows: list[dict], full_rows: list[dict]) -> dict:
     dates = sorted({r["date"] for r in rows})
     latest = dates[-1]
     latest_rows = [r for r in rows if r["date"] == latest]
@@ -50,6 +51,17 @@ def build_payload(rows: list[dict]) -> dict:
     }
     overall = [round(mean(by_date[d]), 3) for d in dates]
 
+    fp_by_date = defaultdict(list)
+    fp_cov_n = fp_cov_d = 0
+    for r in full_rows:
+        fp_by_date[r["date"]].append(float(r["vendi"]))
+        fp_cov_n += int(r.get("n_fullpage", 0))
+        fp_cov_d += int(r["n_results"])
+    fp_overall = [round(mean(fp_by_date[d]), 3) if fp_by_date.get(d) else None for d in dates]
+    fp_with = [d for d in dates if fp_by_date.get(d)]
+    fp_mean_latest = round(mean(fp_by_date[fp_with[-1]]), 2) if fp_with else None
+    snip_mean_matched = round(mean(by_date[fp_with[-1]]), 2) if fp_with else None
+
     return {
         "dates": dates,
         "latest": latest,
@@ -62,6 +74,11 @@ def build_payload(rows: list[dict]) -> dict:
              "vendi": round(r["vendi"], 2), "n": r["n_results"]}
             for r in leaderboard
         ],
+        "has_fullpage": bool(full_rows),
+        "fullpage_overall": fp_overall,
+        "fullpage_coverage": round(fp_cov_n / fp_cov_d, 3) if fp_cov_d else None,
+        "fullpage_mean_latest": fp_mean_latest,
+        "snippet_mean_matched": snip_mean_matched,
     }
 
 
@@ -110,7 +127,8 @@ TEMPLATE = """<!doctype html>
 
   <div class="card">
     <h2>Diversity over time</h2>
-    <p>Mean Vendi per run — overall and by category. Populates as weekly runs accumulate.</p>
+    <p>Mean Vendi per run — overall (snippet = solid white; full-page = dashed yellow) and by
+       category. Full-page sits higher: snippets overstate homogeneity. Populates as runs accumulate.</p>
     <canvas id="timeseries" height="320"></canvas>
   </div>
 </div>
@@ -137,8 +155,13 @@ const overallLatest = DATA.overall[DATA.overall.length-1];
 const kpis = [
   ["Most homogeneous", `${mostHom.query}`, `Vendi ${mostHom.vendi} of ${mostHom.n}`],
   ["Most diverse", `${mostDiv.query}`, `Vendi ${mostDiv.vendi} of ${mostDiv.n}`],
-  ["Mean Vendi (latest)", overallLatest.toFixed(2), `across ${DATA.n_queries} queries`],
+  ["Mean Vendi (latest)", overallLatest.toFixed(2), `snippet-level, ${DATA.n_queries} queries`],
 ];
+if (DATA.has_fullpage) {
+  kpis.push(["Full-page vs snippet",
+    `${DATA.fullpage_mean_latest} vs ${DATA.snippet_mean_matched}`,
+    `full-page higher · ${Math.round(DATA.fullpage_coverage*100)}% page coverage`]);
+}
 document.getElementById("kpis").innerHTML = kpis.map(k =>
   `<div class="kpi"><div class="label">${k[0]}</div>
    <div class="value">${k[1]} <small>${k[2]}</small></div></div>`).join("");
@@ -167,9 +190,16 @@ new Chart(document.getElementById("leaderboard"), {
 
 // --- time series (overall + per category)
 const tsDatasets = [{
-  label: "Overall", data: DATA.overall, borderColor:"#ffffff", backgroundColor:"#ffffff",
+  label: "Overall (snippet)", data: DATA.overall, borderColor:"#ffffff", backgroundColor:"#ffffff",
   borderWidth:3, tension:.25, pointRadius:3,
-}].concat(DATA.cats.map(c => ({
+}];
+if (DATA.has_fullpage) {
+  tsDatasets.push({
+    label: "Overall (full-page)", data: DATA.fullpage_overall, borderColor:"#ffd166",
+    backgroundColor:"#ffd166", borderWidth:3, borderDash:[6,4], tension:.25, pointRadius:3,
+  });
+}
+tsDatasets.push(...DATA.cats.map(c => ({
   label: c, data: DATA.series[c], borderColor: catColor[c], backgroundColor: catColor[c],
   borderWidth:1.5, tension:.25, pointRadius:2,
 })));
@@ -192,7 +222,8 @@ new Chart(document.getElementById("timeseries"), {
 
 def main() -> None:
     rows = load_rows()
-    payload = build_payload(rows)
+    full_rows = list(csv.DictReader(FULL.open(encoding="utf-8"))) if FULL.exists() else []
+    payload = build_payload(rows, full_rows)
     OUT.parent.mkdir(parents=True, exist_ok=True)
     OUT.write_text(TEMPLATE.replace("__DATA__", json.dumps(payload)), encoding="utf-8")
     print(f"Wrote {OUT} ({len(rows)} rows, {len(payload['dates'])} run(s), "
