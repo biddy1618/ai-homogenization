@@ -1,0 +1,51 @@
+[
+  {
+    "position": 1,
+    "title": "What is RAG (Retrieval Augmented Generation) [+ Examples]",
+    "link": "https://www.superannotate.com/blog/rag-explained",
+    "domain": "www.superannotate.com",
+    "snippet": "Retrieval augmented generation (RAG) combines the advanced text-generation capabilities of GPT and other large language models with information ..."
+  },
+  {
+    "position": 2,
+    "title": "Retrieval Augmented Generation (RAG)",
+    "link": "https://www.promptingguide.ai/techniques/rag",
+    "domain": "www.promptingguide.ai",
+    "snippet": "RAG combines an information retrieval component with a text generator model. RAG can be fine-tuned and its internal knowledge can be modified ..."
+  },
+  {
+    "position": 4,
+    "title": "Retrieval Augmented Generation (RAG)",
+    "link": "https://www.deeplearning.ai/courses/retrieval-augmented-generation",
+    "domain": "www.deeplearning.ai",
+    "snippet": "RAG helps large language models generate more accurate and useful responses by retrieving relevant information from knowledge bases of information"
+  },
+  {
+    "position": 5,
+    "title": "What Is RAG (Retrieval-Augmented Generation)? A Full ...",
+    "link": "https://www.snowflake.com/en/fundamentals/rag/",
+    "domain": "www.snowflake.com",
+    "snippet": "Retrieval-Augmented Generation (RAG) is a technique that enhances a foundation model's (large language model or LLMs) output by referencing an external ..."
+  },
+  {
+    "position": 6,
+    "title": "What is RAG (Retrieval-Augmented Generation) & how it ...",
+    "link": "https://www.meilisearch.com/blog/what-is-rag",
+    "domain": "www.meilisearch.com",
+    "snippet": "RAG is a process where a generative AI model accesses external datasets to find relevant, up-to-date information before returning its response."
+  },
+  {
+    "position": 7,
+    "title": "What is RAG (Retrieval-Augmented Generation) in AI?",
+    "link": "https://www.matillion.com/learn/blog/rag-retrieval-augmented-generation",
+    "domain": "www.matillion.com",
+    "snippet": "Retrieval-Augmented Generation (RAG) is an AI framework that improves large language models by connecting them with external data sources and knowledge bases. ..."
+  },
+  {
+    "position": 8,
+    "title": "Retrieval-Augmented Generation (RAG): From Basics to ...",
+    "link": "https://medium.com/@tejpal.abhyuday/retrieval-augmented-generation-rag-from-basics-to-advanced-a2b068fd576c",
+    "domain": "medium.com",
+    "snippet": "Retrieval-Augmented Generation (RAG) is a technique that enhances language model generation by incorporating external knowledge."
+  }
+]

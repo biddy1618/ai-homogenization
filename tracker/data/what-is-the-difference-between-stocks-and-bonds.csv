@@ -1,2 +1,3 @@
 date,category,query,n_results,mean_pairwise_cosine,vendi,distinct_ratio,mean_marginal_novelty
 2026-10-04,finance,what is the difference between stocks and bonds,7,0.656621,2.9556,0.4222,0.286609
+2026-10-05,finance,what is the difference between stocks and bonds,7,0.656905,2.9821,0.426,0.27935

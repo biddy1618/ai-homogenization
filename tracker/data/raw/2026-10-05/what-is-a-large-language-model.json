@@ -1,0 +1,51 @@
+[
+  {
+    "position": 1,
+    "title": "Large Language Model Architecture: How LLMs Actually Work",
+    "link": "https://khalidaboubakr.com/blog/large-language-model-architecture-explained",
+    "domain": "khalidaboubakr.com",
+    "snippet": "A technical deep dive into LLM architecture: tokenization, embeddings, transformer blocks, attention mechanisms, and why these systems ..."
+  },
+  {
+    "position": 2,
+    "title": "LLM Comparison: Choosing the Best Model for Your Needs",
+    "link": "https://visionx.io/blog/llm-comparison/",
+    "domain": "visionx.io",
+    "snippet": "Large Language Models (LLMs) are highly complex artificial intelligence platforms that can understand and generate human speech. They use deep ..."
+  },
+  {
+    "position": 3,
+    "title": "Build Your Own Large Language Model Like Dolly (APJ time)",
+    "link": "https://www.databricks.com/resources/webinar/apj-build-your-own-large-language-model-dolly",
+    "domain": "www.databricks.com",
+    "snippet": "Curious how your company can benefit from large language models (LLM) like ChatGPT? Imagine if you could train your own model — customized to your specific data ..."
+  },
+  {
+    "position": 4,
+    "title": "Fundamental Limits of Large Language Model Scaling ...",
+    "link": "https://medium.com/hackrlife/fundamental-limits-of-large-language-model-scaling-analysis-of-mathematical-impossibility-theorems-53ece210e23e",
+    "domain": "medium.com",
+    "snippet": "Large Language Model Scaling: Analysis of Mathematical Impossibility Theorems and Resource Constraints"
+  },
+  {
+    "position": 5,
+    "title": "ULLME: A Unified Framework for Large Language Model ...",
+    "link": "https://research.adobe.com/publication/ullme-a-unified-framework-for-large-language-model-embeddings-with-generation-augmented-learning/",
+    "domain": "research.adobe.com",
+    "snippet": "Large Language Models (LLMs) excel in various natural language processing tasks, but leveraging them for dense passage embedding remains ..."
+  },
+  {
+    "position": 6,
+    "title": "large language model",
+    "link": "https://www.theatlantic.com/tag/general/large-language-model/",
+    "domain": "www.theatlantic.com",
+    "snippet": "The Atlantic&#39;s coverage of large language model. Does AI Actually Understand Language? the day's biggest news and ideas,"
+  },
+  {
+    "position": 7,
+    "title": "Understanding limitations of large language models",
+    "link": "https://www.facebook.com/groups/698593531630485/posts/1060531765436658/",
+    "domain": "www.facebook.com",
+    "snippet": "Large language models may have shown clear signs of emergence, such as the ability to generate outputs that are not explicitly programmed ..."
+  }
+]

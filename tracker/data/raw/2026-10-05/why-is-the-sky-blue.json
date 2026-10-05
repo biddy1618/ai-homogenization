@@ -1,0 +1,44 @@
+[
+  {
+    "position": 1,
+    "title": "Why Is the Sky Blue?",
+    "link": "https://spaceplace.nasa.gov/blue-sky/",
+    "domain": "spaceplace.nasa.gov",
+    "snippet": "Blue light is scattered more than the other colors because it travels as shorter, smaller waves. This is why we see a blue sky most of the time."
+  },
+  {
+    "position": 2,
+    "title": "Why Is the Sky Blue?",
+    "link": "https://www.nesdis.noaa.gov/about/k-12-education/atmosphere/why-the-sky-blue",
+    "domain": "www.nesdis.noaa.gov",
+    "snippet": "Blue light is scattered more than other colors because it travels as shorter, smaller waves. This is why we see a blue sky most of the time."
+  },
+  {
+    "position": 3,
+    "title": "Eli5: why is the sky blue? : r/explainlikeimfive",
+    "link": "https://www.reddit.com/r/explainlikeimfive/comments/1iytxes/eli5_why_is_the_sky_blue/",
+    "domain": "www.reddit.com",
+    "snippet": "The sky is blue (during the day) because each wavelength of light has a slightly different chance of bouncing off a the molecules in the air."
+  },
+  {
+    "position": 4,
+    "title": "Why is the sky blue?",
+    "link": "https://math.ucr.edu/home/baez/physics/General/BlueSky/blue_sky.html",
+    "domain": "math.ucr.edu",
+    "snippet": "A clear cloudless day-time sky is blue because molecules in the air scatter blue light from the Sun more than they scatter red light."
+  },
+  {
+    "position": 5,
+    "title": "Why is the sky blue?",
+    "link": "https://kids.nationalgeographic.com/books/article/sky",
+    "domain": "kids.nationalgeographic.com",
+    "snippet": "When light hits the air molecules in our atmosphere, its colors are scattered in all directions. Blue light is scattered more because of its short, choppy ..."
+  },
+  {
+    "position": 6,
+    "title": "Why is the Sky Blue?",
+    "link": "https://www.montrealsciencecentre.com/blog/why-the-sky-blue",
+    "domain": "www.montrealsciencecentre.com",
+    "snippet": "The Sun emits more blue wavelengths than purple ones, and some of these purple wavelengths get absorbed by the Earth's upper atmosphere which is further away ..."
+  }
+]

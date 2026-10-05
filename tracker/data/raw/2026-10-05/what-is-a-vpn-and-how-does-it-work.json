@@ -1,0 +1,58 @@
+[
+  {
+    "position": 1,
+    "title": "What is a VPN? - Virtual Private Network Explained",
+    "link": "https://aws.amazon.com/what-is/vpn/",
+    "domain": "aws.amazon.com",
+    "snippet": "A VPN establishes a private network connection between devices over the internet, allowing users to securely and anonymously transmit data over public networks."
+  },
+  {
+    "position": 2,
+    "title": "What is a VPN?",
+    "link": "https://www.cloudflare.com/learning/access-management/what-is-a-vpn/",
+    "domain": "www.cloudflare.com",
+    "snippet": "A virtual private network (VPN) lets a user remotely access a private network for purposes of privacy and security."
+  },
+  {
+    "position": 3,
+    "title": "What is a VPN, what is it for and how does it work?",
+    "link": "https://olin.es/en/blog/what-is-a-vpn/",
+    "domain": "olin.es",
+    "snippet": "A VPN (Virtual Private Network) is a technology that creates an encrypted connection tunnel between your device and a remote server."
+  },
+  {
+    "position": 4,
+    "title": "Explain how a Virtual Private Network (VPN) works",
+    "link": "https://www.levelblue.com/blogs/levelblue-blog/explain-how-vpn-works",
+    "domain": "www.levelblue.com",
+    "snippet": "A virtual private network (VPN) is a series of virtual connections routed over the internet which encrypts your data as it travels back and ..."
+  },
+  {
+    "position": 5,
+    "title": "What is a VPN and what does it do?",
+    "link": "https://us.norton.com/blog/privacy/what-is-a-vpn",
+    "domain": "us.norton.com",
+    "snippet": "A VPN is an app or service that creates an encrypted connection to protect your online activity. Learn what VPNs are and how they work."
+  },
+  {
+    "position": 6,
+    "title": "What is a VPN and How Does it Work?",
+    "link": "https://www.getgds.com/resources/blog/connectivity/what-is-a-vpn-and-how-does-it-work",
+    "domain": "www.getgds.com",
+    "snippet": "A VPN, or virtual private network, is a service that allows your browser to connect to websites through a server, which changes your apparent ..."
+  },
+  {
+    "position": 7,
+    "title": "What is a VPN? Can you describe how it works?",
+    "link": "https://www.quora.com/What-is-a-VPN-Can-you-describe-how-it-works",
+    "domain": "www.quora.com",
+    "snippet": "What is a VPN? Can you describe how it works?"
+  },
+  {
+    "position": 8,
+    "title": "What Is a VPN? How it Works",
+    "link": "https://www.comptia.org/en-us/blog/what-is-a-vpn-how-it-works/",
+    "domain": "www.comptia.org",
+    "snippet": "A virtual private network, or VPN, provides a secure and anonymous connection between two endpoints. For example, if you work from home, ..."
+  }
+]

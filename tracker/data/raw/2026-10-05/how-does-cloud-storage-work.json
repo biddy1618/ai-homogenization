@@ -1,0 +1,58 @@
+[
+  {
+    "position": 1,
+    "title": "What is Cloud Storage & How Does it Work?",
+    "link": "https://cloud.google.com/learn/what-is-cloud-storage",
+    "domain": "cloud.google.com",
+    "snippet": "Cloud Storage uses remote servers to save data, such as files, business data, videos, or images. Users upload data to servers via an internet connection,"
+  },
+  {
+    "position": 2,
+    "title": "ELI5: how does the cloud work and how does it not run out ...",
+    "link": "https://www.reddit.com/r/explainlikeimfive/comments/1ezml1m/eli5_how_does_the_cloud_work_and_how_does_it_not/",
+    "domain": "www.reddit.com",
+    "snippet": "\"The cloud\" is just replacing that external drive and programs with servers. It works a little better: if a file changes on ANY machine, it will ..."
+  },
+  {
+    "position": 3,
+    "title": "What Is Cloud Storage?",
+    "link": "https://www.ibm.com/think/topics/cloud-storage",
+    "domain": "www.ibm.com",
+    "snippet": "Cloud storage allows users to save data and files in an off-site location that accessible by way of the public internet or a dedicated private network ..."
+  },
+  {
+    "position": 4,
+    "title": "What is Cloud Storage?",
+    "link": "https://aws.amazon.com/what-is/cloud-storage/",
+    "domain": "aws.amazon.com",
+    "snippet": "With cloud storage, you control where your data is stored, who can access it, and what resources your organization is consuming at any given moment. Ideally, ..."
+  },
+  {
+    "position": 5,
+    "title": "What is Cloud Storage?",
+    "link": "https://azure.microsoft.com/en-us/resources/cloud-computing-dictionary/what-is-cloud-storage",
+    "domain": "azure.microsoft.com",
+    "snippet": "Cloud storage stores data on remote servers accessed online, It works by distributing data across secure data centers, with replication and encryption to ..."
+  },
+  {
+    "position": 6,
+    "title": "What is Cloud Storage and How Does it Work?",
+    "link": "https://www.dropbox.com/resources/what-is-cloud-storage",
+    "domain": "www.dropbox.com",
+    "snippet": "Cloud storage is a way to store, manage, and access your files over the internet. Instead of relying on a physical hard drive or USB drive, your ..."
+  },
+  {
+    "position": 7,
+    "title": "Cloud storage",
+    "link": "https://en.wikipedia.org/wiki/Cloud_storage",
+    "domain": "en.wikipedia.org",
+    "snippet": "Cloud storage is a model of computer data storage in which data, said to be on \"the cloud\", is stored remotely in logical pools and is accessible to users ..."
+  },
+  {
+    "position": 8,
+    "title": "What Is Cloud Storage? Definition, Benefits, and Use Cases",
+    "link": "https://www.nutanix.com/info/cloud-storage",
+    "domain": "www.nutanix.com",
+    "snippet": "Cloud storage is a service that allows you to store personal or business data and files on remote servers that are managed by a third party."
+  }
+]

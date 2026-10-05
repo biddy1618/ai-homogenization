@@ -44,3 +44,48 @@ date,category,query,n_results,mean_pairwise_cosine,vendi,distinct_ratio,mean_mar
 2026-10-04,tech,what is the difference between http and https,9,0.183491,6.6805,0.7423,0.616334
 2026-10-04,tech,how does cloud storage work,6,0.773275,2.11,0.3517,0.162296
 2026-10-04,tech,what is a large language model,6,0.524408,3.5959,0.5993,0.388402
+2026-10-05,health,what are the symptoms of iron deficiency,8,0.65887,3.096,0.387,0.262588
+2026-10-05,health,how to lower blood pressure naturally,7,0.640086,3.0451,0.435,0.277198
+2026-10-05,health,what causes migraines,8,0.557451,3.8161,0.477,0.353328
+2026-10-05,health,is intermittent fasting healthy,8,0.751391,2.5123,0.314,0.211822
+2026-10-05,health,how much water should you drink a day,8,0.409319,5.1744,0.6468,0.472032
+2026-10-05,health,what are the early signs of diabetes,8,0.666773,3.0763,0.3845,0.263417
+2026-10-05,health,how does the immune system fight infection,9,0.431667,5.5837,0.6204,0.537908
+2026-10-05,health,what causes high cholesterol,7,0.518065,3.8779,0.554,0.382897
+2026-10-05,health,how much sleep do adults need,8,0.750203,2.5293,0.3162,0.201119
+2026-10-05,finance,how does compound interest work,6,0.834776,1.7993,0.2999,0.121031
+2026-10-05,finance,what is a good credit score,8,0.55359,3.7603,0.47,0.310972
+2026-10-05,finance,roth ira vs traditional ira,5,0.777659,1.9937,0.3987,0.196969
+2026-10-05,finance,how does refinancing a mortgage work,7,0.611932,3.2396,0.4628,0.296088
+2026-10-05,finance,how to build an emergency fund,7,0.656596,2.9944,0.4278,0.31397
+2026-10-05,finance,what is a 401k and how does it work,5,0.599304,2.8896,0.5779,0.367969
+2026-10-05,finance,how does inflation affect your savings,9,0.699785,2.9145,0.3238,0.215746
+2026-10-05,finance,how do index funds work,6,0.762108,2.1662,0.361,0.213736
+2026-10-05,finance,what is the difference between stocks and bonds,7,0.656905,2.9821,0.426,0.27935
+2026-10-05,law,what is a power of attorney,8,0.901516,1.5382,0.1923,0.066075
+2026-10-05,law,what are tenant rights during eviction,9,0.620002,3.7129,0.4125,0.322715
+2026-10-05,law,how does the probate process work,8,0.663619,3.1515,0.3939,0.27818
+2026-10-05,law,what is the difference between a will and a trust,7,0.764526,2.289,0.327,0.186135
+2026-10-05,law,how does a class action lawsuit work,9,0.709119,2.905,0.3228,0.245568
+2026-10-05,law,what happens during a divorce proceeding,8,0.534466,4.2679,0.5335,0.42904
+2026-10-05,law,what is an llc and how is it taxed,7,0.651099,3.0319,0.4331,0.268398
+2026-10-05,law,what are your rights if arrested,9,0.601991,3.7696,0.4188,0.305545
+2026-10-05,law,how does copyright protect creators,8,0.666994,3.1008,0.3876,0.275223
+2026-10-05,science,how do vaccines work,8,0.522028,4.173,0.5216,0.369617
+2026-10-05,science,what causes climate change,9,0.759739,2.463,0.2737,0.165367
+2026-10-05,science,how do hurricanes form,5,0.647751,2.625,0.525,0.300535
+2026-10-05,science,why is the sky blue,6,0.862204,1.6576,0.2763,0.10233
+2026-10-05,science,how do black holes form,8,0.614126,3.4987,0.4373,0.329643
+2026-10-05,science,what causes earthquakes,6,0.577955,3.2504,0.5417,0.364411
+2026-10-05,science,how does photosynthesis work,6,0.600657,3.1614,0.5269,0.355469
+2026-10-05,science,are electric cars better for the environment,8,0.574141,3.4901,0.4363,0.323448
+2026-10-05,science,what is dark matter,5,0.671795,2.5125,0.5025,0.266016
+2026-10-05,tech,what is a vpn and how does it work,8,0.866324,1.7485,0.2186,0.092937
+2026-10-05,tech,how does two factor authentication work,8,0.471922,4.3979,0.5497,0.396364
+2026-10-05,tech,what is retrieval augmented generation,7,0.849806,1.7846,0.2549,0.113475
+2026-10-05,tech,how does end-to-end encryption work,8,0.71655,2.6505,0.3313,0.206119
+2026-10-05,tech,is ai going to replace jobs,7,0.69084,2.7917,0.3988,0.276249
+2026-10-05,tech,how does facial recognition work,8,0.555173,4.0685,0.5086,0.374421
+2026-10-05,tech,what is the difference between http and https,5,0.702029,2.3274,0.4655,0.21489
+2026-10-05,tech,how does cloud storage work,8,0.82809,1.9331,0.2416,0.131344
+2026-10-05,tech,what is a large language model,7,0.571905,3.5669,0.5096,0.354284

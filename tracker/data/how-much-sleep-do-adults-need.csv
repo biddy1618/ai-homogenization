@@ -1,2 +1,3 @@
 date,category,query,n_results,mean_pairwise_cosine,vendi,distinct_ratio,mean_marginal_novelty
 2026-10-04,health,how much sleep do adults need,7,0.720616,2.5432,0.3633,0.20295
+2026-10-05,health,how much sleep do adults need,8,0.750203,2.5293,0.3162,0.201119

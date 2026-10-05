@@ -1,0 +1,58 @@
+[
+  {
+    "position": 1,
+    "title": "End-to-End Encryption Explained",
+    "link": "https://guardiandigital.com/content/end-to-end-encryption",
+    "domain": "guardiandigital.com",
+    "snippet": "However, end-to-end encryption ensures that only the intended recipient of messages or other data can decrypt them. Decoding information is much ..."
+  },
+  {
+    "position": 2,
+    "title": "What is end-to-end encryption and how does it work",
+    "link": "https://www.facebook.com/groups/494596534740263/posts/1607439300122642/",
+    "domain": "www.facebook.com",
+    "snippet": "This is accomplished by encrypting the data at the sender's end and decrypting it at the recipient's end, with no intermediate decryption by ..."
+  },
+  {
+    "position": 3,
+    "title": "How do you set up end-to-end encryption?",
+    "link": "https://www.quora.com/How-do-you-set-up-end-to-end-encryption",
+    "domain": "www.quora.com",
+    "snippet": "How do you set up end-to-end encryption?"
+  },
+  {
+    "position": 4,
+    "title": "Importance of end-to-end encryption - Alfatec",
+    "link": "https://www.alfatec.ai/academy/resource-library/importance-of-end-to-end-encryption",
+    "domain": "www.alfatec.ai",
+    "snippet": "End-to-end encryption (E2EE) is a system of communication where only the communicating parties are able to read the messages. Messages are ..."
+  },
+  {
+    "position": 5,
+    "title": "End-to-End Encryption - How It Works, and Why We Need It?",
+    "link": "https://www.tutorialspoint.com/article/end-to-end-encryption-how-it-works-and-why-we-need-it",
+    "domain": "www.tutorialspoint.com",
+    "snippet": "In simple words, encryption is like scrambling data so that no one can read it. Only the person with authority to decrypt the data can read it."
+  },
+  {
+    "position": 6,
+    "title": "End-to-End Encryption: What is it?",
+    "link": "https://blog.nottinghamnerds.com/end-to-end-encryption/",
+    "domain": "blog.nottinghamnerds.com",
+    "snippet": "End-to-end encryption is a method of securing communication between two parties, in which the message is encrypted at the sender's device, ..."
+  },
+  {
+    "position": 7,
+    "title": "What is end to end encryption? - Wisdom Geek",
+    "link": "https://www.wisdomgeek.com/general/privacy/end-to-end-encryption/",
+    "domain": "www.wisdomgeek.com",
+    "snippet": "End to end encryption is a form of encryption wherein only people who are communicating have keys to decrypt the messages."
+  },
+  {
+    "position": 8,
+    "title": "How does end-to-end encryption work in messaging?",
+    "link": "https://hackology.quora.com/https-www-quora-com-How-does-end-to-end-encryption-work-in-messaging-answer-Henry-Zhu-34-1",
+    "domain": "hackology.quora.com",
+    "snippet": "In end-to-end encryption (E2EE), only the communicating clients can decrypt the information they exchange between each other (a server cannot decrypt the ..."
+  }
+]

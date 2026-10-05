@@ -1,0 +1,37 @@
+[
+  {
+    "position": 1,
+    "title": "HTTP vs HTTPS: Comparison, Pros and Cons, and More",
+    "link": "https://www.hostinger.com/my/tutorials/http-vs-https/",
+    "domain": "www.hostinger.com",
+    "snippet": "While HTTP transmits data in plain text, HTTPS encrypts communication with SSL/TLS, preventing hackers from reading sensitive information like login credentials ..."
+  },
+  {
+    "position": 2,
+    "title": "Sina Riyahi's Post - HTTP vs.",
+    "link": "https://www.linkedin.com/posts/sina-riyahi_http-vs-https-when-you-open-a-website-activity-7400180952863420416-0N5j",
+    "domain": "www.linkedin.com",
+    "snippet": "When you open a website, the difference between HTTP and HTTPS decides whether your data travels safely or in plain sight. Sends data in plain ..."
+  },
+  {
+    "position": 3,
+    "title": "HTTP vs HTTPS: What Are the Key Differences? ...",
+    "link": "https://www.instagram.com/p/DaR4XUGlAY6/",
+    "domain": "www.instagram.com",
+    "snippet": "HTTP enables communication between browsers and websites but does not encrypt transmitted data. HTTPS HTTPS uses encryption and ..."
+  },
+  {
+    "position": 4,
+    "title": "Pros and Cons Of Home Page Of https Instead Of http",
+    "link": "https://www.sitepoint.com/community/t/pros-and-cons-of-home-page-of-https-instead-of-http/31344",
+    "domain": "www.sitepoint.com",
+    "snippet": "HTTPS encrypts all traffic between the client and the server so that nobody in between can view the data being transferred. HTTP is in plain ..."
+  },
+  {
+    "position": 5,
+    "title": "Difference Between http and https",
+    "link": "https://www.differencebetween.net/technology/difference-between-http-and-https/",
+    "domain": "www.differencebetween.net",
+    "snippet": "Http defines the methodology and rules of transporting data from the servers of the site we like to view down to our computer and vice versa. the letter S ..."
+  }
+]

@@ -1,0 +1,58 @@
+[
+  {
+    "position": 1,
+    "title": "Authentication",
+    "link": "https://en.wikipedia.org/wiki/Authentication",
+    "domain": "en.wikipedia.org",
+    "snippet": "Two-factor authentication is a special case of multi-factor authentication involving exactly two factors. For example, using a bank card (something the ..."
+  },
+  {
+    "position": 2,
+    "title": "What Is Authentication? Definition and Methods",
+    "link": "https://www.microsoft.com/en-us/security/business/security-101/what-is-authentication",
+    "domain": "www.microsoft.com",
+    "snippet": "Two-factor authentication is a type of multifactor authentication that requires two forms of authentication."
+  },
+  {
+    "position": 3,
+    "title": "Firebase Authentication | Simple, multi-platform sign-in",
+    "link": "https://firebase.google.com/products/auth",
+    "domain": "firebase.google.com",
+    "snippet": "Firebase Authentication aims to make building secure authentication systems easy, while improving the sign-in and onboarding experience for app users."
+  },
+  {
+    "position": 4,
+    "title": "What is Authentication? Definition & Examples",
+    "link": "https://auth0.com/intro-to-iam/what-is-authentication",
+    "domain": "auth0.com",
+    "snippet": "MFA requires users to verify identity using two or more distinct factors from different categories before access is granted. After entering a password, users ..."
+  },
+  {
+    "position": 5,
+    "title": "Google Authenticator - Apps on Google Play",
+    "link": "https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2&hl=en_US",
+    "domain": "play.google.com",
+    "snippet": "Google Authenticator adds an extra layer of security to your online accounts by adding a second step of verification when you sign in."
+  },
+  {
+    "position": 6,
+    "title": "Authentication Cheat Sheet",
+    "link": "https://cheatsheetseries.owasp.org/cheatsheets/Authentication_Cheat_Sheet.html",
+    "domain": "cheatsheetseries.owasp.org",
+    "snippet": "Authentication, also known as two-way TLS authentication, consists of both browser and server sending their respective TLS certificates during the TLS ..."
+  },
+  {
+    "position": 7,
+    "title": "authentication - Glossary | CSRC",
+    "link": "https://csrc.nist.gov/glossary/term/authentication",
+    "domain": "csrc.nist.gov",
+    "snippet": "The process of verifying the identity of a user, process, or device, often as a prerequisite to allowing access to resources in an information system. Sources:"
+  },
+  {
+    "position": 8,
+    "title": "Combating Spoofed Robocalls with Caller ID Authentication",
+    "link": "https://www.fcc.gov/call-authentication",
+    "domain": "www.fcc.gov",
+    "snippet": "Caller ID authentication technology enables subscribers to trust that callers are who they say they are, reducing the effectiveness of fraudulently spoofed ..."
+  }
+]

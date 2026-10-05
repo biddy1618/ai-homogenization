@@ -1,2 +1,3 @@
 date,category,query,n_results,mean_pairwise_cosine,vendi,distinct_ratio,mean_marginal_novelty
 2026-10-04,law,what is a power of attorney,8,0.59012,3.7728,0.4716,0.331909
+2026-10-05,law,what is a power of attorney,8,0.901516,1.5382,0.1923,0.066075
