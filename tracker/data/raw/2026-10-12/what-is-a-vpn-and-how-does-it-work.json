@@ -1,0 +1,51 @@
+[
+  {
+    "position": 1,
+    "title": "What is a VPN? - Virtual Private Network Explained",
+    "link": "https://aws.amazon.com/what-is/vpn/",
+    "domain": "aws.amazon.com",
+    "snippet": "A VPN establishes a private network connection between devices over the internet, allowing users to securely and anonymously transmit data over public networks."
+  },
+  {
+    "position": 2,
+    "title": "What Is a VPN? - Meaning, How It Works & More",
+    "link": "https://www.proofpoint.com/us/threat-reference/vpn",
+    "domain": "www.proofpoint.com",
+    "snippet": "A VPN hides the user's actual public IP address and “tunnels” traffic between the user's device and the remote server."
+  },
+  {
+    "position": 3,
+    "title": "What Is a VPN? How it Works",
+    "link": "https://www.comptia.org/en-us/blog/what-is-a-vpn-how-it-works/",
+    "domain": "www.comptia.org",
+    "snippet": "A virtual private network, or VPN, provides a secure and anonymous connection between two endpoints. For example, if you work from home, ..."
+  },
+  {
+    "position": 4,
+    "title": "Explain how a Virtual Private Network (VPN) works",
+    "link": "https://www.levelblue.com/blogs/levelblue-blog/explain-how-vpn-works",
+    "domain": "www.levelblue.com",
+    "snippet": "A virtual private network (VPN) is a series of virtual connections routed over the internet which encrypts your data as it travels back and ..."
+  },
+  {
+    "position": 5,
+    "title": "What is a VPN?",
+    "link": "https://www.cloudflare.com/learning/access-management/what-is-a-vpn/",
+    "domain": "www.cloudflare.com",
+    "snippet": "A virtual private network (VPN) lets a user remotely access a private network for purposes of privacy and security."
+  },
+  {
+    "position": 7,
+    "title": "Mobile VPN: What Is It and How Does It Work?",
+    "link": "https://www.cnet.com/tech/services-and-software/mobile-vpn-how-does-it-work/",
+    "domain": "www.cnet.com",
+    "snippet": "A virtual private network bolsters your privacy by hiding your public IP address, which contains information about your general geographical ..."
+  },
+  {
+    "position": 8,
+    "title": "What is a virtual private network (VPN)?",
+    "link": "https://www.sophos.com/en-us/cybersecurity-explained/vpn",
+    "domain": "www.sophos.com",
+    "snippet": "A Virtual Private Network (VPN) is a service that creates a secure, encrypted connection between a user's device and the internet."
+  }
+]

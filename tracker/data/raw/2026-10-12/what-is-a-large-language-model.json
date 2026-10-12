@@ -1,0 +1,44 @@
+[
+  {
+    "position": 1,
+    "title": "Large Language Models (LLMs) with Google AI",
+    "link": "https://cloud.google.com/ai/llms",
+    "domain": "cloud.google.com",
+    "snippet": "A large language model (LLM) is a statistical language model, trained on a massive amount of data, that can be used to generate and translate text and other ..."
+  },
+  {
+    "position": 2,
+    "title": "What are large language models? LLMs explained",
+    "link": "https://cohere.com/blog/large-language-models",
+    "domain": "cohere.com",
+    "snippet": "LLMs are a form of artificial intelligence built on deep machine learning using neural networks, particularly leveraging advanced architectures."
+  },
+  {
+    "position": 3,
+    "title": "What are LLMs (Large Language Models)?",
+    "link": "https://www.salesforce.com/artificial-intelligence/what-are-large-language-models/",
+    "domain": "www.salesforce.com",
+    "snippet": "Large Language Models (LLMs) are a type of artificial intelligence model trained on vast amounts of text data, enabling them to understand, generate, and ..."
+  },
+  {
+    "position": 4,
+    "title": "What are large language models supposed to model?",
+    "link": "https://www.sciencedirect.com/science/article/pii/S1364661323002024",
+    "domain": "www.sciencedirect.com",
+    "snippet": "Large language models (LLMs), like the GPTs, are deep learning systems designed to process language. They are exposed to massive collections of texts, and ..."
+  },
+  {
+    "position": 6,
+    "title": "A Brief History of Large Language Models",
+    "link": "https://www.dataversity.net/articles/a-brief-history-of-large-language-models/",
+    "domain": "www.dataversity.net",
+    "snippet": "Large language models are artificial neural networks (algorithms) that have gone from a recent development to widespread use within a few ..."
+  },
+  {
+    "position": 7,
+    "title": "A Very Gentle Introduction to Large Language Models without ...",
+    "link": "https://mark-riedl.medium.com/a-very-gentle-introduction-to-large-language-models-without-the-hype-5f67941fa59e",
+    "domain": "mark-riedl.medium.com",
+    "snippet": "Large language models do not have goals. They have an objective, which is to choose a word that would most likely appear in the training data ..."
+  }
+]

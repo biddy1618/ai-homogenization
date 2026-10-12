@@ -1,0 +1,58 @@
+[
+  {
+    "position": 1,
+    "title": "HTTP vs HTTPS - Difference Between Transfer Protocols",
+    "link": "https://aws.amazon.com/compare/the-difference-between-https-and-http/",
+    "domain": "aws.amazon.com",
+    "snippet": "HTTP messages are plaintext, which means unauthorized parties can easily access and read them over the internet. In contrast, HTTPS transmits all data in ..."
+  },
+  {
+    "position": 2,
+    "title": "HTTP vs HTTPS",
+    "link": "https://silktide.com/glossary/http-vs-https/",
+    "domain": "silktide.com",
+    "snippet": "The primary distinction between HTTP and HTTPS lies in the level of data encryption. HTTP does not encrypt the information transmitted between the client and ..."
+  },
+  {
+    "position": 3,
+    "title": "Why is HTTP not secure? | HTTP vs. HTTPS",
+    "link": "https://www.cloudflare.com/learning/ssl/why-is-http-not-secure/",
+    "domain": "www.cloudflare.com",
+    "snippet": "HTTPS is HTTP with encryption and verification. The only difference between the two protocols is that HTTPS uses TLS (SSL) to encrypt normal ..."
+  },
+  {
+    "position": 4,
+    "title": "HTTP vs. HTTPS: What's the Difference?",
+    "link": "https://rublon.com/blog/http-vs-https-whats-the-difference/",
+    "domain": "rublon.com",
+    "snippet": "The main difference between HTTP and HTTPS is that HTTPS uses SSL/TLS encryption to secure the connection between the client and server."
+  },
+  {
+    "position": 5,
+    "title": "Difference between http:// and https://",
+    "link": "https://www.geeksforgeeks.org/computer-networks/difference-between-http-and-https/",
+    "domain": "www.geeksforgeeks.org",
+    "snippet": "HTTPS is more secure than HTTP because HTTPS (Secure Socket Layer). . In HTTP uses port number 80 for communication. HTTP does not use ..."
+  },
+  {
+    "position": 6,
+    "title": "HTTP vs HTTPS: What's the Difference?",
+    "link": "https://www.keyfactor.com/blog/http-vs-https-whats-the-difference/",
+    "domain": "www.keyfactor.com",
+    "snippet": "The most significant difference between the two protocols is that HTTPS is encrypted and secured using digital certificates, while HTML is not."
+  },
+  {
+    "position": 7,
+    "title": "What's the Difference Between HTTP vs HTTPS?",
+    "link": "https://www.upguard.com/blog/http-vs-https",
+    "domain": "www.upguard.com",
+    "snippet": "The main difference between HTTPS and HTTP is that HTTPS establishes a secure internet connection via encryption, whereas HTTP does not. HTTPS provides a useful ..."
+  },
+  {
+    "position": 8,
+    "title": "HTTP vs HTTPS: What's the Difference Between ...",
+    "link": "https://www.thesslstore.com/blog/http-vs-https-difference-between-http-https-protocols/",
+    "domain": "www.thesslstore.com",
+    "snippet": "HTTP is faster than HTTPS, but the difference is negligible and doesn't outweigh the security benefits of the latter. HTTPS is slower but more ..."
+  }
+]

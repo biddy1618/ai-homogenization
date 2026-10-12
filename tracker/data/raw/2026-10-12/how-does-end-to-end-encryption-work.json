@@ -1,0 +1,44 @@
+[
+  {
+    "position": 2,
+    "title": "Understanding End-to-End Encryption (E2EE)",
+    "link": "https://staffsupport.spcollege.edu/hc/en-us/articles/28596305364763-Understanding-End-to-End-Encryption-E2EE",
+    "domain": "staffsupport.spcollege.edu",
+    "snippet": "End-to-end encryption (E2EE) is a security method that protects data by ensuring only the communicating users (sender and recipient) can access and read the ..."
+  },
+  {
+    "position": 3,
+    "title": "What is end-to-end encrypted? How does it work?",
+    "link": "https://www.quora.com/What-is-end-to-end-encrypted-How-does-it-work",
+    "domain": "www.quora.com",
+    "snippet": "What is end-to-end encrypted? How does it work?"
+  },
+  {
+    "position": 4,
+    "title": "End-to-end encryption: How it works, and why it breaks",
+    "link": "https://solcyber.com/end-to-end-encryption-how-it-works-and-why-it-breaks/",
+    "domain": "solcyber.com",
+    "snippet": "End-to-end encryption, rather than directly protecting files, folders and disks, aims to deal with the problem of data that you need to exchange ..."
+  },
+  {
+    "position": 5,
+    "title": "What is end-to-end encryption and how does it work?",
+    "link": "https://www.msb365.blog/?p=1743",
+    "domain": "www.msb365.blog",
+    "snippet": "By encrypting messages at both ends of a conversation, end-to-end encryption prevents anyone in the middle from reading private communications."
+  },
+  {
+    "position": 6,
+    "title": "How does end-to-end encryption work in messaging apps?",
+    "link": "https://www.quora.com/How-does-end-to-end-encryption-work-in-messaging-apps?no_redirect=1",
+    "domain": "www.quora.com",
+    "snippet": "How does end-to-end encryption work in messaging apps?"
+  },
+  {
+    "position": 7,
+    "title": "What is end-to-end encryption and how does it work",
+    "link": "https://www.facebook.com/groups/494596534740263/posts/1607439300122642/",
+    "domain": "www.facebook.com",
+    "snippet": "This is accomplished by encrypting the data at the sender's end and decrypting it at the recipient's end, with no intermediate decryption by ..."
+  }
+]

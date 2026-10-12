@@ -1,3 +1,4 @@
 date,category,query,n_results,mean_pairwise_cosine,vendi,distinct_ratio,mean_marginal_novelty
 2026-10-04,law,what are your rights if arrested,8,0.478286,4.77,0.5963,0.477448
 2026-10-05,law,what are your rights if arrested,9,0.601991,3.7696,0.4188,0.305545
+2026-10-12,law,what are your rights if arrested,9,0.617505,3.7331,0.4148,0.339659

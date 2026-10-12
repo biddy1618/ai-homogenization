@@ -1,3 +1,4 @@
 date,category,query,n_results,mean_pairwise_cosine,vendi,distinct_ratio,mean_marginal_novelty
 2026-10-04,finance,roth ira vs traditional ira,4,0.795607,1.7835,0.4459,0.188957
 2026-10-05,finance,roth ira vs traditional ira,5,0.777659,1.9937,0.3987,0.196969
+2026-10-12,finance,roth ira vs traditional ira,9,0.771347,2.4415,0.2713,0.180506

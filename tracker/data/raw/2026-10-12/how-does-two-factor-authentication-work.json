@@ -1,0 +1,51 @@
+[
+  {
+    "position": 1,
+    "title": "What Is Two-Factor Authentication (2FA)?",
+    "link": "https://www.okta.com/blog/identity-security/what-is-two-factor-authentication-2fa/",
+    "domain": "www.okta.com",
+    "snippet": "How does 2FA work? ... Put simply, 2FA confirms a user's identity by verifying one authentication factor against a second authentication factor."
+  },
+  {
+    "position": 2,
+    "title": "What is Two-Factor Authentication (2FA): A Complete Guide",
+    "link": "https://www.oloid.com/blog/uses-of-two-factor-authentication",
+    "domain": "www.oloid.com",
+    "snippet": "Two-factor authentication, or 2FA, is a security process that adds an extra checkpoint to verify your identity before granting access to an account, system, ..."
+  },
+  {
+    "position": 3,
+    "title": "What is Two-Factor Authentication (2FA) & How to Enable It?",
+    "link": "https://www.malwarebytes.com/cybersecurity/basics/2fa",
+    "domain": "www.malwarebytes.com",
+    "snippet": "Two‐factor authentication (2FA) is a security method that requires two separate forms of identity verification before granting access to an account or system."
+  },
+  {
+    "position": 4,
+    "title": "Two-factor authentication (2FA): How it works and how to ...",
+    "link": "https://www.csoonline.com/article/563753/two-factor-authentication-2fa-explained.html",
+    "domain": "www.csoonline.com",
+    "snippet": "Two-factor authentication (2FA) goes beyond passwords to add a second layer of security to the authentication process."
+  },
+  {
+    "position": 5,
+    "title": "What Is Two-Factor Authentication and How Does It Work?",
+    "link": "https://www.stratospherenetworks.com/blog/what-is-two-factor-authentication-and-how-does-it-work-your-guide-to-2fa/",
+    "domain": "www.stratospherenetworks.com",
+    "snippet": "2FA uses two different pieces of information (aside from the username) to verify that a user actually is who they say they are before they're ..."
+  },
+  {
+    "position": 6,
+    "title": "What Is Two Factor Authentication & How Does It Work?",
+    "link": "https://www.typingdna.com/glossary/what-is-two-factor-authentication-and-how-does-it-work",
+    "domain": "www.typingdna.com",
+    "snippet": "Two Factor Authentication (2FA) makes online accounts more secure by requiring users to provide 2 pieces of evidence to prove their identity."
+  },
+  {
+    "position": 8,
+    "title": "Complete guide to two-factor authentication (2FA)",
+    "link": "https://www.manageengine.com/products/self-service-password/blog/mfa/two-factor-authentication-2fa-guide.html",
+    "domain": "www.manageengine.com",
+    "snippet": "By requiring two forms of verification, 2FA significantly enhances account security, reduces the risk of unauthorized access, and provides peace of mind for ..."
+  }
+]

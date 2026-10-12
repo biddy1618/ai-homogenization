@@ -1,3 +1,4 @@
 date,category,query,n_results,mean_pairwise_cosine,vendi,distinct_ratio,mean_marginal_novelty
 2026-10-04,law,how does copyright protect creators,8,0.718573,2.7427,0.3428,0.233764
 2026-10-05,law,how does copyright protect creators,8,0.666994,3.1008,0.3876,0.275223
+2026-10-12,law,how does copyright protect creators,8,0.660381,3.1211,0.3901,0.256809

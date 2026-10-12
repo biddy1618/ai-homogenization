@@ -1,3 +1,4 @@
 date,category,query,n_results,mean_pairwise_cosine,vendi,distinct_ratio,mean_marginal_novelty
 2026-10-04,science,why is the sky blue,5,0.752482,2.1447,0.4289,0.220275
 2026-10-05,science,why is the sky blue,6,0.862204,1.6576,0.2763,0.10233
+2026-10-12,science,why is the sky blue,8,0.814209,2.0779,0.2597,0.138316

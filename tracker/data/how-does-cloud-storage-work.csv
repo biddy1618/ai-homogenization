@@ -1,3 +1,4 @@
 date,category,query,n_results,mean_pairwise_cosine,vendi,distinct_ratio,mean_marginal_novelty
 2026-10-04,tech,how does cloud storage work,6,0.773275,2.11,0.3517,0.162296
 2026-10-05,tech,how does cloud storage work,8,0.82809,1.9331,0.2416,0.131344
+2026-10-12,tech,how does cloud storage work,7,0.863111,1.737,0.2481,0.095978

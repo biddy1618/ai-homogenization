@@ -1,3 +1,4 @@
 date,category,query,n_results,mean_pairwise_cosine,vendi,distinct_ratio,mean_marginal_novelty
 2026-10-04,science,how do black holes form,6,0.588781,3.252,0.542,0.374204
 2026-10-05,science,how do black holes form,8,0.614126,3.4987,0.4373,0.329643
+2026-10-12,science,how do black holes form,7,0.594918,3.421,0.4887,0.345141

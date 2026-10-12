@@ -1,3 +1,4 @@
 date,category,query,n_results,mean_pairwise_cosine,vendi,distinct_ratio,mean_marginal_novelty
 2026-10-04,health,what causes migraines,7,0.616651,3.1672,0.4525,0.282091
 2026-10-05,health,what causes migraines,8,0.557451,3.8161,0.477,0.353328
+2026-10-12,health,what causes migraines,7,0.540422,3.7697,0.5385,0.405615

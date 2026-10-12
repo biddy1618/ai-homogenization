@@ -1,0 +1,51 @@
+[
+  {
+    "position": 1,
+    "title": "What is Cloud Storage and How Does it Work? - Servercore",
+    "link": "https://servercore.com/blog/articles/what-is-cloud-storage/",
+    "domain": "servercore.com",
+    "snippet": "Cloud storage enables individuals and organizations to store, access, and manage data via the Internet, removing the need for local drives or in-house servers."
+  },
+  {
+    "position": 2,
+    "title": "What is cloud storage and how does it work?",
+    "link": "https://backup.education/showthread.php?tid=2291",
+    "domain": "backup.education",
+    "snippet": "Basically, cloud storage refers to saving your data on remote servers accessed via the internet rather than on your local hard drive. So, ..."
+  },
+  {
+    "position": 3,
+    "title": "What is cloud storage? a beginner's guide",
+    "link": "https://www.att.com/blog/what-is-cloud-storage/",
+    "domain": "www.att.com",
+    "snippet": "Cloud storage is a service typically offered by a third-party company to provide digital storage separate from your device. These companies ..."
+  },
+  {
+    "position": 4,
+    "title": "What is Cloud storage and how does it work?",
+    "link": "https://www.alibabacloud.com/blog/what-is-cloud-storage-and-how-does-it-work_595461",
+    "domain": "www.alibabacloud.com",
+    "snippet": "Cloud storage uses data centers with massive computer servers that physically store the data and make it available online to users via web."
+  },
+  {
+    "position": 5,
+    "title": "How does cloud storage work?",
+    "link": "https://www.quora.com/How-does-cloud-storage-work",
+    "domain": "www.quora.com",
+    "snippet": "How does cloud storage work?"
+  },
+  {
+    "position": 6,
+    "title": "What is cloud storage?",
+    "link": "https://www.ovhcloud.com/en/learn/what-is-cloud-storage/",
+    "domain": "www.ovhcloud.com",
+    "snippet": "At its core, cloud storage works by distributing your data across a network of interconnected servers. These servers, often located in massive data centres,"
+  },
+  {
+    "position": 7,
+    "title": "Cloud Storage: A Complete Guide in Simple Terms",
+    "link": "https://www.weka.io/learn/guide/cloud-storage/what-is-cloud-storage/",
+    "domain": "www.weka.io",
+    "snippet": "Cloud storage allows individuals and organizations to store files and data on remote servers that are managed and maintained by a third-party ..."
+  }
+]

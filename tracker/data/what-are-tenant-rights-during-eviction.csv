@@ -1,3 +1,4 @@
 date,category,query,n_results,mean_pairwise_cosine,vendi,distinct_ratio,mean_marginal_novelty
 2026-10-04,law,what are tenant rights during eviction,9,0.569895,4.168,0.4631,0.344816
 2026-10-05,law,what are tenant rights during eviction,9,0.620002,3.7129,0.4125,0.322715
+2026-10-12,law,what are tenant rights during eviction,9,0.492108,4.8915,0.5435,0.410532

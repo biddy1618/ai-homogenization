@@ -1,3 +1,4 @@
 date,category,query,n_results,mean_pairwise_cosine,vendi,distinct_ratio,mean_marginal_novelty
 2026-10-04,science,are electric cars better for the environment,8,0.641543,2.8935,0.3617,0.253672
 2026-10-05,science,are electric cars better for the environment,8,0.574141,3.4901,0.4363,0.323448
+2026-10-12,science,are electric cars better for the environment,9,0.761539,2.4908,0.2768,0.191519

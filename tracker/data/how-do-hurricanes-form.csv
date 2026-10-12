@@ -1,3 +1,4 @@
 date,category,query,n_results,mean_pairwise_cosine,vendi,distinct_ratio,mean_marginal_novelty
 2026-10-04,science,how do hurricanes form,5,0.660952,2.586,0.5172,0.318826
 2026-10-05,science,how do hurricanes form,5,0.647751,2.625,0.525,0.300535
+2026-10-12,science,how do hurricanes form,8,0.741188,2.5779,0.3222,0.220697

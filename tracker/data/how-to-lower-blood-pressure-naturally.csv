@@ -1,3 +1,4 @@
 date,category,query,n_results,mean_pairwise_cosine,vendi,distinct_ratio,mean_marginal_novelty
 2026-10-04,health,how to lower blood pressure naturally,7,0.454875,4.2804,0.6115,0.425512
 2026-10-05,health,how to lower blood pressure naturally,7,0.640086,3.0451,0.435,0.277198
+2026-10-12,health,how to lower blood pressure naturally,7,0.62962,3.1434,0.4491,0.306993
