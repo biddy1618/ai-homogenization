@@ -18,9 +18,8 @@ import numpy as np
 import pandas as pd
 from tqdm import tqdm
 
-from metrics import tokenize
 from semantic import spread_metrics, bootstrap_pairwise_samples
-from semantic_bert import load_model, embed_texts
+from semantic_bert import EMBED_MODES, Embedding, embedding_setup, load_model, embed_texts
 from embed_cache import load_cache, save_cache, cached_embed
 
 CHATGPT_QUARTER = "2022Q4"
@@ -36,16 +35,14 @@ def _ci(v: np.ndarray, n_boot: int, ci: float, rng) -> tuple[float, float]:
             float(np.nanpercentile(pc, 100 * (1 - alpha / 2))))
 
 
-def _group_record(quarter: str, group: str, sub: pd.DataFrame, model, lc_window: int,
+def _group_record(quarter: str, group: str, sub: pd.DataFrame, model, emb: Embedding,
                   n_boot: int, ci: float, rng, raw_cache, lc_cache) -> dict:
     ids = sub["id"].tolist()
     texts = sub["text"].tolist()
-    raw_emb = cached_embed(model, ids, texts, embed_texts, raw_cache)
+    raw_emb = cached_embed(model, ids, texts, emb.embed, raw_cache)
     raw = spread_metrics(raw_emb)
 
-    tokenized = [tokenize(t) for t in texts]
-    lc_data = [(i, " ".join(tk[:lc_window])) for i, tk in zip(ids, tokenized)
-               if len(tk) >= lc_window]
+    lc_data = emb.lc(ids, texts)
     if len(lc_data) >= 2:
         lc_emb = cached_embed(model, [i for i, _ in lc_data],
                               [t for _, t in lc_data], embed_texts, lc_cache)
@@ -65,7 +62,7 @@ def _group_record(quarter: str, group: str, sub: pd.DataFrame, model, lc_window:
     return rec
 
 
-def compute_segments(df: pd.DataFrame, model, sample: int = 800, lc_window: int = 100,
+def compute_segments(df: pd.DataFrame, model, emb: Embedding, sample: int = 800,
                      min_answers: int = 30, min_group: int = 30, seed: int = 42,
                      n_boot: int = 0, ci: float = 0.95, raw_cache: dict | None = None,
                      lc_cache: dict | None = None) -> pd.DataFrame:
@@ -84,20 +81,20 @@ def compute_segments(df: pd.DataFrame, model, sample: int = 800, lc_window: int 
         for name, sub in (("low", group[~is_high]), ("high", group[is_high])):
             if len(sub) < min_group:
                 continue
-            records.append(_group_record(quarter, name, sub, model, lc_window,
+            records.append(_group_record(quarter, name, sub, model, emb,
                                          n_boot, ci, boot_rng, raw_cache, lc_cache))
 
     return pd.DataFrame(records).sort_values(["quarter", "group"]).reset_index(drop=True)
 
 
-def plot_segments(seg: pd.DataFrame, output: Path, corpus: str) -> None:
+def plot_segments(seg: pd.DataFrame, output: Path, corpus: str, emb: Embedding) -> None:
     quarters = sorted(seg["quarter"].unique())
     x = {q: i for i, q in enumerate(quarters)}
     marker_x = x.get(CHATGPT_QUARTER)
     colors = {"low": "tab:orange", "high": "tab:blue"}
 
-    panels = [("sem_pairwise_cosine", "raw embeddings"),
-              ("lc_sem_pairwise_cosine", "length-controlled (first 100 tokens)")]
+    panels = [("sem_pairwise_cosine", f"{emb.raw_label} embeddings"),
+              ("lc_sem_pairwise_cosine", emb.lc_label)]
     fig, axes = plt.subplots(2, 1, figsize=(13, 9), sharex=True)
     for ax, (col, title) in zip(axes, panels):
         for g in GROUPS:
@@ -143,21 +140,21 @@ def main() -> None:
     ap.add_argument("--no-emb-cache", action="store_true", help="Bypass the embedding cache")
     ap.add_argument("--corpus", default="Cross Validated")
     ap.add_argument("--seed", type=int, default=42)
+    ap.add_argument("--embed", choices=EMBED_MODES, default="legacy")
     args = ap.parse_args()
 
     df = pd.read_parquet(args.input)
+    model = load_model(args.cache_dir)
+    emb = embedding_setup(model, args.embed, args.emb_cache_dir, args.input.stem, args.lc_window)
 
     if args.no_emb_cache:
         raw_cache = lc_cache = None
         raw_path = lc_path = None
     else:
-        tag = args.input.stem
-        raw_path = args.emb_cache_dir / f"{tag}_minilm_raw.npz"
-        lc_path = args.emb_cache_dir / f"{tag}_minilm_lc{args.lc_window}.npz"
+        raw_path, lc_path = emb.raw_path, emb.lc_path
         raw_cache, lc_cache = load_cache(raw_path), load_cache(lc_path)
 
-    model = load_model(args.cache_dir)
-    seg = compute_segments(df, model, sample=args.sample, lc_window=args.lc_window,
+    seg = compute_segments(df, model, emb, sample=args.sample,
                            min_group=args.min_group, seed=args.seed, n_boot=args.bootstrap,
                            ci=args.ci, raw_cache=raw_cache, lc_cache=lc_cache)
 
@@ -166,7 +163,7 @@ def main() -> None:
     seg.to_csv(out_csv, index=False)
     print(f"Wrote {seg['quarter'].nunique()} quarters x 2 groups -> {out_csv}")
 
-    plot_segments(seg, args.plots_dir / "7_score_segments.png", args.corpus)
+    plot_segments(seg, args.plots_dir / "7_score_segments.png", args.corpus, emb)
 
     if not args.no_emb_cache:
         save_cache(raw_path, raw_cache)

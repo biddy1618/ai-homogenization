@@ -26,7 +26,7 @@ from pathlib import Path
 import pandas as pd
 
 from parse_posts import parse_posts
-from semantic_bert import load_model, embed_texts, compute_quarterly, plot_metrics
+from semantic_bert import EMBED_MODES, embedding_setup, load_model, compute_quarterly, plot_metrics
 from embed_cache import load_cache, save_cache
 
 DUMP_BASE = ("https://archive.org/download/stackexchange_20260630/"
@@ -118,27 +118,27 @@ def recent_volume(df: pd.DataFrame, n_recent: int = 6) -> dict:
 
 
 def run_family5(df: pd.DataFrame, model, key: str, slug: str, corpus: str,
-                base: Path, sample: int, bootstrap: int) -> pd.DataFrame:
+                base: Path, sample: int, bootstrap: int, mode: str = "legacy") -> pd.DataFrame:
     """Family-5 semantic-BERT metrics for one corpus; returns the per-quarter frame."""
-    csv = base / "artifacts" / slug / "data" / "5_semantic_bert.csv"
-    plot = base / "artifacts" / slug / "plots" / "5_semantic_bert.png"
+    out = base / "artifacts" / slug / ("whole" if mode == "whole" else "")
+    csv = out / "data" / "5_semantic_bert.csv"
+    plot = out / "plots" / "5_semantic_bert.png"
     if csv.exists():
         print(f"  [family5] cached {csv.relative_to(base)}")
         return pd.read_csv(csv)
 
-    emb_dir = base / "data" / "embeddings"
-    raw_path = emb_dir / f"{key}_answers_minilm_raw.npz"
-    lc_path = emb_dir / f"{key}_answers_minilm_lc100.npz"
+    emb = embedding_setup(model, mode, base / "data" / "embeddings", f"{key}_answers")
+    raw_path, lc_path = emb.raw_path, emb.lc_path
     raw_cache, lc_cache = load_cache(raw_path), load_cache(lc_path)
 
     result = compute_quarterly(df, model, sample=sample, n_boot=bootstrap,
-                               raw_cache=raw_cache, lc_cache=lc_cache)
+                               raw_cache=raw_cache, lc_cache=lc_cache, emb=emb)
     save_cache(raw_path, raw_cache)
     save_cache(lc_path, lc_cache)
 
     csv.parent.mkdir(parents=True, exist_ok=True)
     result.to_csv(csv, index=False)
-    plot_metrics(result, plot, corpus)
+    plot_metrics(result, plot, corpus, emb=emb)
     print(f"  [family5] wrote {csv.relative_to(base)} ({len(result)} quarters)")
     return result
 
@@ -159,6 +159,8 @@ def main() -> None:
     ap.add_argument("--min-last-quarter", default="2026Q1",
                     help="Skip family 5 if the site has no data at/after this quarter "
                          "(aligns endpoint with existing corpora, which reach 2026Q2)")
+    ap.add_argument("--embed", choices=EMBED_MODES, default="legacy",
+                    help="whole = whole-text chunked embeddings -> artifacts/<slug>/whole/")
     args = ap.parse_args()
 
     base = args.base
@@ -203,7 +205,7 @@ def main() -> None:
                 continue
 
             result = run_family5(df, model, key, slug, corpus, base,
-                                 args.sample, args.bootstrap)
+                                 args.sample, args.bootstrap, args.embed)
             row["status"] = "ok"
             row["n_quarters"] = len(result)
             row["recent_median_sample"] = (result.tail(6)["n_sample"].median()
@@ -217,6 +219,9 @@ def main() -> None:
 
     pool.shutdown(wait=True)
     man = pd.DataFrame(manifest_rows)
+    if args.embed != "legacy":
+        print(man.to_string(index=False))
+        return
     man_path = base / "artifacts" / "sites_manifest.csv"
     if man_path.exists():
         prev = pd.read_csv(man_path)

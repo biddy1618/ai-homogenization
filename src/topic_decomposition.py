@@ -39,7 +39,7 @@ import pandas as pd
 from scipy.spatial.distance import jensenshannon
 from sklearn.cluster import KMeans
 
-from semantic_bert import load_model, embed_texts
+from semantic_bert import EMBED_MODES, embedding_setup, load_model, embed_texts
 from embed_cache import load_cache, save_cache, cached_embed
 from significance import _q_ord, analyze_metric
 
@@ -143,11 +143,11 @@ def decompose_quarter(V: np.ndarray, labels: np.ndarray, K: int) -> dict:
 
 
 def compute(df: pd.DataFrame, model, sample: int, K: int, min_answers: int, seed: int,
-            raw_cache: dict | None) -> pd.DataFrame:
+            raw_cache: dict | None, embed_fn=embed_texts) -> pd.DataFrame:
     ids, texts, quarters = sample_quarters(df, sample, min_answers, seed)
     print(f"Sampled {len(ids):,} answers across {len(set(quarters))} quarters; "
           f"embedding (cache-backed)...")
-    V = cached_embed(model, ids, texts, embed_texts, raw_cache)
+    V = cached_embed(model, ids, texts, embed_fn, raw_cache)
 
     print(f"Global K-means into K={K} stable topics...")
     labels = KMeans(n_clusters=K, random_state=seed, n_init=4).fit_predict(V)
@@ -287,19 +287,22 @@ def main() -> None:
     ap.add_argument("--emb-cache-dir", type=Path, default=Path("data/embeddings"))
     ap.add_argument("--no-emb-cache", action="store_true")
     ap.add_argument("--seed", type=int, default=42)
+    ap.add_argument("--embed", choices=EMBED_MODES, default="legacy")
     args = ap.parse_args()
 
     model = load_model(args.cache_dir)
+    emb = embedding_setup(model, args.embed, args.emb_cache_dir, args.input.stem)
     df = pd.read_parquet(args.input)
 
     if args.no_emb_cache:
         raw_cache = None
     else:
-        raw_path = args.emb_cache_dir / f"{args.input.stem}_minilm_raw.npz"
+        raw_path = emb.raw_path
         raw_cache = load_cache(raw_path)
 
     result = compute(df, model, sample=args.sample, K=args.k,
-                     min_answers=args.min_answers, seed=args.seed, raw_cache=raw_cache)
+                     min_answers=args.min_answers, seed=args.seed, raw_cache=raw_cache,
+                     embed_fn=emb.embed)
 
     if not args.no_emb_cache:
         save_cache(raw_path, raw_cache)

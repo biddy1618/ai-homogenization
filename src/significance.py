@@ -198,14 +198,14 @@ def plot_summary(rep: pd.DataFrame, out_png: Path, break_quarter: str, alpha: fl
 
 def run_all(artifacts: Path, out_csv: Path, break_quarter: str, hac_lags: int,
             alpha: float = 0.05, summary_png: Path | None = None,
-            per_corpus_plots: bool = True) -> None:
+            per_corpus_plots: bool = True, variant: str = "") -> None:
     """Family-8 across every corpus in the shared registry -> one aggregate CSV + report."""
     from cog_load_compare import CORPORA  # shared corpus registry (folder, label, cog)
 
     t_break = _q_ord(break_quarter)
     rows, per = [], {}
     for folder, label, cog in CORPORA:
-        csv = artifacts / folder / "data" / "5_semantic_bert.csv"
+        csv = artifacts / folder / variant / "data" / "5_semantic_bert.csv"
         if not csv.exists():
             print(f"  skip {label}: missing {csv}")
             continue
@@ -221,7 +221,7 @@ def run_all(artifacts: Path, out_csv: Path, break_quarter: str, hac_lags: int,
             mrows[metric] = row
         if per_corpus_plots:
             plot_its(df, fits, mrows, t_break,
-                     artifacts / folder / "plots" / "8_its.png", label)
+                     artifacts / folder / variant / "plots" / "8_its.png", label)
 
     out = pd.DataFrame(rows)
     out_csv.parent.mkdir(parents=True, exist_ok=True)
@@ -283,13 +283,16 @@ def main() -> None:
                     help="artifacts root (--all mode)")
     ap.add_argument("--no-its-plots", action="store_true",
                     help="--all mode: skip per-corpus ITS plots (CSV + summary only)")
+    ap.add_argument("--variant", default="",
+                    help="--all mode: results sub-folder, e.g. 'whole' -> artifacts/<corpus>/whole/")
     args = ap.parse_args()
 
     if args.all:
-        out_csv = args.out_csv or Path("artifacts/8_significance_all.csv")
-        summary_png = args.plot or Path("artifacts/8_significance_all.png")
+        out_csv = args.out_csv or args.artifacts / args.variant / "8_significance_all.csv"
+        summary_png = args.plot or args.artifacts / args.variant / "8_significance_all.png"
         run_all(args.artifacts, out_csv, args.break_quarter, args.hac_lags,
-                summary_png=summary_png, per_corpus_plots=not args.no_its_plots)
+                summary_png=summary_png, per_corpus_plots=not args.no_its_plots,
+                variant=args.variant)
         return
 
     if not (args.input and args.corpus and args.out_csv):

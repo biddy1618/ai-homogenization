@@ -67,11 +67,11 @@ def _slope(t: np.ndarray, y: np.ndarray) -> float:
     return float(np.polyfit(t, y, 1)[0]) if len(t) >= 2 else float("nan")
 
 
-def load_series(artifacts: Path):
+def load_series(artifacts: Path, variant: str = ""):
     series, table = {}, []
     t_break = _q_ord(CHATGPT_QUARTER)
     for folder, label, cog in CORPORA:
-        csv = artifacts / folder / "data" / "5_semantic_bert.csv"
+        csv = artifacts / folder / variant / "data" / "5_semantic_bert.csv"
         if not csv.exists():
             print(f"  skip {label}: {csv} missing")
             continue
@@ -168,11 +168,14 @@ def plot_comparison(series: dict, t_break: int, output: Path) -> None:
 def main() -> None:
     ap = argparse.ArgumentParser(description="High vs low cognitive-load comparison")
     ap.add_argument("--artifacts", type=Path, default=Path("artifacts"))
-    ap.add_argument("--out-csv", type=Path, default=Path("artifacts/9_cog_load_comparison.csv"))
-    ap.add_argument("--plot", type=Path, default=Path("artifacts/9_cog_load_comparison.png"))
+    ap.add_argument("--variant", default="", help="results sub-folder, e.g. 'whole'")
+    ap.add_argument("--out-csv", type=Path, default=None)
+    ap.add_argument("--plot", type=Path, default=None)
     args = ap.parse_args()
+    args.out_csv = args.out_csv or args.artifacts / args.variant / "9_cog_load_comparison.csv"
+    args.plot = args.plot or args.artifacts / args.variant / "9_cog_load_comparison.png"
 
-    series, table, t_break = load_series(args.artifacts)
+    series, table, t_break = load_series(args.artifacts, args.variant)
     if table.empty:
         print("No corpora found — run semantic_bert.py first.")
         return

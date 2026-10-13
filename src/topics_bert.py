@@ -32,7 +32,7 @@ import pandas as pd
 
 from metrics import tokenize
 from semantic import spread_metrics, bootstrap_pairwise_samples
-from semantic_bert import load_model, embed_texts
+from semantic_bert import EMBED_MODES, embedding_setup, load_model, embed_texts
 from embed_cache import load_cache, save_cache, cached_embed
 
 CHATGPT_QUARTER = "2022Q4"
@@ -245,6 +245,7 @@ def main() -> None:
                     help="Bootstrap resamples for within-topic/overall CIs (0 = off)")
     ap.add_argument("--ci", type=float, default=0.95, help="Confidence level for the CIs")
     ap.add_argument("--seed", type=int, default=42)
+    ap.add_argument("--embed", choices=EMBED_MODES, default="legacy")
     args = ap.parse_args()
 
     df = pd.read_parquet(args.input)
@@ -254,16 +255,15 @@ def main() -> None:
     quarters = sampled["quarter"].to_numpy()
     print(f"Embedding {len(texts):,} answers ({len(set(quarters))} quarters)...")
 
+    model = load_model(args.cache_dir)
+    emb_cfg = embedding_setup(model, args.embed, args.emb_cache_dir, args.input.stem, args.lc_window)
     if args.no_emb_cache:
         raw_cache = lc_cache = None
     else:
-        tag = args.input.stem
-        raw_path = args.emb_cache_dir / f"{tag}_minilm_raw.npz"
-        lc_path = args.emb_cache_dir / f"{tag}_minilm_lc{args.lc_window}.npz"
+        raw_path, lc_path = emb_cfg.raw_path, emb_cfg.lc_path
         raw_cache, lc_cache = load_cache(raw_path), load_cache(lc_path)
 
-    model = load_model(args.cache_dir)
-    emb = cached_embed(model, ids, texts, embed_texts, raw_cache)
+    emb = cached_embed(model, ids, texts, emb_cfg.embed, raw_cache)
 
     print(f"Clustering (min_cluster_size={args.min_cluster_size})...")
     topic_model, topics = fit_topics(texts, emb, args.min_cluster_size, args.seed)
@@ -301,22 +301,22 @@ def main() -> None:
                       footnote=wt_foot)
 
     # P1: length-controlled within-topic — same topic assignments, but embeddings of the
-    # first lc_window tokens (answers shorter than the window are excluded, matching the
-    # length-control convention in semantic_bert.py). Closes the raw-embedding caveat.
-    tokenized = [tokenize(t) for t in texts]
-    lc_mask = np.array([len(tk) >= args.lc_window for tk in tokenized])
-    if int(lc_mask.sum()) >= 2:
-        lc_ids = [i for i, tk in zip(ids, tokenized) if len(tk) >= args.lc_window]
-        lc_texts = [" ".join(tk[:args.lc_window]) for tk in tokenized if len(tk) >= args.lc_window]
-        print(f"Length-controlled within-topic on {int(lc_mask.sum()):,} answers "
-              f"(>= {args.lc_window} tokens)...")
+    # length-control window (answers shorter than the window are excluded). Closes the
+    # raw-embedding caveat.
+    lc_data = emb_cfg.lc(ids, texts)
+    lc_set = {i for i, _ in lc_data}
+    lc_mask = np.array([i in lc_set for i in ids])
+    if len(lc_data) >= 2:
+        lc_ids = [i for i, _ in lc_data]
+        lc_texts = [t for _, t in lc_data]
+        print(f"Length-controlled within-topic on {len(lc_data):,} answers ({emb_cfg.lc_label})...")
         emb_lc = cached_embed(model, lc_ids, lc_texts, embed_texts, lc_cache)
         wts_lc = within_topic_similarity(quarters[lc_mask], topics[lc_mask], emb_lc,
                                          n_boot=args.bootstrap, ci=args.ci, rng=boot_rng)
         wts_lc.to_csv(args.data_dir / "6_within_topic_similarity_lc.csv", index=False)
         print(f"Wrote CSV -> {args.data_dir / '6_within_topic_similarity_lc.csv'}")
         plot_within_topic(wts_lc, args.plots_dir / "6c_within_topic_similarity_lc.png",
-                          args.corpus, note=" \u2014 length-controlled (first 100 tokens)",
+                          args.corpus, note=f" \u2014 {emb_cfg.lc_label}",
                           footnote=wt_foot)
     else:
         print("Not enough answers >= lc-window tokens for length-controlled within-topic.")

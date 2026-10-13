@@ -32,7 +32,7 @@ from tqdm import tqdm
 
 from embed_cache import load_cache, save_cache, cached_embed
 from semantic import spread_metrics
-from semantic_bert import CHATGPT_QUARTER, load_model, embed_texts
+from semantic_bert import CHATGPT_QUARTER, EMBED_MODES, embedding_setup, load_model, embed_texts
 from significance import _q_ord, analyze_metric
 
 
@@ -48,7 +48,7 @@ def _bootstrap_mean_ci(values: np.ndarray, n_boot: int, ci: float, rng) -> tuple
 def compute_same_question(df: pd.DataFrame, model, min_answers: int = 30,
                           overall_sample: int = 800, seed: int = 42,
                           n_boot: int = 0, ci: float = 0.95,
-                          raw_cache: dict | None = None) -> pd.DataFrame:
+                          raw_cache: dict | None = None, embed_fn=embed_texts) -> pd.DataFrame:
     """Per-quarter within-question and overall pairwise cosine on multi-answer questions."""
     rng = np.random.default_rng(seed)
 
@@ -61,7 +61,7 @@ def compute_same_question(df: pd.DataFrame, model, min_answers: int = 30,
 
     ids = df["id"].tolist()
     texts = df["text"].tolist()
-    emb = cached_embed(model, ids, texts, embed_texts, raw_cache)  # (n, d) L2-normalized
+    emb = cached_embed(model, ids, texts, embed_fn, raw_cache)  # (n, d) L2-normalized
     quarter = df["quarter"].to_numpy()
     parent = df["parent_id"].to_numpy()
 
@@ -153,9 +153,11 @@ def main() -> None:
     ap.add_argument("--ci", type=float, default=0.95)
     ap.add_argument("--break-quarter", default=CHATGPT_QUARTER)
     ap.add_argument("--hac-lags", type=int, default=4)
+    ap.add_argument("--embed", choices=EMBED_MODES, default="legacy")
     args = ap.parse_args()
 
     model = load_model(args.cache_dir)
+    emb = embedding_setup(model, args.embed, args.emb_cache_dir, args.input.stem)
     df = pd.read_parquet(args.input)
     if "parent_id" not in df.columns:
         raise SystemExit(f"{args.input} has no parent_id column — re-parse with the updated "
@@ -163,12 +165,13 @@ def main() -> None:
 
     raw_cache = None
     if not args.no_emb_cache:
-        raw_path = args.emb_cache_dir / f"{args.input.stem}_minilm_raw.npz"
+        raw_path = emb.raw_path
         raw_cache = load_cache(raw_path)
 
     result = compute_same_question(df, model, min_answers=args.min_answers,
                                    overall_sample=args.overall_sample,
-                                   n_boot=args.bootstrap, ci=args.ci, raw_cache=raw_cache)
+                                   n_boot=args.bootstrap, ci=args.ci, raw_cache=raw_cache,
+                                   embed_fn=emb.embed)
 
     if not args.no_emb_cache:
         save_cache(raw_path, raw_cache)

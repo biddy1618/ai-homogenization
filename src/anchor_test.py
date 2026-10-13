@@ -45,7 +45,7 @@ import pandas as pd
 from tqdm import tqdm
 
 from embed_cache import load_cache, save_cache, cached_embed
-from semantic_bert import CHATGPT_QUARTER, load_model, embed_texts
+from semantic_bert import CHATGPT_QUARTER, EMBED_MODES, embedding_setup, load_model, embed_texts
 from significance import _q_ord, analyze_metric
 
 SYSTEM_PROMPT = (
@@ -169,7 +169,7 @@ def append_generation(path: Path, qid: int, text: str) -> None:
 # --------------------------------------------------------------------------- metric
 def compute_drift(sample: pd.DataFrame, gens: dict[int, str], model,
                   raw_cache: dict | None, ai_cache: dict | None,
-                  min_answers: int, seed: int) -> pd.DataFrame:
+                  min_answers: int, seed: int, embed_fn=embed_texts) -> pd.DataFrame:
     """Per-quarter mean cosine of human answers to the matched / mismatched AI answer."""
     rng = np.random.default_rng(seed)
     sample = sample[sample["parent_id"].isin(gens)].reset_index(drop=True)
@@ -178,12 +178,12 @@ def compute_drift(sample: pd.DataFrame, gens: dict[int, str], model,
 
     # Embed AI answers once per unique question (cache keyed by qid).
     uq = sample["parent_id"].drop_duplicates().tolist()
-    ai_vecs = cached_embed(model, uq, [gens[q] for q in uq], embed_texts, ai_cache)
+    ai_vecs = cached_embed(model, uq, [gens[q] for q in uq], embed_fn, ai_cache)
     qid_to_row = {q: i for i, q in enumerate(uq)}
 
     # Embed the human answers (reuse the id-keyed raw cache).
     hvecs = cached_embed(model, sample["id"].tolist(), sample["text"].tolist(),
-                         embed_texts, raw_cache)
+                         embed_fn, raw_cache)
 
     gi = sample["parent_id"].map(qid_to_row).to_numpy()
     match = np.einsum("ij,ij->i", hvecs, ai_vecs[gi])
@@ -267,6 +267,7 @@ def main() -> None:
     ap.add_argument("--break-quarter", default=CHATGPT_QUARTER)
     ap.add_argument("--hac-lags", type=int, default=4)
     ap.add_argument("--dry-run", action="store_true", help="Plan + estimate only; never call the API")
+    ap.add_argument("--embed", choices=EMBED_MODES, default="legacy")
     args = ap.parse_args()
 
     if not args.questions.exists():
@@ -332,8 +333,10 @@ def main() -> None:
         print(f"Generations cached -> {gen_path} ({len(gens):,} total)")
 
     model = load_model(args.cache_dir)
-    raw_path = args.emb_cache_dir / f"{args.input.stem}_minilm_raw.npz"
-    ai_path = args.emb_cache_dir / f"{args.input.stem}_anchor_{_slug(args.model)}.npz"
+    emb = embedding_setup(model, args.embed, args.emb_cache_dir, args.input.stem)
+    raw_path = emb.raw_path
+    suffix = "" if args.embed == "legacy" else f"_{args.embed}"
+    ai_path = args.emb_cache_dir / f"{args.input.stem}_anchor_{_slug(args.model)}{suffix}.npz"
     raw_cache, ai_cache = load_cache(raw_path), load_cache(ai_path)
 
     # Empty entries are content-filter skips: cached so they never re-spend, dropped here.
@@ -343,7 +346,7 @@ def main() -> None:
         print(f"Skipping {n_skip:,} content-filtered question(s) in the analysis.")
 
     result = compute_drift(sample, gens_ok, model, raw_cache, ai_cache,
-                           args.min_answers, args.seed)
+                           args.min_answers, args.seed, embed_fn=emb.embed)
 
     save_cache(raw_path, raw_cache)
     save_cache(ai_path, ai_cache)

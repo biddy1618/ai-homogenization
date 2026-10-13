@@ -61,13 +61,15 @@ def analyze(csv: Path, label: str, cog: str, t_break: int) -> list[dict]:
 def main() -> None:
     ap = argparse.ArgumentParser(description="Overall vs within-topic significance")
     ap.add_argument("--artifacts", type=Path, default=Path("artifacts"))
-    ap.add_argument("--out-csv", type=Path, default=Path("artifacts/10_within_vs_overall.csv"))
+    ap.add_argument("--variant", default="", help="results sub-folder, e.g. 'whole'")
+    ap.add_argument("--out-csv", type=Path, default=None)
     args = ap.parse_args()
+    args.out_csv = args.out_csv or args.artifacts / args.variant / "10_within_vs_overall.csv"
 
     t_break = _q_ord(CHATGPT_QUARTER)
     rows = []
     for folder, label, cog in CORPORA:
-        csv = args.artifacts / folder / "data" / "6_within_topic_similarity.csv"
+        csv = args.artifacts / folder / args.variant / "data" / "6_within_topic_similarity.csv"
         if not csv.exists():
             print(f"  skip {label}: {csv} missing")
             continue

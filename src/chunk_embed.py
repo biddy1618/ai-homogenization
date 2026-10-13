@@ -46,6 +46,16 @@ def split_sentences(text: str) -> list[str]:
     return [s.strip() for s in _SENT_SPLIT.split(text) if s and s.strip()]
 
 
+def opening_window(tok, text: str, n: int = DEFAULT_BUDGET, clean: bool = True) -> str | None:
+    """The first ``n`` model tokens of the (cleaned) text, or None if it is shorter than ``n``."""
+    if clean:
+        text = clean_text(tok, text)
+    enc = tok.encode(text, add_special_tokens=False)
+    if len(enc.ids) < n:
+        return None
+    return text[: enc.offsets[n - 1][1]]
+
+
 def counting_tokenizer(model):
     """A copy of the model's tokenizer with truncation off, used only for counting tokens."""
     from tokenizers import Tokenizer
