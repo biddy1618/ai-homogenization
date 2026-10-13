@@ -1,8 +1,9 @@
 """Build a self-contained dashboard (tracker/dashboard/index.html) from the tracker data.
 
-All metrics are FULL-PAGE (``runs_fullpage.csv``): Vendi over the main text of each result's page.
-Data is embedded in the HTML, so it renders on GitHub Pages and by simply opening the file.
-Stdlib only -> runs in CI.
+All metrics are FULL-PAGE (``runs_fullpage.csv``). The headline is the DISTINCT RATIO = Vendi / pages
+analysed, shown as "% of pages that are effectively distinct": raw Vendi is capped by how many pages
+could be fetched, so it would drop whenever coverage drops. Data is embedded in the HTML, so it
+renders on GitHub Pages and by simply opening the file. Stdlib only -> runs in CI.
 
 Usage:
     python tracker/dashboard/build.py
@@ -36,6 +37,7 @@ def load(path: Path) -> list[dict]:
     rows = list(csv.DictReader(path.open(encoding="utf-8")))
     for r in rows:
         r["vendi"] = float(r["vendi"])
+        r["pct"] = 100 * float(r["distinct_ratio"])
         r["n_results"] = int(r["n_results"])
         r["n_serp"] = int(r["n_serp"])
     return rows
@@ -44,8 +46,8 @@ def load(path: Path) -> list[dict]:
 def overall_by_date(rows: list[dict], dates: list[str]) -> list:
     by = defaultdict(list)
     for r in rows:
-        by[r["date"]].append(r["vendi"])
-    return [round(mean(by[d]), 3) if by.get(d) else None for d in dates]
+        by[r["date"]].append(r["pct"])
+    return [round(mean(by[d]), 1) if by.get(d) else None for d in dates]
 
 
 def build_payload() -> dict:
@@ -56,11 +58,11 @@ def build_payload() -> dict:
     latest_rows = [r for r in primary if r["date"] == latest]
     cats = sorted({r["category"] for r in primary})
 
-    leaderboard = sorted(latest_rows, key=lambda r: r["vendi"])
+    leaderboard = sorted(latest_rows, key=lambda r: r["pct"])
     by_date_cat = defaultdict(list)
     for r in primary:
-        by_date_cat[(r["date"], r["category"])].append(r["vendi"])
-    series = {c: [round(mean(by_date_cat[(d, c)]), 3) if by_date_cat[(d, c)] else None for d in dates]
+        by_date_cat[(r["date"], r["category"])].append(r["pct"])
+    series = {c: [round(mean(by_date_cat[(d, c)]), 1) if by_date_cat[(d, c)] else None for d in dates]
               for c in cats}
 
     served = sum(r["n_serp"] for r in latest_rows)
@@ -68,17 +70,17 @@ def build_payload() -> dict:
 
     dom = defaultdict(list)
     for r in latest_rows:
-        dom[r["category"]].append(r["vendi"])
-    domains = [{"cat": c, "vendi": round(mean(dom[c]), 2)} for c in sorted(dom, key=lambda c: mean(dom[c]))]
+        dom[r["category"]].append(r["pct"])
+    domains = [{"cat": c, "pct": round(mean(dom[c]), 1)} for c in sorted(dom, key=lambda c: mean(dom[c]))]
 
     return {
         "dates": dates, "latest": latest, "n_queries": len(latest_rows),
         "switches": provider_switches(dates),
         "cats": cats, "overall": overall_by_date(primary, dates),
         "series": series, "coverage": cov,
-        "primary_mean": round(mean([r["vendi"] for r in latest_rows]), 2),
+        "primary_mean": round(mean([r["pct"] for r in latest_rows]), 1),
         "domains": domains,
-        "leaderboard": [{"query": r["query"], "category": r["category"],
+        "leaderboard": [{"query": r["query"], "category": r["category"], "pct": round(r["pct"], 1),
                          "vendi": round(r["vendi"], 2), "n": r["n_results"]} for r in leaderboard],
     }
 
@@ -121,20 +123,21 @@ TEMPLATE = """<!doctype html>
 
   <div class="card">
     <h2>Homogeneity by domain</h2>
-    <p>Mean Vendi (effective number of distinct results) per knowledge domain — latest run,
-       full-page. Lower = results repeat each other more.</p>
+    <p>Share of each domain's result pages that are effectively distinct (Vendi score ÷ pages
+       analysed), latest run. Lower = the top results repeat each other more.</p>
     <canvas id="domains" height="200"></canvas>
   </div>
 
   <div class="card">
     <h2>How repetitive are the top results, by query</h2>
-    <p>Full-page Vendi per query, latest run, colored by domain. Lower = more homogeneous.</p>
+    <p>% of the analysed pages that are effectively distinct, per question, latest run, colored by
+       domain. Lower = more homogeneous.</p>
     <canvas id="leaderboard" height="560"></canvas>
   </div>
 
   <div class="card">
     <h2>Diversity over time</h2>
-    <p>Mean full-page Vendi per run — overall (white) and by domain. Week-to-week movement per
+    <p>Mean % distinct per run — overall (white) and by domain. Week-to-week movement per
        query is still large; read trends only once several weeks have accumulated.</p>
     <canvas id="timeseries" height="320"></canvas>
     <p id="switchnote" style="margin-top:10px"></p>
@@ -161,9 +164,9 @@ document.getElementById("sub").textContent =
 const lb = DATA.leaderboard;
 const mostHom = lb[0], mostDiv = lb[lb.length-1];
 const kpis = [
-  ["Most homogeneous", mostHom.query, `Vendi ${mostHom.vendi} of ${mostHom.n}`],
-  ["Most diverse", mostDiv.query, `Vendi ${mostDiv.vendi} of ${mostDiv.n}`],
-  ["Mean Vendi", DATA.primary_mean.toFixed(2), `across ${DATA.n_queries} queries`],
+  ["Most homogeneous", mostHom.query, `${mostHom.pct}% distinct (Vendi ${mostHom.vendi} of ${mostHom.n} pages)`],
+  ["Most diverse", mostDiv.query, `${mostDiv.pct}% distinct (Vendi ${mostDiv.vendi} of ${mostDiv.n} pages)`],
+  ["Mean % distinct", `${DATA.primary_mean}%`, `across ${DATA.n_queries} questions`],
 ];
 document.getElementById("kpis").innerHTML = kpis.map(k =>
   `<div class="kpi"><div class="label">${k[0]}</div>
@@ -172,17 +175,17 @@ document.getElementById("kpis").innerHTML = kpis.map(k =>
 new Chart(document.getElementById("domains"), {
   type: "bar",
   data: { labels: DATA.domains.map(d=>d.cat),
-    datasets: [{ data: DATA.domains.map(d=>d.vendi),
+    datasets: [{ data: DATA.domains.map(d=>d.pct),
       backgroundColor: DATA.domains.map(d=>catColor[d.cat]) }] },
   options: { plugins:{legend:{display:false}},
     scales:{ x:{grid:{display:false},ticks:{color:"#e8eaed"}},
-      y:{beginAtZero:true,grid:{color:"#262a33"},ticks:{color:"#9aa0aa"},title:{display:true,text:"mean Vendi",color:"#9aa0aa"}} } },
+      y:{beginAtZero:true,grid:{color:"#262a33"},ticks:{color:"#9aa0aa"},title:{display:true,text:"% distinct",color:"#9aa0aa"}} } },
 });
 
 new Chart(document.getElementById("leaderboard"), {
   type: "bar",
   data: { labels: lb.map(d=>d.query),
-    datasets: [{ label:"Vendi", data: lb.map(d=>d.vendi), backgroundColor: lb.map(d=>catColor[d.category]) }] },
+    datasets: [{ label:"% distinct", data: lb.map(d=>d.pct), backgroundColor: lb.map(d=>catColor[d.category]) }] },
   options: { indexAxis:"y",
     plugins:{
       legend:{ display:true, position:"top", align:"end",
@@ -227,7 +230,7 @@ new Chart(document.getElementById("timeseries"), {
   type:"line", data:{ labels:DATA.dates, datasets:tsDatasets }, plugins:[switchMarker],
   options:{ plugins:{legend:{labels:{color:"#e8eaed",boxWidth:12,font:{size:11}}}},
     scales:{ x:{grid:{color:"#262a33"},ticks:{color:"#9aa0aa"}},
-      y:{grid:{color:"#262a33"},ticks:{color:"#9aa0aa"},title:{display:true,text:"mean Vendi",color:"#9aa0aa"}} } },
+      y:{grid:{color:"#262a33"},ticks:{color:"#9aa0aa"},title:{display:true,text:"mean % distinct",color:"#9aa0aa"}} } },
 });
 </script>
 </body>

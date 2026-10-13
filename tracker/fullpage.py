@@ -48,6 +48,27 @@ UA = ("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
 FIELDS = ["date", "category", "query", "n_serp", "n_results",
           "mean_pairwise_cosine", "vendi", "distinct_ratio", "mean_marginal_novelty"]
 
+# The ONNX MiniLM tokenizer truncates at 128 tokens (~90-100 words), so a page is embedded as the
+# word-weighted mean of ~90-word chunks; otherwise only its opening lines would count.
+CHUNK_WORDS = 90
+
+
+def embed_pages(model, texts: list[str]) -> np.ndarray:
+    """One L2-normalised vector per page = word-weighted mean of its chunk embeddings."""
+    chunks, owner, weight = [], [], []
+    for i, t in enumerate(texts):
+        words = t.split()
+        for s in range(0, len(words), CHUNK_WORDS):
+            piece = words[s:s + CHUNK_WORDS]
+            chunks.append(" ".join(piece))
+            owner.append(i)
+            weight.append(len(piece))
+    cv = embed_texts(model, chunks)
+    out = np.zeros((len(texts), cv.shape[1]))
+    for o, w, vec in zip(owner, weight, cv):
+        out[o] += w * vec
+    return out / np.linalg.norm(out, axis=1, keepdims=True)
+
 
 def _get_html(url: str, provider: str, api_key: str | None, timeout: int) -> bytes | None:
     """Raw HTML bytes for ``url`` via the provider. None = failure (retry); b'' = non-HTML."""
@@ -74,7 +95,7 @@ def _get_html(url: str, provider: str, api_key: str | None, timeout: int) -> byt
 
 
 def fetch_page_text(url: str, provider: str = "none", api_key: str | None = None,
-                    timeout: int = 20, max_tokens: int = 1000) -> str | None:
+                    timeout: int = 20, max_tokens: int = 1000, cache_only: bool = False) -> str | None:
     """Capped main-text of a page (cached by TARGET url), or None on failure/non-HTML.
 
     ``provider`` routes the fetch: 'none' (direct, only works from an unblocked IP), 'scraperapi'
@@ -83,6 +104,8 @@ def fetch_page_text(url: str, provider: str = "none", api_key: str | None = None
     key = CACHE / (hashlib.sha1(url.encode()).hexdigest() + ".txt")
     if key.exists():
         return key.read_text(encoding="utf-8") or None
+    if cache_only:
+        return None
     try:
         raw = _get_html(url, provider, api_key, timeout)
     except Exception:  # noqa: BLE001  — transient; don't cache, allow a later retry
@@ -123,6 +146,8 @@ def main() -> None:
                     help="Route fetches through a scraping API (works from blocked datacenter IPs)")
     ap.add_argument("--key-file", type=Path, default=None, help="Override the provider's default key file")
     ap.add_argument("--force", action="store_true")
+    ap.add_argument("--cache-only", action="store_true",
+                    help="Recompute from cached pages only (no fetching, no API credits)")
     args = ap.parse_args()
 
     api_key = None
@@ -168,8 +193,10 @@ def main() -> None:
             for r in results:
                 link = r.get("link", "")
                 page = fetch_page_text(link, args.provider, api_key,
-                                       timeout=90 if api_key else 20) if link else None
-                time.sleep(args.sleep)
+                                       timeout=90 if api_key else 20,
+                                       cache_only=args.cache_only) if link else None
+                if not args.cache_only:
+                    time.sleep(args.sleep)
                 if page and len(page.split()) >= args.min_words:
                     texts.append(page)
                     positions.append(r.get("position") or (len(positions) + 1))
@@ -177,7 +204,7 @@ def main() -> None:
             if n < args.min_results:
                 print(f"[{date} {i}/{len(files)}] skip {query!r}: only {n}/{len(results)} pages", flush=True)
                 continue
-            v = embed_texts(model, texts)
+            v = embed_pages(model, texts)
             vendi = vendi_score(v)
             writer.writerow({
                 "date": date, "category": category, "query": query,

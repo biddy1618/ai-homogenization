@@ -14,24 +14,26 @@ gives you the same answer many times over; a decline over time = homogenization 
    One row per query goes to `data/serp_log.csv`; one provenance row per run to `data/_runs_meta.csv`.
 2. **Analyse full pages** — [`fullpage.py`](fullpage.py): fetch each result's actual page through
    **ScrapingRobot** (GitHub's datacenter IPs are blocked by many sites), extract the main text
-   (first ~1000 words), embed with **MiniLM** (ONNX), and compute the per-query metrics into
-   `data/runs_fullpage.csv`. Pages that can't be fetched or carry < 50 words are **dropped** — no
-   snippet substitution; a query needs ≥ 3 analysable pages to be scored.
+   (first ~1000 words), embed it with **MiniLM** (ONNX), and compute the per-query metrics into
+   `data/runs_fullpage.csv`. MiniLM reads at most 128 tokens (~90 words) at a time, so each page is
+   split into ~90-word chunks and its vector is the word-weighted mean of the chunk vectors — the
+   whole extract counts, not just the opening lines. Pages that can't be fetched or carry < 50 words
+   are **dropped**; a query needs ≥ 3 analysable pages to be scored.
 3. **Dashboard** — [`dashboard/build.py`](dashboard/build.py) regenerates a self-contained
    `dashboard/index.html` (data embedded), served by GitHub Pages.
 4. **Commit** — results + dashboard are committed back to the repo. Git is the datastore.
 
 ## Metrics (per query, per run)
 
-- **`vendi`** — the headline: the *effective number of distinct pages* among the analysed results,
+- **`distinct_ratio`** — **the headline** (shown as "% distinct" on the dashboard): `vendi / n_results`,
+  the share of analysed pages that are effectively distinct. Normalising by page count keeps weeks
+  comparable when fewer pages could be fetched.
+- **`vendi`** — the *effective number of distinct pages* among the analysed results,
   `exp(entropy of the eigenvalues of the cosine-similarity matrix)`. Ranges from 1 (all pages say
-  the same thing) to N (all different). Lower = more homogeneous.
+  the same thing) to N (all different).
 - **`mean_pairwise_cosine`** — average similarity between all page pairs.
 - **`mean_marginal_novelty`** — how much new content each ranked page adds beyond those above it.
 - **`n_serp` / `n_results`** — results returned vs. pages actually analysed (coverage).
-
-Snippets are *not* used: a pilot showed they systematically overstate homogeneity relative to the
-pages themselves.
 
 ## Query panel
 
@@ -63,6 +65,6 @@ Both stages are idempotent per `(date, query)`; pass `--force` to redo.
 
 ## Caveats
 
-- Week-to-week movement per query is still large (~0.8 Vendi); read trends only after several months.
+- Week-to-week movement per query is still large; read trends only after several months.
 - Google's own ranking updates move the metric independently of web content.
 - The page cache (`data/pagecache/`) is local scratch and not committed.
