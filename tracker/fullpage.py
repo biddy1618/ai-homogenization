@@ -30,13 +30,14 @@ import urllib.parse
 import urllib.request
 from pathlib import Path
 
-import numpy as np
 from bs4 import BeautifulSoup
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "src"))
 from tracker import (  # noqa: E402  (same MiniLM model + metrics as the snippet tracker)
     load_model, embed_texts, mean_pairwise_cosine, vendi_score, mean_marginal_novelty, slugify,
 )
+from chunk_embed import counting_tokenizer, embed_documents  # noqa: E402  (shared with the study)
 
 RAW = Path("tracker/data/raw")
 SERP_LOG = Path("tracker/data/serp_log.csv")
@@ -47,27 +48,6 @@ UA = ("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
 
 FIELDS = ["date", "category", "query", "n_serp", "n_results",
           "mean_pairwise_cosine", "vendi", "distinct_ratio", "mean_marginal_novelty"]
-
-# The ONNX MiniLM tokenizer truncates at 128 tokens (~90-100 words), so a page is embedded as the
-# word-weighted mean of ~90-word chunks; otherwise only its opening lines would count.
-CHUNK_WORDS = 90
-
-
-def embed_pages(model, texts: list[str]) -> np.ndarray:
-    """One L2-normalised vector per page = word-weighted mean of its chunk embeddings."""
-    chunks, owner, weight = [], [], []
-    for i, t in enumerate(texts):
-        words = t.split()
-        for s in range(0, len(words), CHUNK_WORDS):
-            piece = words[s:s + CHUNK_WORDS]
-            chunks.append(" ".join(piece))
-            owner.append(i)
-            weight.append(len(piece))
-    cv = embed_texts(model, chunks)
-    out = np.zeros((len(texts), cv.shape[1]))
-    for o, w, vec in zip(owner, weight, cv):
-        out[o] += w * vec
-    return out / np.linalg.norm(out, axis=1, keepdims=True)
 
 
 def _get_html(url: str, provider: str, api_key: str | None, timeout: int) -> bytes | None:
@@ -103,7 +83,8 @@ def fetch_page_text(url: str, provider: str = "none", api_key: str | None = None
     url, so a page already fetched is reused without spending a credit."""
     key = CACHE / (hashlib.sha1(url.encode()).hexdigest() + ".txt")
     if key.exists():
-        return key.read_text(encoding="utf-8") or None
+        text = key.read_text(encoding="utf-8")
+        return None if text.startswith("%PDF-") else (text or None)
     if cache_only:
         return None
     try:
@@ -112,6 +93,8 @@ def fetch_page_text(url: str, provider: str = "none", api_key: str | None = None
         return None
     if raw is None:
         return None
+    if raw.lstrip()[:5] == b"%PDF-":  # scraping APIs can return PDF bytes as the 'HTML' result
+        raw = b""
     if raw == b"":  # non-HTML — cache the "not usable" verdict
         CACHE.mkdir(parents=True, exist_ok=True)
         key.write_text("", encoding="utf-8")
@@ -170,6 +153,7 @@ def main() -> None:
 
     print("Loading MiniLM (ONNX)…", flush=True)
     model = load_model(args.model_cache)
+    tok = counting_tokenizer(model)
     OUT.parent.mkdir(parents=True, exist_ok=True)
     out_new = not OUT.exists()
     writer = csv.DictWriter(OUT.open("a", newline="", encoding="utf-8"), fieldnames=FIELDS)
@@ -204,7 +188,7 @@ def main() -> None:
             if n < args.min_results:
                 print(f"[{date} {i}/{len(files)}] skip {query!r}: only {n}/{len(results)} pages", flush=True)
                 continue
-            v = embed_pages(model, texts)
+            v = embed_documents(model, texts, embed_texts, tok=tok)
             vendi = vendi_score(v)
             writer.writerow({
                 "date": date, "category": category, "query": query,

@@ -15,10 +15,14 @@ gives you the same answer many times over; a decline over time = homogenization 
 2. **Analyse full pages** — [`fullpage.py`](fullpage.py): fetch each result's actual page through
    **ScrapingRobot** (GitHub's datacenter IPs are blocked by many sites), extract the main text
    (first ~1000 words), embed it with **MiniLM** (ONNX), and compute the per-query metrics into
-   `data/runs_fullpage.csv`. MiniLM reads at most 128 tokens (~90 words) at a time, so each page is
-   split into ~90-word chunks and its vector is the word-weighted mean of the chunk vectors — the
-   whole extract counts, not just the opening lines. Pages that can't be fetched or carry < 50 words
-   are **dropped**; a query needs ≥ 3 analysable pages to be scored.
+   `data/runs_fullpage.csv`. Machine strings are stripped first: URLs, DOIs, e-mails, and any single
+   "word" longer than 20 tokens (base64, hashes, markup fragments). This removes ~0.5% of tokens and no prose.
+   MiniLM reads at most 128 tokens (~90 words) at a time, so each page is
+   split into sentences that are packed, whole, into chunks of ≤ 120 tokens (counted with the model's
+   own tokenizer); the page vector is the token-weighted mean of its chunk vectors. No sentence is
+   cut. The cleaning and chunking live in [`../src/chunk_embed.py`](../src/chunk_embed.py)
+   and are shared with the retrospective study. Pages that can't be fetched, aren't HTML (e.g. PDFs),
+   or carry < 50 words are **dropped**; a query needs ≥ 3 analysable pages to be scored.
 3. **Dashboard** — [`dashboard/build.py`](dashboard/build.py) regenerates a self-contained
    `dashboard/index.html` (data embedded), served by GitHub Pages.
 4. **Commit** — results + dashboard are committed back to the repo. Git is the datastore.

@@ -1,0 +1,41 @@
+name: fetch-model
+
+# One-off: GitHub runners can reach Hugging Face (blocked on the analysis VDI), so the runner downloads
+# the ONNX encoder and publishes it as a workflow artifact that `gh run download` can retrieve.
+on:
+  workflow_dispatch:
+    inputs:
+      model:
+        description: fastembed model name
+        default: BAAI/bge-small-en-v1.5
+        required: true
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install fastembed
+        run: pip install "fastembed==0.8.0"
+
+      - name: Download model
+        env:
+          MODEL: ${{ inputs.model }}
+        run: |
+          python - <<'PY'
+          import os
+          from fastembed import TextEmbedding
+          m = TextEmbedding(os.environ["MODEL"], cache_dir="models")
+          print("truncation:", m.model.tokenizer.truncation)
+          print("dim:", len(next(iter(m.embed(["hello world"])))))
+          PY
+          du -sh models
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: model-cache
+          path: models
+          retention-days: 90
