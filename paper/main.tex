@@ -1,0 +1,420 @@
+\documentclass[11pt]{article}
+
+\usepackage[margin=1in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{xcolor}
+\usepackage{tcolorbox}
+\usepackage[numbers,sort&compress]{natbib}
+\usepackage{caption}
+\usepackage{float}
+\usepackage{hyperref}
+
+\graphicspath{{figures/}}
+\hypersetup{colorlinks=true, linkcolor=blue!50!black, citecolor=blue!50!black, urlcolor=blue!50!black}
+\captionsetup{font=small, labelfont=bf}
+
+% Open framing decisions for Mark -- delete the boxes once resolved.
+\newtcolorbox{framing}{colback=orange!8, colframe=orange!70!black, fonttitle=\bfseries\small,
+  title=Framing decision (open), fontupper=\small, left=4pt, right=4pt, top=2pt, bottom=2pt}
+
+\title{Did Generative AI Homogenize Online Writing?\\[4pt]
+  \large A Multi-Corpus, Topic-Controlled Analysis (2009--2026)}
+\author{Dauren \textsc{[surname]} \and Mark Nomellini}
+\date{Draft v0.1 --- \today}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We test the widely held intuition that generative AI (ChatGPT, publicly released in 2022Q4) has made
+online writing more homogeneous. Using per-quarter diversity and similarity metrics on 30 dated text
+corpora---26 Stack Exchange communities spanning high- and low-cognitive-load topics, plus Hacker News
+comments, PubMed oncology abstracts, and arXiv computer-science and mathematics abstracts---and a layered battery of
+controls (length control, four independent topic controls, a known-AI anchor, and
+interrupted-time-series significance testing), we find that the dramatic surface-level convergence is a
+length artifact; that a smaller but statistically real rise in contextual-embedding similarity survives
+length control in most corpora; and that this residual rise is largely a shift in \emph{what} people
+write about (topic composition), not a convergence of \emph{how} they write within a topic. We
+therefore find no evidence of broad stylistic homogenization, but clear evidence of topic-level
+homogenization: a narrowing of the topic mix and the emergence of a shared, AI-shaped set of themes. We
+argue the topic-level effect is the more consequential one for epistemic diversity, and introduce a
+live, open tracker to monitor it going forward.
+\end{abstract}
+
+% ---------------------------------------------------------------------------------------------
+\section{Motivation}
+
+Since late 2022, a common complaint has surfaced: \emph{everything online is starting to sound the
+same}. The em-dashes, the ``it's not just X---it's Y,'' the tidy three-part lists. The worry is that
+as hundreds of millions of people route their writing through a handful of large language models, the
+diversity of human expression---and, more importantly, the diversity of \emph{ideas}---quietly
+collapses toward a shared machine mean.
+
+This matters beyond aesthetics. Three stakes in particular:
+\begin{itemize}
+  \item \textbf{Epistemic diversity.} If the range of answers to a question narrows, so does the pool
+  of ideas a reader is exposed to. Homogenization of \emph{content} (not just style) is a narrowing of
+  what gets said at all.
+  \item \textbf{The integrity of the public record.} Scientific abstracts, legal opinions, and
+  reference sites are the durable, searchable memory of a field. If that record converges toward a
+  model's priors, we lose signal about what humans actually discovered or argued.
+  \item \textbf{Search and discovery.} Search engines rank a top-$N$ of results. If those results
+  increasingly repeat one another, the marginal information a searcher gains from reading more of them
+  falls---the web gets wider but shallower.
+\end{itemize}
+
+There is also a prior reason to expect an effect. A meta-analysis of human--AI co-creation studies
+finds a small but significant homogenization effect that persists after AI use ends
+\citep{derooij2026}. And from behavioural economics, when people face more options or hold weaker
+preferences they default to the status quo and to whatever is placed in front of them
+\citep{samuelson1988}. An always-available, fluent default answer is exactly the kind of anchor that
+theory predicts people will converge on.
+
+\paragraph{The precise question.} ``Did AI homogenize writing?'' is too coarse to test. We decompose
+it into three separable questions, and the paper's contribution is keeping them apart:
+\begin{enumerate}
+  \item \textbf{Aggregate similarity}---are any two texts from the same period more alike than they
+  used to be?
+  \item \textbf{Within-topic style}---holding the \emph{subject} fixed, do people write it more
+  similarly (the ``everyone sounds like ChatGPT'' claim in its strict form)?
+  \item \textbf{Topic composition}---is the \emph{distribution of subjects} narrowing, so texts look
+  more alike simply because everyone now writes about the same things?
+\end{enumerate}
+A rise in (1) is compatible with (2), (3), or both. Most public commentary implicitly claims (2); we
+find the evidence points mainly to (3).
+
+\begin{framing}
+Mark leans toward the affirmative ``AI is driving real, consequential homogenization.'' The data
+supports that claim at the \emph{topic} level and rejects it at the \emph{style} level. The
+introduction can honor the affirmative reading by foregrounding the topic-level finding and the
+epistemic-diversity stakes, without overclaiming a style effect the data does not support.
+\end{framing}
+
+% ---------------------------------------------------------------------------------------------
+\section{Data}
+
+All corpora are public, dated to the quarter, and run through 2026Q2, giving roughly 14 quarters of
+post-ChatGPT observation against a long pre-2022 baseline. The ChatGPT marker throughout is 2022Q4.
+
+\subsection{Stack Exchange (26 communities)}
+From the June 2026 Stack Exchange data dump: 14 high-cognitive-load communities (e.g.\ Cross
+Validated, Philosophy, Economics, Law, Computer Science, Physics) and 12 low-cognitive-load communities
+(e.g.\ Seasoned Advice, Travel, Bicycles, Gardening, Role-playing Games, Board Games). The split tests
+whether casual writing homogenizes more than expert writing. Five ``core'' communities (Cross
+Validated, Philosophy, Economics, Seasoned Advice, Travel) carry every control; the other 21 carry the
+aggregate and significance tests.
+
+\subsection{External, non-Stack-Exchange corpora}
+To test whether any finding is an artifact of Stack Exchange's terse, structured Q\&A style, we added
+four corpora from entirely different platforms (Table~\ref{tab:externals}). arXiv mathematics serves as a
+low-AI control: unlike computer science, its subject matter has little to do with AI itself. All four
+carry the full pipeline, including topic control.
+
+\begin{table}[H]
+\centering
+\caption{External corpora.}
+\label{tab:externals}
+\begin{tabular}{llrll}
+\toprule
+Corpus & Register & Docs & Span & Unit \\
+\midrule
+Hacker News & tech-forum comments & $\sim$39k & 2016Q1--2026Q2 & comments \\
+PubMed (oncology) & scientific abstracts & $\sim$34k & 2016Q1--2026Q2 & abstracts \\
+arXiv (Computer Science) & scientific abstracts & $\sim$64k & 2016Q1--2026Q2 & abstracts \\
+arXiv (Mathematics) & scientific abstracts & $\sim$69k & 2016Q1--2026Q2 & abstracts \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{framing}
+Are the externals ``robustness checks on a Stack Exchange result'' or a ``co-equal cross-domain
+contribution''? With four registers including a low-AI control, the latter framing is now defensible;
+legal opinions or corporate filings would strengthen it further.
+\end{framing}
+
+% ---------------------------------------------------------------------------------------------
+\section{Methodology}
+
+The design is a layered battery of controls, each ruling out one benign explanation for an apparent
+rise (Table~\ref{tab:layers}). Read top to bottom, each layer strips away a confound the previous one
+left standing.
+
+\begin{table}[H]
+\centering
+\caption{The layered control design.}
+\label{tab:layers}
+\small
+\begin{tabularx}{\linewidth}{lXX}
+\toprule
+Layer & What it measures & What it rules out \\
+\midrule
+Surface / lexical & type-token ratio, MTLD \citep{mccarthy2010}, Yule's K & vocabulary-diversity change \\
+Length control & same metrics on first-100-token windows & answers simply got longer \\
+LSA semantic & TF-IDF $\rightarrow$ SVD cosine, centroid variance & coarse topic drift \\
+Contextual embedding & Sentence-BERT / MiniLM pairwise cosine \citep{reimers2019,wang2020minilm} & --- (the live signal) \\
+Topic control (4 ways) & within-topic, same-question, decomposition & topic-mix shift vs.\ style convergence \\
+Significance & segmented regression + Mann--Kendall \citep{mann1945} + bootstrap & noise; wrong break date \\
+Known-AI anchor & distance from human answers to an actual ChatGPT answer & ``similar to each other'' $\neq$ ``similar to AI'' \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+Two commitments deserve emphasis because they are where naive analyses most often go wrong.
+
+\paragraph{Length control.} Embedding similarity rises mechanically with text length. We recompute
+every headline metric on text truncated to the first 100 tokens. A signal that survives is not a
+``posts got longer'' artifact.
+
+\paragraph{Topic control, done four ways.} To separate \emph{style} from \emph{subject} we (a) cluster
+with BERTopic \citep{grootendorst2022} and measure within-topic similarity over time; (b) apply a
+Mann--Kendall trend test to the post-2022 within-topic series; (c) use the \emph{same-question} gold
+standard, comparing only answers to the identical question---no clustering, no dropped data; and
+(d) decompose the aggregate cosine into within- and between-topic components and track topic diversity
+directly (global $k$-means, no dropped outliers). Agreement across four topic definitions is what makes
+the topic-composition conclusion robust.
+
+\paragraph{Anisotropy.} Raw embedding cosines are inflated because embeddings occupy a narrow cone
+\citep{ethayarajh2019}. Where it matters we report the mean-centred (anisotropy-removed) variant, which
+repeatedly flattens an apparent between-topic ``convergence.''
+
+% ---------------------------------------------------------------------------------------------
+\section{Results}
+
+\subsection{The dramatic surface rise is a length artifact}
+Lexical-diversity metrics show a large apparent shift after 2022, but it tracks answer length
+(Figure~\ref{fig:lexical}): raw TTR falls and raw TF-IDF similarity rises as answers grow longer, while
+the length-controlled versions stay essentially flat. The effect never appears in already-verbose
+corpora such as Philosophy. Answers got \emph{longer}, not more uniform.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.82\linewidth]{fig_lexical.png}
+  \caption{Cross Validated, 2010--2026. Lexical diversity (MTLD, TTR), answer-to-answer TF-IDF
+  similarity, mean answer length, and answer volume. Raw (dark) vs.\ length-controlled first-100-token
+  (light) metrics: the raw TTR decline and similarity rise follow the growth in answer length and
+  largely vanish under length control. Dashed line: ChatGPT release (2022Q4).}
+  \label{fig:lexical}
+\end{figure}
+
+\subsection{A smaller contextual-embedding rise is real and survives length control}
+The one signal that does not dissolve: Sentence-BERT pairwise similarity rises modestly from roughly
+2023Q4 onward (Figure~\ref{fig:bert}), and the rise survives length control. By interrupted-time-series
+slope change it is statistically significant in 18 of 26 Stack Exchange corpora (20 of 26 under length
+control; Figure~\ref{fig:significance}), and it replicates in all four external corpora: Hacker News
+(slope change $+0.00101$/quarter, $p=4.5\times10^{-9}$; Figure~\ref{fig:its}), PubMed ($+0.00080$,
+$p=9\times10^{-4}$), arXiv-CS ($+0.00105$, $p=0.0014$), and arXiv mathematics ($+0.00130$,
+$p=4\times10^{-10}$; length-controlled $p=0.007$).
+
+The mathematics result is notable because it is a low-AI control: before 2022 its similarity was
+\emph{falling} ($-0.00057$/quarter, $p\approx10^{-34}$), and after 2022Q4 that decline reverses into a
+significant rise (post-break Mann--Kendall $p=0.0013$). The reversal begins only around 2024, and the
+recent level is still below 2016.
+
+Two honesty notes: the effect is broad but modest (significant partly because $N$ is large; for Cross
+Validated the recent level is still below its own 2010--11 values), and PubMed and arXiv show a
+pre-2022 upward trend---for them the change is an acceleration, not a clean break.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.8\linewidth]{fig_bert_cv.png}
+  \caption{Cross Validated: contextual-embedding (MiniLM) similarity metrics per quarter with 95\%
+  bootstrap bands, raw and length-controlled.}
+  \label{fig:bert}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.78\linewidth]{fig_significance.png}
+  \caption{Post-ChatGPT slope change in mean pairwise cosine for all 26 Stack Exchange corpora (filled =
+  $p<0.05$; diamonds = length-controlled; blue = high, orange = low cognitive load). 18 of 26 show a
+  significant increase.}
+  \label{fig:significance}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.75\linewidth]{fig_its_hn.png}
+  \caption{Hacker News: interrupted time series around 2022Q4---the cleanest external case (flat
+  before, rising after).}
+  \label{fig:its}
+\end{figure}
+
+\subsection{The residual rise is largely topic composition, not within-topic style}
+This is the central result. Once the subject is held fixed, the rise mostly disappears.
+
+\paragraph{Stack Exchange.} Within-topic and same-question similarity is flat in 4 of 5 core corpora
+(Figure~\ref{fig:sameq}). The decomposition locates the rise in \emph{between-topic} pairs while
+within-topic similarity stays flat, and shows topic diversity shrinking and the topic mix drifting after
+2022 (Figure~\ref{fig:decomp}). Philosophy is the lone within-question exception.
+
+\paragraph{External corpora.} Under BERTopic---the same method as the Stack Exchange headline---all
+four externals show within-topic similarity flat while the aggregate rises (Figure~\ref{fig:withinhn}).
+Hacker News: overall post-break Mann--Kendall $p=1.2\times10^{-4}$, within-topic $p=0.44$; PubMed:
+overall $p=8\times10^{-4}$, within-topic $p=0.38$; arXiv-CS: overall $p=5\times10^{-4}$, within-topic
+$p=1.0$; arXiv mathematics: overall $p=0.011$, within-topic $p=0.50$. In mathematics the decomposition
+also shows the effective number of topics, which had been growing before 2022, turning to shrink after
+it. A $k$-means decomposition initially flagged Hacker News as a within-topic exception
+($p=0.004$), but that did not survive a second clustering method---within-topic tests are
+method-sensitive. Every external also shows emergent LLM-era topics after 2022Q4
+(e.g.\ \texttt{qa\_answers\_prompt}, \texttt{captioning\_mllms}, \texttt{segmentation\_radiomics\_dl}).
+
+The reading: the rise is real, but it is mostly people converging on \emph{what} to write about, not
+on \emph{how} to write it.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.85\linewidth]{fig_same_question.png}
+  \caption{Same-question control (Cross Validated). Similarity between answers to the \emph{same}
+  question (blue) is flat across the ChatGPT break, while similarity between any two answers in the
+  quarter (gray) rises: the aggregate rise is topic composition.}
+  \label{fig:sameq}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.85\linewidth]{fig_decomposition.png}
+  \caption{Within- vs.\ between-topic decomposition (Cross Validated; global $k$-means, $K=50$). The
+  rise lives in between-topic pairs; effective number of topics falls and topic-mix divergence from the
+  pre-2022 baseline grows. The mean-centred between-topic line is flat (anisotropy).}
+  \label{fig:decomp}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.75\linewidth]{fig_within_hn.png}
+  \caption{Hacker News: overall vs.\ within-topic (BERTopic) similarity. Within-topic flat while overall
+  rises---the same topic-composition signature as Stack Exchange.}
+  \label{fig:withinhn}
+\end{figure}
+
+\subsection{No drift toward actual AI output; cognitive load does not explain the rise}
+The most literal test---do human answers move toward an actual ChatGPT answer to the same
+question?---is flat in 4 of 5 corpora, with Economics the lone and noisiest exception
+(Figure~\ref{fig:anchor}). The rise is also independent of cognitive load: high- and low-load communities
+track each other (Figure~\ref{fig:cogload}). The two lone exceptions (Philosophy in the same-question
+test, Economics in the anchor test) fall on different sites and so read as noise, not corroboration.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.8\linewidth]{fig_anchor.png}
+  \caption{Known-AI anchor (Cross Validated): cosine similarity between human answers and a
+  gpt-4o-mini answer to the same question, per quarter. No drift toward the AI answer.}
+  \label{fig:anchor}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.8\linewidth]{fig_cogload.png}
+  \caption{High- vs.\ low-cognitive-load communities (bucket mean $\pm$1 SE; individual sites faint).
+  The two tracks overlap.}
+  \label{fig:cogload}
+\end{figure}
+
+\subsection{Summary of evidence}
+\begin{table}[H]
+\centering
+\caption{Summary of evidence.}
+\label{tab:summary}
+\small
+\begin{tabularx}{\linewidth}{llX}
+\toprule
+Claim & Verdict & Backing \\
+\midrule
+Surface convergence & Artifact (length) & lexical + LSA families \\
+Aggregate embedding rise & Real, modest, broad & 18--20/26 SE + 4/4 externals \\
+Within-topic style convergence & Not supported & 4/5 core SE + 4/4 externals flat \\
+Topic-level homogenization & Supported & effective topics $\downarrow$, mix divergence $\uparrow$, emergent LLM topics \\
+Drift toward AI output & Not supported & anchor test flat in 4/5 \\
+Cognitive-load split & None & high/low tracks overlap \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+% ---------------------------------------------------------------------------------------------
+\section{Real-World Consequences}
+
+The finding is often heard as reassuring (``so writing \emph{didn't} homogenize''). We argue the
+opposite is closer to the truth: the kind of homogenization we \emph{did} find---topic-level---is the
+more consequential one.
+
+\begin{itemize}
+  \item \textbf{Narrowing of the idea space, not just the word space.} A flat within-topic style but a
+  shrinking, drifting topic mix means the change is in \emph{which questions get asked and answered at
+  all}. Fewer effective topics is a direct measure of a narrower public conversation.
+  \item \textbf{The scientific record inherits a model's priors.} Emergent post-2022 topic clusters in
+  arXiv and PubMed show the research frontier reorganizing around AI-adjacent themes. Whether that is
+  genuine progress or a bandwagon is exactly what a durable record should let us audit.
+  \item \textbf{Search returns more pages that say less.} If top results increasingly share a topic
+  profile, the marginal value of reading result \#5 after \#1--4 falls.
+  \item \textbf{A feedback loop.} Models are trained on the web; the web is increasingly written with
+  model help; topic-level convergence today biases the training data of tomorrow---a slow ratchet
+  rather than a cliff.
+  \item \textbf{Where it is \emph{not} alarming (yet).} We find no evidence that individual voice,
+  within a subject, is collapsing, and no drift toward literal AI phrasing. The message is targeted, not
+  apocalyptic: \emph{watch the topic mix, not the prose}.
+\end{itemize}
+
+\begin{framing}
+How strong a claim should this section make? From most to least cautious: (a) ``a subtle but
+structurally important narrowing worth monitoring''; (b) ``an early-warning sign of epistemic
+concentration''; (c) ``evidence of a self-reinforcing homogenization loop.''
+\end{framing}
+
+% ---------------------------------------------------------------------------------------------
+\section{Monitoring Going Forward: A Live Search-Result Tracker}
+
+The retrospective study measures the past. To measure the present, we built an open tracker that, every
+week, collects Google's top results for a fixed panel of 45 informational questions across five
+high-stakes domains (health, finance, law, science, technology), fetches each result's full page, and
+scores how much the pages repeat one another with the Vendi score \citep{friedman2023vendi}---the
+effective number of distinct results. Video results and pages that cannot be fetched are excluded. The
+data and dashboard are public and versioned. A pilot comparison showed that search \emph{snippets}
+overstate homogeneity relative to the pages themselves, so the tracker scores full-page text only. The
+series began in October 2026; with week-to-week movement still comparable to between-domain
+differences, trends should be read only after several months of accumulation.
+
+% ---------------------------------------------------------------------------------------------
+\section{Criticisms and Limitations}
+
+\begin{itemize}
+  \item \textbf{Significance $\neq$ magnitude.} Large $N$ makes small slopes significant; several
+  effects are small in absolute terms.
+  \item \textbf{Timing $\neq$ causation.} The clearest bends lag ChatGPT by about a year and lack a
+  clean 2022Q4 step in several corpora; PubMed and arXiv-CS were already trending up before 2022, and
+  the arXiv-mathematics reversal only begins around 2024.
+  \item \textbf{Topic-control fragility.} Within-topic tests depend on the topic definition: BERTopic
+  discards 50--67\% of documents as outliers, and $k$-means and BERTopic disagreed on Hacker News. We
+  rely on the agreement of four methods, not any one.
+  \item \textbf{Anisotropy.} Raw between-topic ``convergence'' is largely embedding geometry; the
+  mean-centred variant flattens it.
+  \item \textbf{Single encoder.} All embedding results use one model family (MiniLM); a second encoder
+  is pending.
+  \item \textbf{Register bias.} Stack Exchange answers are atypically structured; the externals
+  mitigate but do not eliminate this.
+  \item \textbf{Lone exceptions.} Philosophy (same-question) and Economics (anchor) each show an effect
+  on exactly one test, on different sites; reported, not suppressed.
+\end{itemize}
+
+% ---------------------------------------------------------------------------------------------
+\section{Conclusion}
+
+The popular claim that generative AI made everyone write the same way is not supported by a layered,
+multi-corpus, topic-controlled analysis. The large surface convergence is a length artifact; the
+smaller, real, length-robust embedding rise is mostly a change in \emph{what} people write about, not
+\emph{how}. What we do find is topic-level homogenization: a measurable narrowing and drift of the topic
+mix, and the emergence of a shared, AI-shaped set of themes across forums, science, and technical
+writing alike. That is a subtler but arguably more consequential effect for epistemic diversity than
+stylistic sameness---and, because it is measurable, it is worth monitoring in the open. The honest
+headline: \emph{not broad style homogenization, but a real and structurally important topical
+convergence---worth watching, not yet worth alarm.}
+
+\bibliographystyle{plainnat}
+\bibliography{references}
+
+\end{document}
