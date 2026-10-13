@@ -21,16 +21,36 @@ META = Path("tracker/data/_runs_meta.csv")
 OUT = Path("tracker/dashboard/index.html")
 
 
-def provider_switches(dates: list[str]) -> list[dict]:
-    """Indices where the Google-results provider changed (from _runs_meta.csv 'engine')."""
+def _providers() -> dict[str, str]:
+    """run_date -> Google-results provider name, from _runs_meta.csv 'engine'."""
     if not META.exists():
-        return []
-    prov = {}
-    for r in csv.DictReader(META.open(encoding="utf-8")):
-        prov[r["run_date"]] = "Serper.dev" if r["engine"].startswith("serper") else "SerpAPI"
+        return {}
+    return {r["run_date"]: "Serper.dev" if r["engine"].startswith("serper") else "SerpAPI"
+            for r in csv.DictReader(META.open(encoding="utf-8"))}
+
+
+def provider_switches(dates: list[str]) -> list[dict]:
+    """Indices where the Google-results provider changed."""
+    prov = _providers()
     seq = [prov.get(d) for d in dates]
     return [{"index": i, "label": f"{seq[i-1]} \u2192 {seq[i]}"}
             for i in range(1, len(seq)) if seq[i] and seq[i-1] and seq[i] != seq[i-1]]
+
+
+def provider_summary(dates: list[str]) -> str:
+    """e.g. 'SerpAPI 2026-10-04 to 2026-10-12, Serper.dev from 2026-10-19'."""
+    prov = _providers()
+    spans: list[list] = []
+    for d in dates:
+        p = prov.get(d, "unknown provider")
+        if spans and spans[-1][0] == p:
+            spans[-1][2] = d
+        else:
+            spans.append([p, d, d])
+    if len(spans) == 1:
+        return f"via {spans[0][0]}"
+    parts = [f"{p} {a}" + (f" to {b}" if b != a else "") for p, a, b in spans[:-1]]
+    return "via " + ", ".join(parts + [f"{spans[-1][0]} from {spans[-1][1]}"])
 
 
 def load(path: Path) -> list[dict]:
@@ -144,7 +164,7 @@ TEMPLATE = """<!doctype html>
   </div>
 </div>
 <footer>
-  Full-page content: Google's top results (via SerpAPI through 2026-10-12, Serper.dev after), each
+  Full-page content: Google's top results (__PROVIDERS__), each
   page's main text (first ~1000 words) via ScrapingRobot, MiniLM embeddings. Video results and
   unfetchable pages excluded. Forward-looking companion to the AI-homogenization study.
 </footer>
@@ -241,7 +261,8 @@ new Chart(document.getElementById("timeseries"), {
 def main() -> None:
     payload = build_payload()
     OUT.parent.mkdir(parents=True, exist_ok=True)
-    OUT.write_text(TEMPLATE.replace("__DATA__", json.dumps(payload)), encoding="utf-8")
+    html = TEMPLATE.replace("__PROVIDERS__", provider_summary(payload["dates"]))
+    OUT.write_text(html.replace("__DATA__", json.dumps(payload)), encoding="utf-8")
     print(f"Wrote {OUT} ({len(payload['dates'])} run(s), "
           f"{payload['n_queries']} queries, coverage={payload['coverage']}).")
 

@@ -2,8 +2,8 @@
 
 Superseded or background material, kept for provenance. Current work lives in the main tree —
 see [`../research/project-briefing.md`](../research/project-briefing.md) (whole-project anchor),
-[`../research/paper-draft.md`](../research/paper-draft.md) (the paper),
-[`../research/tracker-plan.md`](../research/tracker-plan.md) (the live tracker), and
+[`../../paper/main.tex`](../../paper/main.tex) (the paper),
+[`../../tracker/README.md`](../../tracker/README.md) (the live tracker), and
 [`../status.md`](../status.md).
 
 | File | What it is |
@@ -21,3 +21,5 @@ see [`../research/project-briefing.md`](../research/project-briefing.md) (whole-
 | [critical-review.md](critical-review.md) | Self-critique Q&A dated 2026-08-12 — before externals + paper + tracker. Historical snapshot. Archived 2026-09-26. |
 | [next-steps.md](next-steps.md) | Forward roadmap (P1–P6 + Workstreams A/B/C). Live parts now in `../research/tracker-plan.md` + `../research/paper-draft.md`. Archived 2026-09-26. |
 | [homogenization-metrics-literature.md](homogenization-metrics-literature.md) | Methods reference for future orthogonal metrics (perplexity/compression/n-gram/Vendi). Out of current scope. Archived 2026-09-26. |
+| [paper-draft.md](paper-draft.md) | Markdown paper draft v0.1 (2026-09-19, 3 externals, `[FRAMING]` tags). Superseded by `paper/main.tex`. Archived 2026-10-13. |
+| [tracker-plan.md](tracker-plan.md) | Tracker plan for the snippet-based SerpAPI MVP (phases, sustainability, SerpAPI hand-off to Mark). Superseded by `tracker/README.md` (v0.5: full-page, Serper.dev). Archived 2026-10-13. |

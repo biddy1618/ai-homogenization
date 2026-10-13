@@ -1,6 +1,52 @@
 # Project Status — AI Homogenization
 
 *Running "what's done / current state / open threads" tracker. Newest state at top.*
+
+## Current state (2026-10-13)
+
+**Whole-text replication in progress.** The MiniLM embedding model reads only the first 128 tokens
+(~100 words) of each text, so every delivered embedding result (families 5–13) describes how answers
+*open*. Families 1–4 are unaffected. All embedding families are being re-run on whole text (cleaned
+of URLs/machine strings, split into sentence chunks, chunk vectors averaged), with an exact
+opening-window control (first 120 model tokens). Delivered results stay as the baseline in
+`artifacts/<corpus>/{data,plots}`; new ones go to `artifacts/<corpus>/whole/` and `artifacts/whole/`.
+
+| Step | What | State |
+|---|---|---|
+| 0–1 | Shared chunked embedding (`src/chunk_embed.py`), `--embed whole` in every script | done |
+| 2 | Decision gate: families 5 + 8, core 5 + 4 externals | running (Economics: rise *stronger* on whole text) |
+| 3 | Families 5 + 8 on the other 21 SE sites, 26-site summary, cognitive load (9) | next |
+| 4 | Topic controls: same-question (11), decomposition (13), BERTopic (6), within vs overall (10) | |
+| 5 | Score segments (7), GPT anchor (12, cached GPT answers only) | |
+| 6 | Second encoder (BGE-small) on core 5 + externals | |
+| 7–8 | Paper v0.2 (methodology, figures, numbers) and a note to Mark | |
+
+### To discuss (framing; decide before the paper rewrite)
+1. **Wording of the aggregate result — agreed: "the long decline turned upward", not "rose".** The
+   test is a change in slope at 2022Q4. Of the 18/26 significant sites, 16 were *declining* before
+   ChatGPT; 11 show a significant upward trend after it; 9 have a significantly higher post-ChatGPT
+   average. Corrected for testing 26 sites (Benjamini–Hochberg), 17/26 remain significant.
+2. **arXiv mathematics as a "low-AI control" — dropped as a control.** It shows the same turn-upward
+   as the AI-heavy fields, "low-AI" was never defined, and a field whose subject isn't AI can still
+   use AI to write. Keep it as a 4th external corpus. Open: is any defensible control corpus
+   possible, or do we drop the control framing altogether?
+3. **"Topic composition, not style" needs re-testing.** The committed family-10 summary
+   (`artifacts/10_within_vs_overall.csv`) was generated from an older family-6 run and did not
+   reproduce. Regenerated from the committed inputs: Cross Validated's within-topic similarity does
+   rise after ChatGPT (Mann–Kendall p=0.016, was 0.28), and the within-topic slope also turns upward
+   in Philosophy, Travel and Hacker News. Externals now included; their paper values reproduce
+   exactly. Step 4 (whole text) decides how this claim is worded.
+4. **Paper methodology** must disclose the 128-token window and describe the whole-text method.
+
+**Docs map:** [research/project-briefing.md](research/project-briefing.md) (entry point),
+[../paper/main.tex](../paper/main.tex) (the paper), [../tracker/README.md](../tracker/README.md)
+(tracker), [meetings.md](meetings.md). The markdown paper draft and the old tracker plan are in
+[archived/](archived/INDEX.md).
+
+---
+
+*Below: state as of 2026-09-26 (delivered, opening-window results). Superseded where the Current
+state block above says so.*
 *Last updated: 2026-09-26 (topic control now run on all 3 externals — within-topic **flat** under
 BERTopic, matching SE; paper DRAFT v0.1 written; live tracker built and running weekly on GitHub
 Actions, first 45-query snapshot committed).*
@@ -40,8 +86,8 @@ in `artifacts/sites_manifest.csv`. **26 corpora total: 14 high-cog + 12 low-cog.
 ChatGPT marker: 2022Q4. All core parquets carry `parent_id` (enables family 11). `data/` is
 gitignored; committed outputs live in `artifacts/<corpus>/{data,plots}/` (+ consolidated `artifacts/*_all.csv`).
 
-**+3 external, non-SE corpora** (2026-09-13, via `external_sources.py`; families **5 + 8 only** —
-no topic control yet):
+**+4 external, non-SE corpora** (HN, PubMed, arXiv-CS on 2026-09-13; arXiv mathematics on
+2026-10-13; via `external_sources.py`; families 5, 6, 8, 13):
 
 | Corpus | Cog-load | Docs | Timeframe | Unit | Harvester |
 |---|---|---|---|---|---|
@@ -110,21 +156,15 @@ the rise is **topic-composition**, matching SE. Committed `d4e626f` (harvest) + 
 **Current (main tree):**
 - `docs/status.md` — this running status tracker.
 - `docs/research/project-briefing.md` — **whole-project anchor** (what/why/findings/paper/tracker + glossary + Q&A bank); read-cold reference.
-- `docs/research/paper-draft.md` — **paper draft v0.1** (motivation → data → methodology → results → real-world consequences → criticisms → conclusion).
-- `docs/research/tracker-plan.md` — **live tracker** implementation, roadmap, sustainability + Mark handover checklist.
-- `docs/research/critical-review.md` — self-critique of the findings (updated with the within-topic result).
-- `docs/research/next-steps.md` — forward roadmap (P1–P5).
-- `docs/research/oral-briefing.md` — voice-assistant practice script (pitch, Q&A bank, glossary).
-- `docs/research/short-brief.md` — dense one-pager: today's two direct tests (#11, #12) + the ITS caveat + big picture.
-- `docs/research/homogenization-metrics-literature.md` — how the field measures homogenization + the 4 orthogonal metrics to add (perplexity/compression/n-gram/Vendi), after the anchor test.
+- `paper/main.tex` (+ `main.pdf`) — the paper (LaTeX).
+- `tracker/README.md` — the live tracker (pipeline, metrics, secrets, caveats).
 - `docs/meetings.md` — client meeting log + action items.
 
-**Archived (`docs/archived/`, see its `INDEX.md`):** Week-1 platform research
-(`platforms-assessment.md`, `data-sources-{high,low}-cog.md`, `prototype-candidates.md`),
-metric background (`metrics.md`, `metrics-recommendation.md`), the superseded
-`next-metrics.md`, and `workplan.md`.
+**Archived (`docs/archived/`, see its `INDEX.md`):** the markdown paper draft v0.1, the old tracker
+plan, critical review, next-steps, short/oral briefings, metrics literature, and Week-1 platform
+research.
 
-## Open threads / next actions (see next-steps.md for detail)
+## Open threads / next actions (as of 2026-09-26)
 
 *Client items 1–3 from the 2026-08-20 call are now **done**; the agreed next sequence is the
 GPT-generated-answer anchor test (item 4), then the orthogonal-metrics research.*
@@ -150,16 +190,15 @@ GPT-generated-answer anchor test (item 4), then the orthogonal-metrics research.
   (decomposition) run on HN/PubMed/arXiv. Within-topic **flat** under BERTopic in all three →
   topic-composition, matching SE (HN's K-means within-topic bump did not survive BERTopic).
   Committed `23b7a8d`.
-- **[in progress — workstream B] Academic paper** — DRAFT v0.1 written (`paper-draft.md`):
+- **[in progress — workstream B] Academic paper** — now LaTeX (`paper/main.tex`); markdown draft v0.1 archived:
   motivation → data → methodology → results → real-world consequences → criticisms → conclusion.
   Awaiting Mark's framing input.
-- **[in progress — workstream C] Homogenization tracker** — BUILT and running: weekly GitHub
-  Action → SerpAPI top-10 → MiniLM embed → Vendi + pairwise-cosine + marginal-novelty → results
-  committed to `tracker/data/`. Phases 1–2 done (MVP + production hardening); first 45-query
-  snapshot committed. See `tracker-plan.md`. Next: phase 3 full-page (scraping API) + dashboard.
+- **[in progress — workstream C] Homogenization tracker** — v0.5 live: weekly GitHub Action →
+  Serper.dev Google top-10 (SerpAPI through 2026-10-12) → full pages via ScrapingRobot → whole-page
+  embeddings → "% distinct" → results + dashboard committed. Snippets dropped. See `tracker/README.md`.
 - **[NEXT] Orthogonal-metrics research (the 4 points)** — predictability (distilgpt2-ONNX /
   n-gram perplexity), compression ratio, n-gram diversity, Vendi Score; for convergent validity.
-  See `docs/research/homogenization-metrics-literature.md`.
+  See `docs/archived/homogenization-metrics-literature.md`.
 - **Deferred:** extend family 13 decomposition from the core 5 to all 26; P2b tenure (needs
   `OwnerUserId` parsing); per-tag trends (needs `Tags` parsing); reduce HDBSCAN outliers; second
   encoder; probe the Philosophy within-question exception.
@@ -171,7 +210,7 @@ GPT-generated-answer anchor test (item 4), then the orthogonal-metrics research.
 - **[open] Add more external data sources** beyond the current three (Workstream A).
 - **[done — 2026-09-26] Develop a paper outline** — went further: full DRAFT v0.1 (`paper-draft.md`).
 - **[done — 2026-09-26] Brainstorm the homogenization-tracker implementation** — built + running
-  (`tracker/`, `tracker-plan.md`).
+  (`tracker/`, `tracker/README.md`).
 - **[done — 2026-09-26] Propose how to compute homogenization metrics across Google top results** —
   implemented: Vendi score + mean pairwise cosine + marginal novelty over the top-N SERP.
 - **[open — Mark] Mark reviews the data + sends ideas** for paper development.

@@ -25,6 +25,10 @@ CORPORA = [
     ("economics", "Economics", "high"),
     ("seasoned-advice", "Seasoned Advice", "low"),
     ("travel", "Travel", "low"),
+    ("hackernews", "Hacker News", "external"),
+    ("pubmed-oncology", "PubMed (Oncology)", "external"),
+    ("arxiv-cs", "arXiv (CS)", "external"),
+    ("arxiv-math", "arXiv (Math)", "external"),
 ]
 
 

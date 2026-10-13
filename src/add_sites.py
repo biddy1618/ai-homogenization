@@ -145,8 +145,7 @@ def run_family5(df: pd.DataFrame, model, key: str, slug: str, corpus: str,
 
 def main() -> None:
     ap = argparse.ArgumentParser(description="Batch-add SE sites + run family 5")
-    ap.add_argument("--base", type=Path,
-                    default=Path(r"c:\Users\baitud\Desktop\projects\personal\project-ai-homogenization"))
+    ap.add_argument("--base", type=Path, default=Path(__file__).resolve().parent.parent)
     ap.add_argument("--only", nargs="*", default=None,
                     help="Restrict to these site keys (default: all)")
     ap.add_argument("--sample", type=int, default=800)

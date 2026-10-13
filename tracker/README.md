@@ -52,8 +52,10 @@ nor scrapable. Keep the panel **frozen** so the series stays comparable.
 | `SERPER_API_KEY` | Serper.dev (Google results) | 2,500 queries on signup; then pay-as-you-go ($50 / 50k, valid 6 mo) | 45 |
 | `SCRAPING_ROBOT_API_KEY` | ScrapingRobot (page fetch) | 5,000 scrapes/month | ~330 |
 
-SerpAPI is still supported (`--provider serpapi`, secret `SERP_API_KEY`); runs through 2026-10-12
-used SerpAPI. The provider is recorded per run in `data/_runs_meta.csv` (`engine` column).
+SerpAPI is still supported (`--provider serpapi`, secret `SERP_API_KEY`, mapped to the same-named
+env var); runs through 2026-10-12 used SerpAPI. The provider is recorded per run in
+`data/_runs_meta.csv` (`engine` column). If every search request fails (bad key, no credits),
+`tracker.py` exits with an error so the workflow run fails visibly instead of recording nothing.
 
 GitHub Actions minutes are free and unlimited on this public repo.
 
@@ -72,3 +74,6 @@ Both stages are idempotent per `(date, query)`; pass `--force` to redo.
 - Week-to-week movement per query is still large; read trends only after several months.
 - Google's own ranking updates move the metric independently of web content.
 - The page cache (`data/pagecache/`) is local scratch and not committed.
+- Pages for the 2026-10-05 and 2026-10-12 runs were fetched on 2026-10-13, when the tracker moved to
+  full-page analysis: those weeks use the URLs Google returned on that date but the page text of
+  2026-10-13. From 2026-10-19 on, pages are fetched on the run date.

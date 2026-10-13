@@ -4,8 +4,15 @@
 > so it can be read cold (e.g. by an assistant seeded with only this file) and used to answer
 > questions in conversation. It covers *what we did, why, what we found, the paper, the tracker,
 > current status, open questions,* a **glossary**, and an **anticipated Q&A bank**. For the paper
-> itself see [paper-draft.md](paper-draft.md); for the live tracker see [tracker-plan.md](tracker-plan.md).
-> Last updated 2026-09-26.
+> itself see [paper/main.tex](../../paper/main.tex); for the live tracker see
+> [tracker/README.md](../../tracker/README.md). Last updated 2026-10-13.
+
+> **Status 2026-10-13 — results under re-check.** The embedding model (MiniLM) turned out to read only
+> the first 128 tokens (~100 words) of each text, so every embedding-based finding below (families
+> 5–13) describes how answers *open*, not whole answers. All of it is being re-run on whole text;
+> the findings below are the delivered baseline and may change. Wording of the aggregate result is
+> also being softened ("the long decline turned upward", not "rose"). See
+> [status.md](../status.md) → *Current state* for progress and open framing questions.
 
 ---
 
@@ -13,7 +20,8 @@
 
 We tested the popular worry that generative AI (ChatGPT, public 2022Q4) made online writing
 **homogeneous** — "everything sounds the same now." Using per-quarter text-similarity metrics on
-~29 dated corpora (26 Stack Exchange communities + Hacker News + PubMed oncology + arXiv CS) and a
+30 dated corpora (26 Stack Exchange communities + Hacker News + PubMed oncology + arXiv CS + arXiv
+mathematics) and a
 layered battery of statistical controls, the honest finding is:
 
 - The **dramatic surface convergence is a length artifact** — answers got *longer*, not more uniform.
@@ -60,11 +68,11 @@ plus ~14 post-ChatGPT quarters. The ChatGPT marker is **2022Q4**.
 - **26 Stack Exchange communities** — 14 high-cognitive-load (Cross Validated, Philosophy, Economics,
   Law, Physics, …) + 12 low-cognitive-load (Seasoned Advice, Travel, Bicycles, RPG, …). Five "core"
   communities carry every control; the other 21 carry the aggregate + significance tests.
-- **3 external, non-Stack-Exchange corpora** (added to prove it's not an SE artifact):
-  Hacker News comments (~39k), PubMed oncology abstracts (~34k), arXiv CS abstracts (~64k).
+- **4 external, non-Stack-Exchange corpora** (added to prove it's not an SE artifact):
+  Hacker News comments (~39k), PubMed oncology abstracts (~34k), arXiv CS abstracts (~64k), arXiv
+  mathematics abstracts (~69k).
 
-*(Workstream A will broaden this further — a less-AI-confounded arXiv field like math/q-bio, SEC
-EDGAR risk factors, CourtListener legal opinions.)*
+*(Workstream A could broaden this further — SEC EDGAR risk factors, CourtListener legal opinions.)*
 
 ---
 
@@ -102,10 +110,10 @@ cone, so everything looks a bit similar). Where it matters we report the **mean-
 1. **Surface rise = length artifact.** Big lexical convergence after 2022 vanishes under length
    control and never appears in already-verbose corpora (Philosophy).
 2. **A real, modest embedding rise** from ~2023Q4 survives length control; significant in **18/26 SE
-   corpora** (20/26 length-controlled) and **all 3 externals** (Hacker News cleanest; PubMed & arXiv
+   corpora** (20/26 length-controlled) and **all 4 externals** (Hacker News cleanest; PubMed & arXiv
    accelerate a pre-existing trend).
 3. **It's largely topic composition, not style.** Once the subject is held fixed, within-topic
-   similarity is **flat in 4/5 core SE corpora** and — the key new result — **flat in all 3 externals
+   similarity is **flat in 4/5 core SE corpora** and — the key new result — **flat in all 4 externals
    under BERTopic**. Meanwhile topic diversity shrinks and the topic mix drifts (family 13), and
    emergent LLM-era topics appear post-2022 (`qa_answers_prompt`, `captioning_mllms`,
    `segmentation_radiomics_dl`).
@@ -127,10 +135,11 @@ do **not** conclude "no homogenization"; we conclude it's **mostly topical, not 
 
 ## 6. The paper
 
-Full working draft: [paper-draft.md](paper-draft.md) (v0.1, for Mark to mark up). Structure:
+The paper: [paper/main.tex](../../paper/main.tex) (LaTeX, compiled to `paper/main.pdf`; open framing
+decisions are the orange boxes). The earlier markdown draft v0.1 is archived. Structure:
 1. **Motivation** — the worry, the stakes, the behavioural-economics prior (status-quo bias), the
    three separable questions.
-2. **Data** — 26 SE + 3 externals.
+2. **Data** — 26 SE + 4 externals.
 3. **Methodology** — the layered-controls design; what each layer rules out.
 4. **Results** — surface=artifact; aggregate rise real; mostly topic composition; no AI-anchor drift;
    no cog-load split.
@@ -141,7 +150,7 @@ Full working draft: [paper-draft.md](paper-draft.md) (v0.1, for Mark to mark up)
 7. **Conclusion** — not broad style homogenization; a real, structurally important topical convergence
    worth monitoring.
 
-Open framing decisions (tagged `[FRAMING]` in the draft): audience/venue; externals as robustness vs
+Open framing decisions (orange boxes in the paper): audience/venue; externals as robustness vs
 co-equal contribution; how strong a claim to make in the consequences section.
 
 ---
@@ -150,21 +159,23 @@ co-equal contribution; how strong a claim to make in the consequences section.
 
 A live, open tool that measures **how redundant Google's top results are** for a fixed panel of
 queries, tracked over time. Retrospective study = the past; tracker = the future. Full detail in
-[tracker-plan.md](tracker-plan.md). In one line: **weekly GitHub Action → SerpAPI top-10 → embed →
-diversity metrics (Vendi, pairwise cosine, marginal novelty) → commit results to the repo.** First
-run already shows a clean pattern: **definitional tech queries ("what is a VPN / 2FA / RAG") are the
-most homogeneous** (~2 effective-distinct pages of 8), while open questions ("how does inflation
-affect the economy") stay diverse.
+[tracker/README.md](../../tracker/README.md). In one line: **weekly GitHub Action → Serper.dev
+Google top-10 → each result's full page via ScrapingRobot → whole-page embeddings → "% distinct"
+(Vendi ÷ pages analysed) → commit results + dashboard.** Snippets are no longer used (they
+overstated homogeneity). Latest run (2026-10-12): on average 36.7% of a question's top pages are
+effectively distinct; law and science questions are the most repetitive, tech the least. Most
+repetitive single questions (~23–25% distinct): two-factor authentication, adult sleep needs,
+hurricane formation, probate. The series is only a few weeks old — no trend yet.
 
 ---
 
-## 8. Current status (2026-09-26)
+## 8. Current status (2026-10-13)
 
-- **Research:** 13 metric families complete on 26 SE corpora; 3 externals fully controlled (families
-  5, 8, 6, 13). Headline settled and honestly framed.
-- **Paper:** draft v0.1 written; awaiting Mark's framing input.
-- **Tracker:** phases 1–2 done (MVP + production hardening v0.2); live on GitHub Actions, first
-  45-query snapshot committed; weekly cron running.
+- **Research:** 13 metric families on 26 SE corpora + 4 externals. **Whole-text re-run of the
+  embedding families in progress** (see the banner at the top and `status.md`).
+- **Paper:** LaTeX version (`paper/main.tex`); methodology and numbers will be updated after the re-run.
+- **Tracker:** v0.5, full-page only, live on GitHub Actions with a dashboard; Google results via
+  Serper.dev from 2026-10-19 (SerpAPI before).
 - **Meetings:** last call 2026-09-14 (Mark) opened two workstreams — the paper and the tracker.
 
 ---
@@ -172,10 +183,10 @@ affect the economy") stay diverse.
 ## 9. Open questions / decisions
 
 - **Paper:** venue/audience; how affirmative to be about consequences; externals' role.
-- **Tracker:** snippet-level (now) vs full-page (phase 3, needs a scraping API to beat runner IP
-  blocks); which provider; whether to freeze or grow the query panel; dashboard tech (GitHub Pages vs
-  Streamlit); how to annotate Google ranking-algorithm changes.
-- **More data (Workstream A):** add a low-AI arXiv field (math/q-bio), SEC EDGAR, CourtListener.
+- **Tracker:** whether to freeze or grow the query panel; how to annotate Google ranking-algorithm
+  changes; when the series is long enough to read trends.
+- **More data (Workstream A):** SEC EDGAR, CourtListener. A true "low-AI control" corpus is an open
+  framing question (see `status.md`).
 - **Leftovers:** second encoder (guard against model-specific artifacts); the Philosophy
   within-question exception; reduce BERTopic outliers.
 
@@ -238,12 +249,14 @@ apparent "topics converging" signal, showing part of it was a geometry artifact.
 **Q: What is the tracker and does it run by itself?**
 A: It's a weekly GitHub Action that measures how repetitive Google's top results are and saves the
 numbers into the repo. Yes — it runs on a schedule with no server; if handed to Mark it keeps running
-as long as the repo has a SerpAPI key. (See tracker-plan.md.)
+as long as the repo has a Serper.dev key and a ScrapingRobot key. (See tracker/README.md.)
 
 **Q: What's the single most striking early tracker result?**
-A: Definitional tech queries — "what is a VPN," "what is two-factor authentication," "what is RAG" —
-return only ~2 effectively-distinct pages out of 8. Everyone defines the term the same way.
+A: For many plain informational questions only about a quarter of the top pages are effectively
+distinct (e.g. "how does two-factor authentication work", "how much sleep do adults need"). It is
+early: a few weekly runs, no trend yet.
 
 **Q: What would change your conclusion?**
-A: A second encoder disagreeing; a full-page (not snippet) tracker showing within-topic convergence;
-or a low-AI field (e.g. math) showing the same rise as AI-heavy CS.
+A: A second encoder disagreeing; the whole-text re-run losing the rise; a tracker trend showing
+top results converging over time; or a control corpus with little AI use showing the same change
+(we do not have a clean control yet — see the open framing questions in `status.md`).

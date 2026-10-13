@@ -1,6 +1,7 @@
 """Homogenization tracker — stage 1: collect Google's top-N results for the query panel.
 
-For each query, fetch the top-N organic Google results via SerpAPI, drop video results, and
+For each query, fetch the top-N organic Google results via Serper.dev (or SerpAPI), drop video
+results, and
 save the result list (position/title/link/domain) under ``tracker/data/raw/<date>/``. A row per
 query is logged to ``serp_log.csv`` (idempotency + query/category lookup) and a provenance row per
 run to ``_runs_meta.csv``.
@@ -15,7 +16,7 @@ also hosts the shared MiniLM loader and metric functions that ``fullpage.py`` im
   * mean_marginal_novelty — average "new information" each ranked result adds beyond the
                             higher-ranked ones (1 - max cosine to any result above it).
 
-Setup: set ``SERPER_API_KEY`` (default provider, Serper.dev) or ``SERPAPI_KEY`` (``--provider
+Setup: set ``SERPER_API_KEY`` (default provider, Serper.dev) or ``SERP_API_KEY`` (``--provider
 serpapi``) — GitHub Actions secrets in CI, or a key file under ``.secrets/`` locally.
 
 Usage:
@@ -313,7 +314,7 @@ def main() -> None:
     args = ap.parse_args()
 
     env, default_file = {"serper": ("SERPER_API_KEY", ".secrets/serper_dev_api_key.txt"),
-                         "serpapi": ("SERPAPI_KEY", ".secrets/serp_api_key.txt")}[args.provider]
+                         "serpapi": ("SERP_API_KEY", ".secrets/serp_api_key.txt")}[args.provider]
     kf = args.key_file or Path(default_file)
     api_key = os.environ.get(env) or (kf.read_text(encoding="utf-8").strip() if kf.exists() else None)
     if not api_key:
@@ -330,7 +331,7 @@ def main() -> None:
     log = args.out_dir / "serp_log.csv"
     done = set() if args.force else _existing_keys(log)
 
-    used = n_ok = n_skipped = 0
+    used = n_ok = n_skipped = n_failed = 0
     for i, (category, query) in enumerate(queries, 1):
         if (run_date, query) in done:  # idempotent: skip before spending a credit
             print(f"[{i}/{len(queries)}] skip {query!r}: already recorded for {run_date}", flush=True)
@@ -346,6 +347,7 @@ def main() -> None:
         except Exception as e:  # noqa: BLE001
             print(f"[{i}/{len(queries)}] SKIP {query!r}: {e}", flush=True)
             n_skipped += 1
+            n_failed += 1
             continue
 
         results = [r for r in results if not _blocked(r.get("link", ""))]
@@ -365,6 +367,8 @@ def main() -> None:
     _write_meta(args.out_dir, run_date, args, len(queries), n_ok, n_skipped)
     print(f"\nDone → raw/{run_date}/ + {log}. Recorded {n_ok}, skipped {n_skipped}. "
           f"Used ~{used} {args.provider} searches.")
+    if n_failed and not n_ok:  # e.g. bad key or exhausted quota: fail the CI run instead of a silent no-op
+        sys.exit(f"ERROR: all {n_failed} {args.provider} requests failed; nothing recorded.")
 
 
 if __name__ == "__main__":
