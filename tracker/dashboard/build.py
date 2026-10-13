@@ -1,8 +1,8 @@
 """Build a self-contained dashboard (tracker/dashboard/index.html) from the tracker data.
 
-Full-page metrics (``runs_fullpage.csv``) are the PRIMARY series; snippet metrics (``runs.csv``) are
-shown as a secondary comparison baseline ("snippets overstate homogeneity"). Data is embedded in the
-HTML, so it renders on GitHub Pages and by simply opening the file. Stdlib only -> runs in CI.
+All metrics are FULL-PAGE (``runs_fullpage.csv``): Vendi over the main text of each result's page.
+Data is embedded in the HTML, so it renders on GitHub Pages and by simply opening the file.
+Stdlib only -> runs in CI.
 
 Usage:
     python tracker/dashboard/build.py
@@ -15,20 +15,29 @@ from collections import defaultdict
 from pathlib import Path
 from statistics import mean
 
-SNIP = Path("tracker/data/runs.csv")
 FULL = Path("tracker/data/runs_fullpage.csv")
+META = Path("tracker/data/_runs_meta.csv")
 OUT = Path("tracker/dashboard/index.html")
 
 
-def load(path: Path) -> list[dict]:
-    if not path.exists():
+def provider_switches(dates: list[str]) -> list[dict]:
+    """Indices where the Google-results provider changed (from _runs_meta.csv 'engine')."""
+    if not META.exists():
         return []
+    prov = {}
+    for r in csv.DictReader(META.open(encoding="utf-8")):
+        prov[r["run_date"]] = "Serper.dev" if r["engine"].startswith("serper") else "SerpAPI"
+    seq = [prov.get(d) for d in dates]
+    return [{"index": i, "label": f"{seq[i-1]} \u2192 {seq[i]}"}
+            for i in range(1, len(seq)) if seq[i] and seq[i-1] and seq[i] != seq[i-1]]
+
+
+def load(path: Path) -> list[dict]:
     rows = list(csv.DictReader(path.open(encoding="utf-8")))
     for r in rows:
         r["vendi"] = float(r["vendi"])
         r["n_results"] = int(r["n_results"])
-        if "n_fullpage" in r and r["n_fullpage"] != "":
-            r["n_fullpage"] = int(r["n_fullpage"])
+        r["n_serp"] = int(r["n_serp"])
     return rows
 
 
@@ -40,9 +49,7 @@ def overall_by_date(rows: list[dict], dates: list[str]) -> list:
 
 
 def build_payload() -> dict:
-    full, snip = load(FULL), load(SNIP)
-    primary = full if full else snip
-    mode = "full-page" if full else "snippet"
+    primary = load(FULL)
 
     dates = sorted({r["date"] for r in primary})
     latest = dates[-1]
@@ -56,16 +63,8 @@ def build_payload() -> dict:
     series = {c: [round(mean(by_date_cat[(d, c)]), 3) if by_date_cat[(d, c)] else None for d in dates]
               for c in cats}
 
-    cov = None
-    if full:
-        t = sum(r["n_results"] for r in full)
-        f = sum(r["n_fullpage"] for r in full)
-        cov = round(f / t, 3) if t else None
-    snip_overall = overall_by_date(snip, dates) if (full and snip) else None
-    snip_latest = None
-    if full and snip:
-        sl = [r["vendi"] for r in snip if r["date"] == latest]
-        snip_latest = round(mean(sl), 2) if sl else None
+    served = sum(r["n_serp"] for r in latest_rows)
+    cov = round(sum(r["n_results"] for r in latest_rows) / served, 3) if served else None
 
     dom = defaultdict(list)
     for r in latest_rows:
@@ -73,10 +72,11 @@ def build_payload() -> dict:
     domains = [{"cat": c, "vendi": round(mean(dom[c]), 2)} for c in sorted(dom, key=lambda c: mean(dom[c]))]
 
     return {
-        "mode": mode, "dates": dates, "latest": latest, "n_queries": len(latest_rows),
-        "cats": cats, "overall": overall_by_date(primary, dates), "snip_overall": snip_overall,
+        "dates": dates, "latest": latest, "n_queries": len(latest_rows),
+        "switches": provider_switches(dates),
+        "cats": cats, "overall": overall_by_date(primary, dates),
         "series": series, "coverage": cov,
-        "primary_mean": round(mean([r["vendi"] for r in latest_rows]), 2), "snippet_mean": snip_latest,
+        "primary_mean": round(mean([r["vendi"] for r in latest_rows]), 2),
         "domains": domains,
         "leaderboard": [{"query": r["query"], "category": r["category"],
                          "vendi": round(r["vendi"], 2), "n": r["n_results"]} for r in leaderboard],
@@ -134,14 +134,16 @@ TEMPLATE = """<!doctype html>
 
   <div class="card">
     <h2>Diversity over time</h2>
-    <p>Mean Vendi per run — full-page (solid white) vs snippet (dashed yellow) and by domain.
-       Full-page sits higher: snippets overstate homogeneity. Populates as runs accumulate.</p>
+    <p>Mean full-page Vendi per run — overall (white) and by domain. Week-to-week movement per
+       query is still large; read trends only once several weeks have accumulated.</p>
     <canvas id="timeseries" height="320"></canvas>
+    <p id="switchnote" style="margin-top:10px"></p>
   </div>
 </div>
 <footer>
-  Full-page content (Google top results via SerpAPI, pages via ScrapingRobot, MiniLM embeddings).
-  Video results excluded. Forward-looking companion to the AI-homogenization study.
+  Full-page content: Google's top results (via SerpAPI through 2026-10-12, Serper.dev after), each
+  page's main text (first ~1000 words) via ScrapingRobot, MiniLM embeddings. Video results and
+  unfetchable pages excluded. Forward-looking companion to the AI-homogenization study.
 </footer>
 
 <script>
@@ -152,8 +154,8 @@ const catColor = {};
 DATA.cats.forEach((c,i)=> catColor[c] = PALETTE[i % PALETTE.length]);
 
 document.getElementById("sub").textContent =
-  `Latest run ${DATA.latest} · ${DATA.n_queries} queries · ${DATA.mode}`
-  + (DATA.coverage!=null ? ` · ${Math.round(DATA.coverage*100)}% page coverage` : "")
+  `Latest run ${DATA.latest} · ${DATA.n_queries} queries · full-page`
+  + (DATA.coverage!=null ? ` · ${Math.round(DATA.coverage*100)}% of result pages analysed` : "")
   + ` · ${DATA.dates.length} run(s)`;
 
 const lb = DATA.leaderboard;
@@ -161,11 +163,8 @@ const mostHom = lb[0], mostDiv = lb[lb.length-1];
 const kpis = [
   ["Most homogeneous", mostHom.query, `Vendi ${mostHom.vendi} of ${mostHom.n}`],
   ["Most diverse", mostDiv.query, `Vendi ${mostDiv.vendi} of ${mostDiv.n}`],
-  ["Mean Vendi (full-page)", DATA.primary_mean.toFixed(2), `across ${DATA.n_queries} queries`],
+  ["Mean Vendi", DATA.primary_mean.toFixed(2), `across ${DATA.n_queries} queries`],
 ];
-if (DATA.snippet_mean!=null)
-  kpis.push(["Full-page vs snippet", `${DATA.primary_mean} vs ${DATA.snippet_mean}`,
-             "snippets overstate homogeneity"]);
 document.getElementById("kpis").innerHTML = kpis.map(k =>
   `<div class="kpi"><div class="label">${k[0]}</div>
    <div class="value">${k[1]} <small>${k[2]}</small></div></div>`).join("");
@@ -185,24 +184,47 @@ new Chart(document.getElementById("leaderboard"), {
   data: { labels: lb.map(d=>d.query),
     datasets: [{ label:"Vendi", data: lb.map(d=>d.vendi), backgroundColor: lb.map(d=>catColor[d.category]) }] },
   options: { indexAxis:"y",
-    plugins:{ legend:{display:false},
+    plugins:{
+      legend:{ display:true, position:"top", align:"end",
+        labels:{ color:"#e8eaed", boxWidth:12, font:{size:11},
+          generateLabels: () => DATA.cats.map(c => ({ text:c, fillStyle:catColor[c],
+            strokeStyle:catColor[c], fontColor:"#e8eaed", lineWidth:0, hidden:false })) },
+        onClick: () => {} },
       tooltip:{ callbacks:{ afterLabel:(c)=> lb[c.dataIndex].category } } },
     scales:{ x:{beginAtZero:true,grid:{color:"#262a33"},ticks:{color:"#9aa0aa"}},
       y:{grid:{display:false},ticks:{color:"#e8eaed",font:{size:10}}} } },
 });
 
+const crossesSwitch = (i) => DATA.switches.some(s => s.index === i + 1);
+const switchSegment = { borderDash: ctx => crossesSwitch(ctx.p0DataIndex) ? [2,5] : undefined };
 const tsDatasets = [{
-  label:"Overall (full-page)", data:DATA.overall, borderColor:"#ffffff", backgroundColor:"#ffffff",
-  borderWidth:3, tension:.25, pointRadius:3,
+  label:"Overall", data:DATA.overall, borderColor:"#ffffff", backgroundColor:"#ffffff",
+  borderWidth:3, tension:.25, pointRadius:3, segment:switchSegment,
 }];
-if (DATA.snip_overall)
-  tsDatasets.push({ label:"Overall (snippet)", data:DATA.snip_overall, borderColor:"#ffd166",
-    backgroundColor:"#ffd166", borderWidth:2, borderDash:[6,4], tension:.25, pointRadius:2 });
 tsDatasets.push(...DATA.cats.map(c => ({
   label:c, data:DATA.series[c], borderColor:catColor[c], backgroundColor:catColor[c],
-  borderWidth:1.5, tension:.25, pointRadius:2 })));
+  borderWidth:1.5, tension:.25, pointRadius:2, segment:switchSegment })));
+
+// Vertical dashed marker midway between the last run of one provider and the first of the next.
+const switchMarker = { id:"switchMarker", afterDatasetsDraw(chart) {
+  const {ctx, chartArea:a, scales:{x}} = chart;
+  DATA.switches.forEach(s => {
+    const xp = (x.getPixelForValue(s.index - 1) + x.getPixelForValue(s.index)) / 2;
+    ctx.save(); ctx.strokeStyle = "#9aa0aa"; ctx.setLineDash([4,4]); ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(xp, a.top); ctx.lineTo(xp, a.bottom); ctx.stroke();
+    ctx.setLineDash([]); ctx.fillStyle = "#9aa0aa"; ctx.font = "11px sans-serif";
+    ctx.textAlign = "center"; ctx.fillText("Search provider: " + s.label, xp, a.top + 12);
+    ctx.restore();
+  });
+}};
+if (DATA.switches.length)
+  document.getElementById("switchnote").textContent =
+    "Dotted segments cross a change of Google-results provider (" +
+    DATA.switches.map(s => s.label).join(", ") + "). Both return Google's top results, but for " +
+    "the same query they can surface different pages, so the step across the marker is not a " +
+    "like-for-like comparison.";
 new Chart(document.getElementById("timeseries"), {
-  type:"line", data:{ labels:DATA.dates, datasets:tsDatasets },
+  type:"line", data:{ labels:DATA.dates, datasets:tsDatasets }, plugins:[switchMarker],
   options:{ plugins:{legend:{labels:{color:"#e8eaed",boxWidth:12,font:{size:11}}}},
     scales:{ x:{grid:{color:"#262a33"},ticks:{color:"#9aa0aa"}},
       y:{grid:{color:"#262a33"},ticks:{color:"#9aa0aa"},title:{display:true,text:"mean Vendi",color:"#9aa0aa"}} } },
@@ -217,7 +239,7 @@ def main() -> None:
     payload = build_payload()
     OUT.parent.mkdir(parents=True, exist_ok=True)
     OUT.write_text(TEMPLATE.replace("__DATA__", json.dumps(payload)), encoding="utf-8")
-    print(f"Wrote {OUT} (mode={payload['mode']}, {len(payload['dates'])} run(s), "
+    print(f"Wrote {OUT} ({len(payload['dates'])} run(s), "
           f"{payload['n_queries']} queries, coverage={payload['coverage']}).")
 
 

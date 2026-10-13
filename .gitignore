@@ -14,3 +14,17 @@ __pycache__/
 
 # Tracker page-text cache (local scratch for full-page recompute; not committed)
 tracker/data/pagecache/
+
+# Derived Overleaf upload bundle (rebuild from paper/)
+paper/overleaf-upload.zip
+
+# Local tool binaries (Tectonic LaTeX engine)
+/tools/
+
+# LaTeX build byproducts (keep main.pdf)
+paper/*.aux
+paper/*.log
+paper/*.bbl
+paper/*.blg
+paper/*.out
+paper/*.toc

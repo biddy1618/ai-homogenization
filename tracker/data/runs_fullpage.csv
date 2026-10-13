@@ -1,136 +1,129 @@
-date,category,query,n_results,n_fullpage,mean_pairwise_cosine,vendi,distinct_ratio,mean_marginal_novelty
-2026-10-04,science,are electric cars better for the environment,8,8,0.579425,3.5846,0.4481,0.314804
-2026-10-04,science,how do black holes form,6,3,0.564807,3.3389,0.5565,0.371271
-2026-10-04,science,how do hurricanes form,5,2,0.422391,3.1188,0.6238,0.456465
+date,category,query,n_serp,n_results,mean_pairwise_cosine,vendi,distinct_ratio,mean_marginal_novelty
+2026-10-04,science,are electric cars better for the environment,8,7,0.554197,3.5479,0.5068,0.337084
+2026-10-04,science,how do black holes form,6,3,0.577115,2.1832,0.7277,0.427571
 2026-10-04,finance,how do index funds work,6,6,0.611672,3.102,0.517,0.344002
-2026-10-04,science,how do vaccines work,8,6,0.387555,4.9671,0.6209,0.469862
+2026-10-04,science,how do vaccines work,8,6,0.38498,4.0256,0.6709,0.501564
 2026-10-04,law,how does a class action lawsuit work,9,9,0.53367,3.65,0.4056,0.320219
-2026-10-04,tech,how does cloud storage work,6,5,0.623818,2.9402,0.49,0.311736
-2026-10-04,finance,how does compound interest work,6,5,0.694308,2.487,0.4145,0.228473
-2026-10-04,law,how does copyright protect creators,8,6,0.598977,3.6461,0.4558,0.342931
-2026-10-04,tech,how does end-to-end encryption work,6,3,0.633091,2.7712,0.4619,0.273159
+2026-10-04,tech,how does cloud storage work,6,4,0.587342,2.527,0.6318,0.350486
+2026-10-04,finance,how does compound interest work,6,5,0.688665,2.3438,0.4688,0.249312
+2026-10-04,law,how does copyright protect creators,8,6,0.573081,3.3016,0.5503,0.376489
 2026-10-04,tech,how does facial recognition work,8,8,0.67337,3.096,0.387,0.276284
 2026-10-04,finance,how does inflation affect your savings,8,8,0.279719,6.2861,0.7858,0.601569
-2026-10-04,science,how does photosynthesis work,7,5,0.601842,3.1957,0.4565,0.313201
-2026-10-04,finance,how does refinancing a mortgage work,8,5,0.564452,3.987,0.4984,0.394017
-2026-10-04,health,how does the immune system fight infection,9,7,0.378609,6.1346,0.6816,0.552856
-2026-10-04,law,how does the probate process work,7,6,0.595189,3.4992,0.4999,0.359603
-2026-10-04,tech,how does two factor authentication work,7,6,0.155271,5.5092,0.787,0.676112
-2026-10-04,health,how much sleep do adults need,7,3,0.603002,3.2238,0.4605,0.304804
-2026-10-04,health,how much water should you drink a day,8,7,0.561097,3.9049,0.4881,0.365211
-2026-10-04,finance,how to build an emergency fund,7,6,0.63703,3.0213,0.4316,0.283405
-2026-10-04,health,how to lower blood pressure naturally,7,4,0.431705,4.4991,0.6427,0.460674
-2026-10-04,tech,is ai going to replace jobs,8,5,0.515642,3.9037,0.488,0.364731
-2026-10-04,health,is intermittent fasting healthy,8,6,0.469716,4.439,0.5549,0.425616
+2026-10-04,science,how does photosynthesis work,7,5,0.602871,2.6734,0.5347,0.31433
+2026-10-04,finance,how does refinancing a mortgage work,8,5,0.560278,3.069,0.6138,0.406551
+2026-10-04,health,how does the immune system fight infection,9,6,0.352431,4.697,0.7828,0.588816
+2026-10-04,law,how does the probate process work,7,6,0.577348,3.3534,0.5589,0.404696
+2026-10-04,tech,how does two factor authentication work,7,6,0.103798,5.1782,0.863,0.735326
+2026-10-04,health,how much water should you drink a day,8,6,0.603681,3.1145,0.5191,0.338494
+2026-10-04,finance,how to build an emergency fund,7,6,0.616231,2.9058,0.4843,0.291889
+2026-10-04,health,how to lower blood pressure naturally,7,5,0.343426,3.9515,0.7903,0.548531
+2026-10-04,tech,is ai going to replace jobs,8,4,0.45823,2.8748,0.7187,0.437095
+2026-10-04,health,is intermittent fasting healthy,8,6,0.425584,3.9674,0.6612,0.495253
 2026-10-04,finance,roth ira vs traditional ira,4,4,0.279168,3.2947,0.8237,0.642091
 2026-10-04,law,what are tenant rights during eviction,9,9,0.363789,5.5607,0.6179,0.511863
-2026-10-04,health,what are the early signs of diabetes,8,5,0.587251,3.7159,0.4645,0.335971
+2026-10-04,health,what are the early signs of diabetes,8,5,0.593948,2.892,0.5784,0.355226
 2026-10-04,health,what are the symptoms of iron deficiency,8,8,0.683538,2.9929,0.3741,0.259195
-2026-10-04,law,what are your rights if arrested,8,5,0.402113,5.3622,0.6703,0.565926
+2026-10-04,law,what are your rights if arrested,8,5,0.352847,4.0178,0.8036,0.612975
 2026-10-04,science,what causes climate change,8,8,0.544964,4.0071,0.5009,0.361936
-2026-10-04,science,what causes earthquakes,5,4,0.445822,3.0767,0.6153,0.45822
-2026-10-04,health,what causes high cholesterol,7,7,0.435655,4.2702,0.61,0.452048
-2026-10-04,health,what causes migraines,7,6,0.431454,4.1742,0.5963,0.4112
-2026-10-04,law,what happens during a divorce proceeding,9,8,0.439738,5.5455,0.6162,0.504091
+2026-10-04,science,what causes earthquakes,5,3,0.268182,2.5308,0.8436,0.65614
+2026-10-04,health,what causes high cholesterol,7,6,0.492202,3.5557,0.5926,0.433366
+2026-10-04,health,what causes migraines,7,6,0.410801,3.8642,0.644,0.419346
+2026-10-04,law,what happens during a divorce proceeding,9,8,0.43665,5.1593,0.6449,0.51766
 2026-10-04,finance,what is a 401k and how does it work,8,8,0.530799,3.6559,0.457,0.34167
-2026-10-04,finance,what is a good credit score,7,5,0.39888,4.2995,0.6142,0.515181
-2026-10-04,tech,what is a large language model,6,4,0.41584,4.104,0.684,0.43413
-2026-10-04,law,what is a power of attorney,8,5,0.200294,5.8515,0.7314,0.559009
+2026-10-04,finance,what is a good credit score,7,5,0.348215,3.4711,0.6942,0.549141
+2026-10-04,tech,what is a large language model,6,4,0.320758,3.4499,0.8625,0.627039
+2026-10-04,law,what is a power of attorney,8,6,0.145858,4.9316,0.8219,0.635649
 2026-10-04,tech,what is a vpn and how does it work,8,8,0.636276,3.1944,0.3993,0.259239
-2026-10-04,law,what is an llc and how is it taxed,8,8,0.350306,4.7149,0.5894,0.462074
-2026-10-04,science,what is dark matter,6,6,0.534161,3.5647,0.5941,0.437861
-2026-10-04,tech,what is retrieval augmented generation,7,6,0.698886,2.6544,0.3792,0.213973
-2026-10-04,law,what is the difference between a will and a trust,7,5,0.68298,2.7753,0.3965,0.272487
-2026-10-04,tech,what is the difference between http and https,9,7,0.163429,7.4322,0.8258,0.679396
-2026-10-04,finance,what is the difference between stocks and bonds,7,6,0.644173,3.1245,0.4464,0.31773
-2026-10-04,science,why is the sky blue,5,5,0.430879,3.0315,0.6063,0.450902
-2026-10-05,science,are electric cars better for the environment,8,7,0.398513,4.7075,0.5884,0.476332
-2026-10-05,science,how do black holes form,8,6,0.522672,4.2051,0.5256,0.402686
-2026-10-05,science,how do hurricanes form,5,4,0.64762,2.6249,0.525,0.299461
-2026-10-05,finance,how do index funds work,6,5,0.673894,2.6593,0.4432,0.264944
-2026-10-05,science,how do vaccines work,8,6,0.263179,5.6137,0.7017,0.527085
-2026-10-05,law,how does a class action lawsuit work,9,9,0.374987,4.7828,0.5314,0.408077
-2026-10-05,tech,how does cloud storage work,8,7,0.667699,2.9711,0.3714,0.252417
-2026-10-05,finance,how does compound interest work,6,5,0.676995,2.5865,0.4311,0.235203
-2026-10-05,law,how does copyright protect creators,8,6,0.646983,3.3023,0.4128,0.305458
-2026-10-05,tech,how does end-to-end encryption work,8,5,0.638546,3.2755,0.4094,0.283455
-2026-10-05,tech,how does facial recognition work,8,8,0.441562,4.9738,0.6217,0.46499
-2026-10-05,finance,how does inflation affect your savings,9,8,0.541287,3.861,0.429,0.340397
-2026-10-05,science,how does photosynthesis work,6,5,0.460596,3.4876,0.5813,0.385336
-2026-10-05,finance,how does refinancing a mortgage work,7,4,0.536155,3.7822,0.5403,0.374658
-2026-10-05,health,how does the immune system fight infection,9,7,0.328195,6.2034,0.6893,0.597689
-2026-10-05,law,how does the probate process work,8,4,0.62988,3.4627,0.4328,0.313289
-2026-10-05,tech,how does two factor authentication work,8,7,0.366981,5.1088,0.6386,0.496267
+2026-10-04,law,what is an llc and how is it taxed,8,7,0.462363,3.8507,0.5501,0.399311
+2026-10-04,science,what is dark matter,6,5,0.53737,3.1484,0.6297,0.439207
+2026-10-04,tech,what is retrieval augmented generation,7,6,0.718046,2.4052,0.4009,0.208848
+2026-10-04,law,what is the difference between a will and a trust,7,5,0.695895,2.3364,0.4673,0.285591
+2026-10-04,tech,what is the difference between http and https,9,6,0.177442,4.9365,0.8228,0.660343
+2026-10-04,finance,what is the difference between stocks and bonds,7,6,0.640554,2.9345,0.4891,0.330611
+2026-10-04,science,why is the sky blue,5,3,0.713121,1.8503,0.6168,0.280572
+2026-10-05,science,are electric cars better for the environment,8,7,0.363643,4.5996,0.6571,0.521649
+2026-10-05,science,how do black holes form,8,6,0.543988,3.4374,0.5729,0.394492
+2026-10-05,science,how do hurricanes form,5,4,0.671682,2.2524,0.5631,0.289724
+2026-10-05,finance,how do index funds work,6,6,0.640092,2.8784,0.4797,0.29844
+2026-10-05,science,how do vaccines work,8,5,0.350345,3.6404,0.7281,0.532219
+2026-10-05,law,how does a class action lawsuit work,9,8,0.48163,3.9604,0.4951,0.360077
+2026-10-05,tech,how does cloud storage work,8,4,0.797294,1.8003,0.4501,0.181599
+2026-10-05,finance,how does compound interest work,6,5,0.66209,2.4841,0.4968,0.264075
+2026-10-05,law,how does copyright protect creators,8,6,0.640566,2.9375,0.4896,0.319167
+2026-10-05,tech,how does end-to-end encryption work,8,5,0.652936,2.5916,0.5183,0.273342
+2026-10-05,tech,how does facial recognition work,8,7,0.454149,4.4282,0.6326,0.459248
+2026-10-05,finance,how does inflation affect your savings,9,7,0.519305,3.4393,0.4913,0.365908
+2026-10-05,science,how does photosynthesis work,6,3,0.383402,2.4393,0.8131,0.518139
+2026-10-05,finance,how does refinancing a mortgage work,7,6,0.554113,3.3965,0.5661,0.373573
+2026-10-05,health,how does the immune system fight infection,9,5,0.406722,3.8271,0.7654,0.571804
+2026-10-05,law,how does the probate process work,8,5,0.650216,2.6496,0.5299,0.320102
+2026-10-05,tech,how does two factor authentication work,8,6,0.408661,3.85,0.6417,0.473803
 2026-10-05,health,how much sleep do adults need,8,8,0.586175,3.6996,0.4624,0.325483
-2026-10-05,health,how much water should you drink a day,8,7,0.323802,5.9128,0.7391,0.610097
-2026-10-05,finance,how to build an emergency fund,7,6,0.63703,3.0213,0.4316,0.283405
-2026-10-05,health,how to lower blood pressure naturally,7,3,0.616333,3.3296,0.4757,0.327349
-2026-10-05,tech,is ai going to replace jobs,7,5,0.535231,3.7294,0.5328,0.363051
-2026-10-05,health,is intermittent fasting healthy,8,6,0.475511,4.0218,0.5027,0.408472
+2026-10-05,health,how much water should you drink a day,8,7,0.305283,5.3129,0.759,0.624319
+2026-10-05,finance,how to build an emergency fund,7,6,0.616231,2.9058,0.4843,0.291889
+2026-10-05,tech,is ai going to replace jobs,7,5,0.485609,3.404,0.6808,0.457699
+2026-10-05,health,is intermittent fasting healthy,8,6,0.618982,3.005,0.5008,0.356793
 2026-10-05,finance,roth ira vs traditional ira,5,5,0.313388,3.6528,0.7306,0.559706
-2026-10-05,law,what are tenant rights during eviction,9,6,0.407408,5.2688,0.5854,0.501513
-2026-10-05,health,what are the early signs of diabetes,8,6,0.648688,3.2591,0.4074,0.272132
-2026-10-05,health,what are the symptoms of iron deficiency,8,8,0.413807,4.6933,0.5867,0.444069
-2026-10-05,law,what are your rights if arrested,9,7,0.443923,4.9764,0.5529,0.433865
-2026-10-05,science,what causes climate change,9,9,0.624581,3.6587,0.4065,0.31155
-2026-10-05,science,what causes earthquakes,6,4,0.499102,3.7891,0.6315,0.448673
-2026-10-05,health,what causes high cholesterol,7,7,0.523373,3.7192,0.5313,0.373556
-2026-10-05,health,what causes migraines,8,5,0.589324,3.6549,0.4569,0.326682
+2026-10-05,law,what are tenant rights during eviction,9,7,0.272194,5.1119,0.7303,0.554152
+2026-10-05,health,what are the early signs of diabetes,8,6,0.663528,2.7729,0.4622,0.269908
+2026-10-05,health,what are the symptoms of iron deficiency,8,6,0.593341,3.2033,0.5339,0.341744
+2026-10-05,law,what are your rights if arrested,9,6,0.548078,3.4596,0.5766,0.385706
+2026-10-05,science,what causes climate change,9,8,0.638963,3.3354,0.4169,0.299335
+2026-10-05,science,what causes earthquakes,6,3,0.58004,2.1887,0.7296,0.402708
+2026-10-05,health,what causes high cholesterol,7,6,0.631155,2.9767,0.4961,0.325685
+2026-10-05,health,what causes migraines,8,4,0.580366,2.6017,0.6504,0.385925
 2026-10-05,law,what happens during a divorce proceeding,8,8,0.512156,4.4044,0.5506,0.426955
-2026-10-05,finance,what is a 401k and how does it work,5,3,0.565167,3.0708,0.6142,0.40553
-2026-10-05,finance,what is a good credit score,8,6,0.411923,4.9266,0.6158,0.465829
-2026-10-05,tech,what is a large language model,7,4,0.469386,4.2066,0.6009,0.407034
-2026-10-05,law,what is a power of attorney,8,6,0.719452,2.5853,0.3232,0.206847
-2026-10-05,tech,what is a vpn and how does it work,8,6,0.611463,3.3693,0.4212,0.3052
-2026-10-05,law,what is an llc and how is it taxed,7,7,0.6781,2.8653,0.4093,0.26245
-2026-10-05,science,what is dark matter,5,5,0.466792,3.5394,0.7079,0.499793
-2026-10-05,tech,what is retrieval augmented generation,7,6,0.619057,3.1736,0.4534,0.334454
-2026-10-05,law,what is the difference between a will and a trust,7,7,0.532138,3.0037,0.4291,0.342549
-2026-10-05,tech,what is the difference between http and https,5,1,0.689661,2.3795,0.4759,0.266269
+2026-10-05,finance,what is a 401k and how does it work,5,3,0.579789,2.19,0.73,0.41033
+2026-10-05,finance,what is a good credit score,8,6,0.382119,4.1077,0.6846,0.489233
+2026-10-05,tech,what is a large language model,7,4,0.360422,3.349,0.8373,0.580413
+2026-10-05,law,what is a power of attorney,8,6,0.684982,2.5597,0.4266,0.255583
+2026-10-05,tech,what is a vpn and how does it work,8,6,0.580815,3.1731,0.5289,0.357494
+2026-10-05,law,what is an llc and how is it taxed,7,7,0.6781,2.8653,0.4093,0.262449
+2026-10-05,science,what is dark matter,5,4,0.450914,3.0696,0.7674,0.518933
+2026-10-05,tech,what is retrieval augmented generation,7,5,0.644289,2.6665,0.5333,0.315198
+2026-10-05,law,what is the difference between a will and a trust,7,7,0.529822,2.9995,0.4285,0.350165
 2026-10-05,finance,what is the difference between stocks and bonds,7,7,0.661981,2.9991,0.4284,0.303565
 2026-10-05,science,why is the sky blue,6,6,0.615938,2.9604,0.4934,0.305541
-2026-10-12,science,are electric cars better for the environment,9,8,0.685078,3.1441,0.3493,0.2639
-2026-10-12,science,how do black holes form,7,4,0.58812,3.4717,0.496,0.359669
-2026-10-12,science,how do hurricanes form,8,8,0.637724,2.9631,0.3704,0.251537
-2026-10-12,finance,how do index funds work,8,7,0.686557,2.9384,0.3673,0.261781
-2026-10-12,science,how do vaccines work,7,6,0.561217,3.4221,0.4889,0.347914
+2026-10-12,science,are electric cars better for the environment,9,7,0.671077,2.9247,0.4178,0.274078
+2026-10-12,science,how do black holes form,7,4,0.57464,2.636,0.659,0.402911
+2026-10-12,science,how do hurricanes form,8,7,0.76333,2.3145,0.3306,0.18085
+2026-10-12,finance,how do index funds work,8,7,0.679297,2.8148,0.4021,0.265494
+2026-10-12,science,how do vaccines work,7,5,0.67132,2.5387,0.5077,0.301649
 2026-10-12,law,how does a class action lawsuit work,9,9,0.452764,4.6742,0.5194,0.379872
-2026-10-12,tech,how does cloud storage work,7,5,0.749352,2.3897,0.3414,0.213847
-2026-10-12,finance,how does compound interest work,6,5,0.623556,2.9539,0.4923,0.310669
-2026-10-12,law,how does copyright protect creators,8,6,0.467966,4.2999,0.5375,0.430582
-2026-10-12,tech,how does end-to-end encryption work,6,3,0.494301,3.1701,0.5283,0.388616
-2026-10-12,tech,how does facial recognition work,9,8,0.083553,8.4859,0.9429,0.78932
-2026-10-12,finance,how does inflation affect your savings,8,7,0.474448,4.1534,0.5192,0.401167
-2026-10-12,science,how does photosynthesis work,6,5,0.708874,2.5108,0.4185,0.253018
-2026-10-12,finance,how does refinancing a mortgage work,7,6,0.622802,3.2248,0.4607,0.302659
-2026-10-12,health,how does the immune system fight infection,8,7,0.463448,4.6932,0.5867,0.458164
+2026-10-12,tech,how does cloud storage work,7,5,0.718841,2.2684,0.4537,0.256421
+2026-10-12,finance,how does compound interest work,6,5,0.61321,2.7444,0.5489,0.323393
+2026-10-12,law,how does copyright protect creators,8,6,0.430391,3.7441,0.624,0.455957
+2026-10-12,tech,how does facial recognition work,9,8,0.065667,7.7237,0.9655,0.842286
+2026-10-12,finance,how does inflation affect your savings,8,6,0.630691,2.9616,0.4936,0.287008
+2026-10-12,science,how does photosynthesis work,6,4,0.747482,1.9702,0.4926,0.23708
+2026-10-12,finance,how does refinancing a mortgage work,7,6,0.611802,3.0602,0.51,0.311741
+2026-10-12,health,how does the immune system fight infection,8,7,0.504676,4.0464,0.5781,0.432135
 2026-10-12,law,how does the probate process work,8,8,0.434145,4.406,0.5508,0.414802
 2026-10-12,tech,how does two factor authentication work,7,7,0.748127,2.3957,0.3422,0.180774
-2026-10-12,health,how much sleep do adults need,9,8,0.653265,3.3893,0.3766,0.265059
-2026-10-12,health,how much water should you drink a day,8,7,0.57513,3.7588,0.4699,0.333516
-2026-10-12,finance,how to build an emergency fund,8,7,0.634234,3.0668,0.3834,0.268795
-2026-10-12,health,how to lower blood pressure naturally,7,6,0.338853,4.6228,0.6604,0.522539
-2026-10-12,tech,is ai going to replace jobs,7,4,0.694855,2.6858,0.3837,0.242579
-2026-10-12,health,is intermittent fasting healthy,7,6,0.727286,2.5646,0.3664,0.242986
-2026-10-12,finance,roth ira vs traditional ira,9,9,0.519908,4.3006,0.4778,0.374586
-2026-10-12,law,what are tenant rights during eviction,9,9,0.383403,5.5855,0.6206,0.475943
+2026-10-12,health,how much sleep do adults need,9,8,0.663751,3.1329,0.3916,0.258299
+2026-10-12,health,how much water should you drink a day,8,6,0.616897,2.9954,0.4992,0.32497
+2026-10-12,finance,how to build an emergency fund,8,6,0.580788,2.9949,0.4991,0.315904
+2026-10-12,health,how to lower blood pressure naturally,7,6,0.360812,3.948,0.658,0.519981
+2026-10-12,tech,is ai going to replace jobs,7,4,0.670575,2.2443,0.5611,0.297664
+2026-10-12,health,is intermittent fasting healthy,7,7,0.716906,2.6394,0.3771,0.242575
+2026-10-12,finance,roth ira vs traditional ira,9,8,0.497125,4.2825,0.5353,0.40884
+2026-10-12,law,what are tenant rights during eviction,9,9,0.480573,5.0168,0.5574,0.433078
 2026-10-12,health,what are the early signs of diabetes,8,8,0.582043,3.7271,0.4659,0.335055
-2026-10-12,health,what are the symptoms of iron deficiency,8,7,0.497138,3.9137,0.4892,0.394964
-2026-10-12,law,what are your rights if arrested,9,9,0.446445,4.9039,0.5449,0.466321
+2026-10-12,health,what are the symptoms of iron deficiency,8,6,0.650074,2.7939,0.4656,0.324528
+2026-10-12,law,what are your rights if arrested,9,8,0.506943,4.1754,0.5219,0.439701
 2026-10-12,science,what causes climate change,7,7,0.473773,4.2831,0.6119,0.431555
 2026-10-12,science,what causes earthquakes,8,8,0.610286,3.5161,0.4395,0.294057
-2026-10-12,health,what causes high cholesterol,7,6,0.366063,4.544,0.6491,0.501431
-2026-10-12,health,what causes migraines,7,6,0.399096,4.462,0.6374,0.478327
-2026-10-12,law,what happens during a divorce proceeding,9,8,0.477819,4.9001,0.5445,0.45705
-2026-10-12,finance,what is a 401k and how does it work,7,3,0.537549,3.5622,0.5089,0.35046
-2026-10-12,finance,what is a good credit score,8,3,0.599913,3.5657,0.4457,0.305595
-2026-10-12,tech,what is a large language model,6,3,0.55513,2.8721,0.4787,0.282664
-2026-10-12,law,what is a power of attorney,9,8,0.582529,3.6979,0.4109,0.283132
-2026-10-12,tech,what is a vpn and how does it work,7,6,0.656195,2.9669,0.4238,0.269398
-2026-10-12,law,what is an llc and how is it taxed,8,7,0.536794,3.3889,0.4236,0.32523
-2026-10-12,science,what is dark matter,6,5,0.634611,2.9458,0.491,0.311625
-2026-10-12,tech,what is retrieval augmented generation,8,7,0.50251,4.0985,0.5123,0.365987
-2026-10-12,law,what is the difference between a will and a trust,8,8,0.453757,3.8486,0.4811,0.406779
-2026-10-12,tech,what is the difference between http and https,8,6,0.716657,2.6575,0.3322,0.195649
+2026-10-12,health,what causes high cholesterol,7,5,0.621429,2.7851,0.557,0.333717
+2026-10-12,health,what causes migraines,7,6,0.366985,4.1681,0.6947,0.512043
+2026-10-12,law,what happens during a divorce proceeding,9,9,0.425866,5.3821,0.598,0.492147
+2026-10-12,finance,what is a 401k and how does it work,7,3,0.351319,2.5499,0.85,0.568723
+2026-10-12,finance,what is a good credit score,8,3,0.548475,2.2599,0.7533,0.468455
+2026-10-12,law,what is a power of attorney,9,8,0.595349,3.3777,0.4222,0.280238
+2026-10-12,tech,what is a vpn and how does it work,7,6,0.634647,2.9168,0.4861,0.300708
+2026-10-12,law,what is an llc and how is it taxed,8,6,0.72708,2.389,0.3982,0.218178
+2026-10-12,science,what is dark matter,6,5,0.616676,2.7657,0.5531,0.330638
+2026-10-12,tech,what is retrieval augmented generation,8,7,0.621039,3.0971,0.4424,0.288354
+2026-10-12,law,what is the difference between a will and a trust,8,8,0.453035,3.8478,0.481,0.406845
+2026-10-12,tech,what is the difference between http and https,8,6,0.701187,2.4596,0.4099,0.212718
 2026-10-12,finance,what is the difference between stocks and bonds,8,8,0.559563,3.5792,0.4474,0.313313
 2026-10-12,science,why is the sky blue,8,8,0.518756,3.8235,0.4779,0.352679

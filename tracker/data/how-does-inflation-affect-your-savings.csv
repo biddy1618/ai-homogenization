@@ -1,4 +1,0 @@
-date,category,query,n_results,mean_pairwise_cosine,vendi,distinct_ratio,mean_marginal_novelty
-2026-10-04,finance,how does inflation affect your savings,8,0.240808,6.7009,0.8376,0.701153
-2026-10-05,finance,how does inflation affect your savings,9,0.699785,2.9145,0.3238,0.215746
-2026-10-12,finance,how does inflation affect your savings,8,0.635406,3.3092,0.4136,0.296593

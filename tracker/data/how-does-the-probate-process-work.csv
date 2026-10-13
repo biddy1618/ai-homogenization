@@ -1,4 +1,0 @@
-date,category,query,n_results,mean_pairwise_cosine,vendi,distinct_ratio,mean_marginal_novelty
-2026-10-04,law,how does the probate process work,7,0.738875,2.4083,0.344,0.194304
-2026-10-05,law,how does the probate process work,8,0.663619,3.1515,0.3939,0.27818
-2026-10-12,law,how does the probate process work,8,0.695496,2.946,0.3683,0.260308

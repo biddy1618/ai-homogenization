@@ -1,4 +1,0 @@
-date,category,query,n_results,mean_pairwise_cosine,vendi,distinct_ratio,mean_marginal_novelty
-2026-10-04,law,how does a class action lawsuit work,9,0.697518,3.0056,0.334,0.269265
-2026-10-05,law,how does a class action lawsuit work,9,0.709119,2.905,0.3228,0.245568
-2026-10-12,law,how does a class action lawsuit work,9,0.678442,3.1308,0.3479,0.263513

@@ -1,4 +1,0 @@
-date,category,query,n_results,mean_pairwise_cosine,vendi,distinct_ratio,mean_marginal_novelty
-2026-10-04,finance,how do index funds work,6,0.754753,2.2304,0.3717,0.203169
-2026-10-05,finance,how do index funds work,6,0.762108,2.1662,0.361,0.213736
-2026-10-12,finance,how do index funds work,8,0.737862,2.591,0.3239,0.205361

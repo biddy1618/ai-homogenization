@@ -1,24 +1,22 @@
-"""Homogenization tracker (MVP) — how redundant are Google's top-N results?
+"""Homogenization tracker — stage 1: collect Google's top-N results for the query panel.
 
-For each query in a panel, fetch the top-N Google results via SerpAPI, embed the result
-texts (title + snippet) with the same MiniLM/ONNX model this repo uses elsewhere, and
-compute three diversity metrics per query per run:
+For each query, fetch the top-N organic Google results via SerpAPI, drop video results, and
+save the result list (position/title/link/domain) under ``tracker/data/raw/<date>/``. A row per
+query is logged to ``serp_log.csv`` (idempotency + query/category lookup) and a provenance row per
+run to ``_runs_meta.csv``.
+
+No metrics are computed here: snippets are too short/formulaic to represent page content. The
+diversity metrics are computed on FULL PAGE text by stage 2, ``tracker/fullpage.py``. This module
+also hosts the shared MiniLM loader and metric functions that ``fullpage.py`` imports:
 
   * mean_pairwise_cosine  — raw redundancy of the result set (higher = more alike).
   * vendi                 — effective number of "distinct" results: exp(Shannon entropy
                             of the eigenvalues of the cosine Gram matrix); range [1, n].
   * mean_marginal_novelty — average "new information" each ranked result adds beyond the
-                            higher-ranked ones (1 - max cosine to any result above it);
-                            lower = you stop learning sooner as you read down the page.
+                            higher-ranked ones (1 - max cosine to any result above it).
 
-Rows are appended to committed CSVs under ``tracker/data/`` (a combined ``runs.csv`` plus
-one file per query); the raw top-N SERP is saved under ``tracker/data/raw/<date>/`` and a
-per-run provenance row to ``_runs_meta.csv``. The time series is versioned in git — no
-database needed. Re-runs are idempotent per (date, query). Built to run weekly on a
-GitHub-hosted runner against the SerpAPI free tier (250 searches/month).
-
-Setup: set the ``SERPAPI_KEY`` environment variable (a GitHub Actions secret in CI). Free
-key at https://serpapi.com/ .
+Setup: set ``SERPER_API_KEY`` (default provider, Serper.dev) or ``SERPAPI_KEY`` (``--provider
+serpapi``) — GitHub Actions secrets in CI, or a key file under ``.secrets/`` locally.
 
 Usage:
     python tracker/tracker.py --queries tracker/queries.txt --out-dir tracker/data
@@ -41,11 +39,10 @@ from pathlib import Path
 import numpy as np
 
 SERPAPI_ENDPOINT = "https://serpapi.com/search.json"
-TRACKER_VERSION = "0.3"
+SERPER_ENDPOINT = "https://google.serper.dev/search"
+TRACKER_VERSION = "0.5"
 
-# Video result types are dropped: their pages carry no article text to full-page-scrape, so
-# they only add noise to the diversity metric. (Social/forum results are kept — they're real
-# text answers; they just fall back to snippet when full-page extraction is thin.)
+# Video results are dropped: their pages carry no article text to analyse.
 BLOCKLIST = {
     "youtube.com", "youtu.be", "m.youtube.com", "vimeo.com", "dailymotion.com", "tiktok.com",
 }
@@ -152,6 +149,43 @@ def fetch_serp(query: str, api_key: str, num: int, gl: str, hl: str,
     raise RuntimeError(f"SerpAPI GET failed after {retries} tries: {query!r} ({last})")
 
 
+def fetch_serper(query: str, api_key: str, num: int, gl: str, hl: str,
+                 location: str | None = None, retries: int = 4, timeout: int = 60) -> list[dict]:
+    """Return organic results (position/title/snippet/link) for one query via Serper.dev."""
+    payload = {"q": query, "num": num, "gl": gl, "hl": hl}
+    if location:
+        payload["location"] = location
+    body = json.dumps(payload).encode()
+    backoff, last = 3.0, None
+    for attempt in range(retries):
+        try:
+            req = urllib.request.Request(SERPER_ENDPOINT, data=body, headers={
+                "X-API-KEY": api_key, "Content-Type": "application/json"})
+            with urllib.request.urlopen(req, timeout=timeout) as r:
+                data = json.loads(r.read())
+            return [
+                {
+                    "position": item.get("position"),
+                    "title": item.get("title", "") or "",
+                    "snippet": item.get("snippet", "") or "",
+                    "link": item.get("link", "") or "",
+                }
+                for item in data.get("organic", []) or []
+            ]
+        except urllib.error.HTTPError as e:
+            last = e
+            if e.code in (429, 500, 502, 503):
+                time.sleep(max(backoff, 15.0) * (attempt + 1))
+                backoff *= 2
+            else:
+                raise
+        except (urllib.error.URLError, TimeoutError) as e:
+            last = e
+            time.sleep(backoff)
+            backoff *= 2
+    raise RuntimeError(f"Serper POST failed after {retries} tries: {query!r} ({last})")
+
+
 # --------------------------------------------------------------------------- metrics
 def mean_pairwise_cosine(v: np.ndarray) -> float:
     """Mean cosine over distinct pairs of L2-normalized rows (closed form)."""
@@ -188,8 +222,7 @@ def mean_marginal_novelty(v: np.ndarray, positions: list[int]) -> float:
 
 
 # --------------------------------------------------------------------------- driver
-FIELDNAMES = ["date", "category", "query", "n_results",
-              "mean_pairwise_cosine", "vendi", "distinct_ratio", "mean_marginal_novelty"]
+FIELDNAMES = ["date", "category", "query", "n_serp"]
 
 
 def _append_row(path: Path, row: dict) -> None:
@@ -244,7 +277,7 @@ def _write_meta(out_dir: Path, run_date: str, args, n_queries: int, n_ok: int, n
     row = {
         "run_date": run_date,
         "run_ts_utc": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
-        "tracker_version": TRACKER_VERSION, "model": MODEL_NAME, "engine": args.engine,
+        "tracker_version": TRACKER_VERSION, "model": MODEL_NAME, "engine": f"{args.provider}:{args.engine}",
         "num": args.num, "gl": args.gl, "hl": args.hl, "device": args.device,
         "location": args.location or "", "n_queries": n_queries, "n_ok": n_ok,
         "n_skipped": n_skipped, "code_sha": _code_sha(),
@@ -258,7 +291,7 @@ def _write_meta(out_dir: Path, run_date: str, args, n_queries: int, n_ok: int, n
 
 
 def main() -> None:
-    ap = argparse.ArgumentParser(description="Homogenization tracker (MVP)")
+    ap = argparse.ArgumentParser(description="Homogenization tracker — stage 1: SERP collection")
     ap.add_argument("--queries", type=Path, default=Path("tracker/queries.txt"))
     ap.add_argument("--out-dir", type=Path, default=Path("tracker/data"))
     ap.add_argument("--num", type=int, default=10, help="Top-N results per query")
@@ -269,22 +302,22 @@ def main() -> None:
                     help="Pin the device profile so the series stays comparable over time")
     ap.add_argument("--location", default=None,
                     help="Pin the search origin (e.g. 'United States') for comparable results")
-    ap.add_argument("--model-cache", type=Path, default=Path("data/models"))
     ap.add_argument("--date", default=None, help="Run date YYYY-MM-DD (default: today UTC)")
     ap.add_argument("--min-results", type=int, default=3, help="Skip queries with fewer usable results")
-    ap.add_argument("--key-file", type=Path, default=Path(".secrets/serp_api_key.txt"),
-                    help="Fallback file holding the SerpAPI key when SERPAPI_KEY is unset")
+    ap.add_argument("--provider", choices=["serper", "serpapi"], default="serper",
+                    help="Google results provider")
+    ap.add_argument("--key-file", type=Path, default=None, help="Override the provider's default key file")
     ap.add_argument("--limit", type=int, default=0, help="Process only the first N queries (0 = all)")
     ap.add_argument("--force", action="store_true", help="Re-record queries already saved for this date")
     ap.add_argument("--sleep", type=float, default=1.0, help="Seconds between queries (throughput guard)")
     args = ap.parse_args()
 
-    api_key = os.environ.get("SERPAPI_KEY")
-    if not api_key and args.key_file.exists():
-        api_key = args.key_file.read_text(encoding="utf-8").strip()
+    env, default_file = {"serper": ("SERPER_API_KEY", ".secrets/serper_dev_api_key.txt"),
+                         "serpapi": ("SERPAPI_KEY", ".secrets/serp_api_key.txt")}[args.provider]
+    kf = args.key_file or Path(default_file)
+    api_key = os.environ.get(env) or (kf.read_text(encoding="utf-8").strip() if kf.exists() else None)
     if not api_key:
-        sys.exit("ERROR: set SERPAPI_KEY or put the key in .secrets/serp_api_key.txt "
-                 "(free key at https://serpapi.com/ — 250 searches/month).")
+        sys.exit(f"ERROR: --provider {args.provider} needs the {env} env var or {default_file}.")
 
     queries = read_queries(args.queries)
     if not queries:
@@ -293,11 +326,9 @@ def main() -> None:
         queries = queries[:args.limit]
     run_date = args.date or datetime.now(timezone.utc).strftime("%Y-%m-%d")
 
-    print("Loading MiniLM (ONNX)…", flush=True)
-    model = load_model(args.model_cache)
     args.out_dir.mkdir(parents=True, exist_ok=True)
-    combined = args.out_dir / "runs.csv"
-    done = set() if args.force else _existing_keys(combined)
+    log = args.out_dir / "serp_log.csv"
+    done = set() if args.force else _existing_keys(log)
 
     used = n_ok = n_skipped = 0
     for i, (category, query) in enumerate(queries, 1):
@@ -306,8 +337,11 @@ def main() -> None:
             n_skipped += 1
             continue
         try:
-            results = fetch_serp(query, api_key, args.num, args.gl, args.hl,
-                                 args.engine, args.device, args.location)
+            if args.provider == "serper":
+                results = fetch_serper(query, api_key, args.num, args.gl, args.hl, args.location)
+            else:
+                results = fetch_serp(query, api_key, args.num, args.gl, args.hl,
+                                     args.engine, args.device, args.location)
             used += 1
         except Exception as e:  # noqa: BLE001
             print(f"[{i}/{len(queries)}] SKIP {query!r}: {e}", flush=True)
@@ -315,39 +349,22 @@ def main() -> None:
             continue
 
         results = [r for r in results if not _blocked(r.get("link", ""))]
-        _save_raw(args.out_dir, run_date, query, results)
-        texts, positions = [], []
-        for r in results:
-            text = f"{r['title']}. {r['snippet']}".strip()
-            if text and text != ".":
-                texts.append(text)
-                positions.append(r["position"] or (len(positions) + 1))
-
-        n = len(texts)
-        if n < args.min_results:
-            print(f"[{i}/{len(queries)}] SKIP {query!r}: only {n} usable results", flush=True)
+        results = [r for r in results if r.get("link")]
+        if len(results) < args.min_results:
+            print(f"[{i}/{len(queries)}] SKIP {query!r}: only {len(results)} usable results", flush=True)
             n_skipped += 1
             continue
 
-        v = embed_texts(model, texts)
-        vendi = vendi_score(v)
-        row = {
-            "date": run_date, "category": category, "query": query, "n_results": n,
-            "mean_pairwise_cosine": round(mean_pairwise_cosine(v), 6),
-            "vendi": round(vendi, 4),
-            "distinct_ratio": round(vendi / n, 4),
-            "mean_marginal_novelty": round(mean_marginal_novelty(v, positions), 6),
-        }
-        _append_row(combined, row)
-        _append_row(args.out_dir / f"{slugify(query)}.csv", row)
+        _save_raw(args.out_dir, run_date, query, results)
+        _append_row(log, {"date": run_date, "category": category, "query": query,
+                          "n_serp": len(results)})
         n_ok += 1
-        print(f"[{i}/{len(queries)}] {query!r}: n={n} cos={row['mean_pairwise_cosine']:.3f} "
-              f"vendi={vendi:.2f} novelty={row['mean_marginal_novelty']:.3f}", flush=True)
+        print(f"[{i}/{len(queries)}] {query!r}: {len(results)} results", flush=True)
         time.sleep(args.sleep)
 
     _write_meta(args.out_dir, run_date, args, len(queries), n_ok, n_skipped)
-    print(f"\nDone → {combined} (+ per-query CSVs, raw/, _runs_meta.csv in {args.out_dir}). "
-          f"Recorded {n_ok}, skipped {n_skipped}. Used ~{used} SerpAPI searches (free tier = 250/month).")
+    print(f"\nDone → raw/{run_date}/ + {log}. Recorded {n_ok}, skipped {n_skipped}. "
+          f"Used ~{used} {args.provider} searches.")
 
 
 if __name__ == "__main__":

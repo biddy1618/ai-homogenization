@@ -1,21 +1,19 @@
-"""Full-page recompute of tracker metrics — run LOCALLY (not in CI).
+"""Homogenization tracker — stage 2: diversity metrics on FULL PAGE content.
 
-The weekly CI tracker is snippet-level because GitHub runner IPs are blocked from fetching result
-pages. This script runs from a normal (residential) machine: it reads the raw SERP URLs we already
-saved under ``tracker/data/raw/<date>/``, fetches each actual page, extracts its main text (capped
-to ~1000 tokens), re-embeds with the same MiniLM model, and recomputes the three diversity metrics
-on FULL PAGE CONTENT. Output goes to a parallel ``tracker/data/runs_fullpage.csv`` — the
-snippet-level ``runs.csv`` is left untouched for comparison.
+Reads the result lists saved by stage 1 (``tracker/data/raw/<date>/*.json``), fetches each result's
+actual page through a scraping API (ScrapingRobot by default in CI — datacenter IPs such as GitHub
+runners and VDIs are blocked by many sites), extracts the main text (capped at ~1000 tokens),
+embeds it with MiniLM, and computes the per-query diversity metrics into
+``tracker/data/runs_fullpage.csv``.
 
-Robustness: fetched pages are cached (re-runs are cheap), any page that fails/blocks/non-HTML falls
-back to its snippet, and the per-row ``n_fullpage`` records how many of the N results were truly
-full-page (coverage). Re-runs are idempotent per (date, query).
-
-No scraping API needed — uses your machine's IP directly. Deps: beautifulsoup4 + numpy + fastembed.
+Full-page only: a result whose page can't be fetched or yields too little text is DROPPED (no
+snippet substitution). ``n_serp`` = results returned, ``n_results`` = pages actually analysed, so
+coverage = n_results / n_serp. Pages are cached locally (re-runs are cheap); idempotent per
+(date, query).
 
 Usage:
-    python tracker/fullpage.py                 # every date under tracker/data/raw/
-    python tracker/fullpage.py --date 2026-09-28
+    python tracker/fullpage.py --provider scrapingrobot                 # every date under raw/
+    python tracker/fullpage.py --provider scrapingrobot --date 2026-10-12
 """
 from __future__ import annotations
 
@@ -41,13 +39,13 @@ from tracker import (  # noqa: E402  (same MiniLM model + metrics as the snippet
 )
 
 RAW = Path("tracker/data/raw")
-RUNS = Path("tracker/data/runs.csv")
+SERP_LOG = Path("tracker/data/serp_log.csv")
 OUT = Path("tracker/data/runs_fullpage.csv")
 CACHE = Path("tracker/data/pagecache")
 UA = ("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
       "(KHTML, like Gecko) Chrome/125.0 Safari/537.36")
 
-FIELDS = ["date", "category", "query", "n_results", "n_fullpage",
+FIELDS = ["date", "category", "query", "n_serp", "n_results",
           "mean_pairwise_cosine", "vendi", "distinct_ratio", "mean_marginal_novelty"]
 
 
@@ -118,6 +116,7 @@ def main() -> None:
     ap = argparse.ArgumentParser(description="Full-page recompute of tracker metrics (local)")
     ap.add_argument("--date", default=None, help="Only this run date (default: all under raw/)")
     ap.add_argument("--min-results", type=int, default=3)
+    ap.add_argument("--min-words", type=int, default=50, help="Pages with less text are dropped")
     ap.add_argument("--sleep", type=float, default=0.5, help="Seconds between page fetches")
     ap.add_argument("--model-cache", type=Path, default=Path("data/models"))
     ap.add_argument("--provider", choices=["none", "scraperapi", "scrapingrobot"], default="none",
@@ -136,10 +135,10 @@ def main() -> None:
         if not api_key:
             sys.exit(f"ERROR: --provider {args.provider} needs the {env} env var or {default_file}.")
 
-    if not RUNS.exists():
-        sys.exit(f"{RUNS} not found")
-    snip = list(csv.DictReader(RUNS.open(encoding="utf-8")))
-    meta = {(r["date"], slugify(r["query"])): (r["query"], r["category"]) for r in snip}
+    if not SERP_LOG.exists():
+        sys.exit(f"{SERP_LOG} not found — run tracker/tracker.py first")
+    log = list(csv.DictReader(SERP_LOG.open(encoding="utf-8")))
+    meta = {(r["date"], slugify(r["query"])): (r["query"], r["category"]) for r in log}
 
     dates = [args.date] if args.date else sorted({d.name for d in RAW.iterdir() if d.is_dir()})
     done = set() if args.force else _existing_keys()
@@ -165,34 +164,29 @@ def main() -> None:
                 print(f"[{date} {i}/{len(files)}] skip {query!r} (done)", flush=True)
                 continue
             results = json.loads(jf.read_text(encoding="utf-8"))
-            texts, positions, n_fp = [], [], 0
+            texts, positions = [], []
             for r in results:
                 link = r.get("link", "")
                 page = fetch_page_text(link, args.provider, api_key,
                                        timeout=90 if api_key else 20) if link else None
                 time.sleep(args.sleep)
-                if page and len(page.split()) >= 20:
-                    txt, is_fp = page, True
-                else:
-                    txt, is_fp = f"{r.get('title','')}. {r.get('snippet','')}".strip(), False
-                if txt and txt != ".":
-                    texts.append(txt)
+                if page and len(page.split()) >= args.min_words:
+                    texts.append(page)
                     positions.append(r.get("position") or (len(positions) + 1))
-                    n_fp += int(is_fp)
             n = len(texts)
             if n < args.min_results:
-                print(f"[{date} {i}/{len(files)}] skip {query!r}: only {n} usable", flush=True)
+                print(f"[{date} {i}/{len(files)}] skip {query!r}: only {n}/{len(results)} pages", flush=True)
                 continue
             v = embed_texts(model, texts)
             vendi = vendi_score(v)
             writer.writerow({
-                "date": date, "category": category, "query": query, "n_results": n,
-                "n_fullpage": n_fp,
+                "date": date, "category": category, "query": query,
+                "n_serp": len(results), "n_results": n,
                 "mean_pairwise_cosine": round(mean_pairwise_cosine(v), 6),
                 "vendi": round(vendi, 4), "distinct_ratio": round(vendi / n, 4),
                 "mean_marginal_novelty": round(mean_marginal_novelty(v, positions), 6),
             })
-            print(f"[{date} {i}/{len(files)}] {query!r}: n={n} full={n_fp}/{n} "
+            print(f"[{date} {i}/{len(files)}] {query!r}: pages={n}/{len(results)} "
                   f"vendi={vendi:.2f}", flush=True)
 
     print(f"\nDone -> {OUT}")

@@ -1,4 +1,0 @@
-date,category,query,n_results,mean_pairwise_cosine,vendi,distinct_ratio,mean_marginal_novelty
-2026-10-04,science,how do vaccines work,8,0.541937,3.9616,0.4952,0.342243
-2026-10-05,science,how do vaccines work,8,0.522028,4.173,0.5216,0.369617
-2026-10-12,science,how do vaccines work,7,0.729041,2.5494,0.3642,0.239505

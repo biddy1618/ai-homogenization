@@ -1,4 +1,0 @@
-date,category,query,n_results,mean_pairwise_cosine,vendi,distinct_ratio,mean_marginal_novelty
-2026-10-04,tech,what is the difference between http and https,9,0.183491,6.6805,0.7423,0.616334
-2026-10-05,tech,what is the difference between http and https,5,0.702029,2.3274,0.4655,0.21489
-2026-10-12,tech,what is the difference between http and https,8,0.811981,2.0997,0.2625,0.133201

@@ -1,4 +1,0 @@
-date,category,query,n_results,mean_pairwise_cosine,vendi,distinct_ratio,mean_marginal_novelty
-2026-10-04,law,what is the difference between a will and a trust,7,0.749671,2.3276,0.3325,0.191453
-2026-10-05,law,what is the difference between a will and a trust,7,0.764526,2.289,0.327,0.186135
-2026-10-12,law,what is the difference between a will and a trust,8,0.744501,2.54,0.3175,0.22762

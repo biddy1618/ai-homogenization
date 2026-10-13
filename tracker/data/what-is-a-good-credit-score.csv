@@ -1,4 +1,0 @@
-date,category,query,n_results,mean_pairwise_cosine,vendi,distinct_ratio,mean_marginal_novelty
-2026-10-04,finance,what is a good credit score,7,0.607092,3.3874,0.4839,0.349938
-2026-10-05,finance,what is a good credit score,8,0.55359,3.7603,0.47,0.310972
-2026-10-12,finance,what is a good credit score,8,0.680258,2.9739,0.3717,0.258703

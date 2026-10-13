@@ -35,9 +35,9 @@ jobs:
 
       - name: Run tracker
         env:
-          SERPAPI_KEY: ${{ secrets.SERP_API_KEY }}
+          SERPER_API_KEY: ${{ secrets.SERPER_API_KEY }}
         run: >
-          python tracker/tracker.py
+          python tracker/tracker.py --provider serper
           --queries tracker/queries.txt --out-dir tracker/data
           --location "United States" --device desktop --num 10
 

@@ -1,59 +1,68 @@
-# Homogenization tracker (MVP)
+# Homogenization tracker
 
-A forward-looking companion to the retrospective study: it measures **how much Google's
-top-N results for a query repeat one another**, and tracks that over time. Low diversity =
-the web says the same thing many ways; a drop over time = homogenization you can watch live.
+A forward-looking companion to the retrospective study: every week it measures **how much the
+pages behind Google's top results for a question repeat one another**. Low diversity = the web
+gives you the same answer many times over; a decline over time = homogenization you can watch live.
 
-## What it does
+**Live dashboard:** https://biddy1618.github.io/ai-homogenization/tracker/dashboard/
 
-For each query in [`queries.txt`](queries.txt):
+## Pipeline (weekly, GitHub Actions)
 
-1. Fetch the top-N Google organic results via **SerpAPI** (title + snippet).
-2. Embed the result texts with **MiniLM** (ONNX, same model as the main study).
-3. Compute three per-query diversity metrics:
-   - **`mean_pairwise_cosine`** — raw redundancy of the result set (higher = more alike).
-   - **`vendi`** — effective number of *distinct* results (1 … N); the headline number.
-   - **`mean_marginal_novelty`** — how much new info each ranked result adds beyond the
-     ones above it (lower = you stop learning sooner as you scroll).
-4. Append one row per query to committed CSVs in [`data/`](data) — a combined `runs.csv`
-   plus one file per query. The raw top-N SERP is saved under `data/raw/<date>/` and a
-   per-run provenance row to `data/_runs_meta.csv`. **Git is the datastore; no database
-   needed.** Re-runs are idempotent per `(date, query)` (pass `--force` to overwrite).
+1. **Collect** — [`tracker.py`](tracker.py): for each of the 45 questions in
+   [`queries.txt`](queries.txt), fetch Google's top ~10 organic results via **Serper.dev**, drop video
+   results (YouTube, Vimeo, TikTok, …), and save the result list to `data/raw/<date>/<query>.json`.
+   One row per query goes to `data/serp_log.csv`; one provenance row per run to `data/_runs_meta.csv`.
+2. **Analyse full pages** — [`fullpage.py`](fullpage.py): fetch each result's actual page through
+   **ScrapingRobot** (GitHub's datacenter IPs are blocked by many sites), extract the main text
+   (first ~1000 words), embed with **MiniLM** (ONNX), and compute the per-query metrics into
+   `data/runs_fullpage.csv`. Pages that can't be fetched or carry < 50 words are **dropped** — no
+   snippet substitution; a query needs ≥ 3 analysable pages to be scored.
+3. **Dashboard** — [`dashboard/build.py`](dashboard/build.py) regenerates a self-contained
+   `dashboard/index.html` (data embedded), served by GitHub Pages.
+4. **Commit** — results + dashboard are committed back to the repo. Git is the datastore.
 
-## Run it locally
+## Metrics (per query, per run)
+
+- **`vendi`** — the headline: the *effective number of distinct pages* among the analysed results,
+  `exp(entropy of the eigenvalues of the cosine-similarity matrix)`. Ranges from 1 (all pages say
+  the same thing) to N (all different). Lower = more homogeneous.
+- **`mean_pairwise_cosine`** — average similarity between all page pairs.
+- **`mean_marginal_novelty`** — how much new content each ranked page adds beyond those above it.
+- **`n_serp` / `n_results`** — results returned vs. pages actually analysed (coverage).
+
+Snippets are *not* used: a pilot showed they systematically overstate homogeneity relative to the
+pages themselves.
+
+## Query panel
+
+45 specific, informational questions — 9 each in **health, finance, law, science, tech**. Commercial
+("best X") queries were excluded: they return shopping/social pages that are neither informational
+nor scrapable. Keep the panel **frozen** so the series stays comparable.
+
+## Secrets & quotas
+
+| Repo secret | Service | Free tier | Weekly use |
+|---|---|---|---|
+| `SERPER_API_KEY` | Serper.dev (Google results) | 2,500 queries on signup; then pay-as-you-go ($50 / 50k, valid 6 mo) | 45 |
+| `SCRAPING_ROBOT_API_KEY` | ScrapingRobot (page fetch) | 5,000 scrapes/month | ~330 |
+
+SerpAPI is still supported (`--provider serpapi`, secret `SERP_API_KEY`); runs through 2026-10-12
+used SerpAPI. The provider is recorded per run in `data/_runs_meta.csv` (`engine` column).
+
+GitHub Actions minutes are free and unlimited on this public repo.
+
+## Run locally
 
 ```powershell
-$env:SERPAPI_KEY = "<your-free-key>"          # get one at https://serpapi.com/
-python tracker/tracker.py --queries tracker/queries.txt --out-dir tracker/data
+python tracker/tracker.py --location "United States"          # key from .secrets/serper_dev_api_key.txt
+python tracker/fullpage.py --provider scrapingrobot           # key from .secrets/scraping_robot_api_key.txt
+python tracker/dashboard/build.py
 ```
 
-Only `numpy` + `fastembed` are required (`pip install numpy fastembed`).
+Both stages are idempotent per `(date, query)`; pass `--force` to redo.
 
-## Automation
+## Caveats
 
-[`.github/workflows/tracker.yml`](../.github/workflows/tracker.yml) runs it **weekly** on a
-GitHub-hosted runner, rebuilds the dashboard, and commits the new rows. Add your key as a
-repository secret named `SERP_API_KEY` (Settings → Secrets and variables → Actions).
-
-## Dashboard
-
-[`dashboard/build.py`](dashboard/build.py) generates a self-contained
-[`dashboard/index.html`](dashboard/index.html) from `data/runs.csv` — the data is embedded, so it
-renders on GitHub Pages *and* by simply opening the file (no server needed). Rebuild locally with
-`python tracker/dashboard/build.py`. To publish it, enable **GitHub Pages** (Settings → Pages →
-deploy from `main`); it will be served at `…/tracker/dashboard/`.
-
-## Cost / quota
-
-~45 queries × weekly ≈ **195–225 searches/month** — inside the SerpAPI **free tier**
-(250/mo), with headroom for manual runs. One query = one search credit, regardless of how
-many results come back.
-
-## Notes / next steps
-
-- MVP scores **snippets**; a v1 upgrade fetches each result's full page text for richer
-  embeddings (doesn't cost SerpAPI credits, but some sites block bots).
-- Keep the query panel **frozen** once tracking starts so the series stays comparable.
-- Dashboard (GitHub Pages / Streamlit) reads the committed CSVs — to be added.
-- Google's own ranking changes move the metric independently; log major update dates as
-  annotations when interpreting trends.
+- Week-to-week movement per query is still large (~0.8 Vendi); read trends only after several months.
+- Google's own ranking updates move the metric independently of web content.
+- The page cache (`data/pagecache/`) is local scratch and not committed.
