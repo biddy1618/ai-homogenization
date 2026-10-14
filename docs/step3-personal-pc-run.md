@@ -61,8 +61,9 @@ into `data/models/fast-all-MiniLM-L6-v2/`, and `load_model` refuses to run if th
 Expect roughly 30–60 minutes of compute per site. A line `[gate] SKIP family 5` or `FAILED` for a
 site is a problem — stop and report it (all 8 sites passed the gate on the VDI).
 
-*Mac/Linux only:* `add_sites.py` calls `curl.exe`; change it to `curl` locally for the run and do
-**not** commit that change.
+*Mac/Linux:* since commit after `22fa17d`, `add_sites.py` picks `curl` vs `curl.exe` by OS. If you
+made a local `curl.exe` → `curl` edit, discard it with `git checkout -- src/add_sites.py` **after the
+run finishes** and before `git pull --rebase`.
 
 ## Verify before committing
 The parse must match the VDI exactly. The `volume` column (answers per quarter) of each new CSV must

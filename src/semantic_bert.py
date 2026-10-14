@@ -57,9 +57,14 @@ def load_model(cache_dir: Path):
 
     model_dir = cache_dir / MODEL_DIR
     if not (model_dir / "model.onnx").exists():
-        cache_dir.mkdir(parents=True, exist_ok=True)
-        with urllib.request.urlopen(MODEL_URL, timeout=300) as r:
-            zipfile.ZipFile(io.BytesIO(r.read())).extractall(cache_dir)
+        model_dir.mkdir(parents=True, exist_ok=True)
+        with urllib.request.urlopen(MODEL_URL, timeout=300) as r, \
+                zipfile.ZipFile(io.BytesIO(r.read())) as z:
+            for info in z.infolist():
+                # Base name only: the release zip uses Windows '\' separators.
+                name = info.filename.replace("\\", "/").rsplit("/", 1)[-1]
+                if name and not name.startswith("._"):
+                    (model_dir / name).write_bytes(z.read(info))
     for name, want in MODEL_SHA256.items():
         got = hashlib.sha256((model_dir / name).read_bytes()).hexdigest()
         if got != want:

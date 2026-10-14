@@ -77,7 +77,7 @@ def download(domain: str, raw_dir: Path) -> Path:
     url = f"{DUMP_BASE}/{domain}.7z"
     print(f"  [download] {url}")
     # -C - resumes a partial file; -L follows the archive.org redirect.
-    cmd = ["curl.exe", "-L", "-C", "-", "--fail", "--retry", "3",
+    cmd = ["curl.exe" if sys.platform == "win32" else "curl", "-L", "-C", "-", "--fail", "--retry", "3",
            "--max-time", "5400", "-o", str(out), url]
     subprocess.run(cmd, check=True)
     print(f"  [download] got {out.name} ({out.stat().st_size/1e6:.1f} MB)")
