@@ -28,3 +28,6 @@ paper/*.bbl
 paper/*.blg
 paper/*.out
 paper/*.toc
+
+# macOS
+.DS_Store
