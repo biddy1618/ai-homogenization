@@ -93,7 +93,8 @@ def legacy_lc(ids, texts, lc_window: int = 100) -> list[tuple[int, str]]:
     return out
 
 
-def embedding_setup(model, mode: str, emb_dir: Path, stem: str, lc_window: int = 100) -> Embedding:
+def embedding_setup(model, mode: str, emb_dir: Path, stem: str, lc_window: int = 100,
+                    max_chunks: int | None = None) -> Embedding:
     if mode == "legacy":
         return Embedding(mode, embed_texts, lambda ids, texts: legacy_lc(ids, texts, lc_window),
                          emb_dir / f"{stem}_minilm_raw.npz",
@@ -104,7 +105,7 @@ def embedding_setup(model, mode: str, emb_dir: Path, stem: str, lc_window: int =
     tok = counting_tokenizer(model)
 
     def embed(m, texts):
-        return embed_documents(m, texts, embed_texts, tok=tok)
+        return embed_documents(m, texts, embed_texts, tok=tok, max_chunks=max_chunks)
 
     def lc(ids, texts):
         return [(i, w) for i, t in zip(ids, texts) if (w := opening_window(tok, t)) is not None]
@@ -113,9 +114,11 @@ def embedding_setup(model, mode: str, emb_dir: Path, stem: str, lc_window: int =
         return [len(e.ids) for e in tok.encode_batch([clean_text(tok, t) for t in texts],
                                                      add_special_tokens=False)]
 
-    return Embedding(mode, embed, lc, emb_dir / f"{stem}_minilm_whole.npz",
+    k = f"_k{max_chunks}" if max_chunks else ""
+    raw_label = f"whole text (first <= {max_chunks} chunks)" if max_chunks else "whole text"
+    return Embedding(mode, embed, lc, emb_dir / f"{stem}_minilm_whole{k}.npz",
                      emb_dir / f"{stem}_minilm_open{DEFAULT_BUDGET}.npz",
-                     "whole text", f"opening window (first {DEFAULT_BUDGET} model tokens)", ntok)
+                     raw_label, f"opening window (first {DEFAULT_BUDGET} model tokens)", ntok)
 
 
 def bootstrap_pairwise_ci(v: np.ndarray, n_boot: int, ci: float, rng) -> tuple[float, float]:
@@ -252,11 +255,14 @@ def main() -> None:
     ap.add_argument("--corpus", default="Cross Validated")
     ap.add_argument("--embed", choices=EMBED_MODES, default="legacy",
                     help="legacy = original 128-token-truncated results; whole = whole-text chunked")
+    ap.add_argument("--max-chunks", type=int, default=None,
+                    help="whole mode: keep only each text's first K chunks (length-bias check)")
     args = ap.parse_args()
 
     model = load_model(args.cache_dir)
     df = pd.read_parquet(args.input)
-    emb = embedding_setup(model, args.embed, args.emb_cache_dir, args.input.stem, args.lc_window)
+    emb = embedding_setup(model, args.embed, args.emb_cache_dir, args.input.stem, args.lc_window,
+                          args.max_chunks)
 
     if args.no_emb_cache:
         raw_cache = lc_cache = None

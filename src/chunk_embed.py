@@ -111,17 +111,19 @@ def chunk_text(tok, text: str, budget: int = DEFAULT_BUDGET, overlap: int = 0,
 
 
 def embed_documents(model, texts: list[str], embed_fn, budget: int = DEFAULT_BUDGET,
-                    overlap: int = 0, tok=None, clean: bool = True) -> np.ndarray:
+                    overlap: int = 0, tok=None, clean: bool = True,
+                    max_chunks: int | None = None) -> np.ndarray:
     """One L2-normalised vector per text = token-weighted mean of its chunk embeddings.
 
     ``embed_fn(model, list_of_str) -> (n, dim)`` is the caller's normalising embedder.
+    ``max_chunks`` keeps only each text's first K chunks (length-bias check).
     """
     tok = tok or counting_tokenizer(model)
     flat, owner, weight = [], [], []
     for i, t in enumerate(texts):
         if clean:
             t = clean_text(tok, t) or t
-        for c, n in chunk_text(tok, t, budget, overlap) or [(t, 1)]:
+        for c, n in (chunk_text(tok, t, budget, overlap) or [(t, 1)])[:max_chunks]:
             flat.append(c)
             owner.append(i)
             weight.append(max(n, 1))
