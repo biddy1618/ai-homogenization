@@ -48,23 +48,36 @@ BLOCKLIST = {
     "youtube.com", "youtu.be", "m.youtube.com", "vimeo.com", "dailymotion.com", "tiktok.com",
 }
 
-# Same model + GCS mirror as src/semantic_bert.py, inlined so the tracker stays a lean,
+# Same pinned model + loader as src/semantic_bert.py, inlined so the tracker stays a lean,
 # standalone tool (CI needs only numpy + fastembed, not the full analysis stack).
 MODEL_NAME = "sentence-transformers/all-MiniLM-L6-v2"
-GCS_URL = (
-    "https://storage.googleapis.com/qdrant-fastembed/"
-    "sentence-transformers-all-MiniLM-L6-v2.tar.gz"
-)
+MODEL_DIR = "fast-all-MiniLM-L6-v2"
+# Byte-identical copy of the Qdrant GCS tarball the study used; that GCS URL now returns 403.
+MODEL_URL = ("https://github.com/biddy1618/ai-homogenization/releases/download/"
+             "minilm-v1/fast-all-MiniLM-L6-v2.zip")
+MODEL_SHA256 = {
+    "model.onnx": "bbd7b466f6d58e646fdc2bd5fd67b2f5e93c0b687011bd4548c420f7bd46f0c5",
+    "tokenizer.json": "da0e79933b9ed51798a3ae27893d3c5fa4a201126cef75586296df9b4d2c62a0",
+}
 
 
 def load_model(cache_dir: Path):
-    from fastembed import TextEmbedding
-    from fastembed.text.onnx_embedding import OnnxTextEmbedding
+    """Download (once) and verify the pinned MiniLM ONNX files, then return an embedder."""
+    import hashlib
+    import io
+    import zipfile
 
-    cache_dir.mkdir(parents=True, exist_ok=True)
-    model_dir = OnnxTextEmbedding.retrieve_model_gcs(
-        MODEL_NAME, GCS_URL, str(cache_dir), deprecated_tar_struct=True
-    )
+    from fastembed import TextEmbedding
+
+    model_dir = cache_dir / MODEL_DIR
+    if not (model_dir / "model.onnx").exists():
+        cache_dir.mkdir(parents=True, exist_ok=True)
+        with urllib.request.urlopen(MODEL_URL, timeout=300) as r:
+            zipfile.ZipFile(io.BytesIO(r.read())).extractall(cache_dir)
+    for name, want in MODEL_SHA256.items():
+        got = hashlib.sha256((model_dir / name).read_bytes()).hexdigest()
+        if got != want:
+            raise RuntimeError(f"{model_dir / name}: sha256 {got} != expected {want}")
     return TextEmbedding(MODEL_NAME, specific_model_path=str(model_dir))
 
 

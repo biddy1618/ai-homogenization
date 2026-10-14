@@ -54,7 +54,10 @@ What `add_sites.py` does per site (resumable; finished sites are skipped on re-r
 3. computes whole-text family 5 → `artifacts/<site>/whole/data/5_semantic_bert.csv` and
    `artifacts/<site>/whole/plots/5_semantic_bert.png`.
 
-The MiniLM model is downloaded automatically from Google Cloud Storage into `data/models/`.
+The MiniLM model downloads automatically on first use from the repo's GitHub release `minilm-v1`
+(a byte-identical copy of the VDI's model; the original Google Cloud Storage URL now returns 403)
+into `data/models/fast-all-MiniLM-L6-v2/`, and `load_model` refuses to run if the SHA256 of
+`model.onnx` or `tokenizer.json` differs. Do not use any Hugging Face copy.
 Expect roughly 30–60 minutes of compute per site. A line `[gate] SKIP family 5` or `FAILED` for a
 site is a problem — stop and report it (all 8 sites passed the gate on the VDI).
 

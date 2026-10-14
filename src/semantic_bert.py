@@ -6,10 +6,10 @@ LSA). It embeds each answer with ``all-MiniLM-L6-v2`` running under ONNX Runtime
 same ``spread_metrics`` (pairwise cosine, centroid variance, effective dimensionality)
 so the numbers line up directly with the LSA run.
 
-Model provisioning: HuggingFace is blocked by the corporate proxy, but the Qdrant
-Google-Cloud-Storage mirror is reachable, so we pull the ONNX tarball from there and
-load it via ``specific_model_path`` (bypassing fastembed's HF lookup). The model is
-cached under ``data/models/`` (gitignored).
+Model provisioning: the exact ONNX files the study has always used (originally the Qdrant GCS
+tarball, which now returns 403) are published as a GitHub release asset. ``load_model`` downloads
+them once into ``data/models/`` (gitignored), verifies their SHA256, and loads them via
+``specific_model_path`` (bypassing fastembed's HuggingFace lookup).
 
 Report RELATIVE change over time: absolute embedding cosines are inflated by
 anisotropy/hubness, so the trend and the raw-vs-length-controlled gap are what matter.
@@ -36,22 +36,35 @@ from chunk_embed import DEFAULT_BUDGET, clean_text, counting_tokenizer, embed_do
 
 CHATGPT_QUARTER = "2022Q4"
 MODEL_NAME = "sentence-transformers/all-MiniLM-L6-v2"
-GCS_URL = (
-    "https://storage.googleapis.com/qdrant-fastembed/"
-    "sentence-transformers-all-MiniLM-L6-v2.tar.gz"
-)
+MODEL_DIR = "fast-all-MiniLM-L6-v2"
+# Byte-identical copy of the Qdrant GCS tarball the study used; that GCS URL now returns 403.
+MODEL_URL = ("https://github.com/biddy1618/ai-homogenization/releases/download/"
+             "minilm-v1/fast-all-MiniLM-L6-v2.zip")
+MODEL_SHA256 = {
+    "model.onnx": "bbd7b466f6d58e646fdc2bd5fd67b2f5e93c0b687011bd4548c420f7bd46f0c5",
+    "tokenizer.json": "da0e79933b9ed51798a3ae27893d3c5fa4a201126cef75586296df9b4d2c62a0",
+}
 
 
-def load_model(cache_dir: Path, model_name: str = MODEL_NAME, url: str = GCS_URL):
-    """Provision the ONNX model from the GCS mirror (cached) and return an embedder."""
+def load_model(cache_dir: Path):
+    """Download (once) and verify the pinned MiniLM ONNX files, then return an embedder."""
+    import hashlib
+    import io
+    import urllib.request
+    import zipfile
+
     from fastembed import TextEmbedding
-    from fastembed.text.onnx_embedding import OnnxTextEmbedding
 
-    cache_dir.mkdir(parents=True, exist_ok=True)
-    model_dir = OnnxTextEmbedding.retrieve_model_gcs(
-        model_name, url, str(cache_dir), deprecated_tar_struct=True
-    )
-    return TextEmbedding(model_name, specific_model_path=str(model_dir))
+    model_dir = cache_dir / MODEL_DIR
+    if not (model_dir / "model.onnx").exists():
+        cache_dir.mkdir(parents=True, exist_ok=True)
+        with urllib.request.urlopen(MODEL_URL, timeout=300) as r:
+            zipfile.ZipFile(io.BytesIO(r.read())).extractall(cache_dir)
+    for name, want in MODEL_SHA256.items():
+        got = hashlib.sha256((model_dir / name).read_bytes()).hexdigest()
+        if got != want:
+            raise RuntimeError(f"{model_dir / name}: sha256 {got} != expected {want}")
+    return TextEmbedding(MODEL_NAME, specific_model_path=str(model_dir))
 
 
 def embed_texts(model, texts: list[str], batch_size: int = 256) -> np.ndarray:

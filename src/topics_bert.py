@@ -17,7 +17,7 @@ Two questions answered:
      shift, the OVERALL line rises while the WITHIN-TOPIC line stays flat.
 
 Embeddings are the SAME all-MiniLM-L6-v2 vectors used by ``semantic_bert.py`` (one
-model, no torch — provisioned via the GCS mirror). BERTopic is fed precomputed
+model, no torch — the pinned release copy loaded by ``semantic_bert.load_model``). BERTopic is fed precomputed
 embeddings, so it never needs a sentence-transformers/torch backend.
 """
 
