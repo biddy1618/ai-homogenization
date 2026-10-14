@@ -10,13 +10,20 @@ results are being re-run on **whole text** (`--embed whole`: cleaned text, sente
 to `artifacts/<site>/whole/`. Delivered (old) results in `artifacts/<site>/data|plots/` must stay
 untouched.
 
-Step 3 = whole-text family 5 on 21 Stack Exchange sites. The work VDI is running 13 of them. **This
-computer runs the other 8:**
+Step 3 = whole-text family 5 on 21 Stack Exchange sites, split between two machines:
+
+| Machine | Sites | State (2026-10-15 00:30) |
+|---|---|---|
+| Work VDI | bicycles, gardening, rpg, boardgames, money | done |
+| Work VDI | photo | running — left to finish, not interrupted |
+| Work VDI | workplace, diy, scifi, gaming, crypto, law, history | starts automatically after photo |
+| **This computer** | **cs, biology, astronomy, chemistry, electronics, physics, softwareengineering, english** | **to run here** |
+
+**This computer runs exactly these 8:**
 
 `cs biology astronomy chemistry electronics physics softwareengineering english`
 
-Do not run any other site — the VDI is doing: bicycles, gardening, rpg, boardgames, money, photo,
-workplace, diy, scifi, gaming, crypto, law, history.
+Do not run any other site — the VDI covers the other 13.
 
 ## Rules
 - Do **not** edit any code or existing file. Do not run anything except the commands below.
