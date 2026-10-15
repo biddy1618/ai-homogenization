@@ -4,6 +4,79 @@ Running log of client meetings, newest entry first.
 
 ---
 
+## 2026-10-15 (live call with Mark + Emmett — held, 07:00, 50 min)
+
+Mark joined from the car, and his connection dropped around 26:00–29:10. **New participant: Emmett
+Nomellini** (Mark's son, sophomore in economics at the University of Michigan). He'll be on the
+email chain and review the drafts.
+Recording/notes: tl;dv meeting `6ad03383ea34c80013a98639`.
+
+### What I showed / said
+- **Told Mark about the 128-token issue.** The embedding model only read the first ~80–90 words of
+  each text, so the embedding results need redoing on whole text, and that's in progress. Mark
+  accepted it: "go ahead and do that tweaking of the data" before the next meeting. **No
+  whole-text numbers were shared.**
+- For Emmett, Mark restated the big picture: is human output homogenizing because of AI, and more
+  so on **high-cognitive-load** sites, where AI saves more work?
+- Screen-shared the Cross Validated similarity trend and the slope-change idea (decline before
+  ChatGPT, rise after), and listed the data sources (Stack Exchange, arXiv CS/math, Hacker News,
+  Philosophy, …).
+- **Demoed the tracker proof of concept:** weekly Monday run, Google top 10 → filter → full pages
+  → embeddings → similarity. Mark: "I really like where you're going with that." He likes that it
+  all goes through Google, since that's what most people use.
+
+### Corrections to send with the follow-up email
+- **"High cognitive load is stronger."** I said this on the call. On whole text it is partly
+  supported: 11 of 14 high-load sites vs 4 of 12 low-load sites have a significant slope change
+  (delivered results: 11 of 14 vs 7 of 12). But the average changes are close (Δ similarity
+  +0.0070 high vs +0.0052 low), and the delivered family-9 conclusion was "no clean split".
+  Needs a proper whole-text family-9 read before we claim it.
+- **"A text = the question plus its top answer."** Wrong. Each text is a single **answer** (all
+  answers, not just the top one), sampled up to 800 per quarter.
+- **Tracker numbers:** it has **45 queries** (5 domains × 9) and **3 snapshots**, not "28–30
+  queries" or "four weeks". Search now goes through Serper.dev, not SerpAPI.
+- **Emmett's question exposed a gap:** every external source (HN, PubMed, arXiv) is high load, so
+  **low load is Stack Exchange only.** A non-SE low-load source would strengthen the high- vs
+  low-load comparison.
+
+### New ideas discussed
+- **Homogenization of *ideas*** (from an academic friend): count the number of distinct ideas in a
+  text. The hypothesis is that AI stays tightly on-topic while humans wander across sub-points.
+  **Mark's condition: it must be an objective, quantitative measure**, otherwise "it's a Rorschach
+  test". Look for papers that quantify the number of ideas or claims in a text.
+- **Does Google fight AI content?** Mark wonders what Google does to filter AI-generated pages
+  (possible context for the tracker). I speculated about an internal AI-content index, like
+  Instagram/Threads labels. Unverified.
+- **Dashboard visual:** Mark (half-joking) suggested a row of stormtroopers at the "most
+  homogenized" end of the scale.
+- Mark asked about week-to-week movement in the tracker. **Too early to say:** 3 points, and the
+  apparent drop is likely noise.
+
+### Action items
+
+| # | Owner | Item | Status |
+|---|-------|------|--------|
+| 1 | Mark | **Start an email chain** with Dauren + Emmett | Open (Mark) |
+| 2 | Dauren | **Reply with the paper draft link** (say it's stale: numbers pending the whole-text re-run) **and the tracker link** | Open |
+| 3 | Dauren | **Finish the whole-text re-run** before the next meeting | In progress |
+| 4 | Dauren | **Research quantitative "number of ideas" measures** (papers, objective metrics) | Open |
+| 5 | Emmett | Review the drafts (paper + tracker) and send ideas | Open (Emmett) |
+| 6 | Dauren | (Optional) Look into how Google handles AI-generated content in ranking | Open |
+
+**Next meeting:** tentatively the same time next week (Thu 2026-10-22, ~07:00 Almaty).
+
+### Not covered (carry into the email or next call)
+From the prep notes:
+- the whole-text headline: 15 of 26 Stack Exchange sites (was 18), externals hold, PubMed
+  stronger;
+- that "topic, not style" is provisional until the topic controls finish;
+- the weaker old length control (~128 vs ~100 tokens).
+
+Open questions for Mark: the headline wording ("long decline turned upward"), the control-corpus
+question, the timeline for the paper rewrite, and which tracker domains and cadence he wants.
+
+---
+
 ## 2026-09-14 (live call with Mark — held, 07:00)
 
 Status update on the three external (non-Stack-Exchange) sources.
