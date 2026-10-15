@@ -18,6 +18,7 @@ opening-window control (first 120 model tokens). Delivered results stay as the b
 | 3 | Families 5 + 8 on the other 21 SE sites, 26-site summary, cognitive load (9) | next |
 | 4 | Topic controls: same-question (11), decomposition (13), BERTopic (6), within vs overall (10) | |
 | 5 | Score segments (7), GPT anchor (12, cached GPT answers only) | |
+| 5b | Local DuckDB store: runs, sampled answers, embeddings keyed by model/variant/text hash, metrics (one gitignored file; imports existing caches) | |
 | 6 | Second encoder (BGE-small) on core 5 + externals | |
 | 7–8 | Paper v0.2 (methodology, figures, numbers) and a note to Mark | |
 
