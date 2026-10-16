@@ -9,6 +9,7 @@ pyarrow>=15.0
 tqdm>=4.66
 scipy>=1.11
 statsmodels>=0.14
+duckdb>=1.1
 # Optional: true contextual embeddings (Sentence-BERT/MiniLM via ONNX, no PyTorch)
 fastembed>=0.8
 # Optional: dynamic semantic topic modeling (install bertopic with --no-deps to avoid torch)

@@ -14,13 +14,14 @@ opening-window control (first 120 model tokens). Delivered results stay as the b
 | Step | What | State |
 |---|---|---|
 | 0–1 | Shared chunked embedding (`src/chunk_embed.py`), `--embed whole` in every script | done |
-| 2 | Decision gate: families 5 + 8, core 5 + 4 externals | running (Economics: rise *stronger* on whole text) |
-| 3 | Families 5 + 8 on the other 21 SE sites, 26-site summary, cognitive load (9) | next |
-| 4 | Topic controls: same-question (11), decomposition (13), BERTopic (6), within vs overall (10) | |
-| 5 | Score segments (7), GPT anchor (12, cached GPT answers only) | |
-| 5b | Local DuckDB store: runs, sampled answers, embeddings keyed by model/variant/text hash, metrics (one gitignored file; imports existing caches) | |
-| 6 | Second encoder (BGE-small) on core 5 + externals | |
-| 7–8 | Paper v0.2 (methodology, figures, numbers) and a note to Mark | |
+| 2 | Decision gate: families 5 + 8, core 5 + 4 externals | **done — passed**: change holds wherever it was significant; whole text stronger in CV, Econ, Philosophy, PubMed (partly length: up-to-K check) |
+| 3 | Families 5 + 8 on the other 21 SE sites, 26-site summary, cognitive load (9) | **done**: 15/26 significant on whole text (opening window 19/26; delivered 18/26); 24/26 move up; high-load 11/14 vs low-load 4/12 (needs a proper family-9 read) |
+| 4 | Topic controls: same-question (11), decomposition (13), BERTopic (6), within vs overall (10) | **done**: same-question 0/5 converge; topic narrowing 8/9; within-topic rises 8/9 on whole text but only Philosophy/Economics/Travel under the opening window |
+| 5 | Score segments (7), GPT anchor (12, cached GPT answers only) | **done** (outputs not yet committed): both score tiers rise; anchor Economics positive, Seasoned Advice borderline, 3 null |
+| 5b | Local DuckDB store: runs, sampled answers, embeddings keyed by model/variant/text hash, metrics (one gitignored file; imports existing caches) | **embeddings done (2026-10-15)**: all 116 `.npz` caches → `data/embeddings/embeddings.duckdb` (float32 BLOB, 6.0 GB vs 11.6 GB; Economics family 5 reproduces to ≤5e-8). Same `embed_cache` API, no script changes. Runs/samples/metrics tables not built yet |
+| 5c | Data sharing with the Mac: private S3 `s3://biddy-homogenization` (us-west-2) via `src/sync_data.py` (`push` / `pull` / `status`, targets `raw` and `embeddings`; keys in `.secrets/`) | **done**: 26 June-2026 dumps (5.7 GB) + embeddings DB uploaded and verified; local copies of dumps removed; unused March/undated dumps and `Posts.xml` extracts deleted. Run `pull raw` before re-parsing a site |
+| 6 | Second encoder (BGE-small) on core 5 + externals | **done (2026-10-16)**: `semantic_bert.py --encoder bge-small` (same 120-token chunking; only the encoder changes) → `artifacts/<corpus>/whole_bge/`; comparison `artifacts/whole_bge/6_encoder_compare.csv` (`src/encoder_compare.py`). Verdict agrees 6/9 whole text, 7/9 opening window. Holds with both encoders: CV, Economics, HN, arXiv Math, arXiv CS, PubMed (all p<0.001, both metrics); Philosophy opening window. **Does not hold with BGE**: Travel (MiniLM up*, BGE flat/down), Philosophy whole text (up, p=0.17), Seasoned Advice (MiniLM flat, BGE down*). BGE similarity *levels* are much higher (~0.67 vs ~0.16), so compare slope changes, not levels |
+| 7–8 | Claims ledger + conclusions review; paper v0.2; reply to Mark (next meeting Thu 2026-10-22) | |
 
 ### To discuss (framing; decide before the paper rewrite)
 1. **Wording of the aggregate result — agreed: "the long decline turned upward", not "rose".** The

@@ -44,10 +44,16 @@ MODEL_SHA256 = {
     "model.onnx": "bbd7b466f6d58e646fdc2bd5fd67b2f5e93c0b687011bd4548c420f7bd46f0c5",
     "tokenizer.json": "da0e79933b9ed51798a3ae27893d3c5fa4a201126cef75586296df9b4d2c62a0",
 }
+# encoder key -> (fastembed model name, sub-folder of --cache-dir). Chunking is identical for all
+# encoders (120-token chunks, 120-token opening window) so only the encoder varies.
+ENCODERS = {"minilm": (MODEL_NAME, MODEL_DIR),
+            "bge-small": ("BAAI/bge-small-en-v1.5", "bge-small")}
+ENCODER_LABEL = {"minilm": "Sentence-BERT / MiniLM", "bge-small": "BGE-small-en-v1.5"}
 
 
-def load_model(cache_dir: Path):
-    """Download (once) and verify the pinned MiniLM ONNX files, then return an embedder."""
+def load_model(cache_dir: Path, encoder: str = "minilm"):
+    """Return an embedder. ``minilm``: pinned, sha-verified MiniLM ONNX (the study's encoder).
+    ``bge-small``: BAAI/bge-small-en-v1.5 (fastembed's quantised ONNX), the robustness encoder."""
     import hashlib
     import io
     import urllib.request
@@ -55,6 +61,9 @@ def load_model(cache_dir: Path):
 
     from fastembed import TextEmbedding
 
+    if encoder != "minilm":
+        name, sub = ENCODERS[encoder]
+        return TextEmbedding(name, cache_dir=str(cache_dir / sub))
     model_dir = cache_dir / MODEL_DIR
     if not (model_dir / "model.onnx").exists():
         model_dir.mkdir(parents=True, exist_ok=True)
@@ -112,8 +121,11 @@ def legacy_lc(ids, texts, lc_window: int = 100) -> list[tuple[int, str]]:
 
 
 def embedding_setup(model, mode: str, emb_dir: Path, stem: str, lc_window: int = 100,
-                    max_chunks: int | None = None) -> Embedding:
+                    max_chunks: int | None = None, encoder: str = "minilm") -> Embedding:
+    tag = encoder.split("-")[0]  # cache-name tag: "minilm" (unchanged names) or "bge"
     if mode == "legacy":
+        if encoder != "minilm":
+            raise ValueError("legacy mode is MiniLM-only (it reproduces the delivered results)")
         return Embedding(mode, embed_texts, lambda ids, texts: legacy_lc(ids, texts, lc_window),
                          emb_dir / f"{stem}_minilm_raw.npz",
                          emb_dir / f"{stem}_minilm_lc{lc_window}.npz",
@@ -134,8 +146,8 @@ def embedding_setup(model, mode: str, emb_dir: Path, stem: str, lc_window: int =
 
     k = f"_k{max_chunks}" if max_chunks else ""
     raw_label = f"whole text (first <= {max_chunks} chunks)" if max_chunks else "whole text"
-    return Embedding(mode, embed, lc, emb_dir / f"{stem}_minilm_whole{k}.npz",
-                     emb_dir / f"{stem}_minilm_open{DEFAULT_BUDGET}.npz",
+    return Embedding(mode, embed, lc, emb_dir / f"{stem}_{tag}_whole{k}.npz",
+                     emb_dir / f"{stem}_{tag}_open{DEFAULT_BUDGET}.npz",
                      raw_label, f"opening window (first {DEFAULT_BUDGET} model tokens)", ntok)
 
 
@@ -200,7 +212,7 @@ def compute_quarterly(df: pd.DataFrame, model, sample: int = 800, lc_window: int
 
 
 def plot_metrics(df: pd.DataFrame, output: Path, corpus: str = "Cross Validated",
-                 emb: Embedding | None = None) -> None:
+                 emb: Embedding | None = None, encoder: str = "minilm") -> None:
     quarters = df["quarter"].tolist()
     x = list(range(len(quarters)))
     marker_x = quarters.index(CHATGPT_QUARTER) if CHATGPT_QUARTER in quarters else None
@@ -236,7 +248,7 @@ def plot_metrics(df: pd.DataFrame, output: Path, corpus: str = "Cross Validated"
     axes[-1].set_xlabel("Quarter")
     ci_note = "  (shaded = bootstrap CI)" if "sem_pairwise_cosine_lo" in df.columns else ""
     fig.suptitle(f"{corpus} \u2014 Are answers becoming more alike in meaning? "
-                 f"(Sentence-BERT / MiniLM){ci_note}", fontsize=13)
+                 f"({ENCODER_LABEL[encoder]}){ci_note}", fontsize=13)
     if "n_sample" in df.columns:
         n_max, n_med = int(df["n_sample"].max()), int(df["n_sample"].median())
         if emb and emb.mode == "whole":
@@ -275,12 +287,14 @@ def main() -> None:
                     help="legacy = original 128-token-truncated results; whole = whole-text chunked")
     ap.add_argument("--max-chunks", type=int, default=None,
                     help="whole mode: keep only each text's first K chunks (length-bias check)")
+    ap.add_argument("--encoder", choices=sorted(ENCODERS), default="minilm",
+                    help="sentence encoder; bge-small is the robustness check (whole mode only)")
     args = ap.parse_args()
 
-    model = load_model(args.cache_dir)
+    model = load_model(args.cache_dir, args.encoder)
     df = pd.read_parquet(args.input)
     emb = embedding_setup(model, args.embed, args.emb_cache_dir, args.input.stem, args.lc_window,
-                          args.max_chunks)
+                          args.max_chunks, args.encoder)
 
     if args.no_emb_cache:
         raw_cache = lc_cache = None
@@ -301,7 +315,7 @@ def main() -> None:
     result.to_csv(args.output, index=False)
     print(f"Wrote {len(result)} quarters -> {args.output}")
     print(result.to_string(index=False))
-    plot_metrics(result, args.plot, corpus=args.corpus, emb=emb)
+    plot_metrics(result, args.plot, corpus=args.corpus, emb=emb, encoder=args.encoder)
 
 
 if __name__ == "__main__":
