@@ -41,6 +41,7 @@ from sklearn.cluster import KMeans
 
 from semantic_bert import EMBED_MODES, embedding_setup, load_model, embed_texts
 from embed_cache import load_cache, save_cache, cached_embed
+from paths import source_dir
 from significance import _q_ord, analyze_metric
 
 CHATGPT_QUARTER = "2022Q4"
@@ -277,7 +278,7 @@ def plot_decomposition(df: pd.DataFrame, output: Path, corpus: str) -> None:
 def main() -> None:
     ap = argparse.ArgumentParser(description="Within-topic vs between-topic decomposition (#13)")
     ap.add_argument("-i", "--input", type=Path, default=Path("data/processed/answers.parquet"))
-    ap.add_argument("--out-dir", type=Path, default=Path("artifacts/cross-validated"))
+    ap.add_argument("--out-dir", type=Path, default=source_dir("cross-validated"))
     ap.add_argument("--corpus", default="Cross Validated")
     ap.add_argument("--sample", type=int, default=800)
     ap.add_argument("--k", type=int, default=50, help="Number of global K-means topics")
@@ -308,8 +309,8 @@ def main() -> None:
         save_cache(raw_path, raw_cache)
         print(f"Embedding cache -> {raw_path} ({len(raw_cache):,} vectors)")
 
-    data_dir = args.out_dir / "data"
-    plot_dir = args.out_dir / "plots"
+    data_dir = args.out_dir
+    plot_dir = args.out_dir
     data_dir.mkdir(parents=True, exist_ok=True)
     csv_path = data_dir / "13_topic_decomposition.csv"
     result.to_csv(csv_path, index=False)

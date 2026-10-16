@@ -31,6 +31,7 @@ import pandas as pd
 from tqdm import tqdm
 
 from embed_cache import load_cache, save_cache, cached_embed
+from paths import source_dir
 from semantic import spread_metrics
 from semantic_bert import CHATGPT_QUARTER, EMBED_MODES, embedding_setup, load_model, embed_texts
 from significance import _q_ord, analyze_metric
@@ -141,7 +142,7 @@ def plot_same_question(df: pd.DataFrame, output: Path, corpus: str, footnote: st
 def main() -> None:
     ap = argparse.ArgumentParser(description="Same-question topic control (#11)")
     ap.add_argument("-i", "--input", type=Path, default=Path("data/processed/answers.parquet"))
-    ap.add_argument("--out-dir", type=Path, default=Path("artifacts/cross-validated"))
+    ap.add_argument("--out-dir", type=Path, default=source_dir("cross-validated"))
     ap.add_argument("--corpus", default="Cross Validated")
     ap.add_argument("--cache-dir", type=Path, default=Path("data/models"))
     ap.add_argument("--emb-cache-dir", type=Path, default=Path("data/embeddings"))
@@ -177,13 +178,13 @@ def main() -> None:
         save_cache(raw_path, raw_cache)
         print(f"Embedding cache -> {raw_path} ({len(raw_cache):,} vectors)")
 
-    csv_path = args.out_dir / "data" / "11_same_question.csv"
+    csv_path = args.out_dir / "11_same_question.csv"
     csv_path.parent.mkdir(parents=True, exist_ok=True)
     result.to_csv(csv_path, index=False)
     print(f"Wrote {len(result)} quarters -> {csv_path}")
     print(result.to_string(index=False))
 
-    plot_path = args.out_dir / "plots" / "11_same_question.png"
+    plot_path = args.out_dir / "11_same_question.png"
     sq_note = (f"No topic clustering: within-question compares answers to the exact same question "
                f"(quarters with >= {args.min_answers} contributing answers). The overall line "
                f"samples up to {args.overall_sample} answers/quarter. {len(result)} quarters shown.")

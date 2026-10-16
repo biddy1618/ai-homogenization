@@ -18,18 +18,11 @@ import pandas as pd
 import statsmodels.api as sm
 from scipy import stats
 
+from paths import ALL_SOURCES, ARTIFACTS, CORE, EXTERNALS, source_dir, summary_dir
+
 CHATGPT_QUARTER = "2022Q4"
-CORPORA = [
-    ("cross-validated", "Cross Validated", "high"),
-    ("philosophy", "Philosophy", "high"),
-    ("economics", "Economics", "high"),
-    ("seasoned-advice", "Seasoned Advice", "low"),
-    ("travel", "Travel", "low"),
-    ("hackernews", "Hacker News", "external"),
-    ("pubmed-oncology", "PubMed (Oncology)", "external"),
-    ("arxiv-cs", "arXiv (CS)", "external"),
-    ("arxiv-math", "arXiv (Math)", "external"),
-]
+# Family 6 (within-topic) exists for the core 5 SE sites + the 4 external corpora.
+CORPORA = [(f, l, g) for f, l, g in ALL_SOURCES if f in CORE] + EXTERNALS
 
 
 def _q_ord(q: str) -> int:
@@ -64,16 +57,15 @@ def analyze(csv: Path, label: str, cog: str, t_break: int) -> list[dict]:
 
 def main() -> None:
     ap = argparse.ArgumentParser(description="Overall vs within-topic significance")
-    ap.add_argument("--artifacts", type=Path, default=Path("artifacts"))
-    ap.add_argument("--variant", default="", help="results sub-folder, e.g. 'whole'")
+    ap.add_argument("--artifacts", type=Path, default=ARTIFACTS)
     ap.add_argument("--out-csv", type=Path, default=None)
     args = ap.parse_args()
-    args.out_csv = args.out_csv or args.artifacts / args.variant / "10_within_vs_overall.csv"
+    args.out_csv = args.out_csv or summary_dir(args.artifacts) / "10_within_vs_overall.csv"
 
     t_break = _q_ord(CHATGPT_QUARTER)
     rows = []
     for folder, label, cog in CORPORA:
-        csv = args.artifacts / folder / args.variant / "data" / "6_within_topic_similarity.csv"
+        csv = source_dir(folder, args.artifacts) / "6_within_topic_similarity.csv"
         if not csv.exists():
             print(f"  skip {label}: {csv} missing")
             continue

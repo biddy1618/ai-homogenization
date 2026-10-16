@@ -35,8 +35,8 @@ detail in the project briefing.
 project-ai-homogenization/
 ├── src/                 # analysis pipeline (13 metric "families": lexical → LSA → BERT →
 │                        #   topic control → significance → GPT-anchor → decomposition)
-├── artifacts/           # committed outputs per corpus (data/ CSVs + plots/ PNGs;
-│                        #   whole-text re-run in <corpus>/whole/)
+├── artifacts/           # committed results, whole text (see artifacts/README.md):
+│                        #   summary/, se-hcl/, se-lcl/, external/, robustness/, meta/
 ├── paper/               # LaTeX paper (main.tex, references.bib, figures/, main.pdf)
 ├── deliverables/        # what was sent to Mark (2026-09-07, 2026-09-14)
 ├── tracker/             # live homogenization tracker (weekly GitHub Action + dashboard)

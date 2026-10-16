@@ -9,10 +9,10 @@ Per site, each stage is skipped if its output already exists (resumable):
   2. extract   Posts.xml (py7zr, single member) -> parse -> data/processed/<key>_answers.parquet
                (Posts.xml is deleted after parsing; the .7z is kept for cheap re-parse)
   3. family 5  semantic_bert.compute_quarterly (bootstrap CIs) ->
-               artifacts/<slug>/data/5_semantic_bert.csv + plots/5_semantic_bert.png
+               artifacts/se-{hcl,lcl}/<slug>/5_semantic_bert.{csv,png} (see paths.py)
 
 The MiniLM model is provisioned once and reused across all sites. A manifest row per
-site (answers, quarters, span, recent volume) is written to artifacts/sites_manifest.csv.
+site (answers, quarters, span, recent volume) is written to artifacts/meta/sites_manifest.csv.
 """
 from __future__ import annotations
 
@@ -28,6 +28,7 @@ import pandas as pd
 from parse_posts import parse_posts
 from semantic_bert import EMBED_MODES, embedding_setup, load_model, compute_quarterly, plot_metrics
 from embed_cache import load_cache, save_cache
+from paths import meta_dir, source_dir
 
 DUMP_BASE = ("https://archive.org/download/stackexchange_20260630/"
              "stackexchange_20260630")
@@ -120,9 +121,11 @@ def recent_volume(df: pd.DataFrame, n_recent: int = 6) -> dict:
 def run_family5(df: pd.DataFrame, model, key: str, slug: str, corpus: str,
                 base: Path, sample: int, bootstrap: int, mode: str = "legacy") -> pd.DataFrame:
     """Family-5 semantic-BERT metrics for one corpus; returns the per-quarter frame."""
-    out = base / "artifacts" / slug / ("whole" if mode == "whole" else "")
-    csv = out / "data" / "5_semantic_bert.csv"
-    plot = out / "plots" / "5_semantic_bert.png"
+    out = source_dir(slug, base / "artifacts")
+    if mode != "whole":  # 128-token results are only kept in git tag delivered-v1
+        out = out / "legacy"
+    csv = out / "5_semantic_bert.csv"
+    plot = out / "5_semantic_bert.png"
     if csv.exists():
         print(f"  [family5] cached {csv.relative_to(base)}")
         return pd.read_csv(csv)
@@ -159,7 +162,7 @@ def main() -> None:
                     help="Skip family 5 if the site has no data at/after this quarter "
                          "(aligns endpoint with existing corpora, which reach 2026Q2)")
     ap.add_argument("--embed", choices=EMBED_MODES, default="legacy",
-                    help="whole = whole-text chunked embeddings -> artifacts/<slug>/whole/")
+                    help="whole = whole-text chunked embeddings -> artifacts/se-*/<slug>/")
     args = ap.parse_args()
 
     base = args.base
@@ -221,7 +224,7 @@ def main() -> None:
     if args.embed != "legacy":
         print(man.to_string(index=False))
         return
-    man_path = base / "artifacts" / "sites_manifest.csv"
+    man_path = meta_dir(base / "artifacts") / "sites_manifest.csv"
     if man_path.exists():
         prev = pd.read_csv(man_path)
         man = pd.concat([prev[~prev["key"].isin(man["key"])], man], ignore_index=True)

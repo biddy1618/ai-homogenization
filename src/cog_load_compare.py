@@ -17,42 +17,12 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
+from paths import ARTIFACTS, CORPORA, source_dir, summary_dir
+
 CHATGPT_QUARTER = "2022Q4"
 METRICS = ("sem_pairwise_cosine", "lc_sem_pairwise_cosine")
-PANEL_TITLE = {"sem_pairwise_cosine": "Raw answer text",
-               "lc_sem_pairwise_cosine": "Length-controlled (first 100 tokens)"}
-
-# corpus folder -> (display label, cognitive-load bucket)
-CORPORA = [
-    # --- high cognitive load (technical / expert) ---
-    ("cross-validated", "Cross Validated", "high"),
-    ("philosophy", "Philosophy", "high"),
-    ("economics", "Economics", "high"),
-    ("crypto", "Cryptography", "high"),
-    ("law", "Law", "high"),
-    ("history", "History", "high"),
-    ("cs", "Computer Science", "high"),
-    ("biology", "Biology", "high"),
-    ("astronomy", "Astronomy", "high"),
-    ("chemistry", "Chemistry", "high"),
-    ("electronics", "Electrical Engineering", "high"),
-    ("physics", "Physics", "high"),
-    ("softwareengineering", "Software Engineering", "high"),
-    ("english", "English Language & Usage", "high"),
-    # --- low cognitive load (everyday / practical / hobby / culture) ---
-    ("seasoned-advice", "Seasoned Advice", "low"),
-    ("travel", "Travel", "low"),
-    ("bicycles", "Bicycles", "low"),
-    ("gardening", "Gardening", "low"),
-    ("rpg", "Role-playing Games", "low"),
-    ("boardgames", "Board Games", "low"),
-    ("money", "Personal Finance & Money", "low"),
-    ("photo", "Photography", "low"),
-    ("workplace", "The Workplace", "low"),
-    ("diy", "Home Improvement", "low"),
-    ("scifi", "Science Fiction & Fantasy", "low"),
-    ("gaming", "Arqade (Gaming)", "low"),
-]
+PANEL_TITLE = {"sem_pairwise_cosine": "Whole text (sentence chunks, averaged)",
+               "lc_sem_pairwise_cosine": "Opening window (first 120 model tokens)"}
 # One colour per bucket — with 26 corpora, per-corpus colours are unreadable, so individual
 # series are drawn faint and the bucket MEAN is drawn bold on top.
 BUCKET_COLOR = {"high": "#08519c", "low": "#e6550d"}
@@ -67,11 +37,11 @@ def _slope(t: np.ndarray, y: np.ndarray) -> float:
     return float(np.polyfit(t, y, 1)[0]) if len(t) >= 2 else float("nan")
 
 
-def load_series(artifacts: Path, variant: str = ""):
+def load_series(artifacts: Path = ARTIFACTS):
     series, table = {}, []
     t_break = _q_ord(CHATGPT_QUARTER)
     for folder, label, cog in CORPORA:
-        csv = artifacts / folder / variant / "data" / "5_semantic_bert.csv"
+        csv = source_dir(folder, artifacts) / "5_semantic_bert.csv"
         if not csv.exists():
             print(f"  skip {label}: {csv} missing")
             continue
@@ -115,6 +85,7 @@ def _bucket_band(series: dict, metric: str, bucket: str, t_break: int, min_n: in
 
 
 def plot_comparison(series: dict, t_break: int, output: Path) -> None:
+    titles = PANEL_TITLE
     fig, axes = plt.subplots(2, 1, figsize=(13, 9), sharex=True)
     n_by_bucket = {b: sum(1 for _, (_, c, _) in series.items() if c == b)
                    for b in ("high", "low")}
@@ -144,7 +115,7 @@ def plot_comparison(series: dict, t_break: int, output: Path) -> None:
         if env.size:
             pad = 0.6 * (env.max() - env.min() + 1e-6)
             ax.set_ylim(env.min() - pad, env.max() + pad)
-        ax.set_title(PANEL_TITLE[metric], fontsize=11, loc="left")
+        ax.set_title(titles[metric], fontsize=11, loc="left")
         ax.set_ylabel("cosine minus pre-ChatGPT mean", fontsize=9)
         ax.grid(True, alpha=0.3)
         ax.legend(fontsize=9, loc="upper left", framealpha=0.9)
@@ -167,15 +138,14 @@ def plot_comparison(series: dict, t_break: int, output: Path) -> None:
 
 def main() -> None:
     ap = argparse.ArgumentParser(description="High vs low cognitive-load comparison")
-    ap.add_argument("--artifacts", type=Path, default=Path("artifacts"))
-    ap.add_argument("--variant", default="", help="results sub-folder, e.g. 'whole'")
+    ap.add_argument("--artifacts", type=Path, default=ARTIFACTS)
     ap.add_argument("--out-csv", type=Path, default=None)
     ap.add_argument("--plot", type=Path, default=None)
     args = ap.parse_args()
-    args.out_csv = args.out_csv or args.artifacts / args.variant / "9_cog_load_comparison.csv"
-    args.plot = args.plot or args.artifacts / args.variant / "9_cog_load_comparison.png"
+    args.out_csv = args.out_csv or summary_dir(args.artifacts) / "9_cog_load_comparison.csv"
+    args.plot = args.plot or summary_dir(args.artifacts) / "9_cog_load_comparison.png"
 
-    series, table, t_break = load_series(args.artifacts, args.variant)
+    series, table, t_break = load_series(args.artifacts)
     if table.empty:
         print("No corpora found — run semantic_bert.py first.")
         return

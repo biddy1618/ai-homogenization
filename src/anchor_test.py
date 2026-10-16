@@ -45,6 +45,7 @@ import pandas as pd
 from tqdm import tqdm
 
 from embed_cache import load_cache, save_cache, cached_embed
+from paths import source_dir
 from semantic_bert import CHATGPT_QUARTER, EMBED_MODES, embedding_setup, load_model, embed_texts
 from significance import _q_ord, analyze_metric
 
@@ -248,7 +249,7 @@ def main() -> None:
     ap = argparse.ArgumentParser(description="Known-AI anchor drift test (#12)")
     ap.add_argument("-i", "--input", type=Path, default=Path("data/processed/answers.parquet"))
     ap.add_argument("-Q", "--questions", type=Path, default=Path("data/processed/questions.parquet"))
-    ap.add_argument("--out-dir", type=Path, default=Path("artifacts/cross-validated"))
+    ap.add_argument("--out-dir", type=Path, default=source_dir("cross-validated"))
     ap.add_argument("--corpus", default="Cross Validated")
     ap.add_argument("--site", default="Cross Validated", help="Site name injected into the prompt")
     ap.add_argument("--gen-dir", type=Path, default=Path("data/anchor"))
@@ -351,13 +352,13 @@ def main() -> None:
     save_cache(raw_path, raw_cache)
     save_cache(ai_path, ai_cache)
 
-    csv_path = args.out_dir / "data" / "12_anchor_drift.csv"
+    csv_path = args.out_dir / "12_anchor_drift.csv"
     csv_path.parent.mkdir(parents=True, exist_ok=True)
     result.to_csv(csv_path, index=False)
     print(f"\nWrote {len(result)} quarters -> {csv_path}")
     print(result.to_string(index=False))
 
-    plot_path = args.out_dir / "plots" / "12_anchor_drift.png"
+    plot_path = args.out_dir / "12_anchor_drift.png"
     anchor_note = (f"Sampling: up to {args.per_quarter} human answers per quarter, each compared "
                    f"with one {args.model} answer to the same question. "
                    f"{len(result)} quarters; {int(result['n_answers'].sum()):,} human answers vs "

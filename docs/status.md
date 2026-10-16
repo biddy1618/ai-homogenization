@@ -2,14 +2,17 @@
 
 *Running "what's done / current state / open threads" tracker. Newest state at top.*
 
-## Current state (2026-10-13)
+## Current state (2026-10-16)
 
-**Whole-text replication in progress.** The MiniLM embedding model reads only the first 128 tokens
+**Whole-text replication done (Steps 0–6); paper update next.** The MiniLM embedding model reads only the first 128 tokens
 (~100 words) of each text, so every delivered embedding result (families 5–13) describes how answers
-*open*. Families 1–4 are unaffected. All embedding families are being re-run on whole text (cleaned
+*open*. Families 1–4 are unaffected. All embedding families were re-run on whole text (cleaned
 of URLs/machine strings, split into sentence chunks, chunk vectors averaged), with an exact
-opening-window control (first 120 model tokens). Delivered results stay as the baseline in
-`artifacts/<corpus>/{data,plots}`; new ones go to `artifacts/<corpus>/whole/` and `artifacts/whole/`.
+opening-window control (first 120 model tokens). **Artifacts layout (2026-10-16):** `artifacts/`
+holds whole-text results only — `summary/`, `se-hcl/<site>/`, `se-lcl/<site>/`, `external/<source>/`,
+`robustness/{bge,length-k}/`, `meta/` (map: `artifacts/README.md`; registry: `src/paths.py`). The
+delivered 128-token results were removed from the tree; they are in git tag `delivered-v1`
+(`git checkout delivered-v1 -- artifacts`), and what Mark received is in `deliverables/`.
 
 | Step | What | State |
 |---|---|---|
@@ -20,7 +23,8 @@ opening-window control (first 120 model tokens). Delivered results stay as the b
 | 5 | Score segments (7), GPT anchor (12, cached GPT answers only) | **done** (outputs not yet committed): both score tiers rise; anchor Economics positive, Seasoned Advice borderline, 3 null |
 | 5b | Local DuckDB store: runs, sampled answers, embeddings keyed by model/variant/text hash, metrics (one gitignored file; imports existing caches) | **embeddings done (2026-10-15)**: all 116 `.npz` caches → `data/embeddings/embeddings.duckdb` (float32 BLOB, 6.0 GB vs 11.6 GB; Economics family 5 reproduces to ≤5e-8). Same `embed_cache` API, no script changes. Runs/samples/metrics tables not built yet |
 | 5c | Data sharing with the Mac: private S3 `s3://biddy-homogenization` (us-west-2) via `src/sync_data.py` (`push` / `pull` / `status`, targets `raw` and `embeddings`; keys in `.secrets/`) | **done**: 26 June-2026 dumps (5.7 GB) + embeddings DB uploaded and verified; local copies of dumps removed; unused March/undated dumps and `Posts.xml` extracts deleted. Run `pull raw` before re-parsing a site |
-| 6 | Second encoder (BGE-small) on core 5 + externals | **done (2026-10-16)**: `semantic_bert.py --encoder bge-small` (same 120-token chunking; only the encoder changes) → `artifacts/<corpus>/whole_bge/`; comparison `artifacts/whole_bge/6_encoder_compare.csv` (`src/encoder_compare.py`). Verdict agrees 6/9 whole text, 7/9 opening window. Holds with both encoders: CV, Economics, HN, arXiv Math, arXiv CS, PubMed (all p<0.001, both metrics); Philosophy opening window. **Does not hold with BGE**: Travel (MiniLM up*, BGE flat/down), Philosophy whole text (up, p=0.17), Seasoned Advice (MiniLM flat, BGE down*). BGE similarity *levels* are much higher (~0.67 vs ~0.16), so compare slope changes, not levels |
+| 6 | Second encoder (BGE-small) on core 5 + externals | **done (2026-10-16)**: `semantic_bert.py --encoder bge-small` (same 120-token chunking; only the encoder changes) → `artifacts/robustness/bge/<source>/`; comparison `artifacts/summary/6_encoder_compare.csv` (`src/encoder_compare.py`). Verdict agrees 6/9 whole text, 7/9 opening window. Holds with both encoders: CV, Economics, HN, arXiv Math, arXiv CS, PubMed (all p<0.001, both metrics); Philosophy opening window. **Does not hold with BGE**: Travel (MiniLM up*, BGE flat/down), Philosophy whole text (up, p=0.17), Seasoned Advice (MiniLM flat, BGE down*). BGE similarity *levels* are much higher (~0.67 vs ~0.16), so compare slope changes, not levels |
+| 6b | Family 9 formal test (high vs low load, 26 SE sites; `src/cog_load_test.py` → `artifacts/summary/9_cog_load_{test,sites}.csv`) + tracker check | **done (2026-10-16)**. Whole text: high-load turns up more — significant 11/14 vs 4/12 (Fisher p=0.026, same after BH), median slope change in pre-SD units 0.20 vs 0.09 (Mann–Whitney p=0.010, permutation p=0.010); holds controlling for site answer length (p=0.026). Opening window: more high-load sites significant (13/14 vs 6/12, p=0.021) but effect sizes similar (p=0.06–0.15). Delivered results: no clear split (p=0.06–0.25), as reported. Tracker already uses whole-page chunking; recompute from the page cache is identical. **Plots (2026-10-16):** `artifacts/summary/8_significance_all.png` now covers all 30 sources (`significance.py --all`; SE 15/26, external 4/4); `9_cog_load_test.png` (per-site dot/box plot with the tests); per-source `8_its.png` (main and BGE) relabelled "whole text" / "opening window" |
 | 7–8 | Claims ledger + conclusions review; paper v0.2; reply to Mark (next meeting Thu 2026-10-22) | |
 
 ### To discuss (framing; decide before the paper rewrite)
@@ -83,10 +87,10 @@ Cryptography, Law, History, Computer Science, Biology, Astronomy, Chemistry, Ele
 Engineering, Physics, Software Engineering, English L&U; **low-cog** — Bicycles, Gardening, RPG,
 Board Games, Personal Finance & Money, Photography, The Workplace, Home Improvement, Sci-Fi &
 Fantasy, Arqade (Gaming). Volume+timeframe gated (all end 2026Q2, recent median ≥40/qtr); manifest
-in `artifacts/sites_manifest.csv`. **26 corpora total: 14 high-cog + 12 low-cog.**
+in `artifacts/meta/sites_manifest.csv`. **26 corpora total: 14 high-cog + 12 low-cog.**
 
 ChatGPT marker: 2022Q4. All core parquets carry `parent_id` (enables family 11). `data/` is
-gitignored; committed outputs live in `artifacts/<corpus>/{data,plots}/` (+ consolidated `artifacts/*_all.csv`).
+gitignored; committed outputs live in `artifacts/` (layout in the Current state block above).
 
 **+4 external, non-SE corpora** (HN, PubMed, arXiv-CS on 2026-09-13; arXiv mathematics on
 2026-10-13; via `external_sources.py`; families 5, 6, 8, 13):
