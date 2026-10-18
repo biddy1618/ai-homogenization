@@ -124,7 +124,7 @@ def run_family5(df: pd.DataFrame, model, key: str, slug: str, corpus: str,
     out = source_dir(slug, base / "artifacts")
     if mode != "whole":  # 128-token results are only kept in git tag delivered-v1
         out = out / "legacy"
-    csv = out / "5_semantic_bert.csv"
+    csv = out / "data" / "5_semantic_bert.csv"
     plot = out / "5_semantic_bert.png"
     if csv.exists():
         print(f"  [family5] cached {csv.relative_to(base)}")

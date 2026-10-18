@@ -63,8 +63,13 @@ def questions_parquet(folder: str, processed: Path = Path("data/processed")) -> 
 
 
 def source_dir(folder: str, root: Path = ARTIFACTS) -> Path:
-    """Main (whole-text, MiniLM) results for one source."""
+    """Main (whole-text, MiniLM) results for one source; CSVs live in its ``data/`` subfolder."""
     return root / GROUP_DIR[_GROUP[folder]] / folder
+
+
+def data_dir(d: Path) -> Path:
+    """CSV subfolder of any results folder (plots stay in the folder itself)."""
+    return d / "data"
 
 
 def bge_dir(folder: str, root: Path = ARTIFACTS) -> Path:

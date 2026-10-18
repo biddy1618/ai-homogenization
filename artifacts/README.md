@@ -25,7 +25,9 @@ in the tree. Restore them with `git checkout delivered-v1 -- artifacts`; what Ma
 | [`robustness/topic-k/<source>/`](robustness/topic-k/) | Family 13 with 25 and 100 topics (`_k25`, `_k100`) |
 | [`meta/`](meta/) | `sites_manifest.csv` (site volumes), `anchor_samples.md` (GPT answers used by family 12) |
 
-Each source folder holds a CSV and a PNG per result, with matching names.
+Each results folder (per source, `summary/`, `robustness/...`) holds its plots (PNG) directly
+and its tables in a `data/` subfolder, with matching names (`5_semantic_bert.png` ↔
+`data/5_semantic_bert.csv`).
 
 ## Summary files
 

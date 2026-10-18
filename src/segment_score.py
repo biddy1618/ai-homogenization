@@ -128,7 +128,7 @@ def plot_segments(seg: pd.DataFrame, output: Path, corpus: str, emb: Embedding) 
 def main() -> None:
     ap = argparse.ArgumentParser(description="Segment homogenization by answer score (P2a)")
     ap.add_argument("-i", "--input", type=Path, default=Path("data/processed/answers.parquet"))
-    ap.add_argument("--data-dir", type=Path, default=source_dir("cross-validated"))
+    ap.add_argument("--data-dir", type=Path, default=source_dir("cross-validated") / "data")
     ap.add_argument("--plots-dir", type=Path, default=source_dir("cross-validated"))
     ap.add_argument("--cache-dir", type=Path, default=Path("data/models"))
     ap.add_argument("--sample", type=int, default=800)

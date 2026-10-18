@@ -10,6 +10,8 @@ tqdm>=4.66
 scipy>=1.11
 statsmodels>=0.14
 duckdb>=1.1
+# Family 12 (GPT anchor) generation; needs network access to the OpenAI API
+openai>=1.0
 # Optional: true contextual embeddings (Sentence-BERT/MiniLM via ONNX, no PyTorch)
 fastembed>=0.8
 # Optional: dynamic semantic topic modeling (install bertopic with --no-deps to avoid torch)

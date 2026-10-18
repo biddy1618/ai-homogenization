@@ -4,6 +4,10 @@
     python src/sync_data.py push raw           # upload data/raw/*.7z + SHA-256 manifest
     python src/sync_data.py pull raw           # download and verify against the manifest
     python src/sync_data.py push embeddings    # data/embeddings/embeddings.duckdb (close writers first)
+    python src/sync_data.py push processed     # data/processed/*.parquet (answers + questions)
+    python src/sync_data.py push anchor        # data/anchor/*.jsonl (cached GPT answers, family 12)
+
+``push`` uploads new and changed files only; files removed locally are kept in S3.
 
 Credentials come from .secrets/aws_access_key.txt and .secrets/aws_secret_key.txt (gitignored),
 or from the normal AWS environment/profile if those files are absent.
@@ -23,7 +27,9 @@ ROOT = Path(__file__).resolve().parents[1]
 BUCKET = "s3://biddy-homogenization"
 REGION = "us-west-2"
 TARGETS = {"raw": (ROOT / "data" / "raw", "*.7z"),
-           "embeddings": (ROOT / "data" / "embeddings", "embeddings.duckdb")}
+           "embeddings": (ROOT / "data" / "embeddings", "embeddings.duckdb"),
+           "processed": (ROOT / "data" / "processed", "*.parquet"),
+           "anchor": (ROOT / "data" / "anchor", "*.jsonl")}
 MANIFEST = "MANIFEST.json"
 
 

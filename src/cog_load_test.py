@@ -22,7 +22,7 @@ import pandas as pd
 from scipy.stats import fisher_exact, mannwhitneyu
 from statsmodels.stats.multitest import multipletests
 
-from paths import ALL_SOURCES, ARTIFACTS, source_dir, summary_dir
+from paths import ALL_SOURCES, ARTIFACTS, data_dir, source_dir, summary_dir
 from significance import COG_COLOR
 
 BREAK = "2022Q4"
@@ -35,7 +35,7 @@ def site_table(artifacts: Path, sig_csv: Path) -> pd.DataFrame:
     sig = pd.read_csv(sig_csv)
     rows = []
     for folder, label, cog in ALL_SOURCES:
-        f = source_dir(folder, artifacts) / "5_semantic_bert.csv"
+        f = data_dir(source_dir(folder, artifacts)) / "5_semantic_bert.csv"
         if not f.exists() or label not in set(sig["corpus"]):
             continue
         s = pd.read_csv(f)
@@ -140,10 +140,11 @@ def main() -> None:
     args = ap.parse_args()
 
     base = summary_dir(args.artifacts)
-    sites = site_table(args.artifacts, base / "8_significance_all.csv")
+    sites = site_table(args.artifacts, data_dir(base) / "8_significance_all.csv")
     tests = pd.DataFrame(group_tests(sites, args.n_perm, np.random.default_rng(42)))
-    sites.to_csv(base / "9_cog_load_sites.csv", index=False)
-    tests.to_csv(base / "9_cog_load_test.csv", index=False)
+    data_dir(base).mkdir(parents=True, exist_ok=True)
+    sites.to_csv(data_dir(base) / "9_cog_load_sites.csv", index=False)
+    tests.to_csv(data_dir(base) / "9_cog_load_test.csv", index=False)
     plot_test(sites, tests, base / "9_cog_load_test.png")
 
     for _, r in tests.iterrows():

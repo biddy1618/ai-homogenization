@@ -35,16 +35,16 @@ def main() -> None:
     ap.add_argument("--artifacts", type=Path, default=ARTIFACTS)
     ap.add_argument("--out", type=Path, default=None)
     args = ap.parse_args()
-    args.out = args.out or summary_dir(args.artifacts) / "6_encoder_compare.csv"
+    args.out = args.out or summary_dir(args.artifacts) / "data" / "6_encoder_compare.csv"
 
     rows = []
     for folder in FOLDERS:
         label = LABEL[folder]
         paths = {"minilm": source_dir(folder, args.artifacts), "bge": bge_dir(folder, args.artifacts)}
-        if not all((p / "8_significance.csv").exists() for p in paths.values()):
+        if not all((p / "data" / "8_significance.csv").exists() for p in paths.values()):
             continue
-        sig = {e: pd.read_csv(p / "8_significance.csv").set_index("metric") for e, p in paths.items()}
-        ser = {e: pd.read_csv(p / "5_semantic_bert.csv").set_index("quarter") for e, p in paths.items()}
+        sig = {e: pd.read_csv(p / "data" / "8_significance.csv").set_index("metric") for e, p in paths.items()}
+        ser = {e: pd.read_csv(p / "data" / "5_semantic_bert.csv").set_index("quarter") for e, p in paths.items()}
         for metric in METRICS:
             row = {"corpus": label, "metric": metric}
             for e in ("minilm", "bge"):

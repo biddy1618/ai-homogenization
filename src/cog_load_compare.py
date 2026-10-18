@@ -17,7 +17,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
-from paths import ARTIFACTS, CORPORA, source_dir, summary_dir
+from paths import ARTIFACTS, CORPORA, data_dir, source_dir, summary_dir
 
 CHATGPT_QUARTER = "2022Q4"
 METRICS = ("sem_pairwise_cosine", "lc_sem_pairwise_cosine")
@@ -41,7 +41,7 @@ def load_series(artifacts: Path = ARTIFACTS):
     series, table = {}, []
     t_break = _q_ord(CHATGPT_QUARTER)
     for folder, label, cog in CORPORA:
-        csv = source_dir(folder, artifacts) / "5_semantic_bert.csv"
+        csv = data_dir(source_dir(folder, artifacts)) / "5_semantic_bert.csv"
         if not csv.exists():
             print(f"  skip {label}: {csv} missing")
             continue
@@ -143,7 +143,7 @@ def main() -> None:
     ap.add_argument("--out-csv", type=Path, default=None)
     ap.add_argument("--plot", type=Path, default=None)
     args = ap.parse_args()
-    args.out_csv = args.out_csv or summary_dir(args.artifacts) / "9_cog_load_comparison.csv"
+    args.out_csv = args.out_csv or data_dir(summary_dir(args.artifacts)) / "9_cog_load_comparison.csv"
     args.plot = args.plot or summary_dir(args.artifacts) / "9_cog_load_comparison.png"
 
     series, table, t_break = load_series(args.artifacts)

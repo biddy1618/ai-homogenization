@@ -162,7 +162,7 @@ def summarize(break_quarter: str = CHATGPT_QUARTER, hac_lags: int = 4) -> pd.Dat
 
     rows = []
     for folder, label, cog in CORPORA:
-        f = source_dir(folder) / "11_same_question.csv"
+        f = source_dir(folder) / "data" / "11_same_question.csv"
         if not f.exists():
             continue
         d = pd.read_csv(f)
@@ -171,14 +171,14 @@ def summarize(break_quarter: str = CHATGPT_QUARTER, hac_lags: int = 4) -> pd.Dat
             row, _ = analyze_metric(d, metric, _q_ord(break_quarter), hac_lags)
             rows.append({"corpus": label, "cog_load": cog, **row})
     out = pd.DataFrame(rows)
-    summary_dir().mkdir(parents=True, exist_ok=True)
-    out.to_csv(summary_dir() / "11_same_question_all.csv", index=False)
+    (summary_dir() / "data").mkdir(parents=True, exist_ok=True)
+    out.to_csv(summary_dir() / "data" / "11_same_question_all.csv", index=False)
     w = out[out["metric"] == "within_question_cosine"]
     for cog in ("high", "low"):
         s = w[w["cog_load"] == cog]
         up = int(((s["slope_change"] > 0) & (s["slope_change_p"] < 0.05)).sum())
         print(f"{cog}-load: within-question rises significantly in {up}/{len(s)}")
-    print(f"Wrote -> {summary_dir() / '11_same_question_all.csv'}")
+    print(f"Wrote -> {summary_dir() / 'data' / '11_same_question_all.csv'}")
     return out
 
 
@@ -228,7 +228,7 @@ def main() -> None:
         save_cache(raw_path, raw_cache)
         print(f"Embedding cache -> {raw_path} ({len(raw_cache):,} vectors)")
 
-    csv_path = args.out_dir / "11_same_question.csv"
+    csv_path = args.out_dir / "data" / "11_same_question.csv"
     csv_path.parent.mkdir(parents=True, exist_ok=True)
     result.to_csv(csv_path, index=False)
     print(f"Wrote {len(result)} quarters -> {csv_path}")

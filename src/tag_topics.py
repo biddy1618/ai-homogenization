@@ -189,9 +189,9 @@ def run_one(inp: Path, qpath: Path, corpus: str, out_dir: Path, model, emb_dir: 
     save_cache(emb.raw_path, raw_cache)
     save_cache(emb.lc_path, lc_cache)
     sig = significance(res, corpus)
-    out_dir.mkdir(parents=True, exist_ok=True)
-    res.to_csv(out_dir / "14_tag_topics.csv", index=False)
-    sig.to_csv(out_dir / "14_tag_significance.csv", index=False)
+    (out_dir / "data").mkdir(parents=True, exist_ok=True)
+    res.to_csv(out_dir / "data" / "14_tag_topics.csv", index=False)
+    sig.to_csv(out_dir / "data" / "14_tag_significance.csv", index=False)
     plot(res, sig, out_dir / "14_tag_topics.png", corpus)
     print(f"{corpus}: {len(res)} quarters -> {out_dir}")
     return sig
@@ -215,9 +215,9 @@ def main() -> None:
     if args.replot:
         for folder, label, _ in CORPORA:
             d = source_dir(folder)
-            if (d / "14_tag_topics.csv").exists():
-                plot(pd.read_csv(d / "14_tag_topics.csv"),
-                     pd.read_csv(d / "14_tag_significance.csv"), d / "14_tag_topics.png", label)
+            if (d / "data" / "14_tag_topics.csv").exists():
+                plot(pd.read_csv(d / "data" / "14_tag_topics.csv"),
+                     pd.read_csv(d / "data" / "14_tag_significance.csv"), d / "14_tag_topics.png", label)
         print("replotted")
         return
 
@@ -238,9 +238,9 @@ def main() -> None:
                       model, args.emb_cache_dir)
         sigs.append(sig.assign(cog_load=cog))
     out = pd.concat(sigs, ignore_index=True)
-    summary_dir().mkdir(parents=True, exist_ok=True)
-    out.to_csv(summary_dir() / "14_tag_topics_all.csv", index=False)
-    print(f"Wrote -> {summary_dir() / '14_tag_topics_all.csv'}")
+    (summary_dir() / "data").mkdir(parents=True, exist_ok=True)
+    out.to_csv(summary_dir() / "data" / "14_tag_topics_all.csv", index=False)
+    print(f"Wrote -> {summary_dir() / 'data' / '14_tag_topics_all.csv'}")
 
 
 if __name__ == "__main__":

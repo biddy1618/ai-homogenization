@@ -220,7 +220,7 @@ def run_all(artifacts: Path, out_csv: Path, break_quarter: str, hac_lags: int,
     t_break = _q_ord(break_quarter)
     rows, per = [], {}
     for folder, label, cog in ALL_SOURCES:
-        csv = source_dir(folder, artifacts) / "5_semantic_bert.csv"
+        csv = source_dir(folder, artifacts) / "data" / "5_semantic_bert.csv"
         if not csv.exists():
             print(f"  skip {label}: missing {csv}")
             continue
@@ -306,7 +306,7 @@ def main() -> None:
     args = ap.parse_args()
 
     if args.all:
-        out_csv = args.out_csv or summary_dir(args.artifacts) / "8_significance_all.csv"
+        out_csv = args.out_csv or summary_dir(args.artifacts) / "data" / "8_significance_all.csv"
         summary_png = args.plot or summary_dir(args.artifacts) / "8_significance_all.png"
         run_all(args.artifacts, out_csv, args.break_quarter, args.hac_lags,
                 summary_png=summary_png, per_corpus_plots=not args.no_its_plots)

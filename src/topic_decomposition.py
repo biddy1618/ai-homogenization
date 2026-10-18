@@ -323,8 +323,8 @@ def main() -> None:
     args = ap.parse_args()
 
     if args.replot:
-        res = pd.read_csv(args.out_dir / f"13_topic_decomposition{args.suffix}.csv")
-        sig = pd.read_csv(args.out_dir / f"13_decomposition_significance{args.suffix}.csv")
+        res = pd.read_csv(args.out_dir / "data" / f"13_topic_decomposition{args.suffix}.csv")
+        sig = pd.read_csv(args.out_dir / "data" / f"13_decomposition_significance{args.suffix}.csv")
         plot_decomposition(res, args.out_dir / f"13_topic_decomposition{args.suffix}.png",
                            args.corpus, sig)
         return
@@ -347,7 +347,7 @@ def main() -> None:
         save_cache(raw_path, raw_cache)
         print(f"Embedding cache -> {raw_path} ({len(raw_cache):,} vectors)")
 
-    data_dir = args.out_dir
+    data_dir = args.out_dir / "data"
     plot_dir = args.out_dir
     data_dir.mkdir(parents=True, exist_ok=True)
     csv_path = data_dir / f"13_topic_decomposition{args.suffix}.csv"
