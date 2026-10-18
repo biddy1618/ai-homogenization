@@ -228,88 +228,79 @@ def run_significance(df: pd.DataFrame, corpus: str, break_quarter: str,
     return out[[c for c in cols if c in out.columns]]
 
 
-def plot_decomposition(df: pd.DataFrame, output: Path, corpus: str) -> None:
+def plot_decomposition(df: pd.DataFrame, output: Path, corpus: str,
+                       sig: pd.DataFrame | None = None) -> None:
+    """Three panels: same-topic vs overall similarity, topic diversity, topic-mix drift."""
     quarters = df["quarter"].tolist()
     x = list(range(len(quarters)))
     mx = quarters.index(CHATGPT_QUARTER) if CHATGPT_QUARTER in quarters else None
+    s = sig.set_index("metric") if sig is not None and len(sig) else None
 
-    fig, axes = plt.subplots(4, 1, figsize=(13, 15), sharex=True)
+    def lab(name, m):
+        if s is None or m not in s.index:
+            return name
+        r = s.loc[m]
+        return f"{name}  (slope change {r['slope_change']:+.4f}/qtr, p={r['slope_change_p']:.2g})"
 
-    # Panel A — the decomposition
+    fig, axes = plt.subplots(3, 1, figsize=(13, 12), sharex=True)
+
     ax = axes[0]
-    ax.plot(x, df["overall_cosine"], marker="o", ms=3, color="black", label="overall (all pairs)")
-    ax.plot(x, df["between_cosine"], marker="o", ms=3, color="tab:red",
-            label="between different topics")
+    ax.plot(x, df["overall_cosine"], marker="o", ms=3, color="black",
+            label=lab("all answer pairs", "overall_cosine"))
     ax.plot(x, df["within_cosine"], marker="o", ms=3, color="tab:blue",
-            label="within the same topic")
-    ax.set_ylabel("mean pairwise cosine\n(higher = more alike)", fontsize=9)
-    ax.set_title("Where does the rise live? Overall similarity splits into within-topic vs "
-                 "between-topic", fontsize=10, color="dimgray", loc="left", pad=6)
-    ax.grid(True, alpha=0.3)
+            label=lab("pairs in the same topic", "within_cosine"))
+    ax.set_ylabel("mean pairwise cosine similarity\n(higher = more alike)", fontsize=9)
+    ax.set_title("A. Do answers on the same topic become more alike? (same-topic pairs are more "
+                 "similar by construction; compare trends, not levels)",
+                 fontsize=10, color="dimgray", loc="left", pad=6)
     ax.legend(fontsize=8, loc="best")
 
-    # Panel B — topic diversity
     ax = axes[1]
-    ax.plot(x, df["eff_topics"], marker="o", ms=2, color="tab:green", alpha=0.3,
-            label="all sampled answers (depends on sample size)")
-    if "eff_topics_r" in df:
-        ax.plot(x, df["eff_topics_r"], marker="o", ms=3, color="tab:green",
-                label=f"fixed {RARE_SIZE}-answer subsamples (comparable across quarters)")
-    ax.set_ylabel("effective # of topics\n(lower = less diverse)", fontsize=9)
-    ax.set_title("Topic diversity over time (a drop after ChatGPT = topics homogenising)",
+    ax.plot(x, df["eff_topics_r"], marker="o", ms=3, color="tab:green",
+            label=lab(f"effective number of topics ({RARE_SIZE}-answer samples)", "eff_topics_r"))
+    ax.set_ylabel("effective # of topics\n(lower = fewer subjects)", fontsize=9)
+    ax.set_title("B. How many subjects are in play? exp(entropy) of the topic mix: 50 if all "
+                 "topics are used equally, 1 if everything is one topic",
                  fontsize=10, color="dimgray", loc="left", pad=6)
-    ax.grid(True, alpha=0.3)
     ax.legend(fontsize=8, loc="best")
 
-    # Panel C — composition drift
     ax = axes[2]
-    ax.plot(x, df["comp_jsd"], marker="o", ms=2, color="tab:purple", alpha=0.3,
-            label="all sampled answers")
-    if "comp_jsd_r" in df:
-        ax.plot(x, df["comp_jsd_r"], marker="o", ms=3, color="tab:purple",
-                label=f"fixed {RARE_SIZE}-answer subsamples")
-    ax.set_ylabel("JSD vs pre-ChatGPT mix\n(higher = mix has drifted)", fontsize=9)
-    ax.set_title("Topic-composition drift: how far each quarter's topic mix is from the "
-                 "pre-ChatGPT baseline", fontsize=10, color="dimgray", loc="left", pad=6)
-    ax.grid(True, alpha=0.3)
-    ax.legend(fontsize=8, loc="best")
-
-    # Panel D — genuine convergence vs global drift (anisotropy control)
-    ax = axes[3]
-    ax.plot(x, df["between_cosine"], marker="o", ms=3, color="tab:red",
-            label="between-topic (raw)")
-    ax.plot(x, df["mc_between_cosine"], marker="o", ms=3, color="tab:orange", linestyle="--",
-            label="between-topic (mean-centred = anisotropy removed)")
-    ax.set_ylabel("between-topic cosine", fontsize=9)
-    ax.set_title("Are topics genuinely converging, or is it a growing global direction? "
-                 "If the dashed line stays flat, the raw rise was an artifact.",
+    ax.plot(x, df["comp_jsd_r"], marker="o", ms=3, color="tab:purple",
+            label=lab("JSD from the pre-ChatGPT topic mix", "comp_jsd_r"))
+    ax.set_ylabel("Jensen-Shannon divergence\n(0 = same mix as before)", fontsize=9)
+    ax.set_title("C. Which subjects? How far this quarter's topic mix is from the usual "
+                 "pre-ChatGPT mix (higher = people discuss different things)",
                  fontsize=10, color="dimgray", loc="left", pad=6)
-    ax.grid(True, alpha=0.3)
     ax.legend(fontsize=8, loc="best")
 
     for ax in axes:
+        ax.grid(True, alpha=0.3)
         if mx is not None:
             ax.axvline(mx, color="black", linestyle="--", alpha=0.7)
     if mx is not None:
         axes[0].text(mx, axes[0].get_ylim()[1], " ChatGPT (2022Q4)", va="top", fontsize=8)
-
-    axes[-1].set_xticks(x)
-    axes[-1].set_xticklabels(quarters, rotation=90, fontsize=6)
+    axes[-1].set_xticks(x[::4])
+    axes[-1].set_xticklabels(quarters[::4], rotation=90, fontsize=7)
     axes[-1].set_xlabel("Quarter")
 
-    n_med = int(df["n_sample"].median())
     n_top = int(df["n_topics"].max())
-    foot = (f"Up to {int(df['n_sample'].max())} answers/quarter (median {n_med}); every answer "
-            f"assigned one of K={n_top} global K-means topics (stable across time, no dropped "
-            "outliers). Overall = within-topic + between-topic pairs combined.")
+    foot = (f"Up to {int(df['n_sample'].max())} sampled answers/quarter (median "
+            f"{int(df['n_sample'].median())}), each assigned to one of K={n_top} K-means topics "
+            "found once over all quarters (topics mean the same thing across time; no answer "
+            f"dropped). B and C use random {RARE_SIZE}-answer subsamples (mean of {RARE_DRAWS}) "
+            "so quarters with fewer answers are comparable. Topic mix = share of answers in each "
+            "topic. Pre-ChatGPT mix = shares over all sampled answers before 2022Q4, pooled. JSD "
+            "compares two mixes: average of how each differs from their midpoint (KL divergence, "
+            "base 2); 0 = identical, 1 = no topic in common. Quarters before 2022Q4 are above 0 "
+            "too (sampling noise, slow drift); read the change after the break.")
     fig.text(0.5, 0.005, foot, ha="center", va="bottom", fontsize=8, color="dimgray", wrap=True)
-    fig.suptitle(f"{corpus} \u2014 Is AI homogenising topics, or writing style within a topic? "
-                 "(decomposition #13)", fontsize=13, fontweight="bold", y=0.997)
-    fig.tight_layout(rect=(0, 0.02, 1, 0.985))
+    fig.suptitle(f"{corpus} \u2014 Are the subjects narrowing, or do answers on the same subject "
+                 "converge? (family 13)", fontsize=13, fontweight="bold", y=0.995)
+    fig.tight_layout(rect=(0, 0.07, 1, 0.98))
     output.parent.mkdir(parents=True, exist_ok=True)
     fig.savefig(output, dpi=150, bbox_inches="tight")
+    plt.close(fig)
     print(f"Plot -> {output}")
-
 
 def main() -> None:
     ap = argparse.ArgumentParser(description="Within-topic vs between-topic decomposition (#13)")
@@ -327,7 +318,16 @@ def main() -> None:
     ap.add_argument("--embed", choices=EMBED_MODES, default="legacy")
     ap.add_argument("--suffix", default="",
                     help="appended to output file names, e.g. '_k25' for the K-sensitivity runs")
+    ap.add_argument("--replot", action="store_true",
+                    help="only redraw the plot from the existing CSVs in --out-dir")
     args = ap.parse_args()
+
+    if args.replot:
+        res = pd.read_csv(args.out_dir / f"13_topic_decomposition{args.suffix}.csv")
+        sig = pd.read_csv(args.out_dir / f"13_decomposition_significance{args.suffix}.csv")
+        plot_decomposition(res, args.out_dir / f"13_topic_decomposition{args.suffix}.png",
+                           args.corpus, sig)
+        return
 
     model = load_model(args.cache_dir)
     emb = embedding_setup(model, args.embed, args.emb_cache_dir, args.input.stem)
@@ -361,7 +361,7 @@ def main() -> None:
     with pd.option_context("display.width", 160, "display.max_columns", 20):
         print(sig.to_string(index=False))
 
-    plot_decomposition(result, plot_dir / f"13_topic_decomposition{args.suffix}.png", args.corpus)
+    plot_decomposition(result, plot_dir / f"13_topic_decomposition{args.suffix}.png", args.corpus, sig)
 
 
 if __name__ == "__main__":

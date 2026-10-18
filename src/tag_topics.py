@@ -142,28 +142,25 @@ def plot(res: pd.DataFrame, sig: pd.DataFrame, output: Path, corpus: str) -> Non
 
     fig, axes = plt.subplots(3, 1, figsize=(13, 12), sharex=True)
     ax = axes[0]
-    for m, name, c, ls in (("within_tag_cosine", "same-tag pairs (whole text)", "tab:blue", "-"),
-                           ("within_tag_cosine_lc", "same-tag pairs (opening window)", "tab:blue", ":"),
-                           ("between_tag_cosine", "pairs sharing no tag", "tab:red", "-"),
-                           ("overall_cosine", "all pairs", "black", "-")):
-        ax.plot(x, res[m], marker="o", ms=2.5, color=c, linestyle=ls, label=lab(name, m))
-    ax.set_ylabel("mean pairwise cosine", fontsize=9)
-    ax.set_title("Do answers on the same subject (shared question tag) become more alike?",
+    for m, name, c in (("within_tag_cosine", "pairs sharing a tag", "tab:blue"),
+                       ("overall_cosine", "all answer pairs", "black")):
+        ax.plot(x, res[m], marker="o", ms=2.5, color=c, label=lab(name, m))
+    ax.set_ylabel("mean pairwise cosine similarity", fontsize=9)
+    ax.set_title("A. Do answers on the same subject (shared question tag) become more alike?",
                  fontsize=10, color="dimgray", loc="left")
     ax.legend(fontsize=8, loc="best")
     ax = axes[1]
     ax.plot(x, res["eff_tags_r"], marker="o", ms=3, color="tab:green",
-            label=lab(f"effective number of tags ({RARE_SIZE}-answer subsamples)", "eff_tags_r"))
-    ax.set_ylabel("effective # of tags\n(lower = narrower)", fontsize=9)
-    ax.set_title("Subject diversity", fontsize=10, color="dimgray", loc="left")
+            label=lab(f"effective number of tags ({RARE_SIZE}-answer samples)", "eff_tags_r"))
+    ax.set_ylabel("effective # of tags\n(lower = fewer subjects)", fontsize=9)
+    ax.set_title("B. How many subjects are in play?", fontsize=10, color="dimgray", loc="left")
     ax.legend(fontsize=8, loc="best")
     ax = axes[2]
     ax.plot(x, res["tag_jsd_r"], marker="o", ms=3, color="tab:purple",
-            label=lab("tag-mix drift from pre-ChatGPT (JSD)", "tag_jsd_r"))
-    ax.plot(x, res["p_shared"] * res["tag_jsd_r"].max() / max(res["p_shared"].max(), 1e-9),
-            color="0.6", lw=1, label=lab("share of pairs sharing a tag (rescaled)", "p_shared"))
-    ax.set_ylabel("JSD vs pre-ChatGPT", fontsize=9)
-    ax.set_title("Subject-mix shift", fontsize=10, color="dimgray", loc="left")
+            label=lab("JSD from the pre-ChatGPT tag mix", "tag_jsd_r"))
+    ax.set_ylabel("Jensen-Shannon divergence\n(0 = same mix as before)", fontsize=9)
+    ax.set_title("C. Which subjects? How far this quarter's tag mix is from the usual "
+                 "pre-ChatGPT mix", fontsize=10, color="dimgray", loc="left")
     ax.legend(fontsize=8, loc="best")
     for ax in axes:
         ax.grid(True, alpha=0.3)
@@ -171,8 +168,13 @@ def plot(res: pd.DataFrame, sig: pd.DataFrame, output: Path, corpus: str) -> Non
             ax.axvline(mx, color="black", linestyle="--", alpha=0.7)
     axes[-1].set_xticks(x[::4])
     axes[-1].set_xticklabels(q[::4], rotation=90, fontsize=7)
-    fig.suptitle(f"{corpus} \u2014 topic control with Stack Exchange tags (#14)", fontsize=13)
-    fig.tight_layout(rect=(0, 0, 1, 0.97))
+    foot = ("Each answer inherits its question's Stack Exchange tags (chosen by the asker). Same "
+            "answer sample as families 5 and 13. B and C: random 100-answer subsamples (mean of 50); "
+            "an answer with k tags counts 1/k towards each. Pre-ChatGPT mix = tag shares over all "
+            "sampled answers before 2022Q4, pooled. JSD 0 = identical mix, 1 = no tag in common.")
+    fig.text(0.5, 0.005, foot, ha="center", va="bottom", fontsize=8, color="dimgray", wrap=True)
+    fig.suptitle(f"{corpus} \u2014 topic control with Stack Exchange tags (family 14)", fontsize=13)
+    fig.tight_layout(rect=(0, 0.05, 1, 0.97))
     output.parent.mkdir(parents=True, exist_ok=True)
     fig.savefig(output, dpi=150)
     plt.close(fig)
@@ -206,7 +208,18 @@ def main() -> None:
     ap.add_argument("--processed", type=Path, default=Path("data/processed"))
     ap.add_argument("--cache-dir", type=Path, default=Path("data/models"))
     ap.add_argument("--emb-cache-dir", type=Path, default=Path("data/embeddings"))
+    ap.add_argument("--replot", action="store_true",
+                    help="--all: only redraw plots from existing CSVs")
     args = ap.parse_args()
+
+    if args.replot:
+        for folder, label, _ in CORPORA:
+            d = source_dir(folder)
+            if (d / "14_tag_topics.csv").exists():
+                plot(pd.read_csv(d / "14_tag_topics.csv"),
+                     pd.read_csv(d / "14_tag_significance.csv"), d / "14_tag_topics.png", label)
+        print("replotted")
+        return
 
     model = load_model(args.cache_dir)
     if not args.all:

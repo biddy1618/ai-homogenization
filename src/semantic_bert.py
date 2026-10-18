@@ -212,7 +212,10 @@ def compute_quarterly(df: pd.DataFrame, model, sample: int = 800, lc_window: int
 
 
 def plot_metrics(df: pd.DataFrame, output: Path, corpus: str = "Cross Validated",
-                 emb: Embedding | None = None, encoder: str = "minilm") -> None:
+                 emb: Embedding | None = None, encoder: str = "minilm",
+                 show_lc: bool = False) -> None:
+    """Family-5 plot. The opening-window / length-controlled line (``lc_*`` columns) is shown
+    only with ``show_lc``; it agrees with whole text and is reported once, in family 8."""
     quarters = df["quarter"].tolist()
     x = list(range(len(quarters)))
     marker_x = quarters.index(CHATGPT_QUARTER) if CHATGPT_QUARTER in quarters else None
@@ -230,10 +233,11 @@ def plot_metrics(df: pd.DataFrame, output: Path, corpus: str = "Cross Validated"
     fig, axes = plt.subplots(3, 1, figsize=(13, 11), sharex=True)
     for ax, (raw, lc, label, c_raw, c_lc) in zip(axes, panels):
         ax.plot(x, df[raw], marker="o", ms=3, color=c_raw, label=raw_label)
-        ax.plot(x, df[lc], marker="o", ms=3, color=c_lc, label=lc_label)
+        if show_lc:
+            ax.plot(x, df[lc], marker="o", ms=3, color=c_lc, label=lc_label)
         if f"{raw}_lo" in df.columns:
             ax.fill_between(x, df[f"{raw}_lo"], df[f"{raw}_hi"], color=c_raw, alpha=0.2)
-        if f"{lc}_lo" in df.columns:
+        if show_lc and f"{lc}_lo" in df.columns:
             ax.fill_between(x, df[f"{lc}_lo"], df[f"{lc}_hi"], color=c_lc, alpha=0.2)
         ax.set_ylabel(label, fontsize=9)
         ax.grid(True, alpha=0.3)
@@ -253,9 +257,10 @@ def plot_metrics(df: pd.DataFrame, output: Path, corpus: str = "Cross Validated"
         n_max, n_med = int(df["n_sample"].max()), int(df["n_sample"].median())
         if emb and emb.mode == "whole":
             how = ("Whole text: URLs/machine strings removed, split into sentence chunks of "
-                   f"<= {DEFAULT_BUDGET} tokens, chunk vectors averaged. 'Opening window' embeds "
-                   f"exactly the first {DEFAULT_BUDGET} model tokens of each answer "
-                   "(shorter answers excluded), to rule out a length artifact.")
+                   f"<= {DEFAULT_BUDGET} tokens, chunk vectors averaged.")
+            if show_lc:
+                how += (f" 'Opening window' embeds exactly the first {DEFAULT_BUDGET} model tokens "
+                        "of each answer (shorter answers excluded), to rule out a length artifact.")
         else:
             how = ("'Length-controlled' truncates each answer to its "
                    "first 100 tokens before embedding, to rule out a length artifact.")

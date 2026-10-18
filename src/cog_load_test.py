@@ -85,8 +85,9 @@ def plot_test(sites: pd.DataFrame, tests: pd.DataFrame, out_png: Path) -> None:
     import matplotlib.pyplot as plt
 
     groups = [g for g in ("high", "low", "external") if g in set(sites["cog_load"])]
-    fig, axes = plt.subplots(1, 2, figsize=(15, 8.5), sharey=True)
-    for ax, (metric, name) in zip(axes, METRICS.items()):
+    fig, ax0 = plt.subplots(1, 1, figsize=(9, 8.5))
+    axes = [ax0]
+    for ax, (metric, name) in zip(axes, list(METRICS.items())[:1]):
         d = sites[sites["metric"] == metric]
         r = tests[tests["metric"] == name].iloc[0]
         ax.axhline(0, color="0.5", lw=1)

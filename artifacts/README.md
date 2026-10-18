@@ -3,7 +3,10 @@
 All results here are **whole-text** results: each text is cleaned, split into sentence chunks of
 at most 120 model tokens, and its vector is the average of the chunk vectors. Every embedding
 result also has an **opening-window** control: exactly the first 120 model tokens of each
-text, with shorter texts left out. In CSVs the opening-window columns start with `lc_`.
+text, with shorter texts left out. In CSVs the opening-window columns start with `lc_`. It is
+**plotted only in family 8** (length check: same verdict as whole text in 26/30 sources; the 4
+that differ are significant only on the opening window); other plots show whole text only.
+Redraw any plot from its CSV with `python src/replot.py`.
 
 The delivered results (truncated at 128 tokens, as sent to Mark before 2026-10-15) are no longer
 in the tree. Restore them with `git checkout delivered-v1 -- artifacts`; what Mark received is in

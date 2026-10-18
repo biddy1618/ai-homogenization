@@ -86,10 +86,11 @@ def _bucket_band(series: dict, metric: str, bucket: str, t_break: int, min_n: in
 
 def plot_comparison(series: dict, t_break: int, output: Path) -> None:
     titles = PANEL_TITLE
-    fig, axes = plt.subplots(2, 1, figsize=(13, 9), sharex=True)
+    fig, ax0 = plt.subplots(1, 1, figsize=(13, 5.5))
+    axes = [ax0]
     n_by_bucket = {b: sum(1 for _, (_, c, _) in series.items() if c == b)
                    for b in ("high", "low")}
-    for ax, metric in zip(axes, METRICS):
+    for ax, metric in zip(axes, METRICS[:1]):
         # thin faint context lines: one per corpus, coloured only by bucket
         for _folder, (_label, cog, d) in series.items():
             pre_mean = d[d["_t"] < t_break][metric].mean()
@@ -130,7 +131,7 @@ def plot_comparison(series: dict, t_break: int, output: Path) -> None:
         "High- vs low-cognitive-load corpora: change in answer similarity around ChatGPT\n"
         "(thin lines = individual corpora centered on their own pre-ChatGPT mean; "
         "bold = bucket mean ±1 SE)", fontsize=12)
-    fig.tight_layout(rect=(0, 0, 1, 0.96))
+    fig.tight_layout(rect=(0, 0, 1, 0.9))
     output.parent.mkdir(parents=True, exist_ok=True)
     fig.savefig(output, dpi=150)
     print(f"Saved figure -> {output}")
