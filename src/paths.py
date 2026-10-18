@@ -47,6 +47,19 @@ CORE = ["cross-validated", "philosophy", "economics", "seasoned-advice", "travel
 GROUP_DIR = {"high": "se-hcl", "low": "se-lcl", "external": "external"}
 _GROUP = {f: g for f, _, g in ALL_SOURCES}
 LABEL = {f: l for f, l, _ in ALL_SOURCES}
+# data/processed/<stem>.parquet where the stem is not "<folder>_answers"
+_INPUT_STEM = {"cross-validated": "answers", "seasoned-advice": "cooking_answers",
+               "pubmed-oncology": "pubmed_onco_answers", "arxiv-cs": "arxiv_cs_answers",
+               "arxiv-math": "arxiv_math_answers"}
+
+
+def answers_parquet(folder: str, processed: Path = Path("data/processed")) -> Path:
+    return processed / f"{_INPUT_STEM.get(folder, folder + '_answers')}.parquet"
+
+
+def questions_parquet(folder: str, processed: Path = Path("data/processed")) -> Path:
+    stem = answers_parquet(folder, processed).stem
+    return processed / f"{'questions' if stem == 'answers' else stem.replace('_answers', '_questions')}.parquet"
 
 
 def source_dir(folder: str, root: Path = ARTIFACTS) -> Path:
@@ -60,6 +73,10 @@ def bge_dir(folder: str, root: Path = ARTIFACTS) -> Path:
 
 def length_k_dir(folder: str, root: Path = ARTIFACTS) -> Path:
     return root / "robustness" / "length-k" / folder
+
+
+def topic_k_dir(folder: str, root: Path = ARTIFACTS) -> Path:
+    return root / "robustness" / "topic-k" / folder
 
 
 def summary_dir(root: Path = ARTIFACTS) -> Path:

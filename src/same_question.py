@@ -16,8 +16,8 @@ aggregate rise is a topic-composition effect.
 (ignoring which question they belong to) — an internal apples-to-apples reference on
 identical data.
 
-Output: ``<out-dir>/data/11_same_question.csv`` + ``<out-dir>/plots/11_same_question.png``
-and a significance row (ITS slope-change + Mann-Kendall) on ``within_question_cosine``.
+Output: ``<out-dir>/11_same_question.{csv,png}``; a significance row (ITS slope-change +
+Mann-Kendall) on ``within_question_cosine`` is printed.
 """
 
 from __future__ import annotations
@@ -49,8 +49,13 @@ def _bootstrap_mean_ci(values: np.ndarray, n_boot: int, ci: float, rng) -> tuple
 def compute_same_question(df: pd.DataFrame, model, min_answers: int = 30,
                           overall_sample: int = 800, seed: int = 42,
                           n_boot: int = 0, ci: float = 0.95,
-                          raw_cache: dict | None = None, embed_fn=embed_texts) -> pd.DataFrame:
-    """Per-quarter within-question and overall pairwise cosine on multi-answer questions."""
+                          raw_cache: dict | None = None, embed_fn=embed_texts,
+                          max_questions: int | None = None) -> pd.DataFrame:
+    """Per-quarter within-question and overall pairwise cosine on multi-answer questions.
+
+    ``max_questions`` keeps at most that many multi-answer questions per quarter (the quarter
+    of the question's first answer), with all their answers; ``None`` = every question.
+    """
     rng = np.random.default_rng(seed)
 
     df = df[df["parent_id"] > 0].copy()
@@ -59,6 +64,17 @@ def compute_same_question(df: pd.DataFrame, model, min_answers: int = 30,
     df = df[sizes >= 2].reset_index(drop=True)
     if df.empty:
         raise SystemExit("No multi-answer questions found — is parent_id populated?")
+    if max_questions:
+        first_q = df.groupby("parent_id")["quarter"].min()
+        keep = []
+        for _, qs in sorted(first_q.groupby(first_q)):
+            pids = qs.index.to_numpy()
+            if len(pids) > max_questions:
+                pids = rng.choice(pids, size=max_questions, replace=False)
+            keep.extend(pids.tolist())
+        df = df[df["parent_id"].isin(set(keep))].reset_index(drop=True)
+        print(f"Sampled {len(keep):,} questions ({len(df):,} answers), "
+              f"<= {max_questions} per quarter")
 
     ids = df["id"].tolist()
     texts = df["text"].tolist()
@@ -139,8 +155,37 @@ def plot_same_question(df: pd.DataFrame, output: Path, corpus: str, footnote: st
     plt.close(fig)
 
 
+def summarize(break_quarter: str = CHATGPT_QUARTER, hac_lags: int = 4) -> pd.DataFrame:
+    """ITS slope change on within-question and overall cosine for every SE site with results
+    -> artifacts/summary/11_same_question_all.csv."""
+    from paths import CORPORA, summary_dir
+
+    rows = []
+    for folder, label, cog in CORPORA:
+        f = source_dir(folder) / "11_same_question.csv"
+        if not f.exists():
+            continue
+        d = pd.read_csv(f)
+        d["_t"] = d["quarter"].map(_q_ord)
+        for metric in ("within_question_cosine", "overall_cosine"):
+            row, _ = analyze_metric(d, metric, _q_ord(break_quarter), hac_lags)
+            rows.append({"corpus": label, "cog_load": cog, **row})
+    out = pd.DataFrame(rows)
+    summary_dir().mkdir(parents=True, exist_ok=True)
+    out.to_csv(summary_dir() / "11_same_question_all.csv", index=False)
+    w = out[out["metric"] == "within_question_cosine"]
+    for cog in ("high", "low"):
+        s = w[w["cog_load"] == cog]
+        up = int(((s["slope_change"] > 0) & (s["slope_change_p"] < 0.05)).sum())
+        print(f"{cog}-load: within-question rises significantly in {up}/{len(s)}")
+    print(f"Wrote -> {summary_dir() / '11_same_question_all.csv'}")
+    return out
+
+
 def main() -> None:
     ap = argparse.ArgumentParser(description="Same-question topic control (#11)")
+    ap.add_argument("--summarize", action="store_true",
+                    help="only build artifacts/summary/11_same_question_all.csv from existing results")
     ap.add_argument("-i", "--input", type=Path, default=Path("data/processed/answers.parquet"))
     ap.add_argument("--out-dir", type=Path, default=source_dir("cross-validated"))
     ap.add_argument("--corpus", default="Cross Validated")
@@ -155,7 +200,12 @@ def main() -> None:
     ap.add_argument("--break-quarter", default=CHATGPT_QUARTER)
     ap.add_argument("--hac-lags", type=int, default=4)
     ap.add_argument("--embed", choices=EMBED_MODES, default="legacy")
+    ap.add_argument("--max-questions", type=int, default=None,
+                    help="sample at most N multi-answer questions per quarter (default: all)")
     args = ap.parse_args()
+    if args.summarize:
+        summarize(args.break_quarter, args.hac_lags)
+        return
 
     model = load_model(args.cache_dir)
     emb = embedding_setup(model, args.embed, args.emb_cache_dir, args.input.stem)
@@ -172,7 +222,7 @@ def main() -> None:
     result = compute_same_question(df, model, min_answers=args.min_answers,
                                    overall_sample=args.overall_sample,
                                    n_boot=args.bootstrap, ci=args.ci, raw_cache=raw_cache,
-                                   embed_fn=emb.embed)
+                                   embed_fn=emb.embed, max_questions=args.max_questions)
 
     if not args.no_emb_cache:
         save_cache(raw_path, raw_cache)

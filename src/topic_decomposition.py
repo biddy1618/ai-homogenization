@@ -45,12 +45,34 @@ from paths import source_dir
 from significance import _q_ord, analyze_metric
 
 CHATGPT_QUARTER = "2022Q4"
+# Diversity and drift depend on how many answers a quarter has (fewer answers -> fewer topics
+# seen). Post-ChatGPT volumes fell on several sites, so both are also measured on a fixed-size
+# random subsample per quarter, averaged over draws ("rarefaction").
+RARE_SIZE = 100
+RARE_DRAWS = 50
 
 # Series we run the interrupted-time-series / Mann-Kendall significance test on.
 SIG_METRICS = (
     "overall_cosine", "within_cosine", "between_cosine",
-    "eff_topics", "comp_jsd", "between_centroid_cosine", "mc_between_cosine",
+    "eff_topics", "comp_jsd", "eff_topics_r", "comp_jsd_r",
+    "between_centroid_cosine", "mc_between_cosine",
 )
+
+
+def rarefied_diversity(labels: np.ndarray, K: int, base_dist: np.ndarray, rng,
+                       size: int = RARE_SIZE, draws: int = RARE_DRAWS) -> tuple[float, float]:
+    """Mean effective number of topics and mean JSD vs ``base_dist`` over random subsamples of
+    ``size`` labels (NaN if the quarter has fewer)."""
+    if len(labels) < size:
+        return float("nan"), float("nan")
+    effs, jsds = [], []
+    for _ in range(draws):
+        sub = labels[rng.choice(len(labels), size=size, replace=False)]
+        p = np.bincount(sub, minlength=K) / size
+        nz = p[p > 0]
+        effs.append(float(np.exp(-(nz * np.log(nz)).sum())))
+        jsds.append(float(jensenshannon(p, base_dist, base=2) ** 2))
+    return float(np.mean(effs)), float(np.mean(jsds))
 
 
 def sample_quarters(df: pd.DataFrame, sample: int, min_answers: int, seed: int):
@@ -168,6 +190,7 @@ def compute(df: pd.DataFrame, model, sample: int, K: int, min_answers: int, seed
     pre_prop = _pairwise_pieces(V[pre_mask], labels[pre_mask], K)
     base_counts = np.bincount(labels[pre_mask], minlength=K).astype(float)
     base_dist = base_counts / base_counts.sum()
+    rare_rng = np.random.default_rng(seed)
     for rec in records:
         q = rec["quarter"]
         pr = props.get(q)
@@ -175,11 +198,14 @@ def compute(df: pd.DataFrame, model, sample: int, K: int, min_answers: int, seed
             rec["comp_jsd"] = float(jensenshannon(pr, base_dist, base=2) ** 2)
         else:
             rec["comp_jsd"] = float("nan")
+        rec["eff_topics_r"], rec["comp_jsd_r"] = rarefied_diversity(
+            labels[quarters == q], K, base_dist, rare_rng)
 
     out = pd.DataFrame(records).sort_values("quarter").reset_index(drop=True)
     cols = ["quarter", "n", "n_sample", "n_topics", "p_within", "overall_cosine",
             "within_cosine", "between_cosine", "mc_overall_cosine", "mc_between_cosine",
-            "between_centroid_cosine", "eff_topics", "topic_entropy", "comp_jsd"]
+            "between_centroid_cosine", "eff_topics", "topic_entropy", "comp_jsd",
+            "eff_topics_r", "comp_jsd_r"]
     return out[[c for c in cols if c in out.columns]]
 
 
@@ -224,19 +250,29 @@ def plot_decomposition(df: pd.DataFrame, output: Path, corpus: str) -> None:
 
     # Panel B — topic diversity
     ax = axes[1]
-    ax.plot(x, df["eff_topics"], marker="o", ms=3, color="tab:green")
+    ax.plot(x, df["eff_topics"], marker="o", ms=2, color="tab:green", alpha=0.3,
+            label="all sampled answers (depends on sample size)")
+    if "eff_topics_r" in df:
+        ax.plot(x, df["eff_topics_r"], marker="o", ms=3, color="tab:green",
+                label=f"fixed {RARE_SIZE}-answer subsamples (comparable across quarters)")
     ax.set_ylabel("effective # of topics\n(lower = less diverse)", fontsize=9)
     ax.set_title("Topic diversity over time (a drop after ChatGPT = topics homogenising)",
                  fontsize=10, color="dimgray", loc="left", pad=6)
     ax.grid(True, alpha=0.3)
+    ax.legend(fontsize=8, loc="best")
 
     # Panel C — composition drift
     ax = axes[2]
-    ax.plot(x, df["comp_jsd"], marker="o", ms=3, color="tab:purple")
+    ax.plot(x, df["comp_jsd"], marker="o", ms=2, color="tab:purple", alpha=0.3,
+            label="all sampled answers")
+    if "comp_jsd_r" in df:
+        ax.plot(x, df["comp_jsd_r"], marker="o", ms=3, color="tab:purple",
+                label=f"fixed {RARE_SIZE}-answer subsamples")
     ax.set_ylabel("JSD vs pre-ChatGPT mix\n(higher = mix has drifted)", fontsize=9)
     ax.set_title("Topic-composition drift: how far each quarter's topic mix is from the "
                  "pre-ChatGPT baseline", fontsize=10, color="dimgray", loc="left", pad=6)
     ax.grid(True, alpha=0.3)
+    ax.legend(fontsize=8, loc="best")
 
     # Panel D — genuine convergence vs global drift (anisotropy control)
     ax = axes[3]
@@ -289,6 +325,8 @@ def main() -> None:
     ap.add_argument("--no-emb-cache", action="store_true")
     ap.add_argument("--seed", type=int, default=42)
     ap.add_argument("--embed", choices=EMBED_MODES, default="legacy")
+    ap.add_argument("--suffix", default="",
+                    help="appended to output file names, e.g. '_k25' for the K-sensitivity runs")
     args = ap.parse_args()
 
     model = load_model(args.cache_dir)
@@ -312,18 +350,18 @@ def main() -> None:
     data_dir = args.out_dir
     plot_dir = args.out_dir
     data_dir.mkdir(parents=True, exist_ok=True)
-    csv_path = data_dir / "13_topic_decomposition.csv"
+    csv_path = data_dir / f"13_topic_decomposition{args.suffix}.csv"
     result.to_csv(csv_path, index=False)
     print(f"Wrote {len(result)} quarters -> {csv_path}")
 
     sig = run_significance(result, args.corpus, args.break_quarter)
-    sig_path = data_dir / "13_decomposition_significance.csv"
+    sig_path = data_dir / f"13_decomposition_significance{args.suffix}.csv"
     sig.to_csv(sig_path, index=False)
     print(f"\n=== significance (break {args.break_quarter}) ===")
     with pd.option_context("display.width", 160, "display.max_columns", 20):
         print(sig.to_string(index=False))
 
-    plot_decomposition(result, plot_dir / "13_topic_decomposition.png", args.corpus)
+    plot_decomposition(result, plot_dir / f"13_topic_decomposition{args.suffix}.png", args.corpus)
 
 
 if __name__ == "__main__":
