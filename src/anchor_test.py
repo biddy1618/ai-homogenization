@@ -46,7 +46,7 @@ from tqdm import tqdm
 
 from embed_cache import load_cache, save_cache, cached_embed
 from paths import source_dir
-from semantic_bert import CHATGPT_QUARTER, EMBED_MODES, embedding_setup, load_model
+from semantic_bert import CHATGPT_QUARTER, EMBED_MODES, embedding_setup, embed_texts, load_model
 from significance import _q_ord, analyze_metric
 
 SYSTEM_PROMPT = (
@@ -54,7 +54,7 @@ SYSTEM_PROMPT = (
     "Write a single, self-contained, helpful answer in your own words. "
     "Do not include greetings, sign-offs, or meta commentary."
 )
-SIG_METRICS = ("pull", "ai_match_cosine", "pull_any")
+SIG_METRICS = ("pull", "ai_match_cosine", "pull_any", "lc_pull", "lc_ai_match_cosine")
 _TAG = re.compile(r"<([^>]+)>")
 
 
@@ -168,39 +168,85 @@ def _ai_key(qid: int, draw: int) -> int:
 
 
 # --------------------------------------------------------------------------- metric
+def _anchor_vectors(model, gens_ok, uq, embed_fn, cache, text_fn=None):
+    """Per-question anchor (normalised mean of draw vectors) and mean draw-to-draw cosine.
+
+    ``text_fn(keys, texts) -> [(key, text)]`` optionally maps each draw to another text (the
+    opening window); draws it drops are left out. Questions without any draw get NaN rows."""
+    keys, texts, owner = [], [], []
+    for qi, q in enumerate(uq):
+        for d, t in sorted(gens_ok[q].items()):
+            keys.append(_ai_key(q, d)); texts.append(t); owner.append(qi)
+    if text_fn is not None:
+        kept = dict(text_fn(keys, texts))
+        sel = [i for i, k in enumerate(keys) if k in kept]
+        keys = [keys[i] for i in sel]; texts = [kept[keys_i] for keys_i in keys]
+        owner = [owner[i] for i in sel]
+    dv = cached_embed(model, keys, texts, embed_fn, cache)
+    owner = np.array(owner)
+    anchor = np.full((len(uq), dv.shape[1]), np.nan)
+    sums = np.zeros_like(anchor)
+    np.add.at(sums, owner, dv)
+    has = np.bincount(owner, minlength=len(uq)) > 0
+    anchor[has] = sums[has] / np.linalg.norm(sums[has], axis=1, keepdims=True)
+    draw_cos = np.full(len(uq), np.nan)
+    for qi in np.where(np.bincount(owner, minlength=len(uq)) >= 2)[0]:
+        v = dv[owner == qi]
+        s = v @ v.T
+        draw_cos[qi] = (s.sum() - len(v)) / (len(v) * (len(v) - 1))
+    return anchor, draw_cos
+
+
+def _quarter_pull(Hq, A, answer_q, qs, tags, rng, n_baseline):
+    """match / same-tag baseline / any-other baseline per answer (rows of Hq), NaN-safe."""
+    S = Hq @ A.T
+    col = {q: j for j, q in enumerate(qs)}
+    valid = ~np.isnan(A).any(axis=1)
+    match, same, other, fallback = [], [], [], 0
+    for i, q in enumerate(answer_q):
+        j = col[q]
+        others = [k for k in range(len(qs)) if k != j and valid[k]]
+        if not valid[j] or not others or np.isnan(Hq[i]).any():
+            continue
+        shared = [k for k in others if tags[qs[k]] & tags[q]]
+        pool = shared if shared else others
+        fallback += not shared
+        pick = rng.choice(pool, size=min(n_baseline, len(pool)), replace=False)
+        match.append(S[i, j]); same.append(S[i, pick].mean()); other.append(S[i, others].mean())
+    return np.array(match), np.array(same), np.array(other), fallback
+
+
 def compute_drift(sample: pd.DataFrame, gens: dict[int, dict[int, str]], model,
                   raw_cache, ai_cache, min_answers: int, seed: int, embed_fn,
+                  lc_fn=None, lc_cache=None, ai_lc_cache=None,
                   n_baseline: int = 5) -> pd.DataFrame:
+    """Whole-text match / baseline / pull per quarter; with ``lc_fn`` also the same on the
+    opening window (first 120 model tokens of both the human and the GPT answer)."""
     rng = np.random.default_rng(seed)
     ok = {q: {d: t for d, t in ds.items() if t and t.strip()} for q, ds in gens.items()}
     ok = {q: ds for q, ds in ok.items() if ds}
     sample = sample[sample["parent_id"].isin(ok)].reset_index(drop=True)
     if sample.empty:
         raise SystemExit("No sampled answers have a cached GPT generation yet.")
-
     uq = sample["parent_id"].drop_duplicates().tolist()
-    keys, texts, owner = [], [], []
-    for qi, q in enumerate(uq):
-        for d, t in sorted(ok[q].items()):
-            keys.append(_ai_key(q, d)); texts.append(t); owner.append(qi)
-    print(f"Embedding {len(keys):,} GPT answers for {len(uq):,} questions (cache-backed)...")
-    dv = cached_embed(model, keys, texts, embed_fn, ai_cache)
-    owner = np.array(owner)
-    anchor = np.zeros((len(uq), dv.shape[1]))
-    np.add.at(anchor, owner, dv)
-    anchor /= np.linalg.norm(anchor, axis=1, keepdims=True)
-    draw_cos = np.full(len(uq), np.nan)
-    for qi in range(len(uq)):
-        v = dv[owner == qi]
-        if len(v) >= 2:
-            s = v @ v.T
-            draw_cos[qi] = (s.sum() - len(v)) / (len(v) * (len(v) - 1))
-
-    print(f"Embedding {len(sample):,} human answers (cache-backed)...")
-    H = cached_embed(model, sample["id"].tolist(), sample["text"].tolist(), embed_fn, raw_cache)
     qrow = {q: i for i, q in enumerate(uq)}
     tags = {q: set(_TAG.findall(str(t))) for q, t in
             sample.drop_duplicates("parent_id").set_index("parent_id")["q_tags"].items()}
+
+    print(f"Embedding GPT answers for {len(uq):,} questions (cache-backed)...")
+    anchor, draw_cos = _anchor_vectors(model, ok, uq, embed_fn, ai_cache)
+    print(f"Embedding {len(sample):,} human answers (cache-backed)...")
+    H = cached_embed(model, sample["id"].tolist(), sample["text"].tolist(), embed_fn, raw_cache)
+
+    if lc_fn is not None:
+        print("Opening window: embedding first 120 tokens of human and GPT answers...")
+        anchor_lc, _ = _anchor_vectors(model, ok, uq, embed_texts, ai_lc_cache, lc_fn)
+        pairs = lc_fn(sample["id"].tolist(), sample["text"].tolist())
+        H_lc = np.full_like(H, np.nan)
+        if pairs:
+            v = cached_embed(model, [i for i, _ in pairs], [t for _, t in pairs], embed_texts, lc_cache)
+            pos = {int(i): r for r, i in enumerate(sample["id"])}
+            H_lc[[pos[int(i)] for i, _ in pairs]] = v
 
     records = []
     for quarter, g in sorted(sample.groupby("quarter")):
@@ -209,28 +255,22 @@ def compute_drift(sample: pd.DataFrame, gens: dict[int, dict[int, str]], model,
         qs = g["parent_id"].drop_duplicates().tolist()
         if len(qs) < 2:
             continue
+        idx = g.index.to_numpy()
         A = anchor[[qrow[q] for q in qs]]
-        Hq = H[g.index.to_numpy()]
-        S = Hq @ A.T                                   # answers x questions in this quarter
-        col = {q: j for j, q in enumerate(qs)}
-        match, same, other, fallback = [], [], [], 0
-        for i, q in enumerate(g["parent_id"]):
-            j = col[q]
-            others = [k for k in range(len(qs)) if k != j]
-            shared = [k for k in others if tags[qs[k]] & tags[q]]
-            pool = shared if shared else others
-            fallback += not shared
-            pick = rng.choice(pool, size=min(n_baseline, len(pool)), replace=False)
-            match.append(S[i, j]); same.append(S[i, pick].mean()); other.append(S[i, others].mean())
-        match, same, other = map(np.array, (match, same, other))
-        records.append({
-            "quarter": quarter, "n_answers": int(len(g)), "n_questions": len(qs),
-            "ai_match_cosine": float(match.mean()), "ai_same_tag_cosine": float(same.mean()),
-            "ai_other_cosine": float(other.mean()), "pull": float((match - same).mean()),
-            "pull_any": float((match - other).mean()),
-            "baseline_fallback_share": fallback / len(g),
-            "gpt_draw_cosine": float(np.nanmean(draw_cos[[qrow[q] for q in qs]]))
-            if np.isfinite(draw_cos[[qrow[q] for q in qs]]).any() else float("nan")})
+        m, s, o, fb = _quarter_pull(H[idx], A, g["parent_id"].tolist(), qs, tags, rng, n_baseline)
+        dc = draw_cos[[qrow[q] for q in qs]]
+        rec = {"quarter": quarter, "n_answers": int(len(g)), "n_questions": len(qs),
+               "ai_match_cosine": float(m.mean()), "ai_same_tag_cosine": float(s.mean()),
+               "ai_other_cosine": float(o.mean()), "pull": float((m - s).mean()),
+               "pull_any": float((m - o).mean()), "baseline_fallback_share": fb / len(g),
+               "gpt_draw_cosine": float(np.nanmean(dc)) if np.isfinite(dc).any() else float("nan")}
+        if lc_fn is not None:
+            ml, sl, _, _ = _quarter_pull(H_lc[idx], anchor_lc[[qrow[q] for q in qs]],
+                                         g["parent_id"].tolist(), qs, tags, rng, n_baseline)
+            rec.update({"n_lc": int(len(ml)),
+                        "lc_ai_match_cosine": float(ml.mean()) if len(ml) else float("nan"),
+                        "lc_pull": float((ml - sl).mean()) if len(ml) else float("nan")})
+        records.append(rec)
     return pd.DataFrame(records).sort_values("quarter").reset_index(drop=True)
 
 
@@ -239,7 +279,9 @@ def significance(result: pd.DataFrame, corpus: str, break_quarter: str, hac_lags
     d["_t"] = d["quarter"].map(_q_ord)
     rows = []
     for m in SIG_METRICS:
-        row, _ = analyze_metric(d, m, _q_ord(break_quarter), hac_lags)
+        if m not in d or d[m].notna().sum() < 8:
+            continue
+        row, _ = analyze_metric(d.dropna(subset=[m]), m, _q_ord(break_quarter), hac_lags)
         rows.append({"corpus": corpus, **row})
     return pd.DataFrame(rows)
 
@@ -265,6 +307,10 @@ def plot_drift(df: pd.DataFrame, sig: pd.DataFrame, output: Path, corpus: str,
             label="GPT's answers to OTHER questions with the same tag (same quarter)")
     ax.plot(d["_t"], d["ai_other_cosine"], color="tab:gray", lw=1, ls="--",
             label="GPT's answers to any other question (same quarter)")
+    if "lc_ai_match_cosine" in d:
+        ax.plot(d["_t"], d["lc_ai_match_cosine"], color="tab:blue", lw=1.2, ls=":", marker="o", ms=2,
+                label=lab("same question, first 120 tokens of both (length check)",
+                          "lc_ai_match_cosine"))
     ax.set_ylabel("cosine similarity of human answer\nto GPT answer", fontsize=9)
     ax.set_title("A. How close are human answers to GPT's answers?", fontsize=10,
                  color="dimgray", loc="left")
@@ -272,6 +318,9 @@ def plot_drift(df: pd.DataFrame, sig: pd.DataFrame, output: Path, corpus: str,
     ax = axes[1]
     ax.plot(d["_t"], d["pull"], color="tab:purple", lw=2, marker="o", ms=3,
             label=lab("pull = same question minus same-tag questions", "pull"))
+    if "lc_pull" in d:
+        ax.plot(d["_t"], d["lc_pull"], color="tab:purple", lw=1.2, ls=":", marker="o", ms=2,
+                label=lab("pull, first 120 tokens of both (length check)", "lc_pull"))
     ax.axhline(0, color="0.5", lw=0.8)
     ax.set_ylabel("question-specific\nGPT-likeness", fontsize=9)
     ax.set_title("B. Is a human answer closer to what GPT says for THIS question than for "
@@ -378,11 +427,15 @@ def main() -> None:
     model = load_model(args.cache_dir)
     emb = embedding_setup(model, args.embed, args.emb_cache_dir, args.input.stem)
     ai_path = args.emb_cache_dir / f"{args.input.stem}_anchor_{_slug(args.model)}_{args.embed}.npz"
+    ai_lc_path = args.emb_cache_dir / f"{args.input.stem}_anchor_{_slug(args.model)}_open120.npz"
     raw_cache, ai_cache = load_cache(emb.raw_path), load_cache(ai_path)
+    lc_cache, ai_lc_cache = load_cache(emb.lc_path), load_cache(ai_lc_path)
     result = compute_drift(sample, gens, model, raw_cache, ai_cache, args.min_answers, args.seed,
-                           emb.embed)
+                           emb.embed, lc_fn=emb.lc, lc_cache=lc_cache, ai_lc_cache=ai_lc_cache)
     save_cache(emb.raw_path, raw_cache)
     save_cache(ai_path, ai_cache)
+    save_cache(emb.lc_path, lc_cache)
+    save_cache(ai_lc_path, ai_lc_cache)
 
     sig = significance(result, args.corpus, args.break_quarter, args.hac_lags)
     (args.out_dir / "data").mkdir(parents=True, exist_ok=True)
