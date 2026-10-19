@@ -166,8 +166,8 @@ def plot_metrics(df: pd.DataFrame, output: Path, corpus: str = "Cross Validated"
 def main() -> None:
     ap = argparse.ArgumentParser(description="Semantic homogenization metrics (LSA)")
     ap.add_argument("-i", "--input", type=Path, default=Path("data/processed/answers.parquet"))
-    ap.add_argument("-o", "--output", type=Path, default=Path("artifacts/semantic_metrics.csv"))
-    ap.add_argument("--plot", type=Path, default=Path("artifacts/semantic_trends.png"))
+    ap.add_argument("-o", "--output", type=Path, default=Path("artifacts/exploratory/summary/semantic_metrics.csv"))
+    ap.add_argument("--plot", type=Path, default=Path("artifacts/exploratory/summary/semantic_trends.png"))
     ap.add_argument("--sample", type=int, default=800)
     ap.add_argument("--lc-window", type=int, default=100)
     ap.add_argument("--corpus", default="Cross Validated")

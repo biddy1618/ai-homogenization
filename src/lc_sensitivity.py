@@ -104,8 +104,8 @@ def plot(df: pd.DataFrame, windows: list[int], output: Path) -> None:
 def main() -> None:
     ap = argparse.ArgumentParser(description="LC window sensitivity check")
     ap.add_argument("-i", "--input", type=Path, default=Path("data/processed/answers.parquet"))
-    ap.add_argument("-o", "--output", type=Path, default=Path("artifacts/lc_sensitivity.csv"))
-    ap.add_argument("--plot", type=Path, default=Path("artifacts/lc_sensitivity.png"))
+    ap.add_argument("-o", "--output", type=Path, default=Path("artifacts/exploratory/summary/lc_sensitivity.csv"))
+    ap.add_argument("--plot", type=Path, default=Path("artifacts/exploratory/summary/lc_sensitivity.png"))
     ap.add_argument("--sample", type=int, default=1000)
     args = ap.parse_args()
 

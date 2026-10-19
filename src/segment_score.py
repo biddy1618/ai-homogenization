@@ -21,7 +21,7 @@ from tqdm import tqdm
 from semantic import spread_metrics, bootstrap_pairwise_samples
 from semantic_bert import EMBED_MODES, Embedding, embedding_setup, load_model, embed_texts
 from embed_cache import load_cache, save_cache, cached_embed
-from paths import source_dir
+from paths import exploratory_dir, source_dir
 
 CHATGPT_QUARTER = "2022Q4"
 GROUPS = ("low", "high")
@@ -128,8 +128,8 @@ def plot_segments(seg: pd.DataFrame, output: Path, corpus: str, emb: Embedding) 
 def main() -> None:
     ap = argparse.ArgumentParser(description="Segment homogenization by answer score (P2a)")
     ap.add_argument("-i", "--input", type=Path, default=Path("data/processed/answers.parquet"))
-    ap.add_argument("--data-dir", type=Path, default=source_dir("cross-validated") / "data")
-    ap.add_argument("--plots-dir", type=Path, default=source_dir("cross-validated"))
+    ap.add_argument("--data-dir", type=Path, default=exploratory_dir("cross-validated") / "data")
+    ap.add_argument("--plots-dir", type=Path, default=exploratory_dir("cross-validated"))
     ap.add_argument("--cache-dir", type=Path, default=Path("data/models"))
     ap.add_argument("--sample", type=int, default=800)
     ap.add_argument("--lc-window", type=int, default=100)

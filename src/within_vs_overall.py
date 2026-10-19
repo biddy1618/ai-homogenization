@@ -18,7 +18,7 @@ import pandas as pd
 import statsmodels.api as sm
 from scipy import stats
 
-from paths import ALL_SOURCES, ARTIFACTS, CORE, EXTERNALS, source_dir, summary_dir
+from paths import ALL_SOURCES, ARTIFACTS, CORE, EXTERNALS, exploratory_dir
 
 CHATGPT_QUARTER = "2022Q4"
 # Family 6 (within-topic) exists for the core 5 SE sites + the 4 external corpora.
@@ -60,12 +60,12 @@ def main() -> None:
     ap.add_argument("--artifacts", type=Path, default=ARTIFACTS)
     ap.add_argument("--out-csv", type=Path, default=None)
     args = ap.parse_args()
-    args.out_csv = args.out_csv or summary_dir(args.artifacts) / "data" / "10_within_vs_overall.csv"
+    args.out_csv = args.out_csv or exploratory_dir(root=args.artifacts) / "data" / "10_within_vs_overall.csv"
 
     t_break = _q_ord(CHATGPT_QUARTER)
     rows = []
     for folder, label, cog in CORPORA:
-        csv = source_dir(folder, args.artifacts) / "data" / "6_within_topic_similarity.csv"
+        csv = exploratory_dir(folder, args.artifacts) / "data" / "6_within_topic_similarity.csv"
         if not csv.exists():
             print(f"  skip {label}: {csv} missing")
             continue

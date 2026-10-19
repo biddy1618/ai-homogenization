@@ -112,18 +112,18 @@ def main() -> None:
         "-i",
         "--input",
         type=Path,
-        default=Path("artifacts/quarterly_metrics.csv"),
+        default=Path("artifacts/exploratory/summary/quarterly_metrics.csv"),
     )
     ap.add_argument(
         "-o",
         "--output",
         type=Path,
-        default=Path("artifacts/homogenization_trends.png"),
+        default=Path("artifacts/exploratory/summary/homogenization_trends.png"),
     )
     ap.add_argument(
         "--surface",
         type=Path,
-        default=Path("artifacts/surface_hardening_trends.png"),
+        default=Path("artifacts/exploratory/summary/surface_hardening_trends.png"),
         help="Output path for the length-robust lexical-diversity figure",
     )
     ap.add_argument("--corpus", default="Cross Validated", help="Corpus name for figure titles")

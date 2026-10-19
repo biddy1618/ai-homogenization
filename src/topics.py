@@ -151,8 +151,8 @@ def plot_metrics(df: pd.DataFrame, n_topics: int, output: Path, corpus: str = "C
 def main() -> None:
     ap = argparse.ArgumentParser(description="LDA topic diversity over time")
     ap.add_argument("-i", "--input", type=Path, default=Path("data/processed/answers.parquet"))
-    ap.add_argument("-o", "--output", type=Path, default=Path("artifacts/topic_metrics.csv"))
-    ap.add_argument("--plot", type=Path, default=Path("artifacts/topic_trends.png"))
+    ap.add_argument("-o", "--output", type=Path, default=Path("artifacts/exploratory/summary/topic_metrics.csv"))
+    ap.add_argument("--plot", type=Path, default=Path("artifacts/exploratory/summary/topic_trends.png"))
     ap.add_argument("--n-topics", type=int, default=15)
     ap.add_argument("--sample", type=int, default=800)
     ap.add_argument("--corpus", default="Cross Validated")

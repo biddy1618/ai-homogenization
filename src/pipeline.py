@@ -106,7 +106,7 @@ def main() -> None:
         "-o",
         "--output",
         type=Path,
-        default=Path("artifacts/quarterly_metrics.csv"),
+        default=Path("artifacts/exploratory/summary/quarterly_metrics.csv"),
     )
     ap.add_argument("--sample", type=int, default=1000, help="Answers per quarter")
     ap.add_argument("--lc-window", type=int, default=100, help="Length-control token window")

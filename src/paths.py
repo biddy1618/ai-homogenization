@@ -88,5 +88,10 @@ def summary_dir(root: Path = ARTIFACTS) -> Path:
     return root / "summary"
 
 
+def exploratory_dir(folder: str | None = None, root: Path = ARTIFACTS) -> Path:
+    """Earlier exploration (families 1-4, 6, 7, 10): ``exploratory/<source>/`` or ``exploratory/summary/``."""
+    return root / "exploratory" / (folder or "summary")
+
+
 def meta_dir(root: Path = ARTIFACTS) -> Path:
     return root / "meta"
