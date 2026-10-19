@@ -40,6 +40,7 @@ and its tables in a `data/` subfolder, with matching names (`5_semantic_bert.png
 | `11_same_question_all.csv` | Answers to the same question: do they converge? (26 SE) |
 | `14_tag_topics_all.csv` | Topic control by Stack Exchange tags (26 SE) |
 | `6_encoder_compare.csv` | MiniLM vs BGE-small: same verdict? (9 sources) |
+| `11_same_question_summary.png`, `12_anchor_summary.png`, `13_topic_summary.png`, `14_tag_summary.png` | One row per site, one column per measure: post-ChatGPT slope change, filled = p<0.05 (`python src/summary_plots.py`) |
 
 ## Families (file prefix)
 
