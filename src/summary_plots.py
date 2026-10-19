@@ -102,11 +102,11 @@ def main() -> None:
     sd = summary_dir()
     d11 = pd.read_csv(sd / "data" / "11_same_question_all.csv")
     forest(d11, [("within_question_cosine", "Answers to the SAME question\n(similarity to each other)"),
-                 ("overall_cosine", "Same answers, any pair\n(reference)")],
+                 ("overall_cosine", "Any two answers in the quarter\n(reference, question ignored)")],
            "Family 11 - do answers to the same question become more alike after ChatGPT?",
            sd / "11_same_question_summary.png",
-           "Left: mean similarity among answers to the same question. Right: the same answers "
-           "paired at random within the quarter.")
+           "Left: mean similarity between answers to the same question. Right: mean similarity between "
+           "random pairs of answers from the same quarter, whatever their question.")
 
     d13 = _per_source("13_decomposition_significance.csv", ALL_SOURCES)
     forest(d13, [("within_cosine", "Same-topic answer pairs\n(similarity, + = converging)"),

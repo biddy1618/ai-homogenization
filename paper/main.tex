@@ -22,396 +22,469 @@
 % Open framing decisions for Mark -- delete the boxes once resolved.
 \newtcolorbox{framing}{colback=orange!8, colframe=orange!70!black, fonttitle=\bfseries\small,
   title=Framing decision (open), fontupper=\small, left=4pt, right=4pt, top=2pt, bottom=2pt}
+\newtcolorbox{notemark}{colback=blue!5, colframe=blue!50!black, fonttitle=\bfseries\small,
+  title=Note for Mark (draft only -- remove before release), fontupper=\small, left=4pt, right=4pt,
+  top=2pt, bottom=2pt}
+\newtcolorbox{pending}{colback=orange!8, colframe=orange!70!black, fonttitle=\bfseries\small,
+  title=Pending update, fontupper=\small, left=4pt, right=4pt, top=2pt, bottom=2pt}
 
 \title{Did Generative AI Homogenize Online Writing?\\[4pt]
-  \large A Multi-Corpus, Topic-Controlled Analysis (2009--2026)}
+  \large Evidence from 30 Corpora, 2008--2026}
 \author{Mark Nomellini}
-\date{Draft v0.1 --- \today}
+\date{Draft v0.2 --- \today}
 
 \begin{document}
 \maketitle
 
 \begin{abstract}
-We test the widely held intuition that generative AI (ChatGPT, publicly released in 2022Q4) has made
-online writing more homogeneous. Using per-quarter diversity and similarity metrics on 30 dated text
-corpora---26 Stack Exchange communities spanning high- and low-cognitive-load topics, plus Hacker News
-comments, PubMed oncology abstracts, and arXiv computer-science and mathematics abstracts---and a layered battery of
-controls (length control, four independent topic controls, a known-AI anchor, and
-interrupted-time-series significance testing), we find that the dramatic surface-level convergence is a
-length artifact; that a smaller but statistically real rise in contextual-embedding similarity survives
-length control in most corpora; and that this residual rise is largely a shift in \emph{what} people
-write about (topic composition), not a convergence of \emph{how} they write within a topic. We
-therefore find no evidence of broad stylistic homogenization, but clear evidence of topic-level
-homogenization: a narrowing of the topic mix and the emergence of a shared, AI-shaped set of themes. We
-argue the topic-level effect is the more consequential one for epistemic diversity, and introduce a
-live, open tracker to monitor it going forward.
+We test whether online writing became more homogeneous after the public release of ChatGPT
+(2022Q4). We embed the full text of about 1.2 million sampled answers and abstracts from 30 dated
+corpora---26 Stack Exchange communities (14 high- and 12 low-cognitive-load) plus Hacker News,
+PubMed oncology, arXiv computer science and arXiv mathematics---and test, quarter by quarter, for a
+change in trend at 2022Q4. Four findings. (1) Answers became more similar to each other: the similarity trend turns
+upward after ChatGPT in 24 of 26 Stack Exchange communities, significantly in 15, and in all 4
+external corpora. (2) The turn is stronger in high-cognitive-load communities, where AI saves more
+effort (11 of 14 versus 4 of 12; $p\approx0.01$--$0.03$). (3) The change is mainly in \emph{what}
+is asked and discussed: the mix of subjects shifts in 24 of 26 communities and answers within the same
+subject converge in 18 of 26, but answers to the \emph{same question} converge in only 6. (4) Human
+answers do not move towards what a language model would write for the same question. We conclude
+that generative AI is associated with a real but specific form of homogenization---a narrowing and
+convergence of the questions people bring and the subjects they discuss, strongest in expert
+communities---rather than people writing like the model.
 \end{abstract}
 
 % ---------------------------------------------------------------------------------------------
 \section{Motivation}
 
-Since late 2022, a common complaint has surfaced: \emph{everything online is starting to sound the
-same}. The em-dashes, the ``it's not just X---it's Y,'' the tidy three-part lists. The worry is that
-as hundreds of millions of people route their writing through a handful of large language models, the
-diversity of human expression---and, more importantly, the diversity of \emph{ideas}---quietly
-collapses toward a shared machine mean.
+Since late 2022 a common complaint has surfaced: \emph{everything online is starting to sound the
+same}. As hundreds of millions of people route their writing and their questions through a handful
+of large language models, the worry is that the diversity of human expression---and, more
+importantly, of \emph{ideas}---collapses towards a shared machine mean.
 
-This matters beyond aesthetics. Three stakes in particular:
-\begin{itemize}
-  \item \textbf{Epistemic diversity.} If the range of answers to a question narrows, so does the pool
-  of ideas a reader is exposed to. Homogenization of \emph{content} (not just style) is a narrowing of
-  what gets said at all.
-  \item \textbf{The integrity of the public record.} Scientific abstracts, legal opinions, and
-  reference sites are the durable, searchable memory of a field. If that record converges toward a
-  model's priors, we lose signal about what humans actually discovered or argued.
-  \item \textbf{Search and discovery.} Search engines rank a top-$N$ of results. If those results
-  increasingly repeat one another, the marginal information a searcher gains from reading more of them
-  falls---the web gets wider but shallower.
-\end{itemize}
+This matters beyond aesthetics. If the range of answers to a question narrows, so does the pool of
+ideas a reader meets. Reference sites and scientific abstracts are the durable memory of a field; if
+that record converges, we lose signal about what people actually discovered or argued. There is also
+a prior reason to expect an effect: a meta-analysis of human--AI co-creation studies finds a small,
+persistent homogenization effect \citep{derooij2026}, and behavioural economics predicts that an
+always-available, fluent default answer is exactly the kind of anchor people converge on
+\citep{samuelson1988}.
 
-There is also a prior reason to expect an effect. A meta-analysis of human--AI co-creation studies
-finds a small but significant homogenization effect that persists after AI use ends
-\citep{derooij2026}. And from behavioural economics, when people face more options or hold weaker
-preferences they default to the status quo and to whatever is placed in front of them
-\citep{samuelson1988}. An always-available, fluent default answer is exactly the kind of anchor that
-theory predicts people will converge on.
-
-\paragraph{The precise question.} ``Did AI homogenize writing?'' is too coarse to test. We decompose
-it into three separable questions, and the paper's contribution is keeping them apart:
+``Did AI homogenize writing?'' is too coarse to test. We split it into four questions, each with its
+own test:
 \begin{enumerate}
-  \item \textbf{Aggregate similarity}---are any two texts from the same period more alike than they
-  used to be?
-  \item \textbf{Within-topic style}---holding the \emph{subject} fixed, do people write it more
-  similarly (the ``everyone sounds like ChatGPT'' claim in its strict form)?
-  \item \textbf{Topic composition}---is the \emph{distribution of subjects} narrowing, so texts look
-  more alike simply because everyone now writes about the same things?
+  \item \textbf{Did texts become more similar to each other?} Are two answers from the same quarter more similar after
+  ChatGPT than the earlier trend predicts?
+  \item \textbf{Where is it stronger?} If AI saves the most effort on demanding questions, the effect
+  should be larger in high-cognitive-load communities.
+  \item \textbf{What changed?} Texts can become more alike because people discuss a narrower or
+  different \emph{set of subjects}, because answers on the \emph{same subject} converge, or because
+  answers to the \emph{same question} converge. These have different consequences, and we separate them.
+  \item \textbf{Do people write like the model?} Do human answers move towards what a language model
+  would write for the same question?
 \end{enumerate}
-A rise in (1) is compatible with (2), (3), or both. Most public commentary implicitly claims (2); we
-find the evidence points mainly to (3).
-
-\begin{framing}
-Mark leans toward the affirmative ``AI is driving real, consequential homogenization.'' The data
-supports that claim at the \emph{topic} level and rejects it at the \emph{style} level. The
-introduction can honor the affirmative reading by foregrounding the topic-level finding and the
-epistemic-diversity stakes, without overclaiming a style effect the data does not support.
-\end{framing}
 
 % ---------------------------------------------------------------------------------------------
 \section{Data}
 
-All corpora are public, dated to the quarter, and run through 2026Q2, giving roughly 14 quarters of
-post-ChatGPT observation against a long pre-2022 baseline. The ChatGPT marker throughout is 2022Q4.
+All corpora are public, dated to the quarter, and run to 2026Q2, giving 15 quarters of
+post-ChatGPT observation against a pre-2022 baseline of 6 to 14 years (Table~\ref{tab:data}).
 
-\subsection{Stack Exchange (26 communities)}
-From the June 2026 Stack Exchange data dump: 14 high-cognitive-load communities (e.g.\ Cross
-Validated, Philosophy, Economics, Law, Computer Science, Physics) and 12 low-cognitive-load communities
-(e.g.\ Seasoned Advice, Travel, Bicycles, Gardening, Role-playing Games, Board Games). The split tests
-whether casual writing homogenizes more than expert writing. Five ``core'' communities (Cross
-Validated, Philosophy, Economics, Seasoned Advice, Travel) carry every control; the other 21 carry the
-aggregate and significance tests.
+\textbf{Stack Exchange.} From the June 2026 data dump we use 26 question-and-answer communities with
+healthy recent volume: 14 \emph{high-cognitive-load} communities, where questions are technical or
+expert (Cross Validated, Philosophy, Economics, Cryptography, Law, History, Computer Science,
+Biology, Astronomy, Chemistry, Electrical Engineering, Physics, Software Engineering, English
+Language \& Usage), and 12 \emph{low-cognitive-load} ones, about everyday, practical or hobby
+subjects (Seasoned Advice, Travel, Bicycles, Gardening, Role-playing Games, Board Games, Personal
+Finance, Photography, The Workplace, Home Improvement, Science Fiction \& Fantasy, Arqade). The unit
+is a single answer. Each answer is linked to its question and to the question's tags, which the
+asker chooses.
 
-\subsection{External, non-Stack-Exchange corpora}
-To test whether any finding is an artifact of Stack Exchange's terse, structured Q\&A style, we added
-four corpora from entirely different platforms (Table~\ref{tab:externals}). arXiv mathematics serves as a
-low-AI control: unlike computer science, its subject matter has little to do with AI itself. All four
-carry the full pipeline, including topic control.
+\textbf{External corpora.} To check that results are not specific to Stack Exchange's format we add
+four corpora from other platforms: Hacker News comments, PubMed oncology abstracts, and arXiv
+computer-science and mathematics abstracts. They have no questions or tags, so they are used for the
+similarity trend (question 1) and the embedding-topic test (question 3), but not for the
+cognitive-load comparison, the tag and same-question tests, or the model anchor, which use the 26
+Stack Exchange communities only. Table~\ref{tab:tests} lists the corpora behind each test.
 
 \begin{table}[H]
 \centering
-\caption{External corpora.}
-\label{tab:externals}
-\begin{tabular}{llrll}
+\caption{Corpora. Up to 800 texts are sampled per quarter (quarters with fewer than 30 are dropped).}
+\label{tab:data}
+\small
+\begin{tabular}{lrrrl}
 \toprule
-Corpus & Register & Docs & Span & Unit \\
+Group & Corpora & Texts & Sampled & Span \\
 \midrule
-Hacker News & tech-forum comments & $\sim$39k & 2016Q1--2026Q2 & comments \\
-PubMed (oncology) & scientific abstracts & $\sim$34k & 2016Q1--2026Q2 & abstracts \\
-arXiv (Computer Science) & scientific abstracts & $\sim$64k & 2016Q1--2026Q2 & abstracts \\
-arXiv (Mathematics) & scientific abstracts & $\sim$69k & 2016Q1--2026Q2 & abstracts \\
+Stack Exchange, high cognitive load & 14 & 1.80M & 0.54M & 2008Q3--2026Q2 \\
+Stack Exchange, low cognitive load  & 12 & 1.08M & 0.50M & 2009Q4--2026Q2 \\
+External (HN, PubMed, arXiv CS, arXiv Math) & 4 & 0.21M & 0.13M & 2016Q1--2026Q2 \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-\begin{framing}
-Are the externals ``robustness checks on a Stack Exchange result'' or a ``co-equal cross-domain
-contribution''? With four registers including a low-AI control, the latter framing is now defensible;
-legal opinions or corporate filings would strengthen it further.
-\end{framing}
-
 % ---------------------------------------------------------------------------------------------
-\section{Methodology}
+\section{Method}
 
-The design is a layered battery of controls, each ruling out one benign explanation for an apparent
-rise (Table~\ref{tab:layers}). Read top to bottom, each layer strips away a confound the previous one
-left standing.
+\paragraph{Turning texts into vectors.} A sentence encoder---here all-MiniLM-L6-v2
+\citep{reimers2019,wang2020minilm}---maps a passage to a vector of 384 numbers such that passages
+with similar meaning get vectors pointing in similar directions. The encoder reads at most 128 tokens
+(about 90 words) at a time, so to represent a whole answer we clean it of URLs, DOIs, e-mail
+addresses and machine strings, split it into sentences, pack the sentences into chunks of at most
+120 tokens, embed each chunk, and average the chunk vectors, weighting each by its length.
+
+\begin{notemark}
+Draft v0.1 embedded only the first 128 tokens of each text, so it measured how answers \emph{open};
+every embedding result in this draft is recomputed on whole texts. Two results changed: the
+cognitive-load comparison (Section~\ref{sec:where}) now shows a clear difference, where v0.1 found
+none, and same-subject convergence (Section~\ref{sec:what}) is now found on many sites. This note,
+and any mention of v0.1, will be removed in the release version.
+\end{notemark}
+
+\paragraph{Measuring how alike texts are.} The similarity of two texts is the \emph{cosine
+similarity} of their vectors: the cosine of the angle between them, from about 0 for unrelated
+texts to 1 for texts with the same meaning (in practice, two random answers from the same community
+score about 0.05--0.2). For each corpus and quarter we sample up to 800 texts and take the average
+cosine similarity over all pairs of them. A rising average means that texts written in the same
+quarter are becoming more similar to one another.
+
+\paragraph{Testing for a change at ChatGPT.} For each corpus we fit a straight trend line to the
+quarterly similarity before 2022Q4 and another after it (an \emph{interrupted time series}, or
+segmented regression \citep{wagner2002}), with standard errors that allow for correlation between
+neighbouring quarters \citep{newey1987}. Our main statistic is the \emph{slope change}: the slope of
+the line after ChatGPT minus the slope before, in similarity units per quarter. A positive, significant
+slope change means similarity began rising faster (or stopped falling) after ChatGPT;
+Figure~\ref{fig:its} shows an example. The same test is applied to every measure below. Because we
+test many corpora, we also report how many results survive the Benjamini--Hochberg correction
+\citep{benjamini1995}, which limits the expected share of false positives among the results called
+significant to 5\%.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.75\linewidth]{fig_its_cv.png}
+  \caption{How the slope change is measured, for Cross Validated. Dots: average similarity between
+  answers in each quarter. Blue line: trend before ChatGPT ($-0.0002$ per quarter); red line: trend
+  after ($+0.0026$). The slope change is the difference, $+0.0028$ per quarter. Top: whole answers;
+  bottom: first 120 tokens only (the length check of Section~\ref{sec:alike}).}
+  \label{fig:its}
+\end{figure}
+
+\paragraph{Tests.} We call each test a \emph{family}: a measure computed per corpus and quarter,
+its slope-change test, and its plots, numbered as in the accompanying code. Table~\ref{tab:tests}
+maps each question to its families and the corpora they use. Earlier exploratory families are
+summarised in Appendix~\ref{app:exploratory}.
 
 \begin{table}[H]
 \centering
-\caption{The layered control design.}
-\label{tab:layers}
+\caption{Questions, tests, and the corpora each test uses.}
+\label{tab:tests}
 \small
-\begin{tabularx}{\linewidth}{lXX}
+\begin{tabularx}{\linewidth}{>{\raggedright\arraybackslash}p{2.6cm}p{1.1cm}>{\raggedright\arraybackslash}Xp{1.6cm}}
 \toprule
-Layer & What it measures & What it rules out \\
+Question & Family & Test & Corpora \\
 \midrule
-Surface / lexical & type-token ratio, MTLD \citep{mccarthy2010}, Yule's K & vocabulary-diversity change \\
-Length control & same metrics on first-100-token windows & answers simply got longer \\
-LSA semantic & TF-IDF $\rightarrow$ SVD cosine, centroid variance & coarse topic drift \\
-Contextual embedding & Sentence-BERT / MiniLM pairwise cosine \citep{reimers2019,wang2020minilm} & --- (the live signal) \\
-Topic control (4 ways) & within-topic, same-question, decomposition & topic-mix shift vs.\ style convergence \\
-Significance & segmented regression + Mann--Kendall \citep{mann1945} + bootstrap & noise; wrong break date \\
-Known-AI anchor & distance from human answers to an actual ChatGPT answer & ``similar to each other'' $\neq$ ``similar to AI'' \\
+1. More similar? & 5, 8 & Average similarity between texts each quarter; slope change at 2022Q4 & all 30 \\
+2. Where stronger? & 9 & Slope change, scaled by each site's pre-2022 variability, high vs low load & 26 SE \\
+3. What changed? & 13 & Same-subject similarity, number of subjects and subject mix, with subjects = 50 embedding topics & all 30 \\
+ & 14 & The same, with subjects = Stack Exchange tags & 26 SE \\
+ & 11 & Similarity between answers to the same question & 26 SE \\
+4. Like the model? & 12 & Similarity of each answer to gpt-4o-mini's answer to the same question & 26 SE \\
 \bottomrule
 \end{tabularx}
 \end{table}
 
-Two commitments deserve emphasis because they are where naive analyses most often go wrong.
+\paragraph{Three definitions of ``the same subject''.} Question 3 needs to know which texts are about
+the same thing. We use three definitions, from broad to exact:
+\begin{itemize}
+  \item \textbf{Embedding topics.} All sampled texts of a corpus, across all quarters, are grouped into
+  50 clusters of similar vectors (k-means). A cluster is a topic; it means the same thing in every
+  quarter. Available for all 30 corpora.
+  \item \textbf{Stack Exchange tags.} Every Stack Exchange question carries one to five tags chosen by
+  the asker from the community's vocabulary---for example \texttt{regression} and \texttt{bayesian}
+  on Cross Validated, or \texttt{visas} and \texttt{schengen} on Travel. An answer inherits its
+  question's tags, and two answers are on the same subject if their questions share at least one tag.
+  Tags are defined by the community, not by us or by the embeddings.
+  \item \textbf{The same question.} Two answers to the same question, the narrowest possible subject.
+\end{itemize}
 
-\paragraph{Length control.} Embedding similarity rises mechanically with text length. We recompute
-every headline metric on text truncated to the first 100 tokens. A signal that survives is not a
-``posts got longer'' artifact.
+\paragraph{Subject measures.} With subjects defined, each quarter has a \emph{subject mix}: the share
+of its texts in each subject. We measure three things:
+\begin{itemize}
+  \item \emph{Same-subject similarity}: the average similarity over pairs of texts on the same
+  subject. A rise means texts on the same subject become more alike.
+  \item \emph{Number of subjects}: the effective number of subjects, $e^{H}$, where $H$ is the
+  entropy of the subject mix. It reads as ``how many equally common subjects this mix is worth'':
+  50 if all 50 topics are equally common, 1 if every text is on one subject.
+  \item \emph{Subject-mix shift}: how different the quarter's subject mix is from the mix before
+  ChatGPT (all pre-2022Q4 texts pooled), measured by the Jensen--Shannon divergence \citep{lin1991}:
+  0 for the same proportions, 1 for no subject in common. A rise means people now write about
+  different things, in different proportions, than they used to.
+\end{itemize}
+The last two depend on how many texts a quarter has, and volumes fell after 2022 on several sites, so
+both are computed on random samples of 100 texts per quarter, averaged over 50 draws.
 
-\paragraph{Topic control, done four ways.} To separate \emph{style} from \emph{subject} we (a) cluster
-with BERTopic \citep{grootendorst2022} and measure within-topic similarity over time; (b) apply a
-Mann--Kendall trend test to the post-2022 within-topic series; (c) use the \emph{same-question} gold
-standard, comparing only answers to the identical question---no clustering, no dropped data; and
-(d) decompose the aggregate cosine into within- and between-topic components and track topic diversity
-directly (global $k$-means, no dropped outliers). Agreement across four topic definitions is what makes
-the topic-composition conclusion robust.
-
-\paragraph{Anisotropy.} Raw embedding cosines are inflated because embeddings occupy a narrow cone
-\citep{ethayarajh2019}. Where it matters we report the mean-centred (anisotropy-removed) variant, which
-repeatedly flattens an apparent between-topic ``convergence.''
+\paragraph{Model anchor.} If people increasingly write like a language model, their answer to a
+question should increasingly resemble the model's answer to that same question. For up to 100
+sampled answers per quarter we ask gpt-4o-mini to answer the same question (title and body) as a
+Stack Exchange user would, for every year---including years before ChatGPT existed, so the model acts
+as a fixed ruler. Some resemblance is expected simply because both texts are about the same subject,
+so we compare each human answer with the model's answer to its own question and with the model's
+answers to five \emph{other} questions sharing a tag, from the same quarter. The difference, which
+we call \emph{pull}, is the part of the resemblance specific to the question. In total 154,517 model
+answers were generated for 157,495 human answers.
 
 % ---------------------------------------------------------------------------------------------
 \section{Results}
 
-\subsection{The dramatic surface rise is a length artifact}
-Lexical-diversity metrics show a large apparent shift after 2022, but it tracks answer length
-(Figure~\ref{fig:lexical}): raw TTR falls and raw TF-IDF similarity rises as answers grow longer, while
-the length-controlled versions stay essentially flat. The effect never appears in already-verbose
-corpora such as Philosophy. Answers got \emph{longer}, not more uniform.
+\subsection{Answers became more similar to each other after ChatGPT}
+\label{sec:alike}
+
+This section asks whether answers written in the same quarter resemble \emph{each other} more than
+they used to (comparison with the model's own answers comes in Section~\ref{sec:model}). In 24 of 26
+Stack Exchange communities the slope of answer-to-answer similarity increases after 2022Q4; the
+increase is significant in 15 (all 15 survive the multiple-testing correction) and in all 4 external
+corpora (Figure~\ref{fig:significance}). The typical pattern is a flat or slowly declining similarity
+before ChatGPT that turns upward afterwards: 13 of the 19 significant corpora had a falling pre-2022
+trend, 7 of them significantly. Two external corpora (PubMed, arXiv CS) were already rising before
+2022; there the change is an acceleration rather than a reversal.
+
+\textbf{Is it just longer answers?} Answers got longer after ChatGPT on several sites, and length
+alone can raise similarity: a long answer's vector is the average of many chunk vectors, and
+averaging smooths out what is specific to each chunk, pulling long answers towards a common,
+generic direction---so two long answers can look similar even if they say different things. To rule
+this out we repeat every test on exactly the first 120 tokens of each answer, so that all texts have
+the same length (shorter answers are left out). This gives the same verdict in 26 of 30 corpora; the
+four that differ (History, Astronomy, Bicycles, Photography) are significant \emph{only} in the
+fixed-length version. Length does not drive the result.
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=0.82\linewidth]{fig_lexical.png}
-  \caption{Cross Validated, 2010--2026. Lexical diversity (MTLD, TTR), answer-to-answer TF-IDF
-  similarity, mean answer length, and answer volume. Raw (dark) vs.\ length-controlled first-100-token
-  (light) metrics: the raw TTR decline and similarity rise follow the growth in answer length and
-  largely vanish under length control. Dashed line: ChatGPT release (2022Q4).}
-  \label{fig:lexical}
-\end{figure}
-
-\subsection{A smaller contextual-embedding rise is real and survives length control}
-The one signal that does not dissolve: Sentence-BERT pairwise similarity rises modestly from roughly
-2023Q4 onward (Figure~\ref{fig:bert}), and the rise survives length control. By interrupted-time-series
-slope change it is statistically significant in 18 of 26 Stack Exchange corpora (20 of 26 under length
-control; Figure~\ref{fig:significance}), and it replicates in all four external corpora: Hacker News
-(slope change $+0.00101$/quarter, $p=4.5\times10^{-9}$; Figure~\ref{fig:its}), PubMed ($+0.00080$,
-$p=9\times10^{-4}$), arXiv-CS ($+0.00105$, $p=0.0014$), and arXiv mathematics ($+0.00130$,
-$p=4\times10^{-10}$; length-controlled $p=0.007$).
-
-The mathematics result is notable because it is a low-AI control: before 2022 its similarity was
-\emph{falling} ($-0.00057$/quarter, $p\approx10^{-34}$), and after 2022Q4 that decline reverses into a
-significant rise (post-break Mann--Kendall $p=0.0013$). The reversal begins only around 2024, and the
-recent level is still below 2016.
-
-Two honesty notes: the effect is broad but modest (significant partly because $N$ is large; for Cross
-Validated the recent level is still below its own 2010--11 values), and PubMed and arXiv show a
-pre-2022 upward trend---for them the change is an acceleration, not a clean break.
-
-\begin{figure}[H]
-  \centering
-  \includegraphics[width=0.8\linewidth]{fig_bert_cv.png}
-  \caption{Cross Validated: contextual-embedding (MiniLM) similarity metrics per quarter with 95\%
-  bootstrap bands, raw and length-controlled.}
-  \label{fig:bert}
-\end{figure}
-
-\begin{figure}[H]
-  \centering
-  \includegraphics[width=0.78\linewidth]{fig_significance.png}
-  \caption{Post-ChatGPT slope change in mean pairwise cosine for all 26 Stack Exchange corpora (filled =
-  $p<0.05$; diamonds = length-controlled; blue = high, orange = low cognitive load). 18 of 26 show a
-  significant increase.}
+  \includegraphics[width=0.8\linewidth]{fig_significance.png}
+  \caption{Slope change in answer-to-answer similarity after ChatGPT, per corpus. Circles: whole
+  answers (filled $=p<0.05$); diamonds: first 120 tokens only. Blue: high-load Stack Exchange;
+  orange: low-load; green: external.}
   \label{fig:significance}
 \end{figure}
 
+\subsection{The turn is stronger where AI saves more effort}
+\label{sec:where}
+
+High-cognitive-load communities turn up more than low-load ones (Figure~\ref{fig:cogload}): the
+change is significant in 11 of 14 versus 4 of 12 (Fisher exact $p=0.026$), and the median slope
+change, scaled by each site's pre-2022 variability, is 0.20 versus 0.09 (Mann--Whitney $p=0.010$;
+permutation $p=0.010$). High-load answers are somewhat longer, but answer length does not predict a
+site's slope change, and the difference holds with length as a control ($p=0.026$). On the first 120
+tokens alone more high-load sites are significant (13/14 vs 6/12, $p=0.021$), but the effect sizes
+are closer ($p=0.06$).
+
 \begin{figure}[H]
   \centering
-  \includegraphics[width=0.75\linewidth]{fig_its_hn.png}
-  \caption{Hacker News: interrupted time series around 2022Q4---the cleanest external case (flat
-  before, rising after).}
-  \label{fig:its}
+  \includegraphics[width=0.62\linewidth]{fig_cogload.png}
+  \caption{Slope change per Stack Exchange site, in units of its pre-ChatGPT variability; filled =
+  significant. External corpora shown for reference, not part of the test.}
+  \label{fig:cogload}
 \end{figure}
 
-\subsection{The residual rise is largely topic composition, not within-topic style}
-This is the central result. Once the subject is held fixed, the rise mostly disappears.
+\subsection{What changed: the subjects and the questions, more than the answers}
+\label{sec:what}
 
-\paragraph{Stack Exchange.} Within-topic and same-question similarity is flat in 4 of 5 core corpora
-(Figure~\ref{fig:sameq}). The decomposition locates the rise in \emph{between-topic} pairs while
-within-topic similarity stays flat, and shows topic diversity shrinking and the topic mix drifting after
-2022 (Figure~\ref{fig:decomp}). Philosophy is the lone within-question exception.
+Answers can become more similar for three different reasons: people write about a narrower or
+different set of subjects; answers on the same subject converge; or answers to the same question
+converge. Table~\ref{tab:what} tests each, using the three definitions of ``the same subject'' from
+the Method section.
 
-\paragraph{External corpora.} Under BERTopic---the same method as the Stack Exchange headline---all
-four externals show within-topic similarity flat while the aggregate rises (Figure~\ref{fig:withinhn}).
-Hacker News: overall post-break Mann--Kendall $p=1.2\times10^{-4}$, within-topic $p=0.44$; PubMed:
-overall $p=8\times10^{-4}$, within-topic $p=0.38$; arXiv-CS: overall $p=5\times10^{-4}$, within-topic
-$p=1.0$; arXiv mathematics: overall $p=0.011$, within-topic $p=0.50$. In mathematics the decomposition
-also shows the effective number of topics, which had been growing before 2022, turning to shrink after
-it. A $k$-means decomposition initially flagged Hacker News as a within-topic exception
-($p=0.004$), but that did not survive a second clustering method---within-topic tests are
-method-sensitive. Every external also shows emergent LLM-era topics after 2022Q4
-(e.g.\ \texttt{qa\_answers\_prompt}, \texttt{captioning\_mllms}, \texttt{segmentation\_radiomics\_dl}).
+\begin{table}[H]
+\centering
+\caption{Number of corpora with a significant change after ChatGPT ($p<0.05$).}
+\label{tab:what}
+\small
+\begin{tabularx}{\linewidth}{>{\raggedright\arraybackslash}Xcccc}
+\toprule
+Same subject defined as\ldots & Out of & \shortstack{Same-subject\\texts converge} & \shortstack{Subject mix\\shifts} & \shortstack{Fewer\\subjects} \\
+\midrule
+Embedding topics & 30 & 16 & 25 & 27 \\
+\quad high / low / external & 14 / 12 / 4 & 11 / 3 / 2 & 12 / 9 / 4 & 13 / 10 / 4 \\
+Stack Exchange tags & 26 & 18 & 24 & 13 \\
+\quad high / low load & 14 / 12 & 9 / 9 & 12 / 12 & 8 / 5 \\
+The same question & 26 & 6$^{a}$ & n/a$^{b}$ & n/a$^{b}$ \\
+\quad high / low load & 14 / 12 & 4 / 2 & & \\
+\bottomrule
+\end{tabularx}
+\par\smallskip\raggedright\footnotesize
+$^{a}$ 4 remain significant after the Benjamini--Hochberg correction.
+$^{b}$ Each question is asked once, so there is no mix of questions to compare across quarters.
+\end{table}
 
-The reading: the rise is real, but it is mostly people converging on \emph{what} to write about, not
-on \emph{how} to write it.
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\linewidth]{fig_tags.png}
+  \caption{Subjects as Stack Exchange tags: per-site slope change in the similarity of answers
+  sharing a tag (left), in the effective number of tags (centre) and in the shift of the tag mix
+  from its pre-ChatGPT shape (right). Filled = $p<0.05$.}
+  \label{fig:tags}
+\end{figure}
+
+Three findings follow:
+\begin{itemize}
+  \item \textbf{What people discuss changes almost everywhere.} The subject mix moves away from its
+  pre-ChatGPT shape in 24 of 26 sites by tags and 25 of 30 corpora by embedding topics, and the number
+  of distinct subjects falls in most (Figure~\ref{fig:tags}).
+  \item \textbf{Answers on the same subject become more similar} in about two thirds of the sites by
+  tags.
+  \item \textbf{Answers to the exact same question mostly do not.} Only 6 of 26 sites show
+  convergence, while any two answers from the same quarter, whatever their question, become more
+  similar in 18 (Figure~\ref{fig:samequestion}).
+\end{itemize}
+
+Read together: when the question is held fixed, people answer it no more alike than before. The
+convergence appears when the subject is broad, which means the \emph{questions} within a subject have
+themselves become more similar---narrower, more standard, or concentrated on fewer issues. The change
+is in what is asked and discussed, more than in how people answer.
+
+Two cautions. Embedding topics are found in the same vector space in which similarity is measured,
+so they can mistake answers that converge in wording for ``fewer topics''. Tags, chosen by askers, do
+not have this problem; that is why the two definitions disagree on low-load sites (3 versus 9
+converging), and why we rely mainly on tags. And the number of distinct subjects falls on only half
+the sites by tags; on four it rises.
 
 \begin{figure}[H]
   \centering
   \includegraphics[width=0.85\linewidth]{fig_same_question.png}
-  \caption{Same-question control (Cross Validated). Similarity between answers to the \emph{same}
-  question (blue) is flat across the ChatGPT break, while similarity between any two answers in the
-  quarter (gray) rises: the aggregate rise is topic composition.}
-  \label{fig:sameq}
+  \caption{Left: similarity between answers to the same question. Right, for reference: similarity
+  between random pairs of answers from the same quarter, whatever their question. Filled = $p<0.05$.}
+  \label{fig:samequestion}
 \end{figure}
+
+\subsection{People do not write more like the model}
+\label{sec:model}
+
+If people increasingly wrote like a language model, a human answer should increasingly resemble the
+model's answer to the same question---and more so than it resembles the model's answers to other
+questions on the same subject, which only reflect the shared subject. The test is sensitive: a human
+answer is much closer to the model's answer to its own question than to the model's answers to other
+same-tag questions (median similarity 0.64 versus 0.23). But that closeness does not grow after
+ChatGPT (Figure~\ref{fig:anchor}):
+\begin{itemize}
+  \item similarity to the model's answer to the same question rises in 8 of 26 sites and falls in 2
+  (on the first 120 tokens: rises in 5, falls in 3);
+  \item the question-specific part (\emph{pull}) rises in 2 and falls in 6, none surviving the
+  multiple-testing correction.
+\end{itemize}
+People's answers have not moved towards what the model says. The model's answers are stable: three
+independent answers to the same question have an average similarity of 0.92.
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=0.85\linewidth]{fig_decomposition.png}
-  \caption{Within- vs.\ between-topic decomposition (Cross Validated; global $k$-means, $K=50$). The
-  rise lives in between-topic pairs; effective number of topics falls and topic-mix divergence from the
-  pre-2022 baseline grows. The mean-centred between-topic line is flat (anisotropy).}
-  \label{fig:decomp}
-\end{figure}
-
-\begin{figure}[H]
-  \centering
-  \includegraphics[width=0.75\linewidth]{fig_within_hn.png}
-  \caption{Hacker News: overall vs.\ within-topic (BERTopic) similarity. Within-topic flat while overall
-  rises---the same topic-composition signature as Stack Exchange.}
-  \label{fig:withinhn}
-\end{figure}
-
-\subsection{No drift toward actual AI output; cognitive load does not explain the rise}
-The most literal test---do human answers move toward an actual ChatGPT answer to the same
-question?---is flat in 4 of 5 corpora, with Economics the lone and noisiest exception
-(Figure~\ref{fig:anchor}). The rise is also independent of cognitive load: high- and low-load communities
-track each other (Figure~\ref{fig:cogload}). The two lone exceptions (Philosophy in the same-question
-test, Economics in the anchor test) fall on different sites and so read as noise, not corroboration.
-
-\begin{figure}[H]
-  \centering
-  \includegraphics[width=0.8\linewidth]{fig_anchor.png}
-  \caption{Known-AI anchor (Cross Validated): cosine similarity between human answers and a
-  gpt-4o-mini answer to the same question, per quarter. No drift toward the AI answer.}
+  \includegraphics[width=\linewidth]{fig_anchor.png}
+  \caption{Per-site slope change in similarity to gpt-4o-mini's answer to the same question (whole
+  text and first 120 tokens) and in pull (same question minus same-tag questions). Filled = $p<0.05$.}
   \label{fig:anchor}
 \end{figure}
 
-\begin{figure}[H]
-  \centering
-  \includegraphics[width=0.8\linewidth]{fig_cogload.png}
-  \caption{High- vs.\ low-cognitive-load communities (bucket mean $\pm$1 SE; individual sites faint).
-  The two tracks overlap.}
-  \label{fig:cogload}
-\end{figure}
+\subsection{Robustness}
 
-\subsection{Summary of evidence}
 \begin{table}[H]
 \centering
-\caption{Summary of evidence.}
-\label{tab:summary}
+\caption{Robustness checks.}
+\label{tab:robust}
 \small
-\begin{tabularx}{\linewidth}{llX}
+\begin{tabularx}{\linewidth}{p{4.2cm}X}
 \toprule
-Claim & Verdict & Backing \\
+Check & Result \\
 \midrule
-Surface convergence & Artifact (length) & lexical + LSA families \\
-Aggregate embedding rise & Real, modest, broad & 18--20/26 SE + 4/4 externals \\
-Within-topic style convergence & Not supported & 4/5 core SE + 4/4 externals flat \\
-Topic-level homogenization & Supported & effective topics $\downarrow$, mix divergence $\uparrow$, emergent LLM topics \\
-Drift toward AI output & Not supported & anchor test flat in 4/5 \\
-Cognitive-load split & None & high/low tracks overlap \\
+Answer length & First 120 tokens only: same verdict in 26/30 corpora; the 4 differences are significant only at fixed length. Only each text's first $K$ chunks (Cross Validated $K=3$, PubMed $K=4$): still significant. \\
+Second encoder & BGE-small \citep{xiao2023cpack} on 9 corpora so far: same verdict in 6/9 (whole text) and 7/9 (first 120 tokens). Holds in all academic and expert corpora; does not hold in Travel, Seasoned Advice and Philosophy (whole text). \\
+Number of topics & 25 and 100 instead of 50 topics: the same conclusions (within-topic convergence 9--12/14 high vs 3--5/12 low; diversity falls in 24--26/30). \\
+Sample size & Topic diversity and drift on fixed 100-text samples, as volumes fell after 2022: conclusions unchanged. \\
+Model answers & One versus three answers per question (Economics): mean similarity between answers 0.92, so one is enough. \\
 \bottomrule
 \end{tabularx}
 \end{table}
 
 % ---------------------------------------------------------------------------------------------
-\section{Real-World Consequences}
+\section{Discussion}
 
-The finding is often heard as reassuring (``so writing \emph{didn't} homogenize''). We argue the
-opposite is closer to the truth: the kind of homogenization we \emph{did} find---topic-level---is the
-more consequential one.
+The pattern is consistent across tests. Online answers became more similar to one another after ChatGPT, more so in
+expert communities, mainly because the questions people bring and the subjects they discuss narrowed
+and shifted. People answering the same question do not converge, and they do not converge on the
+model's own answers.
 
-\begin{itemize}
-  \item \textbf{Narrowing of the idea space, not just the word space.} A flat within-topic style but a
-  shrinking, drifting topic mix means the change is in \emph{which questions get asked and answered at
-  all}. Fewer effective topics is a direct measure of a narrower public conversation.
-  \item \textbf{The scientific record inherits a model's priors.} Emergent post-2022 topic clusters in
-  arXiv and PubMed show the research frontier reorganizing around AI-adjacent themes. Whether that is
-  genuine progress or a bandwagon is exactly what a durable record should let us audit.
-  \item \textbf{Search returns more pages that say less.} If top results increasingly share a topic
-  profile, the marginal value of reading result \#5 after \#1--4 falls.
-  \item \textbf{A feedback loop.} Models are trained on the web; the web is increasingly written with
-  model help; topic-level convergence today biases the training data of tomorrow---a slow ratchet
-  rather than a cliff.
-  \item \textbf{Where it is \emph{not} alarming (yet).} We find no evidence that individual voice,
-  within a subject, is collapsing, and no drift toward literal AI phrasing. The message is targeted, not
-  apocalyptic: \emph{watch the topic mix, not the prose}.
-\end{itemize}
+One plausible mechanism is substitution: routine, well-defined questions that a chatbot can answer
+privately no longer reach public forums, which shifts and narrows what remains---especially in
+expert communities, where a model saves the most effort. That would explain why the subject mix moves
+almost everywhere, why same-subject answers converge, and why same-question answers do not. Our data
+are consistent with this reading but do not prove it.
+
+This form of homogenization matters. A shrinking, shifting set of public questions is a narrowing of
+the public conversation itself: the long tail of unusual questions, and the record of how people
+reasoned about them, is what search engines, students and future models draw on. Because the change
+is measurable, it can be monitored. We maintain an open tracker that weekly collects Google's top
+results for 45 informational questions in five domains, fetches the full pages, and measures how much
+they repeat one another \citep{friedman2023vendi}; it began in October 2026 and will need several
+months before trends can be read.
 
 \begin{framing}
-How strong a claim should this section make? From most to least cautious: (a) ``a subtle but
-structurally important narrowing worth monitoring''; (b) ``an early-warning sign of epistemic
-concentration''; (c) ``evidence of a self-reinforcing homogenization loop.''
+How strong a claim should this section make? From most to least cautious: (a) ``a specific, measurable
+narrowing worth monitoring''; (b) ``an early-warning sign of a narrowing public conversation'';
+(c) ``evidence that AI is reshaping what people ask in public''.
 \end{framing}
 
 % ---------------------------------------------------------------------------------------------
-\section{Monitoring Going Forward: A Live Search-Result Tracker}
-
-The retrospective study measures the past. To measure the present, we built an open tracker that, every
-week, collects Google's top results for a fixed panel of 45 informational questions across five
-high-stakes domains (health, finance, law, science, technology), fetches each result's full page, and
-scores how much the pages repeat one another with the Vendi score \citep{friedman2023vendi}---the
-effective number of distinct pages---normalised by the number of pages analysed. Video results and
-pages that cannot be fetched are excluded. The data and dashboard are public and versioned. The
-series began in October 2026; with week-to-week movement still comparable to between-domain
-differences, trends should be read only after several months of accumulation.
-
-% ---------------------------------------------------------------------------------------------
-\section{Criticisms and Limitations}
+\section{Limitations}
 
 \begin{itemize}
-  \item \textbf{Significance $\neq$ magnitude.} Large $N$ makes small slopes significant; several
-  effects are small in absolute terms.
-  \item \textbf{Timing $\neq$ causation.} The clearest bends lag ChatGPT by about a year and lack a
-  clean 2022Q4 step in several corpora; PubMed and arXiv-CS were already trending up before 2022, and
-  the arXiv-mathematics reversal only begins around 2024.
-  \item \textbf{Topic-control fragility.} Within-topic tests depend on the topic definition: BERTopic
-  discards 50--67\% of documents as outliers, and $k$-means and BERTopic disagreed on Hacker News. We
-  rely on the agreement of four methods, not any one.
-  \item \textbf{Anisotropy.} Raw between-topic ``convergence'' is largely embedding geometry; the
-  mean-centred variant flattens it.
-  \item \textbf{Single encoder.} All embedding results use one model family (MiniLM); a second encoder
-  is pending.
-  \item \textbf{Register bias.} Stack Exchange answers are atypically structured; the externals
-  mitigate but do not eliminate this.
-  \item \textbf{Lone exceptions.} Philosophy (same-question) and Economics (anchor) each show an effect
-  on exactly one test, on different sites; reported, not suppressed.
+  \item \textbf{Timing is not causation.} The break is fixed at ChatGPT's release; other changes
+  happened in the same period (falling Stack Exchange volumes, platform policies, the pandemic, which
+  is visible as a 2020 jump in Travel).
+  \item \textbf{Small effects.} Slope changes are on the order of $10^{-3}$ per quarter; with many
+  quarters, small effects become significant. They accumulate to a meaningful share of the
+  between-quarter variation, but they are not large.
+  \item \textbf{One main encoder.} All main results use one encoder; a second agrees on 6 of 9
+  corpora so far, and the everyday communities are the least robust.
+  \item \textbf{Our own labels.} The high/low cognitive-load split is our classification of each
+  community; the 26 sites are a small sample for a group comparison.
+  \item \textbf{Low load is Stack Exchange only.} All external corpora are high-load.
+  \item \textbf{The model anchor is a proxy.} gpt-4o-mini stands in for the different chatbots people
+  actually used between 2022 and 2026.
+  \item \textbf{Many tests.} We report counts after multiple-testing correction where it matters, and
+  report results that do not support our reading (e.g.\ low-load embedding topics, model anchor).
 \end{itemize}
+
+\begin{pending}
+The second encoder (BGE-small) is being run on all 30 corpora; the robustness table and this
+limitation will be updated with the full comparison.
+\end{pending}
 
 % ---------------------------------------------------------------------------------------------
 \section{Conclusion}
 
-The popular claim that generative AI made everyone write the same way is not supported by a layered,
-multi-corpus, topic-controlled analysis. The large surface convergence is a length artifact; the
-smaller, real, length-robust embedding rise is mostly a change in \emph{what} people write about, not
-\emph{how}. What we do find is topic-level homogenization: a measurable narrowing and drift of the topic
-mix, and the emergence of a shared, AI-shaped set of themes across forums, science, and technical
-writing alike. That is a subtler but arguably more consequential effect for epistemic diversity than
-stylistic sameness---and, because it is measurable, it is worth monitoring in the open. The honest
-headline: \emph{not broad style homogenization, but a real and structurally important topical
-convergence---worth watching, not yet worth alarm.}
+Generative AI did not make everyone write the same way, and people do not write like the model. But
+online answers did become more similar to one another after ChatGPT---most in expert communities---because what people
+ask and discuss in public narrowed and shifted. That is a specific, measurable form of
+homogenization, and one worth watching.
+
+\appendix
+\section{Exploratory analyses}
+\label{app:exploratory}
+
+Before the main analysis we ran several simpler measures. They are kept in the code and results
+(folder \texttt{artifacts/\allowbreak exploratory}) but superseded:
+
+\begin{table}[H]
+\centering
+\small
+\begin{tabularx}{\linewidth}{lp{3.2cm}X}
+\toprule
+Family & Measure & Finding and why superseded \\
+\midrule
+1 & Lexical diversity and surface features & Rises after ChatGPT only because answers got longer; flat at fixed length \citep{mccarthy2010}. \\
+2 & Length-window sweep & Confirms family 1 at 50--200-token windows. \\
+3 & LSA (bag-of-words) similarity & Length artifact like family 1; replaced by sentence embeddings. \\
+4 & LDA topics & Topic mix nearly unchanged; replaced by embedding and tag topics. \\
+6 & BERTopic topics & Leaves about half of the texts unassigned, so within-topic results describe a selected half; replaced by families 13 and 14, kept for topic labels \citep{grootendorst2022}. \\
+7 & High- vs low-score answers & Both tiers rise (two sites); the rise is not confined to low-quality answers. \\
+\bottomrule
+\end{tabularx}
+\end{table}
 
 \bibliographystyle{plainnat}
 \bibliography{references}
