@@ -1,0 +1,44 @@
+[
+  {
+    "position": 1,
+    "title": "What Is Dark Matter?",
+    "link": "https://spaceplace.nasa.gov/dark-matter/en/",
+    "domain": "spaceplace.nasa.gov",
+    "snippet": "Dark matter is stuff in space that has gravity, but it is invisible and isn't like anything else we know about. Dark matter makes up about 27% of the universe."
+  },
+  {
+    "position": 2,
+    "title": "Explain dark matter in simple terms : r/cosmology",
+    "link": "https://www.reddit.com/r/cosmology/comments/1f2q7c0/explain_dark_matter_in_simple_terms/",
+    "domain": "www.reddit.com",
+    "snippet": "Matter that doesn't interact with light or other electromagnetic radiation. We detect it by finding more gravity than the matter we can observe ..."
+  },
+  {
+    "position": 3,
+    "title": "Dark matter",
+    "link": "https://home.cern/science/physics/dark-matter/",
+    "domain": "home.cern",
+    "snippet": "Unlike normal matter, dark matter does not interact with the electromagnetic force. This means it does not absorb, reflect or emit light, making it extremely ..."
+  },
+  {
+    "position": 4,
+    "title": "Dark matter",
+    "link": "https://en.wikipedia.org/wiki/Dark_matter",
+    "domain": "en.wikipedia.org",
+    "snippet": "In astronomy and cosmology, dark matter is an invisible and hypothetical form of matter that does not interact with electromagnetic radiation, including light."
+  },
+  {
+    "position": 6,
+    "title": "What is Dark Matter? | Ideas",
+    "link": "https://www.ias.edu/ideas/what-dark-matter",
+    "domain": "www.ias.edu",
+    "snippet": "First, dark matter produces a gravitational field, but does not seem to interact strongly, if at all, through other forces. Second, it is slow moving, which is ..."
+  },
+  {
+    "position": 7,
+    "title": "DOE Explains...Dark Matter",
+    "link": "https://www.energy.gov/science/doe-explainsdark-matter",
+    "domain": "www.energy.gov",
+    "snippet": "Scientific evidence points to dark matter being a new type of fundamental particle or particles that interact with ordinary matter through gravity. Scientists ..."
+  }
+]

@@ -1,0 +1,58 @@
+[
+  {
+    "position": 1,
+    "title": "How do vaccines work?",
+    "link": "https://www.who.int/news-room/feature-stories/detail/how-do-vaccines-work",
+    "domain": "www.who.int",
+    "snippet": "Vaccines contain weakened or inactive parts of a particular organism (antigen) that triggers an immune response within the body."
+  },
+  {
+    "position": 2,
+    "title": "Explaining How Vaccines Work",
+    "link": "https://www.cdc.gov/vaccines/basics/explaining-how-vaccines-work.html",
+    "domain": "www.cdc.gov",
+    "snippet": "Vaccines work by imitating an infection to engage the body's natural defenses. Vaccines help the body learn how to defend itself from disease without the ..."
+  },
+  {
+    "position": 3,
+    "title": "How vaccines actually work: A simple guide",
+    "link": "https://www.mayoclinic.org/healthy-lifestyle/adult-health/in-depth/how-vaccines-actually-work-a-simple-guide/art-80010453",
+    "domain": "www.mayoclinic.org",
+    "snippet": "Most vaccines use a small, safe part of a germ to help your body recognize and fight the disease if you're ever exposed to it. The main ..."
+  },
+  {
+    "position": 4,
+    "title": "The Biology of Vaccines | Johns Hopkins",
+    "link": "https://publichealth.jhu.edu/2025/the-biology-of-vaccines",
+    "domain": "publichealth.jhu.edu",
+    "snippet": "Vaccines teach the body to protect itself against specific microbes without taking the risk of an infection. an immune response."
+  },
+  {
+    "position": 6,
+    "title": "How Do Vaccines Work? A Simple Guide to the Immune ...",
+    "link": "https://distance.physiology.med.ufl.edu/about/articles/pharmacology/how-do-vaccines-work-a-simple-guide-to-the-immune-system-and-immunization/",
+    "domain": "distance.physiology.med.ufl.edu",
+    "snippet": "To put it simply, vaccines imitate an illness without actually causing the illness. Vaccines contain either: a weakened version of the virus or bacteria,"
+  },
+  {
+    "position": 7,
+    "title": "How Vaccines Work - Immunology Explained",
+    "link": "https://immunologyexplained.aai.org/topics/vaccines/how-vaccines-work/",
+    "domain": "immunologyexplained.aai.org",
+    "snippet": "A vaccine trains the immune system to fight and remember pathogens by exposing the immune system to a harmless form of a pathogen, a part of a pathogen,"
+  },
+  {
+    "position": 8,
+    "title": "What Are Vaccines and How Do They Help Protect Us?",
+    "link": "https://www.pfizerforall.com/vaccines/education/how-do-vaccines-work",
+    "domain": "www.pfizerforall.com",
+    "snippet": "Vaccines help protect against serious illnesses by teaching your body's immune system how to recognize and prevent serious infections. They are ..."
+  },
+  {
+    "position": 9,
+    "title": "How Vaccines for Children & Teens Work",
+    "link": "https://www.healthychildren.org/English/safety-prevention/immunizations/Pages/How-do-Vaccines-Work.aspx",
+    "domain": "www.healthychildren.org",
+    "snippet": "They teach your immune system to produce antibodies to get rid of the virus or bacteria. Then, those antibodies remember what to do if your ..."
+  }
+]

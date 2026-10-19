@@ -1,0 +1,58 @@
+[
+  {
+    "position": 1,
+    "title": "ELI5: How does end-to-end encryption work?",
+    "link": "https://www.reddit.com/r/explainlikeimfive/comments/nt3pu1/eli5_how_does_endtoend_encryption_work/",
+    "domain": "www.reddit.com",
+    "snippet": "So end-to-end encryption will typically generate a really long, random, and complex password, and then use asymmetric encryption to safely share ..."
+  },
+  {
+    "position": 2,
+    "title": "What Is End-to-End Encryption?",
+    "link": "https://www.ibm.com/think/topics/end-to-end-encryption",
+    "domain": "www.ibm.com",
+    "snippet": "End-to-end encryption (E2EE) is a secure communication process that prevents third parties from accessing data transferred from one endpoint to another."
+  },
+  {
+    "position": 3,
+    "title": "What is end-to-end encryption (E2EE), and how does it work?",
+    "link": "https://proton.me/learn/encryption/types-of-encryption/what-is-end-to-end",
+    "domain": "proton.me",
+    "snippet": "End-to-end encryption uses asymmetric cryptography to ensure only the intended recipient can decrypt your data. Each user has a public key (safe to share) and ..."
+  },
+  {
+    "position": 5,
+    "title": "End-to-end encryption",
+    "link": "https://en.wikipedia.org/wiki/End-to-end_encryption",
+    "domain": "en.wikipedia.org",
+    "snippet": "End-to-end encryption prevents data from being read or secretly modified, except by the sender and intended recipients. In many applications, messages are ..."
+  },
+  {
+    "position": 6,
+    "title": "End-to-End Encryption (E2EE): What it is & How it Works",
+    "link": "https://www.preveil.com/blog/end-to-end-encryption/",
+    "domain": "www.preveil.com",
+    "snippet": "End-to-End Encryption: E2EE data is encrypted in transit from device to server. Furthermore, the data stays encrypted until it reaches the recipient's device."
+  },
+  {
+    "position": 7,
+    "title": "End-to-End Encryption (E2EE): Safeguarding Your Privacy",
+    "link": "https://www.splashtop.com/blog/what-is-end-to-end-encryption",
+    "domain": "www.splashtop.com",
+    "snippet": "In E2EE, data is encrypted on the sender's device and only decrypted on the recipient's device without any intermediaries having access to the ..."
+  },
+  {
+    "position": 8,
+    "title": "A Deep Dive on End-to-End Encryption: How Do Public ...",
+    "link": "https://ssd.eff.org/module/deep-dive-end-end-encryption-how-do-public-key-encryption-systems-work",
+    "domain": "ssd.eff.org",
+    "snippet": "End-to-end encryption tools make messages unreadable to eavesdroppers on the network, as well as to service providers themselves. They can also ..."
+  },
+  {
+    "position": 9,
+    "title": "What is end-to-end encryption (E2EE)?",
+    "link": "https://www.cloudflare.com/learning/privacy/what-is-end-to-end-encryption/",
+    "domain": "www.cloudflare.com",
+    "snippet": "End-to-end encryption (E2EE) is a type of messaging that keeps messages private from everyone, including the messaging service. When E2EE is used, a message ..."
+  }
+]

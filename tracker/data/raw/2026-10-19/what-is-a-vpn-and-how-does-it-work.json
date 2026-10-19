@@ -1,0 +1,58 @@
+[
+  {
+    "position": 2,
+    "title": "What is a VPN and why it's important",
+    "link": "https://www.reddit.com/r/VPN/comments/1f4whk1/what_is_a_vpn_and_why_its_important/",
+    "domain": "www.reddit.com",
+    "snippet": "VPN also known as a virtual private network is a service that creates an encrypted connection between the internet and your device (laptop, PC, ..."
+  },
+  {
+    "position": 3,
+    "title": "How does a VPN work? Advantages of using a VPN",
+    "link": "https://www.fortinet.com/resources/cyberglossary/how-does-vpn-work",
+    "domain": "www.fortinet.com",
+    "snippet": "A VPN works by routing a device's internet connection through a private service rather than the user's regular internet service provider (ISP)."
+  },
+  {
+    "position": 4,
+    "title": "What is a VPN? How VPNs work & when to use one",
+    "link": "https://protonvpn.com/what-is-a-vpn?srsltid=AU7gw4UfJ-qbxy1ilDUECDiQtr2mq6x_qQqlXTW7npnS1td9UMMT64Kd",
+    "domain": "protonvpn.com",
+    "snippet": "A VPN protects your online privacy by hiding your real IP address and encrypts your internet traffic so you can browse privately, avoid being tracked across ..."
+  },
+  {
+    "position": 5,
+    "title": "What is a VPN and How Does it Work?",
+    "link": "https://www.netgear.com/hub/network/security/what-is-a-vpn/",
+    "domain": "www.netgear.com",
+    "snippet": "A VPN, or Virtual Private Network, is a tool that encrypts your internet traffic and hides your IP (Internet Protocol) address to ensure a ..."
+  },
+  {
+    "position": 6,
+    "title": "What is a VPN?",
+    "link": "https://azure.microsoft.com/en-us/resources/cloud-computing-dictionary/what-is-vpn",
+    "domain": "azure.microsoft.com",
+    "snippet": "A VPN enables secure remote access to private networks and cloud resources. · VPNs uses encryption and tunneling to protect traffic from unauthorized access."
+  },
+  {
+    "position": 7,
+    "title": "How Does a VPN Work?",
+    "link": "https://www.paloaltonetworks.com/cyberpedia/how-does-a-vpn-work",
+    "domain": "www.paloaltonetworks.com",
+    "snippet": "A virtual private network, or VPN, secures data transfers across the internet by creating an encrypted tunnel between the user's device and a remote server."
+  },
+  {
+    "position": 8,
+    "title": "What is a VPN, and how does it work?",
+    "link": "https://watech.wa.gov/what-vpn-and-how-does-it-work",
+    "domain": "watech.wa.gov",
+    "snippet": "What is a VPN, and how does it work? A Virtual Private Network (VPN) creates an encrypted tunnel between you and a remote server operated by a VPN service."
+  },
+  {
+    "position": 9,
+    "title": "What is a VPN - Meaning and all you need to know",
+    "link": "https://surfshark.com/learn/what-is-vpn?srsltid=AU7gw4VOpvT_nMMbAspqlQ3EMAmZPxjhi-FL4xPuXDAXCOBp7aMwen_-",
+    "domain": "surfshark.com",
+    "snippet": "A VPN, or Virtual Private Network, is a tool that protects your online privacy by encrypting your internet connection. Learn how it works."
+  }
+]

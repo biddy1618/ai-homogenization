@@ -127,3 +127,48 @@ date,category,query,n_serp,n_results,mean_pairwise_cosine,vendi,distinct_ratio,m
 2026-10-12,tech,what is the difference between http and https,8,6,0.643106,2.4919,0.4153,0.258704
 2026-10-12,finance,what is the difference between stocks and bonds,8,8,0.801197,2.1544,0.2693,0.135701
 2026-10-12,science,why is the sky blue,8,8,0.784282,2.2213,0.2777,0.148127
+2026-10-19,science,are electric cars better for the environment,9,9,0.704583,2.7299,0.3033,0.20073
+2026-10-19,science,how do black holes form,8,8,0.749318,2.4738,0.3092,0.186639
+2026-10-19,science,how do hurricanes form,9,8,0.867905,1.7638,0.2205,0.109313
+2026-10-19,finance,how do index funds work,9,8,0.827821,1.8778,0.2347,0.127695
+2026-10-19,science,how do vaccines work,8,5,0.879852,1.5603,0.3121,0.10919
+2026-10-19,law,how does a class action lawsuit work,8,7,0.821093,1.9399,0.2771,0.14523
+2026-10-19,tech,how does cloud storage work,8,4,0.883532,1.4685,0.3671,0.095809
+2026-10-19,finance,how does compound interest work,8,8,0.772299,2.2791,0.2849,0.163926
+2026-10-19,law,how does copyright protect creators,10,8,0.766369,2.4068,0.3009,0.179357
+2026-10-19,tech,how does end-to-end encryption work,8,7,0.834274,1.8301,0.2614,0.116511
+2026-10-19,tech,how does facial recognition work,8,5,0.797998,1.9096,0.3819,0.170791
+2026-10-19,finance,how does inflation affect your savings,9,7,0.803458,2.0273,0.2896,0.129088
+2026-10-19,science,how does photosynthesis work,7,6,0.823903,1.8941,0.3157,0.139723
+2026-10-19,finance,how does refinancing a mortgage work,10,5,0.841305,1.7191,0.3438,0.132678
+2026-10-19,health,how does the immune system fight infection,10,8,0.739993,2.5681,0.321,0.185013
+2026-10-19,law,how does the probate process work,8,7,0.788003,2.1227,0.3032,0.167283
+2026-10-19,tech,how does two factor authentication work,8,6,0.790254,1.9367,0.3228,0.170419
+2026-10-19,health,how much sleep do adults need,10,5,0.817099,1.8179,0.3636,0.132482
+2026-10-19,health,how much water should you drink a day,8,6,0.787639,2.0526,0.3421,0.166262
+2026-10-19,finance,how to build an emergency fund,8,6,0.797904,2.0075,0.3346,0.151822
+2026-10-19,health,how to lower blood pressure naturally,9,7,0.791927,2.093,0.299,0.161645
+2026-10-19,tech,is ai going to replace jobs,8,8,0.647904,3.0671,0.3834,0.283815
+2026-10-19,health,is intermittent fasting healthy,9,6,0.90546,1.4783,0.2464,0.067468
+2026-10-19,finance,roth ira vs traditional ira,8,8,0.709776,2.573,0.3216,0.215315
+2026-10-19,law,what are tenant rights during eviction,9,8,0.771202,2.3248,0.2906,0.166659
+2026-10-19,health,what are the early signs of diabetes,9,7,0.838265,1.874,0.2677,0.123799
+2026-10-19,health,what are the symptoms of iron deficiency,9,9,0.864318,1.8216,0.2024,0.102166
+2026-10-19,law,what are your rights if arrested,10,9,0.727446,2.7508,0.3056,0.23959
+2026-10-19,science,what causes climate change,9,8,0.807753,2.0809,0.2601,0.143622
+2026-10-19,science,what causes earthquakes,8,7,0.623404,2.741,0.3916,0.277053
+2026-10-19,health,what causes high cholesterol,9,8,0.867187,1.7589,0.2199,0.101542
+2026-10-19,health,what causes migraines,9,5,0.849717,1.6746,0.3349,0.113466
+2026-10-19,law,what happens during a divorce proceeding,9,8,0.612133,3.3615,0.4202,0.307532
+2026-10-19,finance,what is a 401k and how does it work,8,8,0.793272,2.017,0.2521,0.143746
+2026-10-19,finance,what is a good credit score,9,9,0.839856,1.9362,0.2151,0.106233
+2026-10-19,tech,what is a large language model,7,5,0.80079,1.902,0.3804,0.190384
+2026-10-19,law,what is a power of attorney,8,7,0.673204,2.618,0.374,0.237353
+2026-10-19,tech,what is a vpn and how does it work,8,8,0.790125,2.1892,0.2737,0.151464
+2026-10-19,law,what is an llc and how is it taxed,9,9,0.825114,2.0298,0.2255,0.137294
+2026-10-19,science,what is dark matter,6,6,0.813688,1.9488,0.3248,0.167618
+2026-10-19,tech,what is retrieval augmented generation,7,5,0.720122,2.1744,0.4349,0.245067
+2026-10-19,law,what is the difference between a will and a trust,8,7,0.785175,2.0883,0.2983,0.148957
+2026-10-19,tech,what is the difference between http and https,7,4,0.536979,2.4314,0.6079,0.36086
+2026-10-19,finance,what is the difference between stocks and bonds,8,7,0.819396,1.9834,0.2833,0.127419
+2026-10-19,science,why is the sky blue,8,7,0.77121,2.2184,0.3169,0.167458
