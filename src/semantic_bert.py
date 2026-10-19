@@ -37,23 +37,39 @@ from chunk_embed import DEFAULT_BUDGET, clean_text, counting_tokenizer, embed_do
 CHATGPT_QUARTER = "2022Q4"
 MODEL_NAME = "sentence-transformers/all-MiniLM-L6-v2"
 MODEL_DIR = "fast-all-MiniLM-L6-v2"
-# Byte-identical copy of the Qdrant GCS tarball the study used; that GCS URL now returns 403.
-MODEL_URL = ("https://github.com/biddy1618/ai-homogenization/releases/download/"
-             "minilm-v1/fast-all-MiniLM-L6-v2.zip")
-MODEL_SHA256 = {
-    "model.onnx": "bbd7b466f6d58e646fdc2bd5fd67b2f5e93c0b687011bd4548c420f7bd46f0c5",
-    "tokenizer.json": "da0e79933b9ed51798a3ae27893d3c5fa4a201126cef75586296df9b4d2c62a0",
+_RELEASES = "https://github.com/biddy1618/ai-homogenization/releases/download/"
+# Encoders, each a pinned copy on a GitHub release with SHA-256 checks so vectors are reproducible.
+# Chunking is identical for all encoders (120-token chunks, 120-token opening window).
+#   minilm:    byte-identical copy of the Qdrant GCS tarball the study used (that URL now returns 403)
+#   bge-small: Hugging Face qdrant/bge-small-en-v1.5-onnx-q @ aa8f8b06 (BAAI/bge-small-en-v1.5, MIT)
+ENCODERS = {
+    "minilm": {
+        "name": MODEL_NAME, "dir": MODEL_DIR, "file": "model.onnx",
+        "url": _RELEASES + "minilm-v1/fast-all-MiniLM-L6-v2.zip",
+        "sha256": {
+            "model.onnx": "bbd7b466f6d58e646fdc2bd5fd67b2f5e93c0b687011bd4548c420f7bd46f0c5",
+            "tokenizer.json": "da0e79933b9ed51798a3ae27893d3c5fa4a201126cef75586296df9b4d2c62a0",
+        },
+    },
+    "bge-small": {
+        "name": "BAAI/bge-small-en-v1.5", "dir": "bge-small-en-v1.5-onnx-q",
+        "file": "model_optimized.onnx",
+        "url": _RELEASES + "bge-small-v1/bge-small-en-v1.5-onnx-q.zip",
+        "sha256": {
+            "model_optimized.onnx": "51f1bd0addd6e859e42c2c8021a5e5461385bb676a649f4b269aa445449f2431",
+            "tokenizer.json": "d241a60d5e8f04cc1b2b3e9ef7a4921b27bf526d9f6050ab90f9267a1f9e5c66",
+        },
+    },
 }
-# encoder key -> (fastembed model name, sub-folder of --cache-dir). Chunking is identical for all
-# encoders (120-token chunks, 120-token opening window) so only the encoder varies.
-ENCODERS = {"minilm": (MODEL_NAME, MODEL_DIR),
-            "bge-small": ("BAAI/bge-small-en-v1.5", "bge-small")}
+MODEL_URL = ENCODERS["minilm"]["url"]
+MODEL_SHA256 = ENCODERS["minilm"]["sha256"]
 ENCODER_LABEL = {"minilm": "Sentence-BERT / MiniLM", "bge-small": "BGE-small-en-v1.5"}
 
 
 def load_model(cache_dir: Path, encoder: str = "minilm"):
-    """Return an embedder. ``minilm``: pinned, sha-verified MiniLM ONNX (the study's encoder).
-    ``bge-small``: BAAI/bge-small-en-v1.5 (fastembed's quantised ONNX), the robustness encoder."""
+    """Download (once) and verify the pinned ONNX files for ``encoder``, then return an embedder.
+
+    ``minilm`` is the study's encoder; ``bge-small`` is the robustness encoder."""
     import hashlib
     import io
     import urllib.request
@@ -61,24 +77,22 @@ def load_model(cache_dir: Path, encoder: str = "minilm"):
 
     from fastembed import TextEmbedding
 
-    if encoder != "minilm":
-        name, sub = ENCODERS[encoder]
-        return TextEmbedding(name, cache_dir=str(cache_dir / sub))
-    model_dir = cache_dir / MODEL_DIR
-    if not (model_dir / "model.onnx").exists():
+    spec = ENCODERS[encoder]
+    model_dir = cache_dir / spec["dir"]
+    if not (model_dir / spec["file"]).exists():
         model_dir.mkdir(parents=True, exist_ok=True)
-        with urllib.request.urlopen(MODEL_URL, timeout=300) as r, \
+        with urllib.request.urlopen(spec["url"], timeout=300) as r, \
                 zipfile.ZipFile(io.BytesIO(r.read())) as z:
             for info in z.infolist():
-                # Base name only: the release zip uses Windows '\' separators.
+                # Base name only: release zips may use Windows '\' separators.
                 name = info.filename.replace("\\", "/").rsplit("/", 1)[-1]
                 if name and not name.startswith("._"):
                     (model_dir / name).write_bytes(z.read(info))
-    for name, want in MODEL_SHA256.items():
+    for name, want in spec["sha256"].items():
         got = hashlib.sha256((model_dir / name).read_bytes()).hexdigest()
         if got != want:
             raise RuntimeError(f"{model_dir / name}: sha256 {got} != expected {want}")
-    return TextEmbedding(MODEL_NAME, specific_model_path=str(model_dir))
+    return TextEmbedding(spec["name"], specific_model_path=str(model_dir))
 
 
 def embed_texts(model, texts: list[str], batch_size: int = 256) -> np.ndarray:
