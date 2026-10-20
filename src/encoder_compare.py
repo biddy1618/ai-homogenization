@@ -16,11 +16,9 @@ from pathlib import Path
 import pandas as pd
 from scipy.stats import spearmanr
 
-from paths import ARTIFACTS, LABEL, bge_dir, source_dir, summary_dir
+from scipy.stats import fisher_exact, mannwhitneyu
 
-# Sources with a BGE run (Step 6), in run order.
-FOLDERS = ["economics", "hackernews", "arxiv-math", "pubmed-oncology", "arxiv-cs", "travel",
-           "seasoned-advice", "philosophy", "cross-validated"]
+from paths import ALL_SOURCES, ARTIFACTS, bge_dir, source_dir, summary_dir
 METRICS = ("sem_pairwise_cosine", "lc_sem_pairwise_cosine")
 BREAK = "2022Q4"
 ALPHA = 0.05
@@ -37,16 +35,17 @@ def main() -> None:
     args = ap.parse_args()
     args.out = args.out or summary_dir(args.artifacts) / "data" / "6_encoder_compare.csv"
 
+    main_sig = pd.read_csv(summary_dir(args.artifacts) / "data" / "8_significance_all.csv")
     rows = []
-    for folder in FOLDERS:
-        label = LABEL[folder]
+    for folder, label, cog in ALL_SOURCES:
         paths = {"minilm": source_dir(folder, args.artifacts), "bge": bge_dir(folder, args.artifacts)}
-        if not all((p / "data" / "8_significance.csv").exists() for p in paths.values()):
+        if not (paths["bge"] / "data" / "8_significance.csv").exists():
             continue
-        sig = {e: pd.read_csv(p / "data" / "8_significance.csv").set_index("metric") for e, p in paths.items()}
+        sig = {"minilm": main_sig[main_sig["corpus"] == label].set_index("metric"),
+               "bge": pd.read_csv(paths["bge"] / "data" / "8_significance.csv").set_index("metric")}
         ser = {e: pd.read_csv(p / "data" / "5_semantic_bert.csv").set_index("quarter") for e, p in paths.items()}
         for metric in METRICS:
-            row = {"corpus": label, "metric": metric}
+            row = {"corpus": label, "cog_load": cog, "metric": metric}
             for e in ("minilm", "bge"):
                 s = sig[e].loc[metric]
                 pre_sd = ser[e].loc[ser[e].index < BREAK, metric].std()
@@ -65,7 +64,7 @@ def main() -> None:
         return
     args.out.parent.mkdir(parents=True, exist_ok=True)
     out.to_csv(args.out, index=False)
-    show = out[["corpus", "metric", "minilm_verdict", "minilm_p", "bge_verdict", "bge_p",
+    show = out[["corpus", "cog_load", "metric", "minilm_verdict", "minilm_p", "bge_verdict", "bge_p",
                 "minilm_slope_change_sd", "bge_slope_change_sd", "spearman_series", "agree"]]
     with pd.option_context("display.width", 200, "display.float_format", "{:.3g}".format):
         print(show.to_string(index=False))
@@ -73,6 +72,17 @@ def main() -> None:
     print(f"\nwhole text: verdict agrees in {int(raw['agree'].sum())}/{len(raw)} corpora "
           f"(* = p<{ALPHA}); opening window: "
           f"{int(out[out['metric'] == METRICS[1]]['agree'].sum())}/{len(raw)}")
+    # family 9 with each encoder: high vs low cognitive load (SE only)
+    se = out[(out["metric"] == METRICS[0]) & (out["cog_load"] != "external")]
+    for e in ("minilm", "bge"):
+        hi, lo = se[se["cog_load"] == "high"], se[se["cog_load"] == "low"]
+        sh = int(((hi[f"{e}_slope_change"] > 0) & (hi[f"{e}_p"] < ALPHA)).sum())
+        sl = int(((lo[f"{e}_slope_change"] > 0) & (lo[f"{e}_p"] < ALPHA)).sum())
+        fp = fisher_exact([[sh, len(hi) - sh], [sl, len(lo) - sl]], alternative="greater")[1]
+        mw = mannwhitneyu(hi[f"{e}_slope_change_sd"], lo[f"{e}_slope_change_sd"], alternative="greater").pvalue
+        print(f"family 9, {e:<6}: significant up high {sh}/{len(hi)} vs low {sl}/{len(lo)} (Fisher p={fp:.3f}); "
+              f"median slope change in pre-SD {hi[f'{e}_slope_change_sd'].median():+.2f} vs "
+              f"{lo[f'{e}_slope_change_sd'].median():+.2f} (Mann-Whitney p={mw:.3f})")
     print(f"Wrote -> {args.out}")
 
 

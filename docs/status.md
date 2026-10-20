@@ -2,17 +2,23 @@
 
 *Running "what's done / current state / open threads" tracker. Newest state at top.*
 
-## Current state (2026-10-16)
+## Current state (2026-10-20)
 
-**Whole-text replication done (Steps 0–6); paper update next.** The MiniLM embedding model reads only the first 128 tokens
-(~100 words) of each text, so every delivered embedding result (families 5–13) describes how answers
-*open*. Families 1–4 are unaffected. All embedding families were re-run on whole text (cleaned
-of URLs/machine strings, split into sentence chunks, chunk vectors averaged), with an exact
-opening-window control (first 120 model tokens). **Artifacts layout (2026-10-16):** `artifacts/`
-holds whole-text results only — `summary/`, `se-hcl/<site>/`, `se-lcl/<site>/`, `external/<source>/`,
-`robustness/{bge,length-k}/`, `meta/` (map: `artifacts/README.md`; registry: `src/paths.py`). The
-delivered 128-token results were removed from the tree; they are in git tag `delivered-v1`
-(`git checkout delivered-v1 -- artifacts`), and what Mark received is in `deliverables/`.
+**Analysis complete; paper v0.2 sent to Mark (meeting Wed 2026-10-21).** All 30 sources (26 SE: 14 high-
+and 12 low-cognitive-load; 4 external) are embedded on whole text (sentence chunks of <=120 tokens,
+averaged); a second encoder (BGE-small, pinned as release `bge-small-v1`) covers all 30. Families in the
+analysis: 5/8 (similarity trend, all 30), 9 (high vs low load), 13 (K-means topics, all 30), 14 (tags,
+26 SE), 11 (same question, 26 SE), 12 (GPT anchor, 26 SE, 154k gpt-4o-mini answers generated on the Mac).
+Exploratory families 1-4, 6, 7, 10 are in `artifacts/exploratory/`. Results map: `artifacts/README.md`;
+summary plots: `artifacts/summary/`; paper: `paper/main.tex` (compile with TinyTeX pdflatex + bibtex).
+
+**Findings:** (1) answer-to-answer similarity turns up after ChatGPT: 15/26 SE + 4/4 external significant;
+robust with BGE in expert and academic corpora, encoder-dependent in everyday ones; (2) stronger in
+high-load communities (MiniLM 11/14 vs 4/12, BGE 9/14 vs 2/12); (3) the change is mainly in what is
+asked and discussed: subject mix shifts 24/26 (tags), same-tag answers converge 18/26, same-question
+answers only 6/26; (4) no movement towards GPT's own answers (pull 2 up / 6 down). Data: S3
+`biddy-homogenization` via `src/sync_data.py` (raw, processed, embeddings 11.2 GB, anchor). The CAT
+network blocks api.openai.com: GPT generation runs on the Mac.
 
 | Step | What | State |
 |---|---|---|
@@ -28,6 +34,8 @@ delivered 128-token results were removed from the tree; they are in git tag `del
 | 7–8 | Claims ledger + conclusions review; paper v0.2; reply to Mark (next meeting Thu 2026-10-22) | **paper v0.2 drafted (2026-10-19)**: `paper/main.tex` rewritten around four questions (more alike? 5/8; where stronger? 9; what changed? 13/14/11; like the model? 12), whole-text method and 128-token disclosure, robustness table, updated limitations, exploratory families 1–4/6/7 in an appendix; 7 fresh figures from `artifacts/summary/`; compiles with TinyTeX (`tools/TinyTeX/bin/windows/pdflatex` + `bibtex`; tectonic needs network). Reply to Mark sent by Dauren |
 | 12 | **GPT anchor redesign (2026-10-18)**: 100 answers/qtr, 3 gpt-4o-mini answers per question averaged, baseline = GPT answers to other same-tag questions in the same quarter (`pull`), all 26 SE (~425k generations, ~$100) | **done (2026-10-19)** on all 26 SE (154,517 GPT answers; Economics 3 draws, others 1 — draws agree at cosine 0.92). **Largely null.** Similarity to GPT's answer for the same question rises on 8/26 (all survive BH; 2 fall); at fixed length (first 120 tokens of both) 5 up / 3 down; **pull** (question-specific GPT-likeness) 2 up / 6 down, none after BH. So humans do not broadly move towards GPT's answer to their question. The fixed-length rises are mostly low-load sites (Travel, Home Improvement, Photography, Seasoned Advice) — opposite to family 9's high-load pattern. Caveat: gpt-4o-mini is a fixed proxy for the ChatGPT models people used. Summary: `artifacts/summary/12_anchor_summary.png`. Generation runs on the Mac (CAT network blocks api.openai.com): `run_anchor.py --generate-only` → `sync_data.py push anchor`; here `pull anchor` → `run_anchor.py --analyse` |
 | 6c | **Topic control strengthened (2026-10-16/17)** — families 13 (all 30), 14 tags (26 SE, new: `tag_topics.py`; questions re-parsed via `parse_questions.py`), 11 same-question (26 SE; 21 new sites sample ≤150 questions/qtr) | **done**. Topic **mix shifts** almost everywhere (K-means JSD 25/30; tag JSD 24/26). Topic **diversity** falls 27/30 by K-means (fixed 100-answer subsamples; same at K=25/100) but only 13/26 by tags. **Same-subject convergence**: K-means within-topic 16/30 (high 11/14, low 3/12); same-tag 18/26 (high 9/14, low 9/12). **Same question**: 6/26 (4 after BH: History, Biology, English, Board Games) while overall similarity on the same answers rises 18/26. Reading: holding the exact question fixed, answers do *not* broadly converge; the rise is in *what* is discussed (subject mix, and question mix within subjects). K-means topics live in the embedding space, so they can mistake writing convergence for topic narrowing — tags are the cleaner SE control. Family 6 (BERTopic) drops ~50% of answers as outliers → demoted to topic labels only. Family 13's anisotropy panel (mean-centred cosine) is not interpretable (centred vectors sum to zero) — drop from the paper. Families 1–4 and 7 demoted (appendix / one line). **Plots simplified (2026-10-18):** opening window shown only in family 8 (agrees with whole text 26/30; the 4 differences are opening-only significant — so length does not drive the result; family-9 effect-size difference is borderline on the opening window, p=0.06 — disclose); family 13 = 3 panels (same-topic vs all pairs, effective topics, JSD vs pre-ChatGPT mix, with an explanatory footnote); family 14 without opening-window / share-of-pairs lines; `src/replot.py` redraws from CSVs. Travel shows a COVID jump at 2020Q2 in all tag panels — a confounder to mention |
+| 6d | **Second encoder on all 30 (2026-10-20)**: BGE-small on the 21 remaining SE sites (`robustness/bge/`), `encoder_compare.py` now covers all sources + family 9 per encoder | **done**. Same verdict 21/30 (opening window 20/30), series correlation median 0.66. High load 11/14 agree (9 significant with both); external 4/4; low load 6/12 (BGE: 2 up*, 3 down* ? Seasoned Advice, Bicycles, Home Improvement). Family 9 with BGE stronger: 9/14 vs 2/12 (Fisher p=0.019), scaled median 0.11 vs -0.02 (MWU p=0.002). Reading: the rise is robust in expert/academic writing, encoder-dependent in everyday communities. Paper updated (abstract, 4.1, 4.2, robustness, limitation, discussion, conclusion; pending box removed) |
+| T | **Tracker note (2026-10-19)** | Headline "% distinct" fell 0.44 → 0.42 → 0.37 → 0.31 over 4 snapshots. Not yet a trend: (1) % distinct = Vendi / pages falls ~0.04 per extra page, and pages/query rose 5.8 → 7.0 (~40% of the drop); (2) 10/19 was the first Serper.dev run (v0.5; earlier SerpAPI) — more Reddit/Wikipedia/Mayo Clinic results; (3) week-to-week domain overlap only 14–23%; (4) pairwise cosine (page-count-independent) did rise 0.70 → 0.78 (10/19 p=0.002 holding pages fixed). Possible fix, not done (user's call): headline on a fixed 5 pages/query. Read trends only after 8–10 weekly points from one provider |
 
 ### To discuss (framing; decide before the paper rewrite)
 1. **Wording of the aggregate result — agreed: "the long decline turned upward", not "rose".** The

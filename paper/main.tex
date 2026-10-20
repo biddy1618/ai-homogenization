@@ -43,8 +43,10 @@ corpora---26 Stack Exchange communities (14 high- and 12 low-cognitive-load) plu
 PubMed oncology, arXiv computer science and arXiv mathematics---and test, quarter by quarter, for a
 change in trend at 2022Q4. Four findings. (1) Answers became more similar to each other: the similarity trend turns
 upward after ChatGPT in 24 of 26 Stack Exchange communities, significantly in 15, and in all 4
-external corpora. (2) The turn is stronger in high-cognitive-load communities, where AI saves more
-effort (11 of 14 versus 4 of 12; $p\approx0.01$--$0.03$). (3) The change is mainly in \emph{what}
+external corpora; with a second, independent text encoder the rise holds in expert communities and in
+all external corpora, but not in everyday ones. (2) The turn is stronger in high-cognitive-load
+communities, where AI saves more effort (11 of 14 versus 4 of 12, and 9 of 14 versus 2 of 12 with
+the second encoder; $p\approx0.002$--$0.03$). (3) The change is mainly in \emph{what}
 is asked and discussed: the mix of subjects shifts in 24 of 26 communities and answers within the same
 subject converge in 18 of 26, but answers to the \emph{same question} converge in only 6. (4) Human
 answers do not move towards what a language model would write for the same question. We conclude
@@ -256,6 +258,13 @@ the same length (shorter answers are left out). This gives the same verdict in 2
 four that differ (History, Astronomy, Bicycles, Photography) are significant \emph{only} in the
 fixed-length version. Length does not drive the result.
 
+\textbf{Does it depend on the encoder?} We repeated the test with a second, independently trained
+encoder, BGE-small \citep{xiao2023cpack}. In the 14 high-load communities and the 4 external corpora
+the two agree closely: 9 high-load communities and all 4 external corpora rise significantly with
+both. In the 12 low-load communities they do not: the second encoder finds a significant rise in only
+2 and a significant fall in 3 (Seasoned Advice, Bicycles, Home Improvement). The rise is therefore
+robust in expert and academic writing, and encoder-dependent in everyday communities.
+
 \begin{figure}[H]
   \centering
   \includegraphics[width=0.8\linewidth]{fig_significance.png}
@@ -274,7 +283,9 @@ change, scaled by each site's pre-2022 variability, is 0.20 versus 0.09 (Mann--W
 permutation $p=0.010$). High-load answers are somewhat longer, but answer length does not predict a
 site's slope change, and the difference holds with length as a control ($p=0.026$). On the first 120
 tokens alone more high-load sites are significant (13/14 vs 6/12, $p=0.021$), but the effect sizes
-are closer ($p=0.06$).
+are closer ($p=0.06$). With the second encoder the difference is larger: 9 of 14 versus 2 of 12
+significant (Fisher $p=0.019$), median scaled slope change 0.11 versus $-0.02$ (Mann--Whitney
+$p=0.002$).
 
 \begin{figure}[H]
   \centering
@@ -392,7 +403,7 @@ independent answers to the same question have an average similarity of 0.92.
 Check & Result \\
 \midrule
 Answer length & First 120 tokens only: same verdict in 26/30 corpora; the 4 differences are significant only at fixed length. Only each text's first $K$ chunks (Cross Validated $K=3$, PubMed $K=4$): still significant. \\
-Second encoder & BGE-small \citep{xiao2023cpack} on 9 corpora so far: same verdict in 6/9 (whole text) and 7/9 (first 120 tokens). Holds in all academic and expert corpora; does not hold in Travel, Seasoned Advice and Philosophy (whole text). \\
+Second encoder & BGE-small \citep{xiao2023cpack} on all 30 corpora: same verdict in 21/30 (whole text) and 20/30 (first 120 tokens); quarterly series correlate at a median of 0.66. High load: 11/14 agree (9 significant with both). External: 4/4. Low load: 6/12 agree; BGE finds 2 significant rises and 3 significant falls. High vs low (family 9): 9/14 vs 2/12, $p=0.019$. \\
 Number of topics & 25 and 100 instead of 50 topics: the same conclusions (within-topic convergence 9--12/14 high vs 3--5/12 low; diversity falls in 24--26/30). \\
 Sample size & Topic diversity and drift on fixed 100-text samples, as volumes fell after 2022: conclusions unchanged. \\
 Model answers & One versus three answers per question (Economics): mean similarity between answers 0.92, so one is enough. \\
@@ -403,9 +414,9 @@ Model answers & One versus three answers per question (Economics): mean similari
 % ---------------------------------------------------------------------------------------------
 \section{Discussion}
 
-The pattern is consistent across tests. Online answers became more similar to one another after ChatGPT, more so in
-expert communities, mainly because the questions people bring and the subjects they discuss narrowed
-and shifted. People answering the same question do not converge, and they do not converge on the
+The pattern is consistent across tests. Online answers became more similar to one another after
+ChatGPT---robustly in expert and academic communities, less clearly in everyday ones---mainly because
+the questions people bring and the subjects they discuss narrowed and shifted. People answering the same question do not converge, and they do not converge on the
 model's own answers.
 
 One plausible mechanism is substitution: routine, well-defined questions that a chatbot can answer
@@ -438,8 +449,9 @@ narrowing worth monitoring''; (b) ``an early-warning sign of a narrowing public 
   \item \textbf{Small effects.} Slope changes are on the order of $10^{-3}$ per quarter; with many
   quarters, small effects become significant. They accumulate to a meaningful share of the
   between-quarter variation, but they are not large.
-  \item \textbf{One main encoder.} All main results use one encoder; a second agrees on 6 of 9
-  corpora so far, and the everyday communities are the least robust.
+  \item \textbf{Encoder dependence in everyday communities.} The main results use one encoder. A
+  second agrees in expert and academic corpora, but in low-load communities the rise depends on the
+  encoder (Section~\ref{sec:alike}); claims about everyday writing are therefore weaker.
   \item \textbf{Our own labels.} The high/low cognitive-load split is our classification of each
   community; the 26 sites are a small sample for a group comparison.
   \item \textbf{Low load is Stack Exchange only.} All external corpora are high-load.
@@ -449,17 +461,13 @@ narrowing worth monitoring''; (b) ``an early-warning sign of a narrowing public 
   report results that do not support our reading (e.g.\ low-load embedding topics, model anchor).
 \end{itemize}
 
-\begin{pending}
-The second encoder (BGE-small) is being run on all 30 corpora; the robustness table and this
-limitation will be updated with the full comparison.
-\end{pending}
-
 % ---------------------------------------------------------------------------------------------
 \section{Conclusion}
 
 Generative AI did not make everyone write the same way, and people do not write like the model. But
-online answers did become more similar to one another after ChatGPT---most in expert communities---because what people
-ask and discuss in public narrowed and shifted. That is a specific, measurable form of
+online answers did become more similar to one another after ChatGPT---clearly in expert and
+academic communities, less clearly in everyday ones---because what people ask and discuss in public
+narrowed and shifted. That is a specific, measurable form of
 homogenization, and one worth watching.
 
 \appendix
