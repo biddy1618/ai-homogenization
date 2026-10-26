@@ -1,0 +1,44 @@
+[
+  {
+    "position": 1,
+    "title": "Why Is the Sky Blue?",
+    "link": "https://spaceplace.nasa.gov/blue-sky/",
+    "domain": "spaceplace.nasa.gov",
+    "snippet": "Why Is the Sky Blue? The Short Answer: Sunlight reaches Earth's atmosphere and is scattered in all directions by all the gases and particles in the air. Blue ..."
+  },
+  {
+    "position": 2,
+    "title": "Why is the sky blue?",
+    "link": "https://math.ucr.edu/home/baez/physics/General/BlueSky/blue_sky.html",
+    "domain": "math.ucr.edu",
+    "snippet": "A clear cloudless day-time sky is blue because molecules in the air scatter blue light from the Sun more than they scatter red light. When we look towards the ..."
+  },
+  {
+    "position": 3,
+    "title": "Why Is the Sky Blue? | NESDIS - NOAA",
+    "link": "https://www.nesdis.noaa.gov/about/k-12-education/atmosphere/why-the-sky-blue",
+    "domain": "www.nesdis.noaa.gov",
+    "snippet": "Gases and particles in Earth's atmosphere scatter sunlight in all directions. Blue light is scattered more than other colors because it ..."
+  },
+  {
+    "position": 4,
+    "title": "Why is the sky blue? Do I understand it correctly",
+    "link": "https://www.reddit.com/r/askscience/comments/14566ig/why_is_the_sky_blue_do_i_understand_it_correctly/",
+    "domain": "www.reddit.com",
+    "snippet": "I’ve been trying to understand why the sky changes colors, and I think I understand most of it, but something in the online explanations doesn’t ..."
+  },
+  {
+    "position": 5,
+    "title": "Why is the sky blue?",
+    "link": "https://kids.nationalgeographic.com/books/article/sky",
+    "domain": "kids.nationalgeographic.com",
+    "snippet": "When light hits the air molecules in our atmosphere, its colors are scattered in all directions. Blue light is scattered more because of its short, choppy ..."
+  },
+  {
+    "position": 6,
+    "title": "Why is the sky blue? | Royal Observatory",
+    "link": "https://www.rmg.co.uk/stories/space-astronomy/why-sky-blue",
+    "domain": "www.rmg.co.uk",
+    "snippet": "It's because human eyes are actually more sensitive to detecting blue light, and more of the sunlight coming into the Earth's atmosphere is blue rather than ..."
+  }
+]
