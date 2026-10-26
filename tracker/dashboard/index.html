@@ -22,6 +22,7 @@
   .card { background:var(--card); border-radius:12px; padding:16px; margin:16px 0; }
   .card h2 { margin:0 0 4px; font-size:16px; }
   .card p { margin:0 0 12px; color:var(--muted); font-size:13px; }
+  details.card summary { cursor:pointer; font-size:16px; font-weight:bold; }
   footer { color:var(--muted); font-size:12px; text-align:center; padding:16px; }
   a { color:var(--accent); }
 </style>
@@ -32,119 +33,147 @@
   <div class="sub" id="sub"></div>
 </header>
 <div class="wrap">
+  <div class="card">
+    <p style="margin:0">Every Monday we take Google's top results for a fixed panel of informational
+    questions in five domains, read the first 5 pages that can be read in full, and measure how alike
+    they are. <b>Similarity</b> is the average cosine similarity between the pages' text embeddings
+    &mdash; the same measure as the accompanying study of Stack Exchange and research abstracts
+    (higher = the top pages say more of the same). <b>Distinct pages out of 5</b> (Vendi score) counts
+    how many genuinely different pages there are: 5 = all different, 1 = all the same.</p>
+  </div>
+
   <div class="kpis" id="kpis"></div>
 
   <div class="card">
-    <h2>Homogeneity by domain</h2>
-    <p>Share of each domain's result pages that are effectively distinct (Vendi score ÷ pages
-       analysed), latest run. Lower = the top results repeat each other more.</p>
-    <canvas id="domains" height="200"></canvas>
+    <h2>How alike are Google's top 5 pages? (over time)</h2>
+    <p>Average similarity per run. The white line follows the original 45 questions through every run;
+       the dashed line covers all questions once the panel grew. Read trends only after several weeks
+       from the same search provider.</p>
+    <canvas id="sim"></canvas>
   </div>
 
   <div class="card">
-    <h2>How repetitive are the top results, by query</h2>
-    <p>% of the analysed pages that are effectively distinct, per question, latest run, colored by
-       domain. Lower = more homogeneous.</p>
-    <canvas id="leaderboard" height="560"></canvas>
+    <h2>Distinct pages out of 5 (over time)</h2>
+    <p>Vendi score of the top 5 pages, averaged over questions. Lower = more repetition.</p>
+    <canvas id="ven"></canvas>
   </div>
 
   <div class="card">
-    <h2>Diversity over time</h2>
-    <p>Mean % distinct per run — overall (white) and by domain. Week-to-week movement per
-       query is still large; read trends only once several weeks have accumulated.</p>
-    <canvas id="timeseries" height="320"></canvas>
-    <p id="switchnote" style="margin-top:10px"></p>
+    <h2>By domain, latest run</h2>
+    <p>Average similarity of the top 5 pages for the questions in each domain. Higher = more alike.</p>
+    <canvas id="domains"></canvas>
   </div>
+
+  <div class="card">
+    <h2>Where do Google's results come from?</h2>
+    <p>Share of all returned results (top 10, videos excluded) by type of source, original 45
+       questions. Shifts here show which sources Google favours over time.</p>
+    <canvas id="mix"></canvas>
+  </div>
+
+  <div class="card">
+    <h2>By question, latest run</h2>
+    <p>Similarity of the top 5 pages per question, most alike first; coloured by domain.</p>
+    <div id="lbwrap" style="position:relative"><canvas id="leaderboard"></canvas></div>
+  </div>
+
+  <details class="card">
+    <summary>Archive: methodology v1 (4&ndash;19 Oct 2026)</summary>
+    <p style="margin-top:10px">The first headline: Vendi score divided by however many pages could be
+       read (5&ndash;9 per question), shown as "% distinct". It fell whenever more pages were read, so
+       runs were not comparable; replaced on 2026-10-26 by the fixed top-5 measures above, which were
+       also recomputed for these runs.</p>
+    <canvas id="legacy"></canvas>
+  </details>
 </div>
 <footer>
-  Full-page content: Google's top results (via SerpAPI 2026-10-04 to 2026-10-12, Serper.dev from 2026-10-19), each
-  page's main text (first ~1000 words) via ScrapingRobot, MiniLM embeddings. Video results and
-  unfetchable pages excluded. Forward-looking companion to the AI-homogenization study.
+  Google's top results via SerpAPI (2026-10-04 to 2026-10-12), Serper.dev (2026-10-19); each page's main text (first ~1000 words) via ScrapingRobot;
+  MiniLM whole-text embeddings. Video results and unreadable pages excluded.
+  Code and data: <a href="https://github.com/biddy1618/ai-homogenization/tree/main/tracker">github.com/biddy1618/ai-homogenization</a>.
 </footer>
 
 <script>
-const DATA = {"dates": ["2026-10-04", "2026-10-05", "2026-10-12", "2026-10-19", "2026-10-26"], "latest": "2026-10-26", "n_queries": 45, "switches": [{"index": 3, "label": "SerpAPI \u2192 Serper.dev"}], "cats": ["finance", "health", "law", "science", "tech"], "overall": [43.8, 41.6, 36.7, 31.4, 30.6], "series": {"finance": [41.8, 37.0, 37.6, 28.4, 28.4], "health": [42.3, 41.4, 36.0, 28.9, 27.9], "law": [41.0, 37.0, 33.2, 31.1, 27.9], "science": [47.3, 47.9, 35.2, 30.6, 31.3], "tech": [47.4, 45.2, 42.9, 37.9, 37.4]}, "coverage": 0.829, "primary_mean": 30.6, "domains": [{"cat": "health", "pct": 27.9}, {"cat": "law", "pct": 27.9}, {"cat": "finance", "pct": 28.4}, {"cat": "science", "pct": 31.3}, {"cat": "tech", "pct": 37.4}], "leaderboard": [{"query": "what causes high cholesterol", "category": "health", "pct": 21.8, "vendi": 1.74, "n": 8}, {"query": "what is a 401k and how does it work", "category": "finance", "pct": 22.9, "vendi": 2.06, "n": 9}, {"query": "what is an llc and how is it taxed", "category": "law", "pct": 23.2, "vendi": 2.08, "n": 9}, {"query": "how does a class action lawsuit work", "category": "law", "pct": 23.4, "vendi": 1.87, "n": 8}, {"query": "how do index funds work", "category": "finance", "pct": 23.5, "vendi": 1.88, "n": 8}, {"query": "what is the difference between a will and a trust", "category": "law", "pct": 24.3, "vendi": 1.7, "n": 7}, {"query": "is intermittent fasting healthy", "category": "health", "pct": 24.5, "vendi": 1.47, "n": 6}, {"query": "what causes climate change", "category": "science", "pct": 25.3, "vendi": 2.27, "n": 9}, {"query": "what is a good credit score", "category": "finance", "pct": 25.6, "vendi": 1.79, "n": 7}, {"query": "what are tenant rights during eviction", "category": "law", "pct": 25.8, "vendi": 2.32, "n": 9}, {"query": "what are the symptoms of iron deficiency", "category": "health", "pct": 26.0, "vendi": 1.82, "n": 7}, {"query": "how does end-to-end encryption work", "category": "tech", "pct": 26.1, "vendi": 1.83, "n": 7}, {"query": "how does the probate process work", "category": "law", "pct": 26.3, "vendi": 1.84, "n": 7}, {"query": "what is a large language model", "category": "tech", "pct": 27.7, "vendi": 1.94, "n": 7}, {"query": "what are your rights if arrested", "category": "law", "pct": 27.8, "vendi": 2.77, "n": 10}, {"query": "roth ira vs traditional ira", "category": "finance", "pct": 27.9, "vendi": 2.51, "n": 9}, {"query": "what causes migraines", "category": "health", "pct": 28.2, "vendi": 1.69, "n": 6}, {"query": "how do hurricanes form", "category": "science", "pct": 28.2, "vendi": 1.69, "n": 6}, {"query": "how does photosynthesis work", "category": "science", "pct": 28.2, "vendi": 1.98, "n": 7}, {"query": "how does copyright protect creators", "category": "law", "pct": 28.5, "vendi": 2.28, "n": 8}, {"query": "how much sleep do adults need", "category": "health", "pct": 28.8, "vendi": 1.73, "n": 6}, {"query": "how does inflation affect your savings", "category": "finance", "pct": 28.9, "vendi": 2.02, "n": 7}, {"query": "what is a power of attorney", "category": "law", "pct": 29.2, "vendi": 2.34, "n": 8}, {"query": "how much water should you drink a day", "category": "health", "pct": 29.6, "vendi": 2.07, "n": 7}, {"query": "are electric cars better for the environment", "category": "science", "pct": 30.3, "vendi": 2.73, "n": 9}, {"query": "how does refinancing a mortgage work", "category": "finance", "pct": 30.5, "vendi": 1.52, "n": 5}, {"query": "how does the immune system fight infection", "category": "health", "pct": 30.6, "vendi": 2.45, "n": 8}, {"query": "how to lower blood pressure naturally", "category": "health", "pct": 30.7, "vendi": 2.46, "n": 8}, {"query": "what are the early signs of diabetes", "category": "health", "pct": 30.8, "vendi": 1.85, "n": 6}, {"query": "what is the difference between stocks and bonds", "category": "finance", "pct": 31.0, "vendi": 2.17, "n": 7}, {"query": "how do vaccines work", "category": "science", "pct": 31.2, "vendi": 1.56, "n": 5}, {"query": "how to build an emergency fund", "category": "finance", "pct": 31.8, "vendi": 1.91, "n": 6}, {"query": "what is a vpn and how does it work", "category": "tech", "pct": 31.9, "vendi": 2.23, "n": 7}, {"query": "why is the sky blue", "category": "science", "pct": 31.9, "vendi": 1.91, "n": 6}, {"query": "how does compound interest work", "category": "finance", "pct": 33.2, "vendi": 2.33, "n": 7}, {"query": "what is dark matter", "category": "science", "pct": 34.5, "vendi": 2.07, "n": 6}, {"query": "how do black holes form", "category": "science", "pct": 35.6, "vendi": 2.5, "n": 7}, {"query": "what causes earthquakes", "category": "science", "pct": 36.8, "vendi": 2.94, "n": 8}, {"query": "is ai going to replace jobs", "category": "tech", "pct": 38.3, "vendi": 2.68, "n": 7}, {"query": "how does facial recognition work", "category": "tech", "pct": 39.0, "vendi": 1.95, "n": 5}, {"query": "how does two factor authentication work", "category": "tech", "pct": 39.3, "vendi": 1.96, "n": 5}, {"query": "what is retrieval augmented generation", "category": "tech", "pct": 41.6, "vendi": 2.5, "n": 6}, {"query": "what happens during a divorce proceeding", "category": "law", "pct": 42.8, "vendi": 3.42, "n": 8}, {"query": "how does cloud storage work", "category": "tech", "pct": 43.7, "vendi": 1.31, "n": 3}, {"query": "what is the difference between http and https", "category": "tech", "pct": 49.0, "vendi": 2.45, "n": 5}]};
-const PALETTE = ["#5aa9e6","#e6a15a","#7ac77a","#c77ab0","#e6d15a","#5ae6c1","#e65a5a","#9a8ae6",
-                 "#8ae65a","#e68a5a","#5a7ae6","#b0b0b0"];
-const catColor = {};
-DATA.cats.forEach((c,i)=> catColor[c] = PALETTE[i % PALETTE.length]);
+const DATA = {"dates": ["2026-10-04", "2026-10-05", "2026-10-12", "2026-10-19"], "latest": "2026-10-19", "k": 5, "cats": ["finance", "health", "law", "science", "tech"], "markers": [{"index": 3, "label": "Search provider: SerpAPI \u2192 Serper.dev"}], "n_core": 45, "n_searched": 45, "n_analysed": 42, "sim": {"core": [0.7017, 0.7316, 0.7433, 0.7879], "all": [null, null, null, null]}, "ven": {"core": [2.2955, 2.1747, 2.1007, 1.9302], "all": [null, null, null, null]}, "sim_cat": {"finance": [0.6792, 0.7768, 0.7365, 0.7839], "health": [0.6926, 0.6942, 0.7489, 0.8345], "law": [0.7084, 0.7298, 0.7305, 0.7482], "science": [0.7625, 0.7035, 0.811, 0.7892], "tech": [0.6805, 0.7411, 0.6831, 0.7889]}, "domains": [{"cat": "health", "cos": 0.8345, "vendi": 1.7395}, {"cat": "science", "cos": 0.7892, "vendi": 1.9158}, {"cat": "tech", "cos": 0.7889, "vendi": 1.9272}, {"cat": "finance", "cos": 0.7839, "vendi": 1.9226}, {"cat": "law", "cos": 0.7482, "vendi": 2.1241}], "leaderboard": [{"query": "is intermittent fasting healthy", "category": "health", "cos": 0.899, "vendi": 1.47}, {"query": "how does end-to-end encryption work", "category": "tech", "cos": 0.897, "vendi": 1.48}, {"query": "how do vaccines work", "category": "science", "cos": 0.88, "vendi": 1.56}, {"query": "what is a good credit score", "category": "finance", "cos": 0.874, "vendi": 1.57}, {"query": "how do hurricanes form", "category": "science", "cos": 0.871, "vendi": 1.59}, {"query": "what causes high cholesterol", "category": "health", "cos": 0.87, "vendi": 1.59}, {"query": "what are the symptoms of iron deficiency", "category": "health", "cos": 0.868, "vendi": 1.61}, {"query": "what is the difference between a will and a trust", "category": "law", "cos": 0.865, "vendi": 1.62}, {"query": "how does refinancing a mortgage work", "category": "finance", "cos": 0.863, "vendi": 1.61}, {"query": "how much sleep do adults need", "category": "health", "cos": 0.852, "vendi": 1.67}, {"query": "how does inflation affect your savings", "category": "finance", "cos": 0.846, "vendi": 1.71}, {"query": "what is a vpn and how does it work", "category": "tech", "cos": 0.842, "vendi": 1.7}, {"query": "what causes climate change", "category": "science", "cos": 0.841, "vendi": 1.72}, {"query": "how does photosynthesis work", "category": "science", "cos": 0.832, "vendi": 1.77}, {"query": "what are the early signs of diabetes", "category": "health", "cos": 0.826, "vendi": 1.79}, {"query": "what is an llc and how is it taxed", "category": "law", "cos": 0.824, "vendi": 1.76}, {"query": "what is retrieval augmented generation", "category": "tech", "cos": 0.824, "vendi": 1.8}, {"query": "how does copyright protect creators", "category": "law", "cos": 0.814, "vendi": 1.86}, {"query": "what is dark matter", "category": "science", "cos": 0.806, "vendi": 1.89}, {"query": "are electric cars better for the environment", "category": "science", "cos": 0.801, "vendi": 1.9}, {"query": "how to build an emergency fund", "category": "finance", "cos": 0.801, "vendi": 1.87}, {"query": "what is a large language model", "category": "tech", "cos": 0.801, "vendi": 1.9}, {"query": "how does facial recognition work", "category": "tech", "cos": 0.798, "vendi": 1.91}, {"query": "how much water should you drink a day", "category": "health", "cos": 0.797, "vendi": 1.9}, {"query": "how does the immune system fight infection", "category": "health", "cos": 0.797, "vendi": 1.92}, {"query": "what is the difference between stocks and bonds", "category": "finance", "cos": 0.791, "vendi": 1.94}, {"query": "how do black holes form", "category": "science", "cos": 0.784, "vendi": 1.96}, {"query": "how does compound interest work", "category": "finance", "cos": 0.783, "vendi": 1.96}, {"query": "how do index funds work", "category": "finance", "cos": 0.778, "vendi": 1.86}, {"query": "how does a class action lawsuit work", "category": "law", "cos": 0.776, "vendi": 1.99}, {"query": "what is a power of attorney", "category": "law", "cos": 0.768, "vendi": 2.03}, {"query": "how to lower blood pressure naturally", "category": "health", "cos": 0.768, "vendi": 1.98}, {"query": "how does the probate process work", "category": "law", "cos": 0.768, "vendi": 2.01}, {"query": "what are tenant rights during eviction", "category": "law", "cos": 0.764, "vendi": 2.01}, {"query": "why is the sky blue", "category": "science", "cos": 0.753, "vendi": 2.04}, {"query": "how does two factor authentication work", "category": "tech", "cos": 0.748, "vendi": 2.03}, {"query": "what is a 401k and how does it work", "category": "finance", "cos": 0.71, "vendi": 2.14}, {"query": "what are your rights if arrested", "category": "law", "cos": 0.659, "vendi": 2.59}, {"query": "is ai going to replace jobs", "category": "tech", "cos": 0.612, "vendi": 2.66}, {"query": "roth ira vs traditional ira", "category": "finance", "cos": 0.609, "vendi": 2.64}, {"query": "what causes earthquakes", "category": "science", "cos": 0.535, "vendi": 2.81}, {"query": "what happens during a divorce proceeding", "category": "law", "cos": 0.497, "vendi": 3.25}], "latest_sim": 0.7879, "latest_vendi": 1.9302, "mix": {"groups": ["Reddit & Q&A forums", "Wikipedia & encyclopedias", "Government & universities", "Health sites", "Finance & legal publishers", "Tech companies & publishers", "News & magazines", "Other sites"], "values": {"Reddit & Q&A forums": [8.9, 8.2, 5.2, 7.1], "Wikipedia & encyclopedias": [0.9, 2.1, 1.2, 4.2], "Government & universities": [12.9, 9.4, 15.9, 24.8], "Health sites": [1.5, 2.1, 2.6, 5.3], "Finance & legal publishers": [2.5, 3.0, 5.5, 6.1], "Tech companies & publishers": [1.5, 3.0, 2.9, 5.5], "News & magazines": [1.5, 1.2, 2.3, 1.3], "Other sites": [70.2, 71.0, 64.5, 45.6]}}, "legacy": {"dates": ["2026-10-04", "2026-10-05", "2026-10-12", "2026-10-19"], "pct": [43.8476, 41.6267, 36.724, 31.3773]}};
+const PALETTE = ["#5aa9e6","#e6a15a","#7ac77a","#c77ab0","#e6d15a","#5ae6c1","#e65a5a","#9a8ae6"];
+const catColor = {}; DATA.cats.forEach((c,i)=> catColor[c] = PALETTE[i % PALETTE.length]);
+const grid = {color:"#262a33"}, tick = {color:"#9aa0aa"};
 
 document.getElementById("sub").textContent =
-  `Latest run ${DATA.latest} · ${DATA.n_queries} queries · full-page`
-  + (DATA.coverage!=null ? ` · ${Math.round(DATA.coverage*100)}% of result pages analysed` : "")
-  + ` · ${DATA.dates.length} run(s)`;
+  `Latest run ${DATA.latest} · ${DATA.n_searched} questions searched, ${DATA.n_analysed} with ${DATA.k} readable pages · ${DATA.dates.length} run(s)`;
 
 const lb = DATA.leaderboard;
-const mostHom = lb[0], mostDiv = lb[lb.length-1];
 const kpis = [
-  ["Most homogeneous", mostHom.query, `${mostHom.pct}% distinct (Vendi ${mostHom.vendi} of ${mostHom.n} pages)`],
-  ["Most diverse", mostDiv.query, `${mostDiv.pct}% distinct (Vendi ${mostDiv.vendi} of ${mostDiv.n} pages)`],
-  ["Mean % distinct", `${DATA.primary_mean}%`, `across ${DATA.n_queries} questions`],
+  ["Average similarity", DATA.latest_sim==null ? "–" : DATA.latest_sim.toFixed(2), `top ${DATA.k} pages, latest run`],
+  ["Distinct pages", DATA.latest_vendi==null ? "–" : DATA.latest_vendi.toFixed(2), `out of ${DATA.k}, latest run`],
+  ["Most alike", lb.length ? lb[0].query : "–", lb.length ? `similarity ${lb[0].cos}` : ""],
+  ["Most varied", lb.length ? lb[lb.length-1].query : "–", lb.length ? `similarity ${lb[lb.length-1].cos}` : ""],
 ];
 document.getElementById("kpis").innerHTML = kpis.map(k =>
-  `<div class="kpi"><div class="label">${k[0]}</div>
-   <div class="value">${k[1]} <small>${k[2]}</small></div></div>`).join("");
+  `<div class="kpi"><div class="label">${k[0]}</div><div class="value">${k[1]} <small>${k[2]}</small></div></div>`).join("");
 
-new Chart(document.getElementById("domains"), {
-  type: "bar",
-  data: { labels: DATA.domains.map(d=>d.cat),
-    datasets: [{ data: DATA.domains.map(d=>d.pct),
-      backgroundColor: DATA.domains.map(d=>catColor[d.cat]) }] },
-  options: { plugins:{legend:{display:false}},
-    scales:{ x:{grid:{display:false},ticks:{color:"#e8eaed"}},
-      y:{beginAtZero:true,grid:{color:"#262a33"},ticks:{color:"#9aa0aa"},title:{display:true,text:"% distinct",color:"#9aa0aa"}} } },
-});
-
-new Chart(document.getElementById("leaderboard"), {
-  type: "bar",
-  data: { labels: lb.map(d=>d.query),
-    datasets: [{ label:"% distinct", data: lb.map(d=>d.pct), backgroundColor: lb.map(d=>catColor[d.category]) }] },
-  options: { indexAxis:"y",
-    plugins:{
-      legend:{ display:true, position:"top", align:"end",
-        labels:{ color:"#e8eaed", boxWidth:12, font:{size:11},
-          generateLabels: () => DATA.cats.map(c => ({ text:c, fillStyle:catColor[c],
-            strokeStyle:catColor[c], fontColor:"#e8eaed", lineWidth:0, hidden:false })) },
-        onClick: () => {} },
-      tooltip:{ callbacks:{ afterLabel:(c)=> lb[c.dataIndex].category } } },
-    scales:{ x:{beginAtZero:true,grid:{color:"#262a33"},ticks:{color:"#9aa0aa"}},
-      y:{grid:{display:false},ticks:{color:"#e8eaed",font:{size:10}}} } },
-});
-
-const crossesSwitch = (i) => DATA.switches.some(s => s.index === i + 1);
-const switchSegment = { borderDash: ctx => crossesSwitch(ctx.p0DataIndex) ? [2,5] : undefined };
-const tsDatasets = [{
-  label:"Overall", data:DATA.overall, borderColor:"#ffffff", backgroundColor:"#ffffff",
-  borderWidth:3, tension:.25, pointRadius:3, segment:switchSegment,
-}];
-tsDatasets.push(...DATA.cats.map(c => ({
-  label:c, data:DATA.series[c], borderColor:catColor[c], backgroundColor:catColor[c],
-  borderWidth:1.5, tension:.25, pointRadius:2, segment:switchSegment })));
-
-// Vertical dashed marker midway between the last run of one provider and the first of the next.
-const switchMarker = { id:"switchMarker", afterDatasetsDraw(chart) {
+const markerPlugin = { id:"markers", afterDatasetsDraw(chart) {
   const {ctx, chartArea:a, scales:{x}} = chart;
-  DATA.switches.forEach(s => {
-    const xp = (x.getPixelForValue(s.index - 1) + x.getPixelForValue(s.index)) / 2;
+  DATA.markers.forEach((m, j) => {
+    const xp = (x.getPixelForValue(m.index - 1) + x.getPixelForValue(m.index)) / 2;
     ctx.save(); ctx.strokeStyle = "#9aa0aa"; ctx.setLineDash([4,4]); ctx.lineWidth = 1;
     ctx.beginPath(); ctx.moveTo(xp, a.top); ctx.lineTo(xp, a.bottom); ctx.stroke();
-    ctx.setLineDash([]); ctx.fillStyle = "#9aa0aa"; ctx.font = "11px sans-serif";
-    ctx.textAlign = "center"; ctx.fillText("Search provider: " + s.label, xp, a.top + 12);
-    ctx.restore();
+    ctx.setLineDash([]); ctx.fillStyle = "#9aa0aa"; ctx.font = "11px sans-serif"; ctx.textAlign = "center";
+    ctx.fillText(m.label, xp, a.top + 12 + 14 * j); ctx.restore();
   });
 }};
-if (DATA.switches.length)
-  document.getElementById("switchnote").textContent =
-    "Dotted segments cross a change of Google-results provider (" +
-    DATA.switches.map(s => s.label).join(", ") + "). Both return Google's top results, but for " +
-    "the same query they can surface different pages, so the step across the marker is not a " +
-    "like-for-like comparison.";
-new Chart(document.getElementById("timeseries"), {
-  type:"line", data:{ labels:DATA.dates, datasets:tsDatasets }, plugins:[switchMarker],
-  options:{ plugins:{legend:{labels:{color:"#e8eaed",boxWidth:12,font:{size:11}}}},
-    scales:{ x:{grid:{color:"#262a33"},ticks:{color:"#9aa0aa"}},
-      y:{grid:{color:"#262a33"},ticks:{color:"#9aa0aa"},title:{display:true,text:"mean % distinct",color:"#9aa0aa"}} } },
-});
+
+function timeChart(id, s, label, cats, ratio) {
+  const ds = [
+    {label:`Original ${DATA.n_core} questions`, data:s.core, borderColor:"#fff", backgroundColor:"#fff",
+     borderWidth:3, tension:0, pointRadius:3},
+    {label:"All questions", data:s.all, borderColor:"#fff", backgroundColor:"#fff", borderDash:[6,4],
+     borderWidth:2, tension:0, pointRadius:3, spanGaps:false},
+  ];
+  if (cats) ds.push(...DATA.cats.map(c => ({label:c, data:cats[c], borderColor:catColor[c],
+     backgroundColor:catColor[c], borderWidth:1.5, tension:0, pointRadius:2})));
+  new Chart(document.getElementById(id), { type:"line", data:{labels:DATA.dates, datasets:ds},
+    plugins:[markerPlugin],
+    options:{ aspectRatio:ratio, plugins:{legend:{labels:{color:"#e8eaed",boxWidth:12,font:{size:11}}}},
+      scales:{x:{grid, ticks:tick}, y:{grid, ticks:tick, title:{display:true, text:label, color:"#9aa0aa"}}}}});
+}
+timeChart("sim", DATA.sim, "average similarity", DATA.sim_cat, 2.4);
+timeChart("ven", DATA.ven, `distinct pages out of ${DATA.k}`, null, 3.2);
+
+new Chart(document.getElementById("domains"), { type:"bar",
+  data:{ labels:DATA.domains.map(d=>d.cat), datasets:[{ data:DATA.domains.map(d=>d.cos),
+    backgroundColor:DATA.domains.map(d=>catColor[d.cat]) }] },
+  options:{ aspectRatio:3.4, plugins:{legend:{display:false}, tooltip:{callbacks:{afterLabel:(c)=>
+      `distinct pages: ${DATA.domains[c.dataIndex].vendi} of ${DATA.k}`}}},
+    scales:{ x:{grid:{display:false}, ticks:{color:"#e8eaed"}},
+      y:{grid, ticks:tick, title:{display:true, text:"average similarity", color:"#9aa0aa"}} } } });
+
+const MIXCOL = ["#e65a5a","#e6d15a","#5aa9e6","#7ac77a","#e6a15a","#9a8ae6","#c77ab0","#6b7280"];
+new Chart(document.getElementById("mix"), { type:"bar",
+  data:{ labels:DATA.dates, datasets:DATA.mix.groups.map((g,i)=>({ label:g, data:DATA.mix.values[g],
+    backgroundColor:MIXCOL[i % MIXCOL.length] })) },
+  plugins:[markerPlugin],
+  options:{ aspectRatio:2.6, plugins:{legend:{labels:{color:"#e8eaed",boxWidth:12,font:{size:11}}}},
+    scales:{ x:{stacked:true, grid:{display:false}, ticks:tick},
+      y:{stacked:true, max:100, grid, ticks:tick, title:{display:true, text:"% of results", color:"#9aa0aa"}} } } });
+
+const lbCanvas = document.getElementById("leaderboard");
+document.getElementById("lbwrap").style.height = Math.max(300, 16 * lb.length + 70) + "px";
+new Chart(lbCanvas, { type:"bar",
+  data:{ labels:lb.map(d=>d.query), datasets:[{ label:"similarity", data:lb.map(d=>d.cos),
+    backgroundColor:lb.map(d=>catColor[d.category]) }] },
+  options:{ indexAxis:"y", maintainAspectRatio:false,
+    plugins:{ legend:{ display:true, position:"top", align:"end",
+        labels:{ color:"#e8eaed", boxWidth:12, font:{size:11},
+          generateLabels:() => DATA.cats.map(c => ({ text:c, fillStyle:catColor[c], strokeStyle:catColor[c],
+            fontColor:"#e8eaed", lineWidth:0, hidden:false })) }, onClick:() => {} },
+      tooltip:{ callbacks:{ afterLabel:(c)=> `${lb[c.dataIndex].category} · distinct pages ${lb[c.dataIndex].vendi} of ${DATA.k}` } } },
+    scales:{ x:{grid, ticks:tick}, y:{grid:{display:false}, ticks:{color:"#e8eaed", font:{size:10}}} } } });
+
+new Chart(document.getElementById("legacy"), { type:"line",
+  data:{ labels:DATA.legacy.dates, datasets:[{ label:"% distinct (v1)", data:DATA.legacy.pct,
+    borderColor:"#9aa0aa", backgroundColor:"#9aa0aa", borderWidth:2, pointRadius:3 }] },
+  options:{ aspectRatio:3.4, plugins:{legend:{labels:{color:"#e8eaed"}}},
+    scales:{ x:{grid, ticks:tick}, y:{grid, ticks:tick, title:{display:true, text:"% distinct", color:"#9aa0aa"}} } } });
 </script>
 </body>
 </html>

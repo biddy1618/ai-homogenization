@@ -15,6 +15,13 @@ concurrency:
 jobs:
   track:
     runs-on: ubuntu-latest   # GitHub-hosted runner — no infra to maintain
+    env:
+      # Optional: if these repo secrets exist, page texts are kept in the private S3 bucket (never
+      # in this public repo) so any metric can be recomputed later without re-fetching.
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      AWS_DEFAULT_REGION: us-west-2
+      PAGE_BUCKET: s3://biddy-homogenization/tracker/pagecache/
     steps:
       - uses: actions/checkout@v4
 
@@ -41,10 +48,18 @@ jobs:
           --queries tracker/queries.txt --out-dir tracker/data
           --location "United States" --device desktop --num 10
 
-      - name: Full-page recompute
+      - name: Restore page cache from S3 (optional)
+        if: ${{ env.AWS_ACCESS_KEY_ID != '' }}
+        run: aws s3 sync "$PAGE_BUCKET" tracker/data/pagecache --only-show-errors
+
+      - name: Full-page metrics (first 5 readable pages per question)
         env:
           SCRAPING_ROBOT_API_KEY: ${{ secrets.SCRAPING_ROBOT_API_KEY }}
-        run: python tracker/fullpage.py --provider scrapingrobot --date "$(date -u +%Y-%m-%d)"
+        run: python tracker/fullpage.py --provider scrapingrobot --top-k 5 --date "$(date -u +%Y-%m-%d)"
+
+      - name: Save page cache to S3 (optional)
+        if: ${{ env.AWS_ACCESS_KEY_ID != '' }}
+        run: aws s3 sync tracker/data/pagecache "$PAGE_BUCKET" --only-show-errors
 
       - name: Build dashboard
         run: python tracker/dashboard/build.py

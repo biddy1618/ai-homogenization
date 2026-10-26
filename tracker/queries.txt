@@ -1,11 +1,13 @@
-# Homogenization tracker — query panel (v0.3)
+# Homogenization tracker — query panel (v0.4, from 2026-10-26)
 #
 # Format:   category | query text        (lines starting with # are ignored)
-# FROZEN panel: 5 high-stakes knowledge domains x 9 specific, informational questions.
-# Informational intent -> Google returns ARTICLE pages (good full-page coverage) and the
-# Vendi metric is meaningful. Commercial / "best X" queries were dropped (shopping/social
-# results don't scrape and aren't information). ~45 queries x weekly ≈ 1,550 ScrapingRobot
-# fetches/month (fits the 5,000 free tier) + ~195 SerpAPI/month (fits 250 free).
+# 5 high-stakes knowledge domains x 20 specific, informational questions = 100.
+# The first 9 per domain are the ORIGINAL panel (2026-10-04 onwards, the "core 45"); the
+# other 11 per domain were added on 2026-10-26. Never edit or remove a query: the series
+# depends on the panel staying fixed. Commercial / "best X" queries are excluded (shopping
+# and social results are not information and do not scrape).
+# Budget: 100 Serper searches/week; ScrapingRobot fetches stop once 5 readable pages are found
+# (~650/week, ~2,800/month, within the 5,000 free tier).
 
 health | what are the symptoms of iron deficiency
 health | how to lower blood pressure naturally
@@ -16,6 +18,17 @@ health | what are the early signs of diabetes
 health | how does the immune system fight infection
 health | what causes high cholesterol
 health | how much sleep do adults need
+health | what causes acid reflux
+health | how does caffeine affect the body
+health | what are the symptoms of vitamin d deficiency
+health | how do antibiotics work
+health | what causes anxiety
+health | how to treat a sprained ankle
+health | what is the difference between a cold and the flu
+health | how does alcohol affect the liver
+health | what causes lower back pain
+health | how much protein do you need per day
+health | what are the benefits of regular exercise
 
 finance | how does compound interest work
 finance | what is a good credit score
@@ -26,6 +39,17 @@ finance | what is a 401k and how does it work
 finance | how does inflation affect your savings
 finance | how do index funds work
 finance | what is the difference between stocks and bonds
+finance | how do credit cards work
+finance | what is a mutual fund
+finance | how are capital gains taxed
+finance | how does a home equity loan work
+finance | what is dollar cost averaging
+finance | how does social security work
+finance | what is an annuity
+finance | how do student loans work
+finance | what is a health savings account
+finance | how does a credit freeze work
+finance | what is the difference between a debit card and a credit card
 
 law | what is a power of attorney
 law | what are tenant rights during eviction
@@ -36,6 +60,17 @@ law | what happens during a divorce proceeding
 law | what is an llc and how is it taxed
 law | what are your rights if arrested
 law | how does copyright protect creators
+law | what is the statute of limitations
+law | how does small claims court work
+law | what is fair use in copyright
+law | how does a non-compete agreement work
+law | what is the difference between a misdemeanor and a felony
+law | how does child custody work
+law | what is a living will
+law | how do you file for bankruptcy
+law | what is a trademark and how do you register one
+law | what are employee rights when fired
+law | how does a prenuptial agreement work
 
 science | how do vaccines work
 science | what causes climate change
@@ -46,6 +81,17 @@ science | what causes earthquakes
 science | how does photosynthesis work
 science | are electric cars better for the environment
 science | what is dark matter
+science | how does dna replication work
+science | what causes the seasons
+science | how do tides work
+science | what is quantum entanglement
+science | how does evolution by natural selection work
+science | what causes volcanic eruptions
+science | how does antibiotic resistance develop
+science | what is the big bang theory
+science | how does nuclear fusion work
+science | why do leaves change color in the fall
+science | how do rainbows form
 
 tech | what is a vpn and how does it work
 tech | how does two factor authentication work
@@ -56,3 +102,14 @@ tech | how does facial recognition work
 tech | what is the difference between http and https
 tech | how does cloud storage work
 tech | what is a large language model
+tech | how does a blockchain work
+tech | what is machine learning
+tech | how does wifi work
+tech | what is a password manager
+tech | how does gps work
+tech | what is phishing and how to avoid it
+tech | how do search engines rank pages
+tech | what is 5g technology
+tech | how does a computer virus spread
+tech | what is an api
+tech | how do solid state drives work

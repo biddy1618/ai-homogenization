@@ -4,6 +4,34 @@ Running log of client meetings, newest entry first.
 
 ---
 
+## 2026-10-25 (live call with Mark — held, ~18 min)
+
+Recording: tl;dv transcript "AI Project – update". Mark had not yet read paper v0.2.
+
+### What I showed / said
+- **Paper v0.2** (sent 2026-10-19): after the whole-text fix, the rise in similarity is clearly
+  stronger in high-cognitive-load communities. Mark: "extremely interesting". Paper is 13 pages, PDF.
+- **Tracker:** the latest drop is not apples-to-apples: the switch from SerpAPI to Serper.dev
+  returned more pages per query, and "% distinct" falls with page count. Mark agreed it can't be
+  compared with earlier points.
+
+### Decisions
+- **More queries approved**, even if it costs ~$1/month later ("that's okay, let's do that").
+- **Open-ended work approved:** Mark is fine with me setting the direction — more tracker plots,
+  testing other scores, mirroring the paper's similarity measure on the tracker so the two can be
+  compared, and testing my own hypotheses for the paper ("I like that idea").
+
+### Action items
+
+| # | Owner | Item | Status |
+|---|-------|------|--------|
+| 1 | Dauren | Email Mark a summary of the call, incl. the two additions (tracker plots/metrics, paper hypotheses) | Open |
+| 2 | Dauren | Calendar invite: same time next week | Open |
+| 3 | Dauren | Tracker: comparable weeks (fixed page count), more queries, paper's similarity measure, new plots | Open |
+| 4 | Mark | Read paper v0.2 and send feedback | Open (Mark) |
+
+---
+
 ## 2026-10-15 (live call with Mark + Emmett — held, 07:00, 50 min)
 
 Mark joined from the car, and his connection dropped around 26:00–29:10. **New participant: Emmett
