@@ -4,3 +4,4 @@ run_date,run_ts_utc,tracker_version,model,engine,num,gl,hl,device,location,n_que
 2026-10-12,2026-10-12T15:37:38Z,0.3,sentence-transformers/all-MiniLM-L6-v2,google,10,us,en,desktop,United States,45,45,0,c9341a8
 2026-10-19,2026-10-19T13:26:23Z,0.5,sentence-transformers/all-MiniLM-L6-v2,serper:google,10,us,en,desktop,United States,45,45,0,ba39709
 2026-10-26,2026-10-26T13:12:24Z,0.5,sentence-transformers/all-MiniLM-L6-v2,serper:google,10,us,en,desktop,United States,45,45,0,8fc3742
+2026-10-26,2026-10-26T15:37:31Z,0.5,sentence-transformers/all-MiniLM-L6-v2,serper:google,10,us,en,desktop,United States,100,55,45,bc9266b

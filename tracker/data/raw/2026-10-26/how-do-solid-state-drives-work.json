@@ -1,0 +1,65 @@
+[
+  {
+    "position": 1,
+    "title": "ELI5: How does a SSD physically store data?",
+    "link": "https://www.reddit.com/r/explainlikeimfive/comments/p2tmz8/eli5_how_does_a_ssd_physically_store_data/",
+    "domain": "www.reddit.com",
+    "snippet": "I know that on hard drives the bits are stored in magnetic material where south pole is 0 and north is 1 (something like that anyways) but how can the ssd ..."
+  },
+  {
+    "position": 2,
+    "title": "Solid-state drive",
+    "link": "https://en.wikipedia.org/wiki/Solid-state_drive",
+    "domain": "en.wikipedia.org",
+    "snippet": "SSDs rely on non-volatile memory, typically NAND flash, to store data in memory cells. The performance and endurance of SSDs vary depending on the number of ..."
+  },
+  {
+    "position": 3,
+    "title": "What Is an SSD and How Does It Work?",
+    "link": "https://computer.howstuffworks.com/solid-state-drive.htm",
+    "domain": "computer.howstuffworks.com",
+    "snippet": "The SSD works by storing data on an interconnected network of flash-memory chips. HDD and SSD work by storing data on a series of spinning disks or flash ..."
+  },
+  {
+    "position": 5,
+    "title": "What is an SSD? The Ultimate Guide to Solid-State Drives",
+    "link": "https://www.hp.com/us-en/tech-takes/components/explainer/what-is-an-ssd.html",
+    "domain": "www.hp.com",
+    "snippet": "SSDs store data using flash memory, typically NAND flash. chips The SSD controller manages read/write operations and data distribution"
+  },
+  {
+    "position": 6,
+    "title": "What is an SSD and how does it work?",
+    "link": "https://www.avira.com/en/blog/what-is-an-ssd?srsltid=AYCX9vIs654-fzUDDBJpLDAczi5e0kiMaMoyCsugPyZb7ap0w-RMXcJv",
+    "domain": "www.avira.com",
+    "snippet": "Let's sum up what we know so far: SSDs use flash memory to store data within a built-in circuit. The data is stored persistently, so it's called ..."
+  },
+  {
+    "position": 7,
+    "title": "What is a Solid State Drive (SSD)?",
+    "link": "https://www.sandisk.com/topics/ssd/what-is-a-solid-state-drive-ssd",
+    "domain": "www.sandisk.com",
+    "snippet": "A solid state drive (SSD) is a storage device that saves your files, photos, and applications using memory chips instead of physical moving parts like an HDD."
+  },
+  {
+    "position": 8,
+    "title": "How Do SSDs Work? - ExtremeTech",
+    "link": "https://www.extremetech.com/computing/how-do-ssds-work",
+    "domain": "www.extremetech.com",
+    "snippet": "Solid-state drives are called that specifically because they don't rely on moving parts or spinning disks. Instead, data is saved to a pool of ..."
+  },
+  {
+    "position": 9,
+    "title": "What Is SSD? Solid State Drive Explained",
+    "link": "https://www.lenovo.com/us/en/glossary/what-is-ssd/?srsltid=AYCX9vJq8y__Q6zlDaC-ivfJ4LxZBWtshdxTeXU6TH74_kVMtcIqaSjm",
+    "domain": "www.lenovo.com",
+    "snippet": "They use flash memory to store data, which allows for rapid access and retrieval. This results in quicker boot times, faster file transfers, and overall ..."
+  },
+  {
+    "position": 10,
+    "title": "What is an SSD?",
+    "link": "https://www.crucial.com/articles/about-ssd/what-is-an-ssd?srsltid=AYCX9vK2oNalz7DEjKwRrf4bVsl_j8rYPUC4Oax2_q4lYKZHjhULENrt",
+    "domain": "www.crucial.com",
+    "snippet": "SSDs use flash memory to read and write data digitally. Since they don't have to mechanically seek out data, SSDs deliver nearly instant boot and load times ..."
+  }
+]

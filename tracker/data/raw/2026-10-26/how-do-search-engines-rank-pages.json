@@ -1,0 +1,72 @@
+[
+  {
+    "position": 1,
+    "title": "In-Depth Guide to How Google Search Works",
+    "link": "https://developers.google.com/search/docs/fundamentals/how-search-works",
+    "domain": "developers.google.com",
+    "snippet": "Get an in-depth understanding of how Google Search works and improve your site for Google's crawling, indexing, and ranking processes."
+  },
+  {
+    "position": 2,
+    "title": "How Does Google Determine Ranking Results",
+    "link": "https://www.google.com/intl/en_us/search/howsearchworks/how-search-works/ranking-results",
+    "domain": "www.google.com",
+    "snippet": "Discover how key factors such as meaning, relevance, and quality are used to generate how websites are ranking on Google."
+  },
+  {
+    "position": 3,
+    "title": "How Search Engines Rank Pages",
+    "link": "https://www.searchenginejournal.com/search-engines/ranking/",
+    "domain": "www.searchenginejournal.com",
+    "snippet": "How Search Engines Rank Pages · Step 1: Classify · Step 2: Context · Step 3: Weights · Step 4: Layout · Step 5: Ranking."
+  },
+  {
+    "position": 4,
+    "title": "How Do Search Engines Work?",
+    "link": "https://www.spyfu.com/blog/how-do-search-engines-work/",
+    "domain": "www.spyfu.com",
+    "snippet": "Search engines rank the results in order of relevance. The goal is to give the searcher the best possible answer to their query that they typed."
+  },
+  {
+    "position": 5,
+    "title": "How Do Search Engines Rank Websites? - HatchTechs UAE",
+    "link": "https://hatchtechs.ae/blog/how-do-search-engines-rank-websites",
+    "domain": "hatchtechs.ae",
+    "snippet": "Search engines rank websites by evaluating hundreds of factors to determine which pages provide the most relevant, trustworthy, and valuable ..."
+  },
+  {
+    "position": 6,
+    "title": "How Search Engines Work: Crawling, Indexing, and Ranking",
+    "link": "https://moz.com/beginners-guide-to-seo/how-search-engines-operate",
+    "domain": "moz.com",
+    "snippet": "This ordering of search results by relevance is known as ranking. In general, you can assume that the higher a website is ranked, the more relevant the search ..."
+  },
+  {
+    "position": 7,
+    "title": "How do search engines determine the ranking of web ...",
+    "link": "https://seoforbeginnerwithtipsandtricks.quora.com/How-do-search-engines-determine-the-ranking-of-web-pages-in-search-results",
+    "domain": "seoforbeginnerwithtipsandtricks.quora.com",
+    "snippet": "How do search engines determine the ranking of web pages in search results?"
+  },
+  {
+    "position": 8,
+    "title": "How do Search Engine rank web pages?",
+    "link": "https://www.rankwatch.com/learning/content/13-how-do-search-engine-rank-web-pages",
+    "domain": "www.rankwatch.com",
+    "snippet": "Basically, every Search Engine uses its own algorithm to rank webpages making sure that only relevant results are returned for the query entered by the user."
+  },
+  {
+    "position": 9,
+    "title": "ELI5: How do Google and other search engines provide me with results so ...",
+    "link": "https://www.reddit.com/r/explainlikeimfive/comments/1plb35a/eli5_how_do_google_and_other_search_engines/",
+    "domain": "www.reddit.com",
+    "snippet": ""
+  },
+  {
+    "position": 10,
+    "title": "How does a search engine rank millions of pages within 1 second?",
+    "link": "https://stackoverflow.com/questions/19162020/how-does-a-search-engine-rank-millions-of-pages-within-1-second",
+    "domain": "stackoverflow.com",
+    "snippet": ""
+  }
+]

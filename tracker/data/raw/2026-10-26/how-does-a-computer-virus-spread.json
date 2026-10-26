@@ -1,0 +1,58 @@
+[
+  {
+    "position": 1,
+    "title": "What are Computer Viruses? Definition & Types of Viruses",
+    "link": "https://www.fortinet.com/resources/cyberglossary/computer-virus",
+    "domain": "www.fortinet.com",
+    "snippet": "Computer viruses are commonly spread via email. Hackers can use other people's email accounts to spread malware and carry out wider cyberattacks. Therefore, if ..."
+  },
+  {
+    "position": 2,
+    "title": "What Is a Computer Virus and How Does It Work?",
+    "link": "https://www.avast.com/c-computer-virus",
+    "domain": "www.avast.com",
+    "snippet": "Typically, viruses spread through malicious online downloads, infected email attachments, or compromised hardware like an external flash drive."
+  },
+  {
+    "position": 3,
+    "title": "How malware can infect your PC",
+    "link": "https://support.microsoft.com/en-us/security/how-malware-can-infect-your-pc",
+    "domain": "support.microsoft.com",
+    "snippet": "Many worms spread by infecting removable drives such as USB flash drives or external hard drives. The malware can be automatically installed when you connect ..."
+  },
+  {
+    "position": 4,
+    "title": "ELI5 how are computer viruses even a thing",
+    "link": "https://www.reddit.com/r/explainlikeimfive/comments/1l8zu6e/eli5_how_are_computer_viruses_even_a_thing/",
+    "domain": "www.reddit.com",
+    "snippet": "Viruses usually end up on your computer through trusting unknown downloads from unknown sources/links, opening sketchy or unknown emails/files/ ..."
+  },
+  {
+    "position": 5,
+    "title": "Virus Basics",
+    "link": "https://www.cisa.gov/news-events/news/virus-basics",
+    "domain": "www.cisa.gov",
+    "snippet": "A computer virus is a program that spreads by first infecting files or the system areas of a computer or network router's hard drive and then making copies of ..."
+  },
+  {
+    "position": 7,
+    "title": "What is a computer virus? Types and how to avoid them",
+    "link": "https://us.norton.com/blog/malware/what-is-a-computer-virus",
+    "domain": "us.norton.com",
+    "snippet": "Computer viruses spread digitally from host to host, infecting systems and replicating as they go, similar to how a flu virus spreads through a population. ..."
+  },
+  {
+    "position": 8,
+    "title": "How does computer virus spread",
+    "link": "https://askfilo.com/user-question-answers-smart-solutions/how-does-computer-virus-spread-3331303331363339",
+    "domain": "askfilo.com",
+    "snippet": "Computer viruses spread through email attachments, downloading infected files, removable media, network connections, and exploiting software ..."
+  },
+  {
+    "position": 9,
+    "title": "Computer Viruses",
+    "link": "https://www.wbu.edu/wbu-online/current-students/computer-viruses.htm",
+    "domain": "www.wbu.edu",
+    "snippet": "Viruses spread by infecting other programs, either on the same computer or on other computers connected to it over a network. Any newly infected programs/ ..."
+  }
+]

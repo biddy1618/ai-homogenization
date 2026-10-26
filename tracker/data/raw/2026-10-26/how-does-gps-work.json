@@ -1,0 +1,58 @@
+[
+  {
+    "position": 1,
+    "title": "How Does GPS Work?",
+    "link": "https://spaceplace.nasa.gov/gps/",
+    "domain": "spaceplace.nasa.gov",
+    "snippet": "The Short Answer: GPS is a system of 30+ navigation satellites circling Earth. We know where they are because they constantly send out signals."
+  },
+  {
+    "position": 2,
+    "title": "Satellite Navigation - GPS - How It Works",
+    "link": "https://www.faa.gov/about/office_org/headquarters_offices/ato/service_units/techops/navservices/gnss/gps/howitworks",
+    "domain": "www.faa.gov",
+    "snippet": "Satellite Navigation is based on a global network of satellites that transmit radio signals from medium earth orbit. Users of Satellite Navigation are most ..."
+  },
+  {
+    "position": 3,
+    "title": "What is GPS and how does it work?",
+    "link": "https://novatel.com/support/knowledge-and-learning/what-is-gps-gnss",
+    "domain": "novatel.com",
+    "snippet": "The Global Positioning System (GPS) is a satellite-based locating and navigating utility that determines a user's precise latitude, longitude and altitude ..."
+  },
+  {
+    "position": 4,
+    "title": "Global Positioning System",
+    "link": "https://en.wikipedia.org/wiki/Global_Positioning_System",
+    "domain": "en.wikipedia.org",
+    "snippet": "GPS satellites broadcast signals from space, and each GPS receiver uses these signals to calculate its three-dimensional location (latitude, longitude, and ..."
+  },
+  {
+    "position": 6,
+    "title": "What is GPS? | Garmin",
+    "link": "https://www.garmin.com/en-US/aboutgps/",
+    "domain": "www.garmin.com",
+    "snippet": "HOW GPS WORKS ... GPS satellites circle the Earth twice a day in a precise orbit. Each satellite transmits a unique signal and orbital parameters that allow GPS ..."
+  },
+  {
+    "position": 7,
+    "title": "Eli5 How does GPS navigation work? : r/explainlikeimfive",
+    "link": "https://www.reddit.com/r/explainlikeimfive/comments/1ae9ngm/eli5_how_does_gps_navigation_work/",
+    "domain": "www.reddit.com",
+    "snippet": "Your GPS device uses the time difference between each satellite it can hear to determine the distance from each satellite. Your GPS devices uses ..."
+  },
+  {
+    "position": 8,
+    "title": "What Is GPS & How do Global Positioning Systems Work?",
+    "link": "https://www.geotab.com/blog/what-is-gps/",
+    "domain": "www.geotab.com",
+    "snippet": "GPS, or Global Positioning System, is a network of satellites that transmit signals to GPS receivers, allowing them to determine precise geographic location and ..."
+  },
+  {
+    "position": 9,
+    "title": "How Does GPS Work? | Time and Navigation",
+    "link": "https://timeandnavigation.si.edu/multimedia-asset/how-does-gps-work",
+    "domain": "timeandnavigation.si.edu",
+    "snippet": "GPS satellites simultaneously transmit synchronized time and orbital data to Earth. GPS receivers compute location using orbital data and the difference in ..."
+  }
+]

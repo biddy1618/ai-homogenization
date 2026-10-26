@@ -1,0 +1,58 @@
+[
+  {
+    "position": 1,
+    "title": "What is 5G | Everything You Need to Know About 5G",
+    "link": "https://www.qualcomm.com/5g/what-is-5g",
+    "domain": "www.qualcomm.com",
+    "snippet": "5G is the 5th generation mobile network. 5G wireless technology is meant to deliver higher multi-Gbps peak data speeds, ultra low latency, more reliability, ..."
+  },
+  {
+    "position": 2,
+    "title": "What Is 5G? - How Does 5G Network Technology Work",
+    "link": "https://www.cisco.com/site/us/en/learn/topics/networking/what-is-5g.html",
+    "domain": "www.cisco.com",
+    "snippet": "5G is the fifth generation of cellular technology. It is designed to increase speed, reduce latency, and improve flexibility of wireless services."
+  },
+  {
+    "position": 3,
+    "title": "5G Technology, Explained",
+    "link": "https://www.wpi.edu/news/explainers/5g-technology",
+    "domain": "www.wpi.edu",
+    "snippet": "5G technology is the fifth generation of wireless cellular communications, allowing for information to be shared and transferred faster than ever before."
+  },
+  {
+    "position": 4,
+    "title": "What is 5G? - 5G Technology Explained",
+    "link": "https://aws.amazon.com/what-is/5g/",
+    "domain": "aws.amazon.com",
+    "snippet": "5G is the fifth generation of wireless cellular technology, offering higher upload and download speeds, more consistent connections, and improved capacity ..."
+  },
+  {
+    "position": 5,
+    "title": "5G",
+    "link": "https://en.wikipedia.org/wiki/5G",
+    "domain": "en.wikipedia.org",
+    "snippet": "5G refers to the fifth and current generation of cellular network technology and the successor to 4G. In common commercial use, the term refers primarily to ..."
+  },
+  {
+    "position": 6,
+    "title": "What is 5G? How it transforms our world.",
+    "link": "https://www.ericsson.com/en/5g",
+    "domain": "www.ericsson.com",
+    "snippet": "5G is the fifth generation of cellular networks. Up to 100 times faster than 4G, 5G is creating never-before-seen opportunities for people and businesses."
+  },
+  {
+    "position": 7,
+    "title": "What is 5G?",
+    "link": "https://www.ibm.com/think/topics/5g",
+    "domain": "www.ibm.com",
+    "snippet": "5G, or fifth-generation mobile technology, is the new standard for telecommunications networks, replacing 4G, with better speed, latency and bandwidth."
+  },
+  {
+    "position": 9,
+    "title": "What is 5G Wireless Technology and How it Works",
+    "link": "https://www.geeksforgeeks.org/blogs/what-is-5g-wireless-technology-and-how-it-works/",
+    "domain": "www.geeksforgeeks.org",
+    "snippet": "5G (Fifth Generation) wireless technology is the latest mobile network standard offering ultra-fast speeds, low latency, and massive ..."
+  }
+]

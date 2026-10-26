@@ -1,0 +1,58 @@
+[
+  {
+    "position": 1,
+    "title": "What is an API really? Need deeper explanation.",
+    "link": "https://www.reddit.com/r/cybersecurity/comments/1elnz4j/what_is_an_api_really_need_deeper_explanation/",
+    "domain": "www.reddit.com",
+    "snippet": "I've read all the textbook descriptions of what an API is. But I've never \"seen\" one so to speak. I learn better by seeing and doing. What are some tools ..."
+  },
+  {
+    "position": 2,
+    "title": "What is an API? - Application Programming Interfaces Explained",
+    "link": "https://aws.amazon.com/what-is/api/",
+    "domain": "aws.amazon.com",
+    "snippet": "APIs are mechanisms that enable two software components to communicate with each other using a set of definitions and protocols. For example, the weather ..."
+  },
+  {
+    "position": 4,
+    "title": "Introduction to API (Application Programming Interface)",
+    "link": "https://www.geeksforgeeks.org/software-testing/what-is-an-api/",
+    "domain": "www.geeksforgeeks.org",
+    "snippet": "An API (Application Programming Interface) is a set of rules that allows different software applications to communicate with each other."
+  },
+  {
+    "position": 5,
+    "title": "What Is an API (Application Programming Interface)?",
+    "link": "https://www.ibm.com/think/topics/api",
+    "domain": "www.ibm.com",
+    "snippet": "An application programming interface (API) is a contract that enables software to access data or invoke functionality exposed by other ..."
+  },
+  {
+    "position": 6,
+    "title": "What Is an API and How Does It Work? | Foundry - FoundryCo",
+    "link": "https://foundryco.com/blog/what-is-an-api/",
+    "domain": "foundryco.com",
+    "snippet": "An API is a set of rules that lets two systems talk to each other — like your app talking to Google Maps, or your website pulling in data from a CRM. APIs ..."
+  },
+  {
+    "position": 7,
+    "title": "APIs",
+    "link": "https://en.wikipedia.org/wiki/API",
+    "domain": "en.wikipedia.org",
+    "snippet": "An application programming interface (API) is a connection between computers or between computer programs. It is a type of software interface, ..."
+  },
+  {
+    "position": 8,
+    "title": "What is an API? (Application Programming Interface)",
+    "link": "https://www.mulesoft.com/api/what-is-an-api",
+    "domain": "www.mulesoft.com",
+    "snippet": "API stands for Application Programming Interface. You can think of it as a common language that lets different software systems communicate smoothly, without ..."
+  },
+  {
+    "position": 9,
+    "title": "What is an API? A Comprehensive Run-through and ...",
+    "link": "https://www.openlegacy.com/blog/whats-an-api/",
+    "domain": "www.openlegacy.com",
+    "snippet": "API stands for “application programming interface”. In simple terms, an API is a set of protocols that developers use to build application ..."
+  }
+]

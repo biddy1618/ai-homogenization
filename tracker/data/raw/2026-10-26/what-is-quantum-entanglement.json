@@ -1,0 +1,44 @@
+[
+  {
+    "position": 1,
+    "title": "What Is Entanglement and Why Is It Important?",
+    "link": "https://scienceexchange.caltech.edu/topics/quantum-science-explained/entanglement",
+    "domain": "scienceexchange.caltech.edu",
+    "snippet": "When two particles, such as a pair of photons or electrons, become entangled, they remain connected even when separated by vast distances. In the same way that ..."
+  },
+  {
+    "position": 2,
+    "title": "What Is the Spooky Science of Quantum Entanglement?",
+    "link": "https://science.nasa.gov/what-is-the-spooky-science-of-quantum-entanglement/",
+    "domain": "science.nasa.gov",
+    "snippet": "Quantum entanglement is the theory that particles of the same origin, which were once connected, always stay connected, even through time ..."
+  },
+  {
+    "position": 3,
+    "title": "ELI5: What is Quantum Entanglement? : r/explainlikeimfive",
+    "link": "https://www.reddit.com/r/explainlikeimfive/comments/1ihv2q7/eli5_what_is_quantum_entanglement/",
+    "domain": "www.reddit.com",
+    "snippet": "why its important? its useful? what is it? why does it matter? Quantum Entanglement affect us, the universe... in a way?"
+  },
+  {
+    "position": 5,
+    "title": "Quantum entanglement",
+    "link": "https://en.wikipedia.org/wiki/Quantum_entanglement",
+    "domain": "en.wikipedia.org",
+    "snippet": "Quantum entanglement is the phenomenon in which the quantum state of each particle in a group cannot be described independently of the state of the others,"
+  },
+  {
+    "position": 6,
+    "title": "Quantum entanglement is far stranger than you've been told",
+    "link": "https://csferrie.medium.com/quantum-entanglement-is-far-stranger-than-youve-been-told-60a060228ee0",
+    "domain": "csferrie.medium.com",
+    "snippet": "Quantum entanglement is the physical phenomenon that occurs when a group of particles are generated, interact, or share spatial proximity"
+  },
+  {
+    "position": 7,
+    "title": "Entanglement",
+    "link": "https://quantum.microsoft.com/en-us/insights/education/concepts/entanglement",
+    "domain": "quantum.microsoft.com",
+    "snippet": "Entanglement is a fundamental concept of quantum mechanics that describes a non-classical correlation, or shared quantum state, between two or more quantum ..."
+  }
+]

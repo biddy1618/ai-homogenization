@@ -1,0 +1,51 @@
+[
+  {
+    "position": 1,
+    "title": "DNA Replication",
+    "link": "https://www.genome.gov/genetics-glossary/DNA-Replication",
+    "domain": "www.genome.gov",
+    "snippet": "DNA replication is the process by which the genome's DNA is copied in cells. Before a cell divides, it must first copy (or replicate) its entire genome so ..."
+  },
+  {
+    "position": 2,
+    "title": "Learn: Molecular mechanism of DNA replication (article)",
+    "link": "https://www.khanacademy.org/science/biology/dna-as-the-genetic-material/dna-replication/a/molecular-mechanism-of-dna-replication",
+    "domain": "www.khanacademy.org",
+    "snippet": "During DNA replication, one new strand (the leading strand) is made as a continuous piece. The other (the lagging strand) is made in small pieces. DNA ..."
+  },
+  {
+    "position": 3,
+    "title": "Cells Can Replicate Their DNA Precisely | Learn Science at Scitable",
+    "link": "https://www.nature.com/scitable/topicpage/cells-can-replicate-their-dna-precisely-6524830/",
+    "domain": "www.nature.com",
+    "snippet": "Replication occurs in three major steps: the opening of the double helix and separation of the DNA strands, the priming of the template strand, and the assembly ..."
+  },
+  {
+    "position": 4,
+    "title": "The Initiation and Completion of DNA Replication in Chromosomes - NCBI",
+    "link": "https://www.ncbi.nlm.nih.gov/books/NBK26826/",
+    "domain": "www.ncbi.nlm.nih.gov",
+    "snippet": "by B Alberts · 2002 · Cited by 104 — It begins when initiator proteins bind in multiple copies to specific sites in the replication origin, wrapping the DNA around the proteins to form a large ..."
+  },
+  {
+    "position": 6,
+    "title": "What happens in DNA replication?",
+    "link": "https://www.yourgenome.org/theme/what-happens-in-dna-replication/",
+    "domain": "www.yourgenome.org",
+    "snippet": "Each time a cell divides, its DNA is carefully copied, creating a new DNA molecule that is passed to the new daughter cell. This is the process of DNA ..."
+  },
+  {
+    "position": 7,
+    "title": "DNA Replication - Stages of Replication - TeachMePhyiology",
+    "link": "https://teachmephysiology.com/biochemistry/cell-growth-death/dna-replication/",
+    "domain": "teachmephysiology.com",
+    "snippet": "DNA replication occurs in three key stages: initiation, elongation, and termination. Each stage involves specific processes and enzymes that ..."
+  },
+  {
+    "position": 8,
+    "title": "DNA replication",
+    "link": "https://en.wikipedia.org/wiki/DNA_replication",
+    "domain": "en.wikipedia.org",
+    "snippet": "DNA replication is the process by which a cell makes exact copies of its DNA. This process occurs in all organisms and is essential to biological ..."
+  }
+]

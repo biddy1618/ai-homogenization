@@ -1,0 +1,58 @@
+[
+  {
+    "position": 1,
+    "title": "What is Machine Learning? | IBM",
+    "link": "https://www.ibm.com/think/topics/machine-learning",
+    "domain": "www.ibm.com",
+    "snippet": "Machine learning is the subset of artificial intelligence (AI) focused on algorithms that can “learn” the patterns of training data and, ..."
+  },
+  {
+    "position": 2,
+    "title": "Machine learning, explained",
+    "link": "https://mitsloan.mit.edu/ideas-made-to-matter/machine-learning-explained",
+    "domain": "mitsloan.mit.edu",
+    "snippet": "Machine learning is a subfield of artificial intelligence, which is broadly defined as the capability of a machine to imitate intelligent human ..."
+  },
+  {
+    "position": 3,
+    "title": "What is Machine Learning?",
+    "link": "https://developers.google.com/machine-learning/intro-to-ml/what-is-ml",
+    "domain": "developers.google.com",
+    "snippet": "Machine learning (ML) is a way to train software, called a model, to make predictions or generate content using data. ML systems can be ..."
+  },
+  {
+    "position": 4,
+    "title": "What Is Machine Learning (ML)? Definition and Examples",
+    "link": "https://ischoolonline.berkeley.edu/blog/what-is-machine-learning/",
+    "domain": "ischoolonline.berkeley.edu",
+    "snippet": "Machine learning is a subset of AI concerned with training models to allow computers to mimic human thought and decision making without explicit ..."
+  },
+  {
+    "position": 5,
+    "title": "DOE Explains...Machine Learning",
+    "link": "https://www.energy.gov/science/doe-explainsmachine-learning",
+    "domain": "www.energy.gov",
+    "snippet": "Machine learning is the process of using computers to detect patterns in massive datasets and then make predictions based on what the computer ..."
+  },
+  {
+    "position": 6,
+    "title": "What is Machine Learning? - ML Technology Explained - AWS",
+    "link": "https://aws.amazon.com/what-is/machine-learning/",
+    "domain": "aws.amazon.com",
+    "snippet": "Machine learning is a type of artificial intelligence that performs data analysis tasks without explicit instructions."
+  },
+  {
+    "position": 7,
+    "title": "What Is Machine Learning? Definition, Types, and Examples",
+    "link": "https://www.coursera.org/articles/what-is-machine-learning",
+    "domain": "www.coursera.org",
+    "snippet": "Machine learning is a subfield of artificial intelligence that uses algorithms and data to create models capable of performing tasks without ..."
+  },
+  {
+    "position": 9,
+    "title": "What is Machine Learning? How It Works, Types and Use ...",
+    "link": "https://www.databricks.com/blog/machine-learning",
+    "domain": "www.databricks.com",
+    "snippet": "Machine learning is a broad category of algorithms and data to enable systems to learn and perform tasks with limited or no human intervention. Deep learning ( ..."
+  }
+]
