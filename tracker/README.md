@@ -14,8 +14,7 @@ gives you the same answer many times over; a decline over time = homogenization 
    One row per query goes to `data/serp_log.csv`; one provenance row per run to `data/_runs_meta.csv`.
 2. **Analyse full pages** — [`fullpage.py`](fullpage.py): fetch each result's actual page through
    **ScrapingRobot** (GitHub's datacenter IPs are blocked by many sites), extract the main text
-   (first ~1000 words), embed it with **MiniLM** (ONNX), and compute the per-query metrics into
-   `data/runs_fullpage.csv`. Machine strings are stripped first: URLs, DOIs, e-mails, and any single
+   (first ~1000 words), embed it with **MiniLM** (ONNX), and compute the per-query metrics. Machine strings are stripped first: URLs, DOIs, e-mails, and any single
    "word" longer than 20 tokens (base64, hashes, markup fragments). This removes ~0.5% of tokens and no prose.
    MiniLM reads at most 128 tokens (~90 words) at a time, so each page is
    split into sentences that are packed, whole, into chunks of ≤ 120 tokens (counted with the model's
@@ -43,8 +42,9 @@ gives you the same answer many times over; a decline over time = homogenization 
 **Methodology history.** v1 (2026-10-04 to 2026-10-19): headline "% distinct" = Vendi ÷ however many
 pages could be read (3–10), in `data/runs_fullpage.csv`. It fell whenever more pages were read, so runs
 were not comparable. v2 (from 2026-10-26): fixed 5 pages and the two headlines above; the v1 runs were
-recomputed the same way (pages missing from the cache re-fetched on 2026-10-25). The v1 chart stays on
-the dashboard as an archive.
+recomputed the same way (pages missing from the cache re-fetched on 2026-10-25). The dashboard shows
+v2 only. `data/runs_fullpage.csv` stays in the repo as raw v1 history (`fullpage.py --top-k 0`
+reproduces it); it also holds a 2026-10-26 row set from the last scheduled run of the old version.
 
 ## Query panel
 

@@ -8,8 +8,8 @@ the first 5 readable pages in Google rank order (``runs_top5.csv``). Two measure
 * distinct pages out of 5 - the Vendi score of the 5 pages (5 = all different, 1 = all the same).
 
 "Core 45" = the original questions, tracked since 2026-10-04 (one continuous series); the panel grew
-to 100 questions on 2026-10-26. The v1 headline (% distinct over a varying number of pages,
-``runs_fullpage.csv``) is kept as an archived chart. Data is embedded in the HTML, so it renders on
+to 100 questions on 2026-10-26. The v1 data (% distinct over a varying number of pages,
+``runs_fullpage.csv``) stays in the repo as raw history but is not shown. Data is embedded in the HTML, so it renders on
 GitHub Pages and by opening the file. Stdlib only, so it runs in CI.
 
 Usage:
@@ -24,7 +24,6 @@ from pathlib import Path
 from statistics import mean
 
 TOP5 = Path("tracker/data/runs_top5.csv")
-LEGACY = Path("tracker/data/runs_fullpage.csv")
 META = Path("tracker/data/_runs_meta.csv")
 SERP_LOG = Path("tracker/data/serp_log.csv")
 RAW = Path("tracker/data/raw")
@@ -141,10 +140,6 @@ def build_payload() -> dict:
         for g in groups:
             mix[g].append(round(100 * cnt[g] / tot, 1))
 
-    legacy = _rows(LEGACY)
-    leg_dates = sorted({r["date"] for r in legacy})
-    leg = [_mean([100 * float(r["distinct_ratio"]) for r in legacy if r["date"] == d]) for d in leg_dates]
-
     return {
         "dates": dates, "latest": latest, "k": K, "cats": cats, "markers": markers,
         "n_core": len(core), "n_searched": searched[latest], "n_analysed": len(by[latest]),
@@ -154,7 +149,6 @@ def build_payload() -> dict:
         "latest_sim": _mean([r["cos"] for r in by[latest]]),
         "latest_vendi": _mean([r["vendi"] for r in by[latest]]),
         "mix": {"groups": groups, "values": mix},
-        "legacy": {"dates": leg_dates, "pct": leg},
     }
 
 
@@ -243,15 +237,6 @@ TEMPLATE = """<!doctype html>
     <p>Similarity of the top 5 pages per question, most alike first; coloured by domain.</p>
     <div id="lbwrap" style="position:relative"><canvas id="leaderboard"></canvas></div>
   </div>
-
-  <details class="card">
-    <summary>Archive: methodology v1 (4&ndash;19 Oct 2026)</summary>
-    <p style="margin-top:10px">The first headline: Vendi score divided by however many pages could be
-       read (5&ndash;9 per question), shown as "% distinct". It fell whenever more pages were read, so
-       runs were not comparable; replaced on 2026-10-26 by the fixed top-5 measures above, which were
-       also recomputed for these runs.</p>
-    <canvas id="legacy"></canvas>
-  </details>
 </div>
 <footer>
   Google's top results via __PROVIDERS__; each page's main text (first ~1000 words) via ScrapingRobot;
@@ -345,12 +330,6 @@ new Chart(lbCanvas, { type:"bar",
             fontColor:"#e8eaed", lineWidth:0, hidden:false })) }, onClick:() => {} },
       tooltip:{ callbacks:{ afterLabel:(c)=> `${lb[c.dataIndex].category} · distinct pages ${lb[c.dataIndex].vendi} of ${DATA.k}` } } },
     scales:{ x:{grid, ticks:tick}, y:{grid:{display:false}, ticks:{color:"#e8eaed", font:{size:10}}} } } });
-
-new Chart(document.getElementById("legacy"), { type:"line",
-  data:{ labels:DATA.legacy.dates, datasets:[{ label:"% distinct (v1)", data:DATA.legacy.pct,
-    borderColor:"#9aa0aa", backgroundColor:"#9aa0aa", borderWidth:2, pointRadius:3 }] },
-  options:{ aspectRatio:3.4, plugins:{legend:{labels:{color:"#e8eaed"}}},
-    scales:{ x:{grid, ticks:tick}, y:{grid, ticks:tick, title:{display:true, text:"% distinct", color:"#9aa0aa"}} } } });
 </script>
 </body>
 </html>
