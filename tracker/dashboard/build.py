@@ -172,7 +172,7 @@ def build_payload() -> dict:
     for d in dates:
         cnt = Counter()
         for r in serp:
-            if r["date"] != d or r["query"] not in core:
+            if r["date"] != d:
                 continue
             from_slug = RAW / d / f"{_slug(r['query'])}.json"
             if from_slug.exists():
@@ -274,8 +274,8 @@ TEMPLATE = """<!doctype html>
 
   <div class="card">
     <h2>Where do Google's results come from?</h2>
-    <p>Share of all returned results (top 10, videos excluded) by type of source, original 45
-       questions. Shifts here show which sources Google favours over time. Groups are ordered by their
+    <p>Share of all returned results (top 10, videos excluded)     by type of source, all questions
+           searched in each run (45 until 2026-10-19, 100 from 2026-10-26; see the panel marker). Shifts here show which sources Google favours over time. Groups are ordered by their
        total share across all runs (largest at the bottom); the two "Other" groups come last.</p>
     <canvas id="mix"></canvas>
   </div>
