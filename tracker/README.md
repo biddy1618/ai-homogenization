@@ -50,7 +50,8 @@ reproduces it); it also holds a 2026-10-26 row set from the last scheduled run o
 
 100 specific, informational questions — 20 each in **health, finance, law, science, tech**. The
 first 9 per domain are the original panel (the "core 45", tracked since 2026-10-04, shown as one
-continuous line); the other 55 were added on 2026-10-26. Commercial ("best X") queries are excluded:
+line until 2026-10-26); the other 55 were added on 2026-10-26. From then on the dashboard headline is
+all questions; the original-45 line is shown only up to 2026-10-26. Commercial ("best X") queries are excluded:
 they return shopping/social pages that are neither informational nor scrapable. Never edit or remove
 a query; only add, and note the date.
 
@@ -60,7 +61,7 @@ a query; only add, and note the date.
 |---|---|---|---|
 | `SERPER_API_KEY` | Serper.dev (Google results) | 2,500 queries on signup; then pay-as-you-go ($50 / 50k, valid 6 mo) | 100 |
 | `SCRAPING_ROBOT_API_KEY` | ScrapingRobot (page fetch) | 5,000 scrapes/month | ~650 (stops at 5 readable pages) |
-| `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY` (optional) | private S3 bucket | — | ~0.5–0.9 MB: this run's page texts |
+| `AWS_ACCESS_KEY`, `AWS_SECRET_KEY` (optional) | private S3 bucket | — | ~0.5–0.9 MB: this run's page texts |
 
 SerpAPI is still supported (`--provider serpapi`, secret `SERP_API_KEY`, mapped to the same-named
 env var); runs through 2026-10-12 used SerpAPI. The provider is recorded per run in

@@ -141,10 +141,15 @@ def build_payload() -> dict:
         return [_mean([r[field] for r in by[d] if sel(r)]) for d in dates]
 
     expanded = next((i for i, d in enumerate(dates) if searched[d] > len(core)), None)
-    sim = {"core": series(lambda r: r["query"] in core, "cos"),
+    # Original 45 is shown only up to the run where the panel grew (one overlapping point); from then
+    # on "all questions" is the headline series.
+    def history(vals):
+        return [v if expanded is None or i <= expanded else None for i, v in enumerate(vals)]
+
+    sim = {"core": history(series(lambda r: r["query"] in core, "cos")),
            "all": [v if expanded is not None and i >= expanded else None
                    for i, v in enumerate(series(lambda r: True, "cos"))]}
-    ven = {"core": series(lambda r: r["query"] in core, "vendi"),
+    ven = {"core": history(series(lambda r: r["query"] in core, "vendi")),
            "all": [v if expanded is not None and i >= expanded else None
                    for i, v in enumerate(series(lambda r: True, "vendi"))]}
     sim_cat = {c: series(lambda r, c=c: r["category"] == c, "cos") for c in cats}
@@ -248,9 +253,9 @@ TEMPLATE = """<!doctype html>
 
   <div class="card">
     <h2>How alike are Google's top 5 pages? (over time)</h2>
-    <p>Average similarity per run. The white line follows the original 45 questions through every run;
-       the dashed line covers all questions once the panel grew. Read trends only after several weeks
-       from the same search provider.</p>
+    <p>Average similarity per run. The white line covers all questions (100 since 2026-10-26); the grey
+       dashed line follows the original 45 questions from 2026-10-04 until the panel grew. Read trends
+       only after several weeks from the same search provider.</p>
     <canvas id="sim"></canvas>
   </div>
 
@@ -331,10 +336,10 @@ function lineLegend(chart) {
 
 function timeChart(id, s, label, cats, ratio) {
   const ds = [
-    {label:`Original ${DATA.n_core} questions`, data:s.core, borderColor:"#fff", backgroundColor:"#fff",
-     borderWidth:3, tension:0, pointRadius:3},
-    {label:"All questions", data:s.all, borderColor:"#b0b4bb", backgroundColor:"#b0b4bb", borderDash:[6,4],
-     borderWidth:2, tension:0, pointRadius:3, spanGaps:false},
+    {label:"All questions", data:s.all, borderColor:"#fff", backgroundColor:"#fff",
+     borderWidth:3, tension:0, pointRadius:3, spanGaps:false},
+    {label:`Original ${DATA.n_core} questions (until the panel grew)`, data:s.core, borderColor:"#9aa0aa",
+     backgroundColor:"#9aa0aa", borderDash:[6,4], borderWidth:1.5, tension:0, pointRadius:2},
   ];
   if (cats) ds.push(...DATA.cats.map(c => ({label:c, data:cats[c], borderColor:catColor[c],
      backgroundColor:catColor[c], borderWidth:1.5, tension:0, pointRadius:2})));

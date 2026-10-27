@@ -18,8 +18,8 @@ jobs:
     env:
       # Optional: if these repo secrets exist, each run's page texts are kept in the private S3 bucket
       # (never in this public repo), one file per run date, so metrics can be recomputed later.
-      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_KEY }}
       AWS_DEFAULT_REGION: us-west-2
       PAGE_BUCKET: s3://biddy-homogenization/tracker/pages/
     steps:
