@@ -30,30 +30,63 @@ RAW = Path("tracker/data/raw")
 OUT = Path("tracker/dashboard/index.html")
 K = 5
 
-# Source groups for the "where results come from" panel: (label, domain rules). A rule starting with
-# "." matches a domain ending; otherwise it matches the domain or any of its subdomains.
+# Source groups for the "where results come from" panel: (label, rules). A rule starting with "."
+# matches a domain ending; "~" matches a word anywhere in the domain (catches the long tail of
+# hospitals, banks and law firms); otherwise it matches the domain or its subdomains. All exact and
+# ending rules are tried before any "~" rule; within each pass the first group in order wins.
 SOURCES = [
-    ("Reddit & Q&A forums", ["reddit.com", "quora.com", "stackexchange.com", "stackoverflow.com"]),
-    ("Wikipedia & encyclopedias", ["wikipedia.org", "britannica.com"]),
     ("Government & universities", [".gov", ".edu", ".mil", ".gov.uk", ".ac.uk", ".gc.ca", ".gov.au",
-                                   "who.int", "europa.eu", "nhs.uk"]),
-    ("Health sites", ["mayoclinic.org", "clevelandclinic.org", "webmd.com", "healthline.com",
-                      "hopkinsmedicine.org", "heart.org", "medicalnewstoday.com",
-                      "verywellhealth.com", "health.harvard.edu", "medlineplus.gov"]),
-    ("Finance & legal publishers", ["investopedia.com", "nerdwallet.com", "bankrate.com",
-                                    "fidelity.com", "vanguard.com", "schwab.com", "forbes.com",
-                                    "experian.com", "myfico.com", "equifax.com", "nolo.com",
-                                    "findlaw.com", "justia.com", "legalzoom.com", "lawhelp.org"]),
+                                   ".int", "europa.eu", "nhs.uk", "un.org", "oecd.org", "worldbank.org",
+                                   "imf.org"]),
+    ("Forums & social media", ["reddit.com", "quora.com", "stackexchange.com", "stackoverflow.com",
+                               "facebook.com", "instagram.com", "linkedin.com", "x.com", "twitter.com",
+                               "pinterest.com", "medium.com", "substack.com", "justanswer.com"]),
+    ("Wikipedia & encyclopedias", ["wikipedia.org", "britannica.com"]),
+    ("Health sites & hospitals", ["mayoclinic.org", "clevelandclinic.org", "webmd.com", "healthline.com",
+                                  "hopkinsmedicine.org", "heart.org", "medicalnewstoday.com",
+                                  "verywellhealth.com", "medlineplus.gov", "cedars-sinai.org", "nm.org",
+                                  "uhc.com", "goodrx.com", "pfizerforall.com", "weightwatchers.com", "henryford.com",
+                                  "ama-assn.org", "sleepfoundation.org", "familydoctor.org", "ncoa.org",
+                                  "~health", "~clinic", "~hospital", "~medicine", "~medical", "~doctor",
+                                  "~cancer", "~heart", "~diabetes", "~hematology", "~migraine", "~pharma"]),
+    ("Legal sites & law firms", ["nolo.com", "findlaw.com", "justia.com", "legalzoom.com", "lawhelp.org",
+                                 "americanbar.org", "isba.org", "osbar.org", "legalshield.com",
+                                 "bencrump.com", "saul.com", "millershah.com", "holteybrownnewsom.com",
+                                 ".legal", "~bankrupt",
+                                 "~law", "~legal", "~attorney", "~lawyer", "~justice"]),
+    ("Banks & finance", ["investopedia.com", "nerdwallet.com", "bankrate.com", "fidelity.com",
+                         "vanguard.com", "schwab.com", "forbes.com", "experian.com", "myfico.com",
+                         "equifax.com", "chase.com", "td.com", "discover.com", "blackrock.com",
+                         "pimco.com", "empower.com", "public.com", "ameriprise.com", "morganstanley.com",
+                         "metlife.com", "newyorklife.com", "guardianlife.com", "securian.com",
+                         "westernsouthern.com", "turbotax.intuit.com", "ubs.com", "stonex.com",
+                         "smartasset.com", "missionsquare.com", "pnc.com", "acorns.com", ".bank",
+                         "~bank", "~credit", "~invest", "~wealth", "~financ", "~money", "~mortgage",
+                         "~insurance", "~loan", "~capital"]),
     ("Tech companies & publishers", ["ibm.com", "microsoft.com", "amazon.com", "cloudflare.com",
                                      "google.com", "cisco.com", "kaspersky.com", "norton.com",
                                      "techtarget.com", "geeksforgeeks.org", "mozilla.org",
-                                     "nvidia.com", "oracle.com"]),
+                                     "nvidia.com", "oracle.com", "databricks.com", "fortinet.com",
+                                     "paloaltonetworks.com", "netgear.com", "protonvpn.com",
+                                     "dropbox.com", "nutanix.com", "keyfactor.com", "upguard.com",
+                                     "silktide.com", "~cyber", "~security", "~cloud", "~vpn", "~software"]),
+    ("Science & education", ["nature.com", "sciencedirect.com", "springer.com", "wiley.com",
+                             "jamanetwork.com", "khanacademy.org", "coursera.org",
+                             "study.com", "quantamagazine.org", "discovermagazine.com", "snexplores.org",
+                             "education.nationalgeographic.org", "neurosciencenews.com", "earth.org",
+                             ".education", "~science", "~academy", "~museum", "~learn"]),
     ("News & magazines", ["nytimes.com", "bbc.com", "bbc.co.uk", "cnn.com", "theguardian.com",
                           "washingtonpost.com", "npr.org", "reuters.com", "apnews.com", "cnbc.com",
                           "nationalgeographic.com", "scientificamerican.com", "time.com",
-                          "theconversation.com", "livescience.com", "space.com"]),
+                          "theconversation.com", "livescience.com", "space.com", "fortune.com",
+                          "usnews.com", "theatlantic.com", "nymag.com", "economictimes.com",
+                          "6abc.com", "~news"]),
 ]
+ORG = ("Other non-profits (.org)", (".org", ".org.uk"))   # fallback, after the "~" rules
 OTHER = "Other sites"
+# One colour per group in SOURCES order, then ORG and OTHER (greys: residual groups).
+MIX_COLOURS = ["#5aa9e6", "#e65a5a", "#e6d15a", "#7ac77a", "#e6a15a", "#c77ab0", "#9a8ae6", "#5ae6c1",
+               "#a3d977", "#7d8590", "#d0d3d8"]
 
 
 def source_group(domain: str) -> str:
@@ -61,9 +94,13 @@ def source_group(domain: str) -> str:
     host = host[4:] if host.startswith("www.") else host
     for label, rules in SOURCES:
         for r in rules:
-            if (r.startswith(".") and host.endswith(r)) or host == r or host.endswith("." + r):
+            if not r.startswith("~") and (
+                    (r.startswith(".") and host.endswith(r)) or host == r or host.endswith("." + r)):
                 return label
-    return OTHER
+    for label, rules in SOURCES:
+        if any(r.startswith("~") and r[1:] in host for r in rules):
+            return label
+    return ORG[0] if host.endswith(ORG[1]) else OTHER
 
 
 def _providers() -> dict[str, str]:
@@ -125,7 +162,7 @@ def build_payload() -> dict:
                 "vendi": _mean([r["vendi"] for r in latest_rows if r["category"] == c])} for c in cats]
     domains.sort(key=lambda d: -(d["cos"] or 0))
 
-    groups = [g for g, _ in SOURCES] + [OTHER]
+    groups = [g for g, _ in SOURCES] + [ORG[0], OTHER]
     mix = {g: [] for g in groups}
     for d in dates:
         cnt = Counter()
@@ -139,6 +176,11 @@ def build_payload() -> dict:
         tot = sum(cnt.values()) or 1
         for g in groups:
             mix[g].append(round(100 * cnt[g] / tot, 1))
+    # Largest groups (summed over all runs) first, so the stack order is stable week to week; the two
+    # residual groups stay last. Colours follow the group, not the position.
+    colour = dict(zip(groups, MIX_COLOURS))
+    named = sorted(groups[:-2], key=lambda g: -sum(mix[g]))
+    groups = named + groups[-2:]
 
     return {
         "dates": dates, "latest": latest, "k": K, "cats": cats, "markers": markers,
@@ -148,7 +190,7 @@ def build_payload() -> dict:
                          "vendi": round(r["vendi"], 2)} for r in latest_rows],
         "latest_sim": _mean([r["cos"] for r in by[latest]]),
         "latest_vendi": _mean([r["vendi"] for r in by[latest]]),
-        "mix": {"groups": groups, "values": mix},
+        "mix": {"groups": groups, "values": mix, "colours": [colour[g] for g in groups]},
     }
 
 
@@ -228,7 +270,8 @@ TEMPLATE = """<!doctype html>
   <div class="card">
     <h2>Where do Google's results come from?</h2>
     <p>Share of all returned results (top 10, videos excluded) by type of source, original 45
-       questions. Shifts here show which sources Google favours over time.</p>
+       questions. Shifts here show which sources Google favours over time. Groups are ordered by their
+       total share across all runs (largest at the bottom); the two "Other" groups come last.</p>
     <canvas id="mix"></canvas>
   </div>
 
@@ -269,8 +312,11 @@ const markerPlugin = { id:"markers", afterDatasetsDraw(chart) {
     const xp = (x.getPixelForValue(m.index - 1) + x.getPixelForValue(m.index)) / 2;
     ctx.save(); ctx.strokeStyle = "#9aa0aa"; ctx.setLineDash([4,4]); ctx.lineWidth = 1;
     ctx.beginPath(); ctx.moveTo(xp, a.top); ctx.lineTo(xp, a.bottom); ctx.stroke();
-    ctx.setLineDash([]); ctx.fillStyle = "#9aa0aa"; ctx.font = "11px sans-serif"; ctx.textAlign = "center";
-    ctx.fillText(m.label, xp, a.top + 12 + 14 * j); ctx.restore();
+    ctx.setLineDash([]); ctx.font = "11px sans-serif"; ctx.textAlign = "center";
+    // Dark box behind the label keeps it readable over any bar or line colour.
+    const y = a.top + 12 + 16 * j, w = ctx.measureText(m.label).width + 10;
+    ctx.fillStyle = "rgba(23,26,33,0.85)"; ctx.fillRect(xp - w / 2, y - 11, w, 15);
+    ctx.fillStyle = "#c9ccd1"; ctx.fillText(m.label, xp, y); ctx.restore();
   });
 }};
 
@@ -309,10 +355,9 @@ new Chart(document.getElementById("domains"), { type:"bar",
     scales:{ x:{grid:{display:false}, ticks:{color:"#e8eaed"}},
       y:{grid, ticks:tick, title:{display:true, text:"average similarity", color:"#9aa0aa"}} } } });
 
-const MIXCOL = ["#e65a5a","#e6d15a","#5aa9e6","#7ac77a","#e6a15a","#9a8ae6","#c77ab0","#6b7280"];
 new Chart(document.getElementById("mix"), { type:"bar",
   data:{ labels:DATA.dates, datasets:DATA.mix.groups.map((g,i)=>({ label:g, data:DATA.mix.values[g],
-    backgroundColor:MIXCOL[i % MIXCOL.length] })) },
+    backgroundColor:DATA.mix.colours[i] })) },
   plugins:[markerPlugin],
   options:{ aspectRatio:2.6, plugins:{legend:{labels:{color:"#e8eaed",boxWidth:12,font:{size:11}}}},
     scales:{ x:{stacked:true, grid:{display:false}, ticks:tick},
