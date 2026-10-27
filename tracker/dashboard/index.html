@@ -122,18 +122,28 @@ const markerPlugin = { id:"markers", afterDatasetsDraw(chart) {
   });
 }};
 
+// Legend entries drawn as short lines that copy each dataset's width and dash pattern.
+function lineLegend(chart) {
+  return Chart.defaults.plugins.legend.labels.generateLabels(chart).map(l => {
+    const d = chart.data.datasets[l.datasetIndex];
+    return {...l, fillStyle:d.borderColor, strokeStyle:d.borderColor, lineWidth:d.borderWidth,
+            lineDash:d.borderDash || []};
+  });
+}
+
 function timeChart(id, s, label, cats, ratio) {
   const ds = [
     {label:`Original ${DATA.n_core} questions`, data:s.core, borderColor:"#fff", backgroundColor:"#fff",
      borderWidth:3, tension:0, pointRadius:3},
-    {label:"All questions", data:s.all, borderColor:"#fff", backgroundColor:"#fff", borderDash:[6,4],
+    {label:"All questions", data:s.all, borderColor:"#b0b4bb", backgroundColor:"#b0b4bb", borderDash:[6,4],
      borderWidth:2, tension:0, pointRadius:3, spanGaps:false},
   ];
   if (cats) ds.push(...DATA.cats.map(c => ({label:c, data:cats[c], borderColor:catColor[c],
      backgroundColor:catColor[c], borderWidth:1.5, tension:0, pointRadius:2})));
   new Chart(document.getElementById(id), { type:"line", data:{labels:DATA.dates, datasets:ds},
     plugins:[markerPlugin],
-    options:{ aspectRatio:ratio, plugins:{legend:{labels:{color:"#e8eaed",boxWidth:12,font:{size:11}}}},
+    options:{ aspectRatio:ratio, plugins:{legend:{labels:{color:"#e8eaed",font:{size:11},
+        boxWidth:28, boxHeight:0, generateLabels:lineLegend}}},
       scales:{x:{grid, ticks:tick}, y:{grid, ticks:tick, title:{display:true, text:label, color:"#9aa0aa"}}}}});
 }
 timeChart("sim", DATA.sim, "average similarity", DATA.sim_cat, 2.4);
