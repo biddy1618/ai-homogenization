@@ -16,14 +16,17 @@ jobs:
   track:
     runs-on: ubuntu-latest   # GitHub-hosted runner — no infra to maintain
     env:
-      # Optional: if these repo secrets exist, page texts are kept in the private S3 bucket (never
-      # in this public repo) so any metric can be recomputed later without re-fetching.
+      # Optional: if these repo secrets exist, each run's page texts are kept in the private S3 bucket
+      # (never in this public repo), one file per run date, so metrics can be recomputed later.
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       AWS_DEFAULT_REGION: us-west-2
-      PAGE_BUCKET: s3://biddy-homogenization/tracker/pagecache/
+      PAGE_BUCKET: s3://biddy-homogenization/tracker/pages/
     steps:
       - uses: actions/checkout@v4
+
+      - name: Fix the run date
+        run: echo "RUN_DATE=$(date -u +%Y-%m-%d)" >> "$GITHUB_ENV"
 
       - uses: actions/setup-python@v5
         with:
@@ -44,22 +47,32 @@ jobs:
         env:
           SERPER_API_KEY: ${{ secrets.SERPER_API_KEY }}
         run: >
-          python tracker/tracker.py --provider serper
+          python tracker/tracker.py --provider serper --date "$RUN_DATE"
           --queries tracker/queries.txt --out-dir tracker/data
           --location "United States" --device desktop --num 10
 
-      - name: Restore page cache from S3 (optional)
+      # Only this run date's texts are restored (a re-run of the same day); earlier weeks are never
+      # reused, so every week reads the pages as they are that week.
+      - name: Restore this run's page texts from S3 (optional)
         if: ${{ env.AWS_ACCESS_KEY_ID != '' }}
-        run: aws s3 sync "$PAGE_BUCKET" tracker/data/pagecache --only-show-errors
+        run: |
+          mkdir -p tracker/data/pages
+          if aws s3 cp "${PAGE_BUCKET}${RUN_DATE}.jsonl.gz" tracker/data/pages/ --only-show-errors; then
+            python tracker/pagestore.py unpack --date "$RUN_DATE"
+          else
+            echo "No stored texts for $RUN_DATE (first run of the day)."
+          fi
 
       - name: Full-page metrics (first 5 readable pages per question)
         env:
           SCRAPING_ROBOT_API_KEY: ${{ secrets.SCRAPING_ROBOT_API_KEY }}
-        run: python tracker/fullpage.py --provider scrapingrobot --top-k 5 --date "$(date -u +%Y-%m-%d)"
+        run: python tracker/fullpage.py --provider scrapingrobot --top-k 5 --date "$RUN_DATE"
 
-      - name: Save page cache to S3 (optional)
+      - name: Save this run's page texts to S3 (optional)
         if: ${{ env.AWS_ACCESS_KEY_ID != '' }}
-        run: aws s3 sync tracker/data/pagecache "$PAGE_BUCKET" --only-show-errors
+        run: |
+          python tracker/pagestore.py pack --date "$RUN_DATE"
+          aws s3 cp "tracker/data/pages/${RUN_DATE}.jsonl.gz" "$PAGE_BUCKET" --only-show-errors
 
       - name: Build dashboard
         run: python tracker/dashboard/build.py

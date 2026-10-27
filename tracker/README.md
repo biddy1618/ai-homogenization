@@ -60,7 +60,7 @@ a query; only add, and note the date.
 |---|---|---|---|
 | `SERPER_API_KEY` | Serper.dev (Google results) | 2,500 queries on signup; then pay-as-you-go ($50 / 50k, valid 6 mo) | 100 |
 | `SCRAPING_ROBOT_API_KEY` | ScrapingRobot (page fetch) | 5,000 scrapes/month | ~650 (stops at 5 readable pages) |
-| `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY` (optional) | private S3 bucket | — | keeps page texts out of this public repo |
+| `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY` (optional) | private S3 bucket | — | ~0.5–0.9 MB: this run's page texts |
 
 SerpAPI is still supported (`--provider serpapi`, secret `SERP_API_KEY`, mapped to the same-named
 env var); runs through 2026-10-12 used SerpAPI. The provider is recorded per run in
@@ -83,8 +83,12 @@ Both stages are idempotent per `(date, query)`; `--force` recomputes and replace
 
 - Week-to-week movement per query is still large; read trends only after several months.
 - Google's own ranking updates move the metric independently of web content.
-- Page texts (`data/pagecache/`) are never committed (they are other sites' content); with the AWS
-  secrets set, the workflow keeps them in a private S3 bucket so metrics can be recomputed.
+- Page texts are never committed (they are other sites' content). They are cached per run date in
+  `data/pagecache/<date>/`, so a week never reuses another week's text. With the AWS secrets set
+  (ideally a user limited to this bucket), the workflow packs that run's texts into one file,
+  `s3://biddy-homogenization/tracker/pages/<date>.jsonl.gz`, and restores only that same date on a
+  re-run ([`pagestore.py`](pagestore.py) `pack` / `unpack`). The 2026-10-04 to 2026-10-19 runs are
+  stored the same way; the 2026-10-26 texts stayed on the CI runner and are lost.
 - Pages for the 2026-10-05 and 2026-10-12 runs were fetched on 2026-10-13, when the tracker moved to
   full-page analysis: those weeks use the URLs Google returned on that date but the page text of
   2026-10-13. From 2026-10-19 on, pages are fetched on the run date.

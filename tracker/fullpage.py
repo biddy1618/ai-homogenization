@@ -14,7 +14,8 @@ reproduces methodology v1 (all readable pages, ``runs_fullpage.csv``, kept as an
 
 A page that can't be fetched or yields too little text is DROPPED (no snippet substitution).
 ``n_serp`` = results returned, ``n_results`` = pages analysed, ``positions`` = their Google ranks.
-Pages are cached locally (re-runs are cheap). Re-running a date replaces its rows (no duplicates).
+Pages are cached per run date (``pagecache/<date>/``, see ``pagestore.py``): re-runs of a date are
+cheap, and no week reuses another week's page text. Re-running a date replaces its rows (no duplicates).
 
 Usage:
     python tracker/fullpage.py --provider scrapingrobot                 # every date under raw/
@@ -43,11 +44,11 @@ from tracker import (  # noqa: E402  (same MiniLM model + metrics as the snippet
     load_model, embed_texts, mean_pairwise_cosine, vendi_score, mean_marginal_novelty, slugify,
 )
 from chunk_embed import counting_tokenizer, embed_documents  # noqa: E402  (shared with the study)
+from pagestore import cache_dir  # noqa: E402
 
 RAW = Path("tracker/data/raw")
 SERP_LOG = Path("tracker/data/serp_log.csv")
 LEGACY_OUT = Path("tracker/data/runs_fullpage.csv")   # methodology v1 (all readable pages)
-CACHE = Path("tracker/data/pagecache")
 UA = ("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
       "(KHTML, like Gecko) Chrome/125.0 Safari/537.36")
 
@@ -80,14 +81,14 @@ def _get_html(url: str, provider: str, api_key: str | None, timeout: int) -> byt
         return r.read(2_000_000)
 
 
-def fetch_page_text(url: str, provider: str = "none", api_key: str | None = None,
+def fetch_page_text(url: str, cache: Path, provider: str = "none", api_key: str | None = None,
                     timeout: int = 20, max_tokens: int = 1000, cache_only: bool = False) -> str | None:
-    """Capped main-text of a page (cached by TARGET url), or None on failure/non-HTML.
+    """Capped main-text of a page (cached by TARGET url in ``cache``), or None on failure/non-HTML.
 
     ``provider`` routes the fetch: 'none' (direct, only works from an unblocked IP), 'scraperapi'
-    (GET-wrapped proxy), or 'scrapingrobot' (POST + gzip JSON). The cache is keyed by the target
-    url, so a page already fetched is reused without spending a credit."""
-    key = CACHE / (hashlib.sha1(url.encode()).hexdigest() + ".txt")
+    (GET-wrapped proxy), or 'scrapingrobot' (POST + gzip JSON). ``cache`` is the run date's own
+    directory (``pagestore.cache_dir``), so text is reused within a run but never across weeks."""
+    key = cache / (hashlib.sha1(url.encode()).hexdigest() + ".txt")
     if key.exists():
         text = key.read_text(encoding="utf-8")
         return None if text.startswith("%PDF-") else (text or None)
@@ -102,7 +103,7 @@ def fetch_page_text(url: str, provider: str = "none", api_key: str | None = None
     if raw.lstrip()[:5] == b"%PDF-":  # scraping APIs can return PDF bytes as the 'HTML' result
         raw = b""
     if raw == b"":  # non-HTML — cache the "not usable" verdict
-        CACHE.mkdir(parents=True, exist_ok=True)
+        cache.mkdir(parents=True, exist_ok=True)
         key.write_text("", encoding="utf-8")
         return None
     soup = BeautifulSoup(raw, "html.parser")
@@ -110,7 +111,7 @@ def fetch_page_text(url: str, provider: str = "none", api_key: str | None = None
         tag.decompose()
     node = soup.find("article") or soup.find("main") or soup.body or soup
     text = " ".join(" ".join(node.get_text(" ").split()).split()[:max_tokens])
-    CACHE.mkdir(parents=True, exist_ok=True)
+    cache.mkdir(parents=True, exist_ok=True)
     key.write_text(text, encoding="utf-8")
     return text or None
 
@@ -201,8 +202,8 @@ def main() -> None:
                 if args.top_k and len(texts) >= args.top_k:
                     break
                 link = r.get("link", "")
-                cached = (CACHE / (hashlib.sha1(link.encode()).hexdigest() + ".txt")).exists()
-                page = fetch_page_text(link, args.provider, api_key,
+                cached = (cache_dir(date) / (hashlib.sha1(link.encode()).hexdigest() + ".txt")).exists()
+                page = fetch_page_text(link, cache_dir(date), args.provider, api_key,
                                        timeout=90 if api_key else 20,
                                        cache_only=args.cache_only) if link else None
                 if link and not cached and not args.cache_only:
