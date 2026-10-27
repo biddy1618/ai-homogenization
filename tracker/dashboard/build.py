@@ -112,6 +112,7 @@ def build_payload() -> dict:
            "all": [v if expanded is not None and i >= expanded else None
                    for i, v in enumerate(series(lambda r: True, "vendi"))]}
     sim_cat = {c: series(lambda r, c=c: r["category"] == c, "cos") for c in cats}
+    ven_cat = {c: series(lambda r, c=c: r["category"] == c, "vendi") for c in cats}
 
     prov = _providers()
     markers = [{"index": i, "label": f"Search provider: {prov[dates[i-1]]} \u2192 {prov[dates[i]]}"}
@@ -147,7 +148,7 @@ def build_payload() -> dict:
     return {
         "dates": dates, "latest": latest, "k": K, "cats": cats, "markers": markers,
         "n_core": len(core), "n_searched": searched[latest], "n_analysed": len(by[latest]),
-        "sim": sim, "ven": ven, "sim_cat": sim_cat, "domains": domains,
+        "sim": sim, "ven": ven, "sim_cat": sim_cat, "ven_cat": ven_cat, "domains": domains,
         "leaderboard": [{"query": r["query"], "category": r["category"], "cos": round(r["cos"], 3),
                          "vendi": round(r["vendi"], 2)} for r in latest_rows],
         "latest_sim": _mean([r["cos"] for r in by[latest]]),
@@ -219,7 +220,8 @@ TEMPLATE = """<!doctype html>
 
   <div class="card">
     <h2>Distinct pages out of 5 (over time)</h2>
-    <p>Vendi score of the top 5 pages, averaged over questions. Lower = more repetition.</p>
+    <p>Vendi score of the top 5 pages, averaged over questions. Lower = more repetition.
+       Axis zoomed; full scale 1&ndash;5.</p>
     <canvas id="ven"></canvas>
   </div>
 
@@ -312,7 +314,7 @@ function timeChart(id, s, label, cats, ratio) {
       scales:{x:{grid, ticks:tick}, y:{grid, ticks:tick, title:{display:true, text:label, color:"#9aa0aa"}}}}});
 }
 timeChart("sim", DATA.sim, "average similarity", DATA.sim_cat, 2.4);
-timeChart("ven", DATA.ven, `distinct pages out of ${DATA.k}`, null, 3.2);
+timeChart("ven", DATA.ven, `distinct pages out of ${DATA.k}`, DATA.ven_cat, 2.4);
 
 new Chart(document.getElementById("domains"), { type:"bar",
   data:{ labels:DATA.domains.map(d=>d.cat), datasets:[{ data:DATA.domains.map(d=>d.cos),
