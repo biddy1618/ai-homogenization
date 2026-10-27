@@ -1,0 +1,225 @@
+group,spec,break,kind,n_sites,slope_change
+all SE,linear,2022Q4,real,26,0.15618564784559993
+all SE,linear,2012Q4,placebo,13,0.20033064336072925
+all SE,linear,2013Q1,placebo,14,0.19407359193096863
+all SE,linear,2013Q2,placebo,17,0.19100792222712126
+all SE,linear,2013Q3,placebo,18,0.18918154543775634
+all SE,linear,2013Q4,placebo,20,0.1906387672149099
+all SE,linear,2014Q1,placebo,21,0.185881372997031
+all SE,linear,2014Q2,placebo,23,0.1660693124683732
+all SE,linear,2014Q3,placebo,23,0.15538222948230174
+all SE,linear,2014Q4,placebo,23,0.1508522953768261
+all SE,linear,2015Q1,placebo,23,0.14068160721406242
+all SE,linear,2015Q2,placebo,23,0.13191088370875592
+all SE,linear,2015Q3,placebo,24,0.12727085508508984
+all SE,linear,2015Q4,placebo,24,0.11858143648793788
+all SE,linear,2016Q1,placebo,24,0.1097479011353486
+all SE,linear,2016Q2,placebo,24,0.10510974740303979
+all SE,linear,2016Q3,placebo,24,0.09836070807043075
+all SE,linear,2016Q4,placebo,25,0.09612370637035716
+all SE,linear,2017Q1,placebo,25,0.09697918493630475
+all SE,linear,2017Q2,placebo,26,0.09231280275197695
+all SE,linear,2017Q3,placebo,26,0.09353411873699397
+all SE,linear,2017Q4,placebo,26,0.09628519372168473
+all SE,linear,2018Q1,placebo,26,0.09279201898903082
+all SE,linear,2018Q2,placebo,26,0.09224009136194593
+all SE,linear,2018Q3,placebo,26,0.08944708592310777
+all SE,linear,2018Q4,placebo,26,0.08039615306231106
+all SE,linear,2019Q1,placebo,26,0.07946191192418656
+all SE,quad,2022Q4,real,26,0.006430671081247286
+all SE,quad,2012Q4,placebo,13,0.08563141783043182
+all SE,quad,2013Q1,placebo,14,0.021700711389570637
+all SE,quad,2013Q2,placebo,17,-0.026883936340946935
+all SE,quad,2013Q3,placebo,18,-0.02823499560922635
+all SE,quad,2013Q4,placebo,20,-0.03144867907786203
+all SE,quad,2014Q1,placebo,21,-0.000728561514330317
+all SE,quad,2014Q2,placebo,23,-0.0204343238893695
+all SE,quad,2014Q3,placebo,23,-0.038872251349876374
+all SE,quad,2014Q4,placebo,23,-0.04620706381602091
+all SE,quad,2015Q1,placebo,23,-0.0476688445336203
+all SE,quad,2015Q2,placebo,23,-0.07491105557357036
+all SE,quad,2015Q3,placebo,24,-0.09573774188288453
+all SE,quad,2015Q4,placebo,24,-0.1140933295666261
+all SE,quad,2016Q1,placebo,24,-0.13911685460302303
+all SE,quad,2016Q2,placebo,24,-0.1642248220911125
+all SE,quad,2016Q3,placebo,24,-0.1771394098675435
+all SE,quad,2016Q4,placebo,25,-0.1828966109409278
+all SE,quad,2017Q1,placebo,25,-0.1869015564236996
+all SE,quad,2017Q2,placebo,26,-0.1815259580210491
+all SE,quad,2017Q3,placebo,26,-0.17847291592493061
+all SE,quad,2017Q4,placebo,26,-0.1671944362672528
+all SE,quad,2018Q1,placebo,26,-0.1529551024174918
+all SE,quad,2018Q2,placebo,26,-0.14831293324494196
+all SE,quad,2018Q3,placebo,26,-0.14167558464239505
+all SE,quad,2018Q4,placebo,26,-0.1392238822347692
+all SE,quad,2019Q1,placebo,26,-0.1314046185044691
+high-load SE,linear,2022Q4,real,14,0.20820905269557502
+high-load SE,linear,2013Q3,placebo,7,0.24214605148934076
+high-load SE,linear,2013Q4,placebo,9,0.23588830878008293
+high-load SE,linear,2014Q1,placebo,10,0.22798077330697453
+high-load SE,linear,2014Q2,placebo,11,0.20667555625807799
+high-load SE,linear,2014Q3,placebo,11,0.19092071069492533
+high-load SE,linear,2014Q4,placebo,11,0.17625824669467471
+high-load SE,linear,2015Q1,placebo,11,0.15535298992877333
+high-load SE,linear,2015Q2,placebo,11,0.13612672115066626
+high-load SE,linear,2015Q3,placebo,12,0.13227452987771304
+high-load SE,linear,2015Q4,placebo,12,0.11669752861257932
+high-load SE,linear,2016Q1,placebo,12,0.10583914173827624
+high-load SE,linear,2016Q2,placebo,12,0.10884254722998654
+high-load SE,linear,2016Q3,placebo,12,0.10736528197792383
+high-load SE,linear,2016Q4,placebo,13,0.10702355487218518
+high-load SE,linear,2017Q1,placebo,13,0.10685253903817915
+high-load SE,linear,2017Q2,placebo,14,0.10088925687379846
+high-load SE,linear,2017Q3,placebo,14,0.10516857712482164
+high-load SE,linear,2017Q4,placebo,14,0.11154394067786644
+high-load SE,linear,2018Q1,placebo,14,0.10722708381742696
+high-load SE,linear,2018Q2,placebo,14,0.11294023279176069
+high-load SE,linear,2018Q3,placebo,14,0.10623983552963556
+high-load SE,linear,2018Q4,placebo,14,0.10574308770182506
+high-load SE,linear,2019Q1,placebo,14,0.09914520379796055
+high-load SE,quad,2022Q4,real,14,0.04091791595115936
+high-load SE,quad,2013Q3,placebo,7,0.06108736312182117
+high-load SE,quad,2013Q4,placebo,9,0.01607073739658116
+high-load SE,quad,2014Q1,placebo,10,0.03233091509785413
+high-load SE,quad,2014Q2,placebo,11,-0.0012610485588600007
+high-load SE,quad,2014Q3,placebo,11,-0.04551373344348253
+high-load SE,quad,2014Q4,placebo,11,-0.07727427565868661
+high-load SE,quad,2015Q1,placebo,11,-0.10016267808882606
+high-load SE,quad,2015Q2,placebo,11,-0.14592504651890548
+high-load SE,quad,2015Q3,placebo,12,-0.18441417197256604
+high-load SE,quad,2015Q4,placebo,12,-0.20218993568415972
+high-load SE,quad,2016Q1,placebo,12,-0.23166347975462365
+high-load SE,quad,2016Q2,placebo,12,-0.2684139900153643
+high-load SE,quad,2016Q3,placebo,12,-0.2784533106114859
+high-load SE,quad,2016Q4,placebo,13,-0.25935786604894573
+high-load SE,quad,2017Q1,placebo,13,-0.2509291891853394
+high-load SE,quad,2017Q2,placebo,14,-0.23092961201876788
+high-load SE,quad,2017Q3,placebo,14,-0.2231648503646233
+high-load SE,quad,2017Q4,placebo,14,-0.2023490735116286
+high-load SE,quad,2018Q1,placebo,14,-0.18236724221859804
+high-load SE,quad,2018Q2,placebo,14,-0.17255390247228086
+high-load SE,quad,2018Q3,placebo,14,-0.15775279126258906
+high-load SE,quad,2018Q4,placebo,14,-0.14118717296915667
+high-load SE,quad,2019Q1,placebo,14,-0.12997161585991623
+low-load SE,linear,2022Q4,real,12,0.09706071893956458
+low-load SE,linear,2012Q3,placebo,7,0.1171835796175471
+low-load SE,linear,2012Q4,placebo,8,0.11303582467404298
+low-load SE,linear,2013Q1,placebo,9,0.12077706986138281
+low-load SE,linear,2013Q2,placebo,11,0.13804818874625335
+low-load SE,linear,2013Q3,placebo,11,0.14659116969795605
+low-load SE,linear,2013Q4,placebo,11,0.15327687114328614
+low-load SE,linear,2014Q1,placebo,11,0.15075586539309382
+low-load SE,linear,2014Q2,placebo,12,0.13204633265674526
+low-load SE,linear,2014Q3,placebo,12,0.12565694048364828
+low-load SE,linear,2014Q4,placebo,12,0.1299800488067493
+low-load SE,linear,2015Q1,placebo,12,0.1290065530699489
+low-load SE,linear,2015Q2,placebo,12,0.12925538028842087
+low-load SE,linear,2015Q3,placebo,12,0.12370001988641433
+low-load SE,linear,2015Q4,placebo,12,0.12105710524562507
+low-load SE,linear,2016Q1,placebo,12,0.11444509356298405
+low-load SE,linear,2016Q2,placebo,12,0.1023952555971821
+low-load SE,linear,2016Q3,placebo,12,0.08994147765909288
+low-load SE,linear,2016Q4,placebo,12,0.08553579126142341
+low-load SE,linear,2017Q1,placebo,12,0.08722357898643063
+low-load SE,linear,2017Q2,placebo,12,0.0841538934229833
+low-load SE,linear,2017Q3,placebo,12,0.08183503443660078
+low-load SE,linear,2017Q4,placebo,12,0.08054868494423473
+low-load SE,linear,2018Q1,placebo,12,0.077559264776765
+low-load SE,linear,2018Q2,placebo,12,0.06958836834831539
+low-load SE,linear,2018Q3,placebo,12,0.07101468682075174
+low-load SE,linear,2018Q4,placebo,12,0.05265907274872428
+low-load SE,linear,2019Q1,placebo,12,0.05827436732967073
+low-load SE,quad,2022Q4,real,12,-0.03020764151847774
+low-load SE,quad,2012Q3,placebo,7,-0.05100018254514982
+low-load SE,quad,2012Q4,placebo,8,-0.05759157973168516
+low-load SE,quad,2013Q1,placebo,9,-0.10667902900418137
+low-load SE,quad,2013Q2,placebo,11,-0.08804032106200743
+low-load SE,quad,2013Q3,placebo,11,-0.08873989207154442
+low-load SE,quad,2013Q4,placebo,11,-0.07246224559045862
+low-load SE,quad,2014Q1,placebo,11,-0.03445829871896977
+low-load SE,quad,2014Q2,placebo,12,-0.04118985640106737
+low-load SE,quad,2014Q3,placebo,12,-0.03417195660028438
+low-load SE,quad,2014Q4,placebo,12,-0.01927598434256722
+low-load SE,quad,2015Q1,placebo,12,-0.0005360156120634008
+low-load SE,quad,2015Q2,placebo,12,-0.010908901742333055
+low-load SE,quad,2015Q3,placebo,12,-0.010815417555323892
+low-load SE,quad,2015Q4,placebo,12,-0.03095709491380938
+low-load SE,quad,2016Q1,placebo,12,-0.054225068754772565
+low-load SE,quad,2016Q2,placebo,12,-0.0677925538393101
+low-load SE,quad,2016Q3,placebo,12,-0.08196113503978295
+low-load SE,quad,2016Q4,placebo,12,-0.1100090495887232
+low-load SE,quad,2017Q1,placebo,12,-0.12631702902489933
+low-load SE,quad,2017Q2,placebo,12,-0.1353211832861931
+low-load SE,quad,2017Q3,placebo,12,-0.13637321908467703
+low-load SE,quad,2017Q4,placebo,12,-0.1338401054230724
+low-load SE,quad,2018Q1,placebo,12,-0.12493878285280131
+low-load SE,quad,2018Q2,placebo,12,-0.12458996854446658
+low-load SE,quad,2018Q3,placebo,12,-0.12606097000377608
+low-load SE,quad,2018Q4,placebo,12,-0.13672914564096852
+low-load SE,quad,2019Q1,placebo,12,-0.13256307321297756
+high minus low (SE),linear,2022Q4,real,26,0.11114833375601524
+high minus low (SE),linear,2012Q4,placebo,13,0.18117125930824618
+high minus low (SE),linear,2013Q1,placebo,14,0.15849484378321188
+high minus low (SE),linear,2013Q2,placebo,17,0.11960288356914694
+high minus low (SE),linear,2013Q3,placebo,18,0.09555488179139005
+high minus low (SE),linear,2013Q4,placebo,20,0.08261143763678125
+high minus low (SE),linear,2014Q1,placebo,21,0.07722490791387426
+high minus low (SE),linear,2014Q2,placebo,23,0.07462922360132657
+high minus low (SE),linear,2014Q3,placebo,23,0.06526377021127781
+high minus low (SE),linear,2014Q4,placebo,23,0.04627819788792132
+high minus low (SE),linear,2015Q1,placebo,23,0.02634643685882261
+high minus low (SE),linear,2015Q2,placebo,23,0.006871340862243703
+high minus low (SE),linear,2015Q3,placebo,24,0.008574509991304852
+high minus low (SE),linear,2015Q4,placebo,24,-0.0043595766330405405
+high minus low (SE),linear,2016Q1,placebo,24,-0.008605951824704583
+high minus low (SE),linear,2016Q2,placebo,24,0.006447291632790286
+high minus low (SE),linear,2016Q3,placebo,24,0.01742380431883439
+high minus low (SE),linear,2016Q4,placebo,25,0.021487763610785804
+high minus low (SE),linear,2017Q1,placebo,25,0.019628960051773517
+high minus low (SE),linear,2017Q2,placebo,26,0.016735363450841007
+high minus low (SE),linear,2017Q3,placebo,26,0.02333354268824961
+high minus low (SE),linear,2017Q4,placebo,26,0.03099525573365619
+high minus low (SE),linear,2018Q1,placebo,26,0.029667819040659738
+high minus low (SE),linear,2018Q2,placebo,26,0.043351864443445264
+high minus low (SE),linear,2018Q3,placebo,26,0.035225148708885656
+high minus low (SE),linear,2018Q4,placebo,26,0.053084014953101
+high minus low (SE),linear,2019Q1,placebo,26,0.04087083646829098
+high minus low (SE),quad,2022Q4,real,26,0.07112555746963833
+high minus low (SE),quad,2012Q4,placebo,13,0.34830675992375815
+high minus low (SE),quad,2013Q1,placebo,14,0.3371148996465003
+high minus low (SE),quad,2013Q2,placebo,17,0.1667216765577047
+high minus low (SE),quad,2013Q3,placebo,18,0.1498272551933654
+high minus low (SE),quad,2013Q4,placebo,20,0.08853298298703516
+high minus low (SE),quad,2014Q1,placebo,21,0.06678921381682218
+high minus low (SE),quad,2014Q2,placebo,23,0.03992880784220709
+high minus low (SE),quad,2014Q3,placebo,23,-0.01134177684320059
+high minus low (SE),quad,2014Q4,placebo,23,-0.05799829131611922
+high minus low (SE),quad,2015Q1,placebo,23,-0.09962666247676288
+high minus low (SE),quad,2015Q2,placebo,23,-0.13501614477657264
+high minus low (SE),quad,2015Q3,placebo,24,-0.1735987544172422
+high minus low (SE),quad,2015Q4,placebo,24,-0.1712328407703495
+high minus low (SE),quad,2016Q1,placebo,24,-0.17743841099985114
+high minus low (SE),quad,2016Q2,placebo,24,-0.20062143617605377
+high minus low (SE),quad,2016Q3,placebo,24,-0.19649217557170282
+high minus low (SE),quad,2016Q4,placebo,25,-0.1493488164602208
+high minus low (SE),quad,2017Q1,placebo,25,-0.12461216016043941
+high minus low (SE),quad,2017Q2,placebo,26,-0.09560842873257575
+high minus low (SE),quad,2017Q3,placebo,26,-0.08679163127994505
+high minus low (SE),quad,2017Q4,placebo,26,-0.06850896808855567
+high minus low (SE),quad,2018Q1,placebo,26,-0.05742845936579588
+high minus low (SE),quad,2018Q2,placebo,26,-0.04796393392781262
+high minus low (SE),quad,2018Q3,placebo,26,-0.03169182125881209
+high minus low (SE),quad,2018Q4,placebo,26,-0.004458027328190006
+high minus low (SE),quad,2019Q1,placebo,26,0.0025914573530615437
+external,linear,2022Q4,real,4,0.22537491495262452
+external,linear,2018Q1,placebo,4,-0.004230198312779598
+external,linear,2018Q2,placebo,4,0.0067678001770491575
+external,linear,2018Q3,placebo,4,0.008272851975831878
+external,linear,2018Q4,placebo,4,0.010373607526558581
+external,linear,2019Q1,placebo,4,0.020602880791677033
+external,quad,2022Q4,real,4,0.1262336410840812
+external,quad,2018Q1,placebo,4,0.014412929914750489
+external,quad,2018Q2,placebo,4,0.03484069945508114
+external,quad,2018Q3,placebo,4,-0.06034576070395617
+external,quad,2018Q4,placebo,4,-0.11300198362403113
+external,quad,2019Q1,placebo,4,-0.146767856099549

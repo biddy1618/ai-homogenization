@@ -1,0 +1,11 @@
+spec,test,high,low,p_one_sided
+linear,Fisher on sig_hac,11/14,4/12,0.026033113474222647
+linear,Fisher on sig_cal,2/14,0/12,0.27999999999999997
+linear,Fisher on sig_cal_bh,1/14,0/12,0.5384615384615383
+linear,Mann-Whitney on t,median 4.21,median 1.71,0.04729967623495567
+linear,Mann-Whitney on z_vs_own_placebo,median 0.85,median -0.23,0.09483119988207284
+quad,Fisher on sig_hac,3/14,0/12,0.14
+quad,Fisher on sig_cal,1/14,0/12,0.5384615384615383
+quad,Fisher on sig_cal_bh,1/14,0/12,0.5384615384615383
+quad,Mann-Whitney on t,median 0.45,median -0.60,0.13439774313438896
+quad,Mann-Whitney on z_vs_own_placebo,median 0.67,median 0.04,0.012630150816006215
