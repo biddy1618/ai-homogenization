@@ -4,6 +4,49 @@ Running log of client meetings, newest entry first.
 
 ---
 
+## 2026-10-31 (live call with Mark — held, ~17 min)
+
+Recording: tl;dv transcript "AI Project - update" (36:25; Mark joined at ~19:22). Halloween.
+Mark had still not read paper v0.2.
+
+### What I showed / said
+- **Tracker v2, live.** 100 queries (20 each in finance, health, law, science, tech). Headline is
+  the paper's measure: mean pairwise cosine similarity of Google's top 5 pages. Vendi kept as the
+  second score. Mark: "I love this" and "100 is a nice round number."
+- **By domain:** most alike in health, then finance, science, tech; least alike in law.
+- **Source mix:** top results mostly government and university sites, then banks and finance, then
+  forums and social media.
+- **By question:** highest similarity on "is intermittent fasting healthy?"; lowest on "what
+  happens during a divorce proceeding?" (law).
+- **Week-to-week:** the all-questions line, five snapshots since 2026-10-04. I said it looks like
+  a real rise, each week a fresh search, and that it feels "too good." Mark: it may fall back in a
+  couple of weeks — "whatever it is, it is." Too early to conclude.
+
+### Decisions
+- **Substance stands.** Mark likes the 100-query panel, the paper's similarity measure, the domain
+  split, and the source buckets. The dashboard may stay as it is.
+- **Next design question, not a rebuild:** one public page with a single overall homogenization
+  line over time, scaled so week-to-week movement is visible, plus a methodology link. Look at how
+  Bloomberg, the Wall Street Journal, and the New York Times present an index. The stormtroopers
+  image is still an open maybe.
+
+### Action items
+
+| # | Owner | Item | Status |
+|---|-------|------|--------|
+| 1 | Dauren | Tell Mark how the Monday tracker run goes | Open |
+| 2 | Dauren | During the week, send design ideas for a single public chart (methodology one click away) | Open |
+| 3 | Mark | Pencil sketch of that page; text a photo | Open (Mark) |
+| 4 | Mark | Ask Emmett for design ideas | Open (Mark) |
+| 5 | Mark | Read paper v0.2 next Tuesday (2026-11-03) and send ideas during the week | Open (Mark) |
+
+### Not covered (carry to the paper read)
+The 2026-10-27 reframing: similarity curved upward in recent years, more on high-load sites, but
+the ChatGPT launch date is a pre-chosen reference, not a break the tests can pin down. Mark will
+hit this when he reads the paper.
+
+---
+
 ## 2026-10-25 (live call with Mark — held, ~18 min)
 
 Recording: tl;dv transcript "AI Project – update". Mark had not yet read paper v0.2.
@@ -27,8 +70,8 @@ Recording: tl;dv transcript "AI Project – update". Mark had not yet read paper
 |---|-------|------|--------|
 | 1 | Dauren | Email Mark a summary of the call, incl. the two additions (tracker plots/metrics, paper hypotheses) | Open |
 | 2 | Dauren | Calendar invite: same time next week | Open |
-| 3 | Dauren | Tracker: comparable weeks (fixed page count), more queries, paper's similarity measure, new plots | Open |
-| 4 | Mark | Read paper v0.2 and send feedback | Open (Mark) |
+| 3 | Dauren | Tracker: comparable weeks (fixed page count), more queries, paper's similarity measure, new plots | Done (shown 2026-10-31) |
+| 4 | Mark | Read paper v0.2 and send feedback | Open (Mark) — on 2026-10-31 he said next Tuesday (2026-11-03) |
 
 ---
 
