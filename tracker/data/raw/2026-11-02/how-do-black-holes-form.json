@@ -1,0 +1,51 @@
+[
+  {
+    "position": 1,
+    "title": "Black Hole Basics",
+    "link": "https://science.nasa.gov/universe/black-holes/",
+    "domain": "science.nasa.gov",
+    "snippet": "One type of black hole is born when massive stars run out of fuel and explode in supernovae. 10. Not so rare. Most Milky Way-sized galaxies have ..."
+  },
+  {
+    "position": 3,
+    "title": "Black holes, explained - UChicago News",
+    "link": "https://news.uchicago.edu/explainer/black-holes-explained",
+    "domain": "news.uchicago.edu",
+    "snippet": "Black holes are regions in space where an enormous amount of mass is packed into a tiny volume. This creates a gravitational pull so strong that not even light ..."
+  },
+  {
+    "position": 4,
+    "title": "ELI5: Black holes. What causes them to form, how do they ...",
+    "link": "https://www.reddit.com/r/explainlikeimfive/comments/40mrfh/eli5_black_holes_what_causes_them_to_form_how_do/",
+    "domain": "www.reddit.com",
+    "snippet": "Always been interested in them but never got a full understanding from what I've read."
+  },
+  {
+    "position": 5,
+    "title": "ESA - Black holes",
+    "link": "https://www.esa.int/Science_Exploration/Space_Science/Black_holes",
+    "domain": "www.esa.int",
+    "snippet": "A black hole is an extremely dense object whose gravity is so strong that nothing, not even light, can escape it. Eventually a point is reached when even light ..."
+  },
+  {
+    "position": 6,
+    "title": "Black hole",
+    "link": "https://en.wikipedia.org/wiki/Black_hole",
+    "domain": "en.wikipedia.org",
+    "snippet": "Black holes typically form as part of a supernova event when massive stars collapse at the end of their life cycle."
+  },
+  {
+    "position": 7,
+    "title": "How do black holes form?",
+    "link": "https://www.astronomy.com/science/how-do-black-holes-form/",
+    "domain": "www.astronomy.com",
+    "snippet": "The most well-understood black holes are created when a massive star reaches the end of its life and implodes, collapsing in on itself."
+  },
+  {
+    "position": 8,
+    "title": "How do black holes form?",
+    "link": "https://medium.com/@deep.space/how-do-black-holes-form-14ff43494dc7",
+    "domain": "medium.com",
+    "snippet": "The simple answer is that black holes originate from dying stars, provided the mass of the star is large enough. It is believed that the mass of ..."
+  }
+]

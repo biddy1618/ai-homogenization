@@ -1,0 +1,44 @@
+[
+  {
+    "position": 1,
+    "title": "What is an API really? Need deeper explanation.",
+    "link": "https://www.reddit.com/r/cybersecurity/comments/1elnz4j/what_is_an_api_really_need_deeper_explanation/",
+    "domain": "www.reddit.com",
+    "snippet": "I've read all the textbook descriptions of what an API is. But I've never \"seen\" one so to speak. I learn better by seeing and doing. What are some tools ..."
+  },
+  {
+    "position": 2,
+    "title": "What is an API? - Application Programming Interfaces Explained",
+    "link": "https://aws.amazon.com/what-is/api/",
+    "domain": "aws.amazon.com",
+    "snippet": "APIs are mechanisms that enable two software components to communicate with each other using a set of definitions and protocols."
+  },
+  {
+    "position": 4,
+    "title": "Introduction to API (Application Programming Interface)",
+    "link": "https://www.geeksforgeeks.org/software-testing/what-is-an-api/",
+    "domain": "www.geeksforgeeks.org",
+    "snippet": "An API (Application Programming Interface) is a set of rules that allows different software applications to communicate with each other."
+  },
+  {
+    "position": 5,
+    "title": "What Is an API (Application Programming Interface)?",
+    "link": "https://www.ibm.com/think/topics/api",
+    "domain": "www.ibm.com",
+    "snippet": "An application programming interface (API) is a contract that enables software to access data or invoke functionality exposed by other software."
+  },
+  {
+    "position": 6,
+    "title": "What is an API: Types and examples",
+    "link": "https://kontent.ai/blog/what-is-api-how-it-works-types-of-apis/",
+    "domain": "kontent.ai",
+    "snippet": "API stands for Application Programming Interface. In simple terms, an API is a messenger that allows two different software applications to ..."
+  },
+  {
+    "position": 7,
+    "title": "What is an API? · GitHub",
+    "link": "https://github.com/resources/articles/what-is-an-api",
+    "domain": "github.com",
+    "snippet": "An API (application programming interface) is a defined set of rules that allows one piece of software to request data or actions from another."
+  }
+]

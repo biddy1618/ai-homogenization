@@ -1,0 +1,65 @@
+[
+  {
+    "position": 1,
+    "title": "How Does Facial Recognition Work?",
+    "link": "https://www.csis.org/analysis/how-does-facial-recognition-work",
+    "domain": "www.csis.org",
+    "snippet": "1. What Is Facial Recognition? Facial recognition is a way of using software to determine the similarity between two face images in order to ..."
+  },
+  {
+    "position": 2,
+    "title": "Facial Recognition Technology: How It Works, Types ...",
+    "link": "https://www.envistaforensics.com/knowledge-center/insights/articles/facial-recognition-technology-how-it-works-types-accuracy-and-ethical-concerns/",
+    "domain": "www.envistaforensics.com",
+    "snippet": "It works by mapping and measuring facial features from a digital image or video frame against a database of known faces to find a match. Facial ..."
+  },
+  {
+    "position": 3,
+    "title": "Facial Recognition - Innovatrics - How it Works",
+    "link": "https://www.innovatrics.com/facial-recognition-technology/",
+    "domain": "www.innovatrics.com",
+    "snippet": "Facial recognition technology identifies or verifies a person by analyzing unique features of the human face. Using artificial intelligence and deep learning ..."
+  },
+  {
+    "position": 4,
+    "title": "Facial recognition system",
+    "link": "https://en.wikipedia.org/wiki/Facial_recognition_system",
+    "domain": "en.wikipedia.org",
+    "snippet": "Facial recognition systems are applications that use algorithms to compare facial images or representations to verify an identity or to identify a person ..."
+  },
+  {
+    "position": 5,
+    "title": "What Is Facial Recognition?",
+    "link": "https://azure.microsoft.com/en-us/resources/cloud-computing-dictionary/what-is-face-recognition",
+    "domain": "azure.microsoft.com",
+    "snippet": "Facial recognition is a biometric technology that identifies or verifies a person by analyzing facial features. Learn about how it works and its benefits."
+  },
+  {
+    "position": 7,
+    "title": "What is facial recognition and how does it work?",
+    "link": "https://us.norton.com/blog/iot/how-facial-recognition-software-works",
+    "domain": "us.norton.com",
+    "snippet": "Facial recognition is a type of biometric technology that works by capturing an image of a person's face, detecting key features, and converting ..."
+  },
+  {
+    "position": 8,
+    "title": "What is Facial Recognition & How does it work?",
+    "link": "https://www.kaspersky.com/resource-center/definitions/what-is-facial-recognition",
+    "domain": "www.kaspersky.com",
+    "snippet": "The camera detects and locates the image of a face, either alone or in a crowd. The image may show the person looking straight ahead or in profile."
+  },
+  {
+    "position": 9,
+    "title": "How does facial recognition work?  - #didyouknow - #science",
+    "link": "https://www.facebook.com/theactionlabofficial/videos/how-does-facial-recognition-work-didyouknow-science-iphone-laser-infrared-reels/1971516440112589/",
+    "domain": "www.facebook.com",
+    "snippet": "It explains that the system uses an infrared camera and thousands of dots to scan a person's face, creating a detailed 3D facial pattern."
+  },
+  {
+    "position": 10,
+    "title": "How Does Facial Recognition Work & Is It Secure?",
+    "link": "https://www.okta.com/identity-101/how-does-facial-recognition-work/",
+    "domain": "www.okta.com",
+    "snippet": "Facial recognition technology uses algorithms to match a captured image of a person's face against a stored database to confirm identity. It is ..."
+  }
+]

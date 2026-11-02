@@ -246,3 +246,99 @@ date,category,query,n_serp,n_results,mean_pairwise_cosine,vendi,distinct_ratio,m
 2026-10-26,tech,what is phishing and how to avoid it,9,5,0.775464,2.026,0.4052,0.181598,2;3;4;5;6
 2026-10-26,tech,what is retrieval augmented generation,8,5,0.71985,2.1744,0.4349,0.246241,2;3;6;7;8
 2026-10-26,tech,what is the difference between http and https,8,5,0.608306,2.4522,0.4904,0.295944,3;4;5;7;9
+2026-11-02,finance,how are capital gains taxed,8,5,0.880674,1.5447,0.3089,0.123905,1;2;3;4;5
+2026-11-02,finance,how do credit cards work,10,5,0.691281,2.239,0.4478,0.25534,1;2;6;7;9
+2026-11-02,finance,how do index funds work,9,5,0.78062,1.8583,0.3717,0.164256,1;2;3;4;5
+2026-11-02,finance,how do student loans work,10,5,0.862812,1.6257,0.3251,0.108461,2;3;4;5;7
+2026-11-02,finance,how does a credit freeze work,9,5,0.795874,1.8676,0.3735,0.157789,2;5;6;7;8
+2026-11-02,finance,how does a home equity loan work,9,5,0.723631,2.2224,0.4445,0.24661,1;3;6;7;9
+2026-11-02,finance,how does compound interest work,7,5,0.782821,1.9634,0.3927,0.183696,1;2;3;4;5
+2026-11-02,finance,how does inflation affect your savings,9,5,0.845618,1.7054,0.3411,0.128348,1;2;3;4;7
+2026-11-02,finance,how does refinancing a mortgage work,10,5,0.872864,1.5755,0.3151,0.114395,1;2;6;8;9
+2026-11-02,finance,how does social security work,9,5,0.634836,2.6104,0.5221,0.334356,2;3;5;7;8
+2026-11-02,finance,how to build an emergency fund,9,5,0.861769,1.6335,0.3267,0.113606,1;2;5;6;7
+2026-11-02,finance,roth ira vs traditional ira,7,5,0.610279,2.6736,0.5347,0.287175,1;2;3;4;5
+2026-11-02,finance,what is a 401k and how does it work,8,5,0.70974,2.1415,0.4283,0.218362,1;2;3;4;5
+2026-11-02,finance,what is a good credit score,10,5,0.740918,2.1247,0.4249,0.212792,1;2;3;6;7
+2026-11-02,finance,what is a health savings account,9,5,0.826019,1.7222,0.3444,0.133975,1;2;4;6;8
+2026-11-02,finance,what is a mutual fund,8,5,0.896098,1.4845,0.2969,0.0882,1;2;3;4;5
+2026-11-02,finance,what is an annuity,9,5,0.8787,1.5411,0.3082,0.091798,1;2;3;4;5
+2026-11-02,finance,what is dollar cost averaging,7,5,0.748383,2.0152,0.403,0.140137,1;2;3;4;5
+2026-11-02,finance,what is the difference between a debit card and a credit card,8,5,0.553025,2.1969,0.4394,0.307268,1;2;3;4;5
+2026-11-02,finance,what is the difference between stocks and bonds,7,5,0.790303,1.9388,0.3878,0.161151,1;2;3;4;6
+2026-11-02,health,how do antibiotics work,8,5,0.804609,1.8863,0.3773,0.150213,1;2;6;7;8
+2026-11-02,health,how does alcohol affect the liver,8,5,0.711662,2.2303,0.4461,0.213878,1;2;3;5;7
+2026-11-02,health,how does caffeine affect the body,9,5,0.886805,1.5187,0.3037,0.094386,2;3;4;6;7
+2026-11-02,health,how does the immune system fight infection,10,5,0.762803,2.0605,0.4121,0.188444,2;3;4;5;6
+2026-11-02,health,how much protein do you need per day,8,5,0.866097,1.6129,0.3226,0.113319,1;2;3;4;5
+2026-11-02,health,how much sleep do adults need,10,5,0.851621,1.6659,0.3332,0.122628,1;6;7;8;9
+2026-11-02,health,how much water should you drink a day,8,5,0.839282,1.7216,0.3443,0.133283,1;2;3;5;6
+2026-11-02,health,how to lower blood pressure naturally,9,5,0.679406,2.4349,0.487,0.263453,1;2;3;4;7
+2026-11-02,health,how to treat a sprained ankle,8,5,0.864249,1.6178,0.3236,0.114146,1;2;3;4;5
+2026-11-02,health,is intermittent fasting healthy,9,5,0.90482,1.4382,0.2876,0.06935,1;2;3;6;7
+2026-11-02,health,what are the benefits of regular exercise,9,5,0.853884,1.675,0.335,0.128221,1;2;3;4;6
+2026-11-02,health,what are the early signs of diabetes,8,5,0.826658,1.7832,0.3566,0.134801,1;3;4;5;7
+2026-11-02,health,what are the symptoms of iron deficiency,8,5,0.884003,1.5358,0.3072,0.093024,1;2;3;4;7
+2026-11-02,health,what are the symptoms of vitamin d deficiency,9,5,0.865567,1.5969,0.3194,0.092569,1;3;4;5;6
+2026-11-02,health,what causes acid reflux,8,5,0.828601,1.7664,0.3533,0.127737,1;2;3;4;5
+2026-11-02,health,what causes anxiety,8,5,0.826191,1.7766,0.3553,0.137138,1;2;3;5;6
+2026-11-02,health,what causes high cholesterol,9,5,0.872474,1.5812,0.3162,0.107243,1;2;3;4;6
+2026-11-02,health,what causes lower back pain,9,5,0.173824,4.2023,0.8405,0.698502,1;2;3;5;7
+2026-11-02,health,what causes migraines,8,5,0.836831,1.72,0.344,0.119655,1;2;3;4;6
+2026-11-02,health,what is the difference between a cold and the flu,9,5,0.649519,2.3359,0.4672,0.235747,1;2;3;5;6
+2026-11-02,law,how do you file for bankruptcy,10,5,0.743255,2.1583,0.4317,0.223146,1;2;3;4;5
+2026-11-02,law,how does a class action lawsuit work,8,5,0.858419,1.6439,0.3288,0.131727,1;2;4;6;7
+2026-11-02,law,how does a non-compete agreement work,10,5,0.670308,2.4511,0.4902,0.24038,1;3;4;7;8
+2026-11-02,law,how does a prenuptial agreement work,9,5,0.543648,2.6924,0.5385,0.342249,1;2;3;4;5
+2026-11-02,law,how does child custody work,9,5,0.863149,1.6371,0.3274,0.116747,1;2;3;4;5
+2026-11-02,law,how does copyright protect creators,10,5,0.801846,1.9106,0.3821,0.173746,1;2;3;4;5
+2026-11-02,law,how does small claims court work,9,5,0.753975,2.0982,0.4196,0.204143,1;2;3;4;5
+2026-11-02,law,how does the probate process work,8,5,0.794769,1.9346,0.3869,0.177326,1;2;3;5;6
+2026-11-02,law,what are employee rights when fired,10,5,0.6528,2.5358,0.5072,0.265868,1;2;3;4;6
+2026-11-02,law,what are tenant rights during eviction,9,5,0.755332,2.0725,0.4145,0.184102,1;2;3;4;5
+2026-11-02,law,what are your rights if arrested,10,5,0.69083,2.3935,0.4787,0.264666,1;2;3;4;5
+2026-11-02,law,what happens during a divorce proceeding,8,5,0.450979,3.2651,0.653,0.478935,1;2;3;4;5
+2026-11-02,law,what is a living will,8,5,0.830871,1.7501,0.35,0.14569,1;2;5;6;7
+2026-11-02,law,what is a power of attorney,7,5,0.786084,1.9115,0.3823,0.156991,1;2;4;5;6
+2026-11-02,law,what is a trademark and how do you register one,9,5,0.698122,2.3359,0.4672,0.238922,1;2;4;7;8
+2026-11-02,law,what is an llc and how is it taxed,7,5,0.823753,1.7645,0.3529,0.157324,1;2;3;4;6
+2026-11-02,law,what is fair use in copyright,8,5,0.845343,1.707,0.3414,0.1324,1;2;3;4;5
+2026-11-02,law,what is the difference between a misdemeanor and a felony,7,5,0.86486,1.6024,0.3205,0.10998,1;2;3;4;5
+2026-11-02,law,what is the difference between a will and a trust,8,5,0.865497,1.6118,0.3224,0.108908,1;2;3;4;5
+2026-11-02,law,what is the statute of limitations,8,5,0.768309,2.0309,0.4062,0.207141,1;2;4;5;6
+2026-11-02,science,are electric cars better for the environment,9,5,0.806565,1.8729,0.3746,0.156288,1;2;3;4;5
+2026-11-02,science,how do black holes form,7,5,0.815436,1.8362,0.3672,0.144499,1;3;5;6;7
+2026-11-02,science,how do hurricanes form,6,5,0.867367,1.6058,0.3212,0.120391,1;2;4;5;6
+2026-11-02,science,how do rainbows form,6,5,0.776898,2.0004,0.4001,0.186427,1;2;5;7;8
+2026-11-02,science,how do tides work,7,5,0.888604,1.4907,0.2981,0.088573,1;2;5;6;9
+2026-11-02,science,how do vaccines work,9,5,0.879852,1.5603,0.3121,0.108938,1;2;3;4;5
+2026-11-02,science,how does antibiotic resistance develop,8,5,0.830968,1.7559,0.3512,0.126462,2;3;4;5;7
+2026-11-02,science,how does nuclear fusion work,8,5,0.732342,2.1596,0.4319,0.216627,1;2;3;7;8
+2026-11-02,science,how does photosynthesis work,7,5,0.838783,1.7318,0.3464,0.127973,1;4;5;6;9
+2026-11-02,science,what causes climate change,9,5,0.840766,1.7213,0.3443,0.145806,1;2;3;4;5
+2026-11-02,science,what causes earthquakes,7,5,0.545748,2.6994,0.5399,0.344704,1;4;5;6;7
+2026-11-02,science,what causes the seasons,5,5,0.752028,2.0815,0.4163,0.186935,1;2;3;5;7
+2026-11-02,science,what causes volcanic eruptions,8,5,0.850142,1.67,0.334,0.099684,2;4;5;7;8
+2026-11-02,science,what is dark matter,7,5,0.813921,1.8571,0.3714,0.185412,1;2;3;4;5
+2026-11-02,science,what is quantum entanglement,7,5,0.763555,2.0898,0.418,0.197471,1;2;5;7;8
+2026-11-02,science,what is the big bang theory,9,5,0.654795,2.5276,0.5055,0.275601,1;3;6;7;8
+2026-11-02,science,why do leaves change color in the fall,8,5,0.779966,1.9909,0.3982,0.182871,1;3;4;5;7
+2026-11-02,science,why is the sky blue,8,5,0.808504,1.8551,0.371,0.143839,1;2;3;4;6
+2026-11-02,tech,how do search engines rank pages,10,5,0.709315,2.3115,0.4623,0.256489,2;3;4;6;8
+2026-11-02,tech,how do solid state drives work,9,5,0.723484,2.2348,0.447,0.24955,1;2;5;6;7
+2026-11-02,tech,how does a computer virus spread,8,5,0.640187,2.5856,0.5171,0.263959,1;2;6;7;8
+2026-11-02,tech,how does end-to-end encryption work,9,5,0.867694,1.5935,0.3187,0.093213,1;3;4;5;6
+2026-11-02,tech,how does facial recognition work,9,5,0.844229,1.7161,0.3432,0.138202,2;3;4;7;8
+2026-11-02,tech,how does gps work,8,5,0.805151,1.8797,0.3759,0.172662,1;2;3;4;8
+2026-11-02,tech,how does two factor authentication work,9,5,0.769264,1.9465,0.3893,0.183508,1;2;3;4;8
+2026-11-02,tech,how does wifi work,9,5,0.653088,2.5926,0.5185,0.332724,1;2;3;4;6
+2026-11-02,tech,is ai going to replace jobs,9,5,0.615256,2.6598,0.532,0.340349,1;2;3;4;6
+2026-11-02,tech,what is 5g technology,8,5,0.867513,1.5993,0.3199,0.111809,3;4;5;6;7
+2026-11-02,tech,what is a large language model,7,5,0.796777,1.9173,0.3835,0.194857,1;2;3;4;5
+2026-11-02,tech,what is a password manager,9,5,0.860755,1.6203,0.3241,0.102006,1;3;4;5;7
+2026-11-02,tech,what is a vpn and how does it work,8,5,0.758717,2.0574,0.4115,0.170092,4;5;6;7;8
+2026-11-02,tech,what is an api,6,5,0.767643,2.0245,0.4049,0.186281,1;4;5;6;7
+2026-11-02,tech,what is machine learning,8,5,0.835197,1.7413,0.3483,0.132932,1;2;3;5;7
+2026-11-02,tech,what is phishing and how to avoid it,10,5,0.775464,2.026,0.4052,0.181598,2;3;4;5;6
+2026-11-02,tech,what is retrieval augmented generation,7,5,0.719458,2.1753,0.4351,0.246253,2;4;6;7;8
+2026-11-02,tech,what is the difference between http and https,7,5,0.607568,2.4847,0.4969,0.247601,2;4;5;7;8

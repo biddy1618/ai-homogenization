@@ -1,0 +1,51 @@
+[
+  {
+    "position": 1,
+    "title": "HTTP vs HTTPS - Difference Between Transfer Protocols - AWS",
+    "link": "https://aws.amazon.com/compare/the-difference-between-https-and-http/",
+    "domain": "aws.amazon.com",
+    "snippet": "HTTP messages are plaintext, which means unauthorized parties can easily access and read them over the internet. In contrast, HTTPS transmits all data in ..."
+  },
+  {
+    "position": 2,
+    "title": "HTTP vs HTTPS",
+    "link": "https://silktide.com/glossary/http-vs-https/",
+    "domain": "silktide.com",
+    "snippet": "Encryption: The primary distinction between HTTP and HTTPS lies in the level of data encryption. HTTP does not encrypt the information transmitted between the ..."
+  },
+  {
+    "position": 3,
+    "title": "ELI5 how does https and http differ in making the website ...",
+    "link": "https://www.reddit.com/r/explainlikeimfive/comments/ypcjgc/eli5_how_does_https_and_http_differ_in_making_the/",
+    "domain": "www.reddit.com",
+    "snippet": "HTTP and HTTPS follow the same communication standard but the difference is that in HTTPS it uses TLS or (transport layer security) which is a ..."
+  },
+  {
+    "position": 4,
+    "title": "Difference between http:// and https://",
+    "link": "https://www.geeksforgeeks.org/computer-networks/difference-between-http-and-https/",
+    "domain": "www.geeksforgeeks.org",
+    "snippet": "HTTPS stands for HyperText Transfer Protocol Secure. In HTTPS, the URL starts with “https://”. HTTP uses port number 80 for communication."
+  },
+  {
+    "position": 5,
+    "title": "HTTPS vs. HTTP: Why Secure Connections Matter in 2025",
+    "link": "https://securityscorecard.com/blog/https-vs-http-why-secure-connections-matter-in-2025/",
+    "domain": "securityscorecard.com",
+    "snippet": "HTTP: No encryption. All data is exposed in transit. · HTTPS: Encrypted using SSL/TLS, which ensures confidentiality, integrity, and ..."
+  },
+  {
+    "position": 7,
+    "title": "HTTP vs. HTTPS",
+    "link": "https://medium.com/@pranjalpanta2.0/http-vs-https-c2ea9bed6c8e",
+    "domain": "medium.com",
+    "snippet": "The only difference between the two protocols is that HTTPS uses TLS (SSL) to encrypt normal HTTP requests and responses, and to digitally sign ..."
+  },
+  {
+    "position": 8,
+    "title": "What's the Difference Between HTTP vs HTTPS?",
+    "link": "https://www.upguard.com/blog/http-vs-https",
+    "domain": "www.upguard.com",
+    "snippet": "The main difference between HTTPS and HTTP is that HTTPS establishes a secure internet connection via encryption, whereas HTTP does not. HTTPS provides a useful ..."
+  }
+]
