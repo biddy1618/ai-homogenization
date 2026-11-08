@@ -32,3 +32,6 @@ paper/*.toc
 
 # macOS
 .DS_Store
+
+# Design handoff archive (contents are unpacked in tracker/onepager/)
+tracker/onepager/*.zip

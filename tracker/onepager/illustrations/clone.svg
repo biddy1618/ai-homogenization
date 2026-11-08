@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+<defs><clipPath id="c_clone"><circle cx="100" cy="100" r="100"/></clipPath></defs>
+<circle cx="100" cy="100" r="100" fill="#3A2A1E"/>
+<g clip-path="url(#c_clone)"><path d="M14 200 C18 162 50 144 100 144 C150 144 182 162 186 200 Z" fill="#B9662A"/><path d="M40 200 C44 172 66 158 100 158 C134 158 156 172 160 200 Z" fill="#E8863C"/><path d="M78 172 L122 172 L114 200 L86 200 Z" fill="#B9662A" opacity="0.6"/><rect x="84" y="128" width="32" height="26" rx="4" fill="#B9662A"/><path d="M84 140 L116 140" stroke="#8E4C1E" stroke-width="2"/><path d="M64 96 C64 58 80 42 100 42 C120 42 136 58 136 96 L136 116 C136 128 128 136 116 136 L84 136 C72 136 64 128 64 116 Z" fill="#E8863C"/><path d="M74 70 C78 56 88 50 98 49" stroke="#F3A766" stroke-width="6" fill="none" stroke-linecap="round"/><rect x="68" y="84" width="64" height="15" rx="7.5" fill="#1B1410"/><rect x="76" y="88" width="16" height="3" rx="1.5" fill="#3A2A1E"/><path d="M80 118 L120 118" stroke="#B9662A" stroke-width="3" stroke-linecap="round"/></g>
+</svg>
