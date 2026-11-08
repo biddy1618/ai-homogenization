@@ -4,6 +4,44 @@ Running log of client meetings, newest entry first.
 
 ---
 
+## 2026-11-07 (async — meeting moved to 2026-11-08; Mark's sketch)
+
+No call. Mark texted the pencil sketch on Monday 2026-11-02, 06:38. On 2026-11-07, ~20:18, he
+asked whether we were meeting that day and for a short methodology write-up. I had not moved the
+dashboard, so we moved the call to **tomorrow, same time** (2026-11-08). He agreed.
+
+### His sketch
+One chart, not the four-panel dashboard. Title, still rough: a real-time tracker of AI-driven
+homogenization.
+
+- **Y-axis:** "Homogenization (measured by ___)" — the blank is the metric, left for us to name.
+- **X-axis:** time, from 2026-10-04 to "latest current date." Points drift slightly up. Most of
+  the plot is empty, so the movement is visible.
+- **Low end (bottom left):** portraits of different people — Aristotle, Shakespeare, Leonardo da
+  Vinci, Einstein, Marie Curie. He said two is enough (Da Vinci and Marie Curie). "Just
+  brainstorming."
+- **High end (top right):** identical stormtroopers.
+- **Caption:** "Based on 100 queries in finance, health, law, and science." Tech is missing; the
+  live panel has tech too.
+- **Methodology** is a link under the chart, not on the chart.
+
+The pictures are scale anchors, not data. Low = many distinct voices; high = one repeated face.
+Same idea as the October 31 ask: one number over time, methodology one click away.
+
+### What he asked for now
+A couple of paragraphs on how the tracker was designed, to put in the paper. I said I would send
+them within 30 minutes. The chart design is later, not part of this send.
+
+### Action items
+
+| # | Owner | Item | Status |
+|---|-------|------|--------|
+| 1 | Dauren | Send Mark two paragraphs on the tracker methodology, for the paper | Open |
+| 2 | Dauren | Chart design (his sketch) | Later |
+| 3 | Both | Call 2026-11-08, same time | Open |
+
+---
+
 ## 2026-10-31 (live call with Mark — held, ~17 min)
 
 Recording: tl;dv transcript "AI Project - update" (36:25; Mark joined at ~19:22). Halloween.
@@ -35,8 +73,8 @@ Mark had still not read paper v0.2.
 | # | Owner | Item | Status |
 |---|-------|------|--------|
 | 1 | Dauren | Tell Mark how the Monday tracker run goes | Open |
-| 2 | Dauren | During the week, send design ideas for a single public chart (methodology one click away) | Open |
-| 3 | Mark | Pencil sketch of that page; text a photo | Open (Mark) |
+| 2 | Dauren | During the week, send design ideas for a single public chart (methodology one click away) | Later — design deferred on 2026-11-07 |
+| 3 | Mark | Pencil sketch of that page; text a photo | Done (texted 2026-11-02) |
 | 4 | Mark | Ask Emmett for design ideas | Open (Mark) |
 | 5 | Mark | Read paper v0.2 next Tuesday (2026-11-03) and send ideas during the week | Open (Mark) |
 
