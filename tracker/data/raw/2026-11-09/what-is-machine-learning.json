@@ -1,0 +1,65 @@
+[
+  {
+    "position": 1,
+    "title": "What is Machine Learning? | IBM",
+    "link": "https://www.ibm.com/think/topics/machine-learning",
+    "domain": "www.ibm.com",
+    "snippet": "Machine learning is the subset of AI focused on algorithms that analyze and “learn” the patterns of training data in order to make accurate ..."
+  },
+  {
+    "position": 2,
+    "title": "What is Machine Learning?",
+    "link": "https://developers.google.com/machine-learning/intro-to-ml/what-is-ml",
+    "domain": "developers.google.com",
+    "snippet": "Machine learning (ML) powers some of the most important technologies we use, from translation apps to autonomous vehicles."
+  },
+  {
+    "position": 3,
+    "title": "Machine learning, explained",
+    "link": "https://mitsloan.mit.edu/ideas-made-to-matter/machine-learning-explained",
+    "domain": "mitsloan.mit.edu",
+    "snippet": "Machine learning starts with data — numbers, photos, or text, like bank transactions, pictures of people or even bakery items, repair records, ..."
+  },
+  {
+    "position": 4,
+    "title": "DOE Explains...Machine Learning",
+    "link": "https://www.energy.gov/science/doe-explainsmachine-learning",
+    "domain": "www.energy.gov",
+    "snippet": "Machine learning is the process of using computers to detect patterns in massive datasets and then make predictions based on what the computer learns from those ..."
+  },
+  {
+    "position": 5,
+    "title": "Machine learning",
+    "link": "https://en.wikipedia.org/wiki/Machine_learning",
+    "domain": "en.wikipedia.org",
+    "snippet": "Machine learning (ML) is a field of study in artificial intelligence concerned with the development and study of statistical algorithms that can learn from ..."
+  },
+  {
+    "position": 6,
+    "title": "What is Machine Learning? How It Works, Types and Use ...",
+    "link": "https://www.databricks.com/blog/machine-learning",
+    "domain": "www.databricks.com",
+    "snippet": "Machine learning is a type of AI that enables systems to learn from data. Learn how it works, key ML types, and real-world examples below."
+  },
+  {
+    "position": 7,
+    "title": "Machine Learning: What it is and why it matters",
+    "link": "https://www.sas.com/en_us/insights/analytics/machine-learning.html",
+    "domain": "www.sas.com",
+    "snippet": "Machine learning is a subset of artificial intelligence that trains a machine how to learn. See how machine learning works and how it's being used today."
+  },
+  {
+    "position": 9,
+    "title": "What Is Machine Learning (ML)? Definition and Examples",
+    "link": "https://ischoolonline.berkeley.edu/blog/what-is-machine-learning/",
+    "domain": "ischoolonline.berkeley.edu",
+    "snippet": "Machine learning is a subset of AI concerned with training models to allow computers to mimic human thought and decision making without explicit ..."
+  },
+  {
+    "position": 10,
+    "title": "What Is Machine Learning?",
+    "link": "https://www.oracle.com/artificial-intelligence/machine-learning/what-is-machine-learning/",
+    "domain": "www.oracle.com",
+    "snippet": "Machine learning (ML) is the subset of artificial intelligence that focuses on building systems that learn—and improve—as they consume more data ..."
+  }
+]

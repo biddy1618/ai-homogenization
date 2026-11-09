@@ -1,0 +1,65 @@
+[
+  {
+    "position": 1,
+    "title": "What is Nuclear Fusion?",
+    "link": "http://www.iaea.org/newscenter/news/what-is-nuclear-fusion",
+    "domain": "www.iaea.org",
+    "snippet": "Nuclear fusion is the process by which two light atomic nuclei combine to form a single heavier one while releasing massive amounts of energy."
+  },
+  {
+    "position": 2,
+    "title": "I do not understand how nuclear fusion works",
+    "link": "https://www.reddit.com/r/NuclearPower/comments/133yuyb/i_do_not_understand_how_nuclear_fusion_works/",
+    "domain": "www.reddit.com",
+    "snippet": "nuclear fission works by using the mass defect, the energy that binds atom, to release that energy and use it"
+  },
+  {
+    "position": 3,
+    "title": "DOE Explains...Fusion Reactions",
+    "link": "https://www.energy.gov/science/doe-explainsfusion-reactions",
+    "domain": "www.energy.gov",
+    "snippet": "In fusion, two light nuclei merge to form a single heavier nucleus. The process releases energy because the total mass of the resulting single nucleus is less ..."
+  },
+  {
+    "position": 4,
+    "title": "How Does Nuclear Fusion Work? - SHINE Technologies",
+    "link": "https://www.shinefusion.com/blog/how-does-nuclear-fusion-work/",
+    "domain": "www.shinefusion.com",
+    "snippet": "Two very excited, very hot, very energetic atoms collide with each other and turn into one atom, releasing a few leftover subatomic particles and leftover ..."
+  },
+  {
+    "position": 5,
+    "title": "Fusion - Understand Energy Learning Hub - Stanford University",
+    "link": "https://understand-energy.stanford.edu/energy-resources/nuclear-energy/fusion",
+    "domain": "understand-energy.stanford.edu",
+    "snippet": "Fusion occurs when nuclei from two or more atoms are forced together (overcoming the Coulomb barrier*) and fuse to form a single larger nucleus."
+  },
+  {
+    "position": 7,
+    "title": "Nuclear Fusion Power",
+    "link": "https://world-nuclear.org/information-library/current-and-future-generation/nuclear-fusion-power",
+    "domain": "world-nuclear.org",
+    "snippet": "Fusion powers the Sun and stars as hydrogen atoms fuse together to form helium, and matter is converted into energy."
+  },
+  {
+    "position": 8,
+    "title": "Nuclear fusion",
+    "link": "https://en.wikipedia.org/wiki/Nuclear_fusion",
+    "domain": "en.wikipedia.org",
+    "snippet": "Nuclear fusion is a reaction in which two or more atomic nuclei combine to form a larger nucleus. Active stellar cores are powered by fusion. all elements ..."
+  },
+  {
+    "position": 9,
+    "title": "Nuclear fusion (video) | Nuclear chemistry",
+    "link": "https://www.khanacademy.org/science/hs-chemistry/x2613d8165d88df5e:nuclear-chemistry-hs/x2613d8165d88df5e:nuclear-fusion/v/nuclear-fusion",
+    "domain": "www.khanacademy.org",
+    "snippet": "During nuclear fusion, two or more nuclei combine to form a different nucleus. When light nuclei fuse to produce a nucleus lighter than iron, ..."
+  },
+  {
+    "position": 10,
+    "title": "Making fusion work",
+    "link": "https://www.iter.org/fusion-energy/making-it-work",
+    "domain": "www.iter.org",
+    "snippet": "The fusion between deuterium and tritium (D-T) nuclei produces one helium nucleus, one neutron, and great amounts of energy. Three, two, one ... We have plasma!"
+  }
+]

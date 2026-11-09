@@ -1,0 +1,65 @@
+[
+  {
+    "position": 1,
+    "title": "How Does Wi-Fi Work?",
+    "link": "https://www.britannica.com/story/how-does-wi-fi-work",
+    "domain": "www.britannica.com",
+    "snippet": "Wi-Fi uses radio waves to transmit information between your device and a router via frequencies. Two radio-wave frequencies can be used, ..."
+  },
+  {
+    "position": 2,
+    "title": "ELI5 how wifi works and is accessed? : r/explainlikeimfive",
+    "link": "https://www.reddit.com/r/explainlikeimfive/comments/1ieidmc/eli5_how_wifi_works_and_is_accessed/",
+    "domain": "www.reddit.com",
+    "snippet": "Wi-Fi is a way for devices to communicate over radio. Like Bluetooth, but much more powerful. Your phone communicates with your router via wi-fi ..."
+  },
+  {
+    "position": 3,
+    "title": "What is WiFi and How Does it Work?",
+    "link": "https://computer.howstuffworks.com/wireless-network.htm",
+    "domain": "computer.howstuffworks.com",
+    "snippet": "The router directly connects to a modem via a cable. The modem brings the internet service into your home. The router transmits the internet signal from the ..."
+  },
+  {
+    "position": 5,
+    "title": "WiFi basics: What it is and how it works",
+    "link": "https://support.linksys.com/kb/article/8226-en/",
+    "domain": "support.linksys.com",
+    "snippet": "WiFi works by using a device called a router, which connects to the internet through a modem. The router sends out a wireless signal"
+  },
+  {
+    "position": 6,
+    "title": "What Is Wi-Fi? - Definition and Types",
+    "link": "https://www.cisco.com/site/us/en/learn/topics/networking/what-is-wi-fi.html",
+    "domain": "www.cisco.com",
+    "snippet": "When you access Wi-Fi, you are connecting to a wireless router that allows your Wi-Fi-compatible devices to interface with the Internet. Watch Wi-Fi 7 overview ..."
+  },
+  {
+    "position": 7,
+    "title": "Understanding How Wifi Networks Work",
+    "link": "https://www.racoman.com/blog/understanding-how-wifi-networks-work?srsltid=AYCX9vIpfXo0afnyBN6RfTHGretso1jjhYdDIFWxYgJU2HbAa2H0kVCZ",
+    "domain": "www.racoman.com",
+    "snippet": "Wifi, short for Wireless Fidelity, is a technology that allows devices to connect to the internet without the need for physical wired connections. It uses radio ..."
+  },
+  {
+    "position": 8,
+    "title": "What is WiFi and how do I get it?",
+    "link": "https://www.xfinity.com/support/articles/what-is-wifi",
+    "domain": "www.xfinity.com",
+    "snippet": "A wireless or WiFi network uses a radio frequency signal instead of wires to connect your devices - such as computers, printers and smartphones - to the ..."
+  },
+  {
+    "position": 9,
+    "title": "How does Wi-Fi work?",
+    "link": "https://www.alliedtelesis.com/us/en/foundations/how-does-wi-fi-work/",
+    "domain": "www.alliedtelesis.com",
+    "snippet": "Wi-Fi and access points work together to create a wireless network that allows us to connect to the Internet without the need for physical cables. Access points ..."
+  },
+  {
+    "position": 10,
+    "title": "What is Wi-Fi? | Definition, Meaning & Explanation",
+    "link": "https://www.verizon.com/articles/internet-essentials/wifi-definiton/",
+    "domain": "www.verizon.com",
+    "snippet": "Wi-Fi is the radio signal sent from a wireless router to a nearby device, which translates the signal into data you can see and use. The device ..."
+  }
+]

@@ -1,0 +1,58 @@
+[
+  {
+    "position": 1,
+    "title": "How does blockchain work? - Stanford Online",
+    "link": "https://online.stanford.edu/how-does-blockchain-work",
+    "domain": "online.stanford.edu",
+    "snippet": "Blockchain, as it's moniker suggests, is blocks of data linked into an uneditable, digital chain. This information is stored in an open-source decentralized"
+  },
+  {
+    "position": 2,
+    "title": "Blockchain Facts: What Is It, How It Works, and How It Can ...",
+    "link": "https://www.investopedia.com/terms/b/blockchain.asp",
+    "domain": "www.investopedia.com",
+    "snippet": "Blockchain is a decentralized digital database or ledger that securely stores records across a network of computers in a way that is transparent, immutable, ..."
+  },
+  {
+    "position": 3,
+    "title": "What Is Blockchain? | IBM",
+    "link": "https://www.ibm.com/think/topics/blockchain",
+    "domain": "www.ibm.com",
+    "snippet": "Blockchain operates as a decentralized distributed database, with data stored across multiple computers, making it resistant to tampering."
+  },
+  {
+    "position": 5,
+    "title": "Blockchain",
+    "link": "https://en.wikipedia.org/wiki/Blockchain",
+    "domain": "en.wikipedia.org",
+    "snippet": "A blockchain is a distributed ledger with growing lists of records (blocks) that are securely linked together via cryptographic hashes."
+  },
+  {
+    "position": 6,
+    "title": "What is Blockchain Technology? - AWS - Amazon.com",
+    "link": "https://aws.amazon.com/what-is/blockchain/",
+    "domain": "aws.amazon.com",
+    "snippet": "Blockchain technology is an advanced database mechanism that allows transparent information sharing within a business network. A blockchain database stores ..."
+  },
+  {
+    "position": 7,
+    "title": "Blockchain for beginners- basic guiding principles",
+    "link": "https://blockchain-observatory.ec.europa.eu/document/download/1063effa-59cc-4df4-aeee-d2cf94f69178_en?filename=Blockchain_For_Beginners_A_EUBOF_Guide.pdf",
+    "domain": "blockchain-observatory.ec.europa.eu",
+    "snippet": "2.1 How does Blockchain work. 2.1.1. Decentralization. Blockchain decentralization is a “paradigm shift” from centralized systems. It distributes power and ..."
+  },
+  {
+    "position": 8,
+    "title": "How Blockchain Works: Under the Hood (video)",
+    "link": "https://www.khanacademy.org/computing/code-org/x06130d92:blockchain-technology/x06130d92:how-blockchain-works/v/how-blockchain-works-under-the-hood",
+    "domain": "www.khanacademy.org",
+    "snippet": "To summarize one, the currency works on a shared ledger of transactions. Two, to keep a shared ledger, the information is stored in blocks. Three, the blocks ..."
+  },
+  {
+    "position": 9,
+    "title": "What is blockchain? How does blockchain work?",
+    "link": "https://www.cloudflare.com/learning/security/what-is-blockchain/",
+    "domain": "www.cloudflare.com",
+    "snippet": "Blockchain records transactions and other information in chronological “blocks” of data and is an application of distributed ledger technology (DLT)."
+  }
+]
