@@ -1,0 +1,44 @@
+[
+  {
+    "position": 1,
+    "title": "HTTP vs HTTPS - Difference Between Transfer Protocols - AWS",
+    "link": "https://aws.amazon.com/compare/the-difference-between-https-and-http/",
+    "domain": "aws.amazon.com",
+    "snippet": "Search engines generally rank HTTP website content lower than HTTPS webpages due to HTTP being less trustworthy. Customers also prefer HTTPS websites over HTTP."
+  },
+  {
+    "position": 2,
+    "title": "ELI5 how does https and http differ in making the website ...",
+    "link": "https://www.reddit.com/r/explainlikeimfive/comments/ypcjgc/eli5_how_does_https_and_http_differ_in_making_the/",
+    "domain": "www.reddit.com",
+    "snippet": "HTTP and HTTPS follow the same communication standard but the difference is that in HTTPS it uses TLS or (transport layer security) which is a ..."
+  },
+  {
+    "position": 4,
+    "title": "Difference between http:// and https://",
+    "link": "https://www.geeksforgeeks.org/computer-networks/difference-between-http-and-https/",
+    "domain": "www.geeksforgeeks.org",
+    "snippet": "HTTPS stands for HyperText Transfer Protocol Secure. In HTTPS, the URL starts with “https://”. HTTP uses port number 80 for communication."
+  },
+  {
+    "position": 5,
+    "title": "Why is HTTP not secure? | HTTP vs. HTTPS",
+    "link": "https://www.cloudflare.com/learning/ssl/why-is-http-not-secure/",
+    "domain": "www.cloudflare.com",
+    "snippet": "HTTPS is HTTP with encryption and verification. The only difference between the two protocols is that HTTPS uses TLS (SSL) to encrypt normal ..."
+  },
+  {
+    "position": 6,
+    "title": "HTTP vs HTTPS: The Real Difference and Why It Still Matters",
+    "link": "https://www.keyfactor.com/blog/http-vs-https-the-real-difference-and-why-it-still-matters/",
+    "domain": "www.keyfactor.com",
+    "snippet": "What is the main difference between HTTP and HTTPS? HTTP sends data in plain text over port 80, so it can be intercepted and read. HTTPS adds ..."
+  },
+  {
+    "position": 7,
+    "title": "HTTP vs HTTPS",
+    "link": "https://silktide.com/glossary/http-vs-https/",
+    "domain": "silktide.com",
+    "snippet": "Encryption: The primary distinction between HTTP and HTTPS lies in the level of data encryption. HTTP does not encrypt the information ..."
+  }
+]

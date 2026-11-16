@@ -1,0 +1,44 @@
+[
+  {
+    "position": 1,
+    "title": "Why Is the Sky Blue?",
+    "link": "https://spaceplace.nasa.gov/blue-sky/",
+    "domain": "spaceplace.nasa.gov",
+    "snippet": "Why Is the Sky Blue? The Short Answer: Sunlight reaches Earth's atmosphere and is scattered in all directions by all the gases and particles in the air. Blue ..."
+  },
+  {
+    "position": 2,
+    "title": "Why Is the Sky Blue? - NESDIS - NOAA",
+    "link": "https://www.nesdis.noaa.gov/about/k-12-education/atmosphere/why-the-sky-blue",
+    "domain": "www.nesdis.noaa.gov",
+    "snippet": "The Short Answer. Gases and particles in Earth's atmosphere scatter sunlight in all directions. Blue light is scattered more than other colors ..."
+  },
+  {
+    "position": 3,
+    "title": "Why is the sky blue?",
+    "link": "https://math.ucr.edu/home/baez/physics/General/BlueSky/blue_sky.html",
+    "domain": "math.ucr.edu",
+    "snippet": "When a fluid is near its critical temperature and pressure, tiny density fluctuations are responsible for a blue coloration known as critical opalescence."
+  },
+  {
+    "position": 4,
+    "title": "Why is the sky blue? Do I understand it correctly",
+    "link": "https://www.reddit.com/r/askscience/comments/14566ig/why_is_the_sky_blue_do_i_understand_it_correctly/",
+    "domain": "www.reddit.com",
+    "snippet": "I’ve been trying to understand why the sky changes colors, and I think I understand most of it, but something in the online explanations doesn’t ..."
+  },
+  {
+    "position": 6,
+    "title": "Why Is The Sky Blue?",
+    "link": "https://www.weather.gov/fgz/SkyBlue",
+    "domain": "www.weather.gov",
+    "snippet": "The sky looks blue, not violet, because our eyes are more sensitive to blue light (and the sun also emits more energy as blue light than as violet). This ..."
+  },
+  {
+    "position": 7,
+    "title": "Why is the sky blue?",
+    "link": "https://kids.nationalgeographic.com/books/article/sky",
+    "domain": "kids.nationalgeographic.com",
+    "snippet": "When light hits the air molecules in our atmosphere, its colors are scattered in all directions. Blue light is scattered more because of its short, choppy ..."
+  }
+]
