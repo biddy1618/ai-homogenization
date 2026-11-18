@@ -1,0 +1,604 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI-driven homogenization of expression — real-time tracker</title>
+<meta name="description" content="Every week, the same 100 everyday questions to Google. This week the top 5 answers are 0.78 alike on a 0–1 scale: 1.96 distinct answers out of 5.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="AI-driven homogenization of expression — real-time tracker">
+<meta property="og:description" content="Google's top 5 answers to 100 everyday questions are 0.78 alike this week: 1.96 distinct answers out of 5.">
+<meta property="og:image" content="https://biddy1618.github.io/ai-homogenization/tracker/designs/concordance/assets/share.jpg">
+<meta property="og:url" content="https://biddy1618.github.io/ai-homogenization/tracker/designs/concordance/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#0b3b38">
+<link rel="preload" href="fonts/anybody.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/scene.webp" as="image" media="(min-width: 761px)">
+<link rel="preload" href="assets/scene-sm.webp" as="image" media="(max-width: 760px)">
+<style>
+@font-face { font-family: "Anybody"; src: url("fonts/anybody.woff2") format("woff2"); font-weight: 100 900; font-stretch: 50% 150%; font-display: swap; }
+@font-face { font-family: "Archivo"; src: url("fonts/archivo.woff2") format("woff2"); font-weight: 100 900; font-stretch: 62% 125%; font-display: swap; }
+
+:root {
+  --void: #061b1a;
+  --field: #0b3b38;
+  --field-2: #0f4a45;
+  --verdigris: #3d8a78;
+  --bone: #efe6d2;
+  --bone-2: #b3dccb;
+  --marigold: #f4b331;
+  --marigold-deep: #c98a12;
+  --display: "Anybody", "Archivo", system-ui, sans-serif;
+  --body: "Archivo", system-ui, sans-serif;
+  --gut: clamp(18px, 3.4vw, 56px);
+  --cut: 4.5vw;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html { background: var(--field); scrollbar-color: var(--verdigris) var(--void); }
+body { margin: 0; color: var(--bone); font: 400 1.0625rem/1.55 var(--body); font-stretch: 100%;
+  -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
+::selection { background: var(--marigold); color: var(--void); }
+a { color: inherit; text-underline-offset: .22em; text-decoration-thickness: 1px; }
+a:hover { color: var(--marigold); }
+:focus-visible { outline: 3px solid var(--marigold); outline-offset: 3px; }
+img { display: block; max-width: 100%; }
+.wrap { padding-inline: var(--gut); max-width: 1680px; margin-inline: auto; }
+.num { font-variant-numeric: tabular-nums lining-nums; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+
+/* ---------- header strip */
+.strip { display: flex; align-items: center; gap: 24px; padding-block: 12px; border-bottom: 1px solid rgb(239 230 210 / .16);
+  font: 600 .8125rem/1 var(--display); font-stretch: 120%; letter-spacing: .08em; text-transform: uppercase; }
+.mark { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+.mark svg { width: 18px; height: 22px; }
+.strip .week { color: var(--bone-2); font-weight: 500; }
+.strip nav { margin-left: auto; display: flex; align-items: center; gap: 22px; }
+.strip nav a { text-decoration: none; }
+.btn { display: inline-flex; align-items: center; gap: .6em; background: var(--marigold); color: var(--void);
+  padding: .78em 1.1em .72em; text-decoration: none; font: 800 .8125rem/1 var(--display); font-stretch: 120%;
+  letter-spacing: .08em; text-transform: uppercase; clip-path: polygon(0 0, 100% 0, calc(100% - 10px) 100%, 0 100%);
+  transition: background-color .2s cubic-bezier(.2,.7,.2,1); }
+.btn:hover { background: var(--bone); color: var(--void); }
+.btn svg { width: 14px; height: 10px; }
+
+/* ---------- title */
+.title { margin: 0; padding-top: clamp(16px, 1.8vw, 28px); white-space: nowrap; overflow: hidden; text-shadow: 0 1px 12px rgb(6 27 26 / .6);
+  font: 850 3vw/1 var(--display); font-stretch: 112%; letter-spacing: -.01em; text-transform: uppercase; }
+
+/* ---------- scene band */
+.scene { position: relative; z-index: 1; isolation: isolate; height: clamp(400px, 33vw, 620px); overflow: hidden;
+  clip-path: polygon(0 0, 100% 0, 100% calc(100% - var(--cut)), 0 100%); margin-bottom: calc(var(--cut) * -1); }
+.scene picture { position: absolute; inset: 0; z-index: -1; }
+.scene img.bg { position: absolute; inset: -8% 0 0 0; width: 100%; height: 116%; object-fit: cover; object-position: 50% 58%; will-change: transform; }
+.scene::after { content: ""; position: absolute; inset: 0; z-index: -1;
+  background: linear-gradient(180deg, rgb(6 27 26 / .62) 0%, rgb(6 27 26 / 0) 22%, rgb(6 27 26 / 0) 40%, rgb(6 27 26 / .74) 90%),
+              linear-gradient(90deg, rgb(6 27 26 / 0) 40%, rgb(6 27 26 / .38) 100%); }
+.scene-inner { height: 100%; display: flex; flex-direction: column; justify-content: space-between; padding-bottom: calc(var(--cut) + clamp(10px, 1.2vw, 22px)); }
+.verdict { position: relative; display: flex; align-items: flex-end; gap: clamp(18px, 2.2vw, 40px); align-self: flex-end; max-width: 60%; }
+.big { display: block; flex: none; margin-left: -.04em; font: 900 clamp(5rem, 10.5vw, 11.5rem)/.8 var(--display); font-stretch: 150%;
+  letter-spacing: -.04em; color: var(--marigold); }
+.verdict p { margin: 0 0 .2em; max-width: 31ch; background: rgb(6 27 26 / .94); border: 1px solid rgb(239 230 210 / .18); padding: .8em 1em .85em; font: 600 clamp(1.05rem, 1.45vw, 1.6rem)/1.28 var(--body); font-stretch: 96%; text-wrap: balance; }
+.verdict p strong { color: var(--marigold); font-weight: 750; }
+
+/* ---------- chart panel */
+.panel { position: relative; background: var(--void); padding-top: calc(var(--cut) * .6); }
+.chart-wrap { position: relative; }
+.chart { display: block; width: 100%; height: auto; }
+.chart-m { display: none; }
+.chart .grid { stroke: rgb(239 230 210 / .11); stroke-width: 1; }
+.chart .grid-base, .chart .axis { stroke: rgb(239 230 210 / .5); stroke-width: 1.5; }
+.chart .tick { fill: var(--bone-2); font: 500 13px var(--body); font-variant-numeric: tabular-nums; }
+.chart .hatch { stroke: rgb(239 230 210 / .07); stroke-width: 4; }
+.chart .gap-label { fill: rgb(239 230 210 / .55); font: 600 12px var(--display); font-stretch: 120%; letter-spacing: .08em; text-transform: uppercase; }
+.chart .line { fill: none; stroke: var(--marigold); stroke-width: 4; stroke-linejoin: round; stroke-linecap: square; }
+.chart .pt { fill: var(--void); stroke: var(--marigold); stroke-width: 2; }
+.chart .pt-last { fill: var(--marigold); }
+.chart .end-val { fill: var(--marigold); font: 850 26px var(--display); font-stretch: 130%; }
+.chart .end-chg { fill: var(--bone); font: 600 14px var(--body); }
+.chart .end-chg-n { fill: var(--marigold); font-weight: 800; }
+.chart .fig-label { fill: var(--bone); font: 700 13px var(--display); font-stretch: 125%; letter-spacing: .1em; text-transform: uppercase; }
+.readout { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 10px 32px;
+  padding-block: 14px 30px; border-top: 1px solid rgb(239 230 210 / .14); color: var(--bone-2); font-size: .95rem; }
+.readout .change { color: var(--bone); font-weight: 600; }
+.readout .change b { color: var(--marigold); font: 800 1.1em var(--body); font-variant-numeric: tabular-nums; }
+
+/* ---------- sections */
+section { position: relative; }
+.s-pad { padding-block: clamp(64px, 8vw, 128px); }
+h2 { margin: 0 0 .5em; font: 850 clamp(2.2rem, 4.6vw, 4.6rem)/.95 var(--display); font-stretch: 140%; letter-spacing: -.02em; text-transform: uppercase; text-wrap: balance; }
+h2 em { font-style: normal; color: var(--marigold); }
+.lede { max-width: 62ch; color: var(--bone-2); font-size: 1.125rem; margin: 0 0 2.2em; }
+.lede strong { color: var(--bone); font-weight: 650; }
+
+/* how it works: five slots */
+.how { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); gap: clamp(32px, 5vw, 88px); align-items: center; }
+.slots { display: grid; grid-template-columns: repeat(5, 1fr); gap: clamp(6px, .8vw, 12px); }
+.slot { position: relative; aspect-ratio: 52 / 78; background: var(--void); overflow: hidden; border: 1px solid rgb(239 230 210 / .14); }
+.slot img { position: absolute; left: 50%; bottom: 6%; width: 78%; transform: translateX(-50%); height: auto; }
+.slot::before { content: ""; position: absolute; inset: auto 0 0 0; height: calc(var(--f) * 100%); background: var(--marigold); z-index: 1;
+  transition: height .7s cubic-bezier(.16,1,.3,1); }
+.slots-caption { display: flex; justify-content: space-between; margin-top: 12px; color: var(--bone-2); font-size: .875rem; }
+.slots-caption b { color: var(--marigold); font-weight: 700; }
+.plates { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1px; background: rgb(239 230 210 / .16); border: 1px solid rgb(239 230 210 / .16); margin-top: 28px; }
+.plate { background: var(--field); padding: 16px 18px 18px; display: grid; gap: 6px; }
+.plate-label { font: 650 .75rem/1.2 var(--display); font-stretch: 120%; letter-spacing: .1em; text-transform: uppercase; color: var(--bone-2); }
+.plate-val { font: 850 clamp(2rem, 3.4vw, 3rem)/1 var(--display); font-stretch: 140%; color: var(--bone); }
+.plate p { margin: 0; font-size: .9375rem; color: var(--bone-2); }
+
+/* scan the ranks: question slider */
+.scan { background: var(--void); }
+.scan-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr); gap: clamp(32px, 5vw, 88px); align-items: start; }
+.dossier { border: 1px solid rgb(239 230 210 / .18); background: var(--field); }
+.dossier-head { display: grid; grid-template-columns: 1fr auto; gap: 4px 20px; padding: 18px 20px; border-bottom: 1px solid rgb(239 230 210 / .14); }
+.dossier-q { grid-column: 1 / -1; margin: 6px 0 0; min-height: 2.5em; font: 750 clamp(1.35rem, 2.2vw, 2rem)/1.15 var(--display); font-stretch: 105%; text-wrap: balance; }
+.dossier-body { display: grid; grid-template-columns: auto 1fr; gap: 20px 28px; align-items: center; padding: 20px; }
+.dossier-sim { font: 900 clamp(3.2rem, 6vw, 5.4rem)/.85 var(--display); font-stretch: 150%; color: var(--marigold); letter-spacing: -.03em; }
+.scale { position: relative; height: 10px; background: rgb(239 230 210 / .12); margin-top: 6px; }
+.scale span { position: absolute; inset: 0 auto 0 0; width: calc(var(--v) * 100%); background: var(--marigold); transition: width .5s cubic-bezier(.16,1,.3,1); }
+.scale-ends { display: flex; justify-content: space-between; margin-top: 6px; font-size: .8125rem; color: var(--bone-2); }
+.dossier .slots { grid-column: 1 / -1; }
+.dossier .slots-caption { grid-column: 1 / -1; margin-top: -8px; }
+.picker { margin-top: 26px; }
+.picker label { display: block; margin-bottom: 10px; }
+.range { -webkit-appearance: none; appearance: none; width: 100%; height: 44px; background: transparent; cursor: pointer; }
+.range::-webkit-slider-runnable-track { height: 4px; background: linear-gradient(90deg, var(--bone-2), var(--marigold)); }
+.range::-moz-range-track { height: 4px; background: linear-gradient(90deg, var(--bone-2), var(--marigold)); }
+.range::-webkit-slider-thumb { -webkit-appearance: none; width: 22px; height: 30px; margin-top: -13px; background: var(--bone); border: 3px solid var(--void); clip-path: polygon(0 0, 100% 0, 100% 72%, 50% 100%, 0 72%); }
+.range::-moz-range-thumb { width: 22px; height: 30px; background: var(--bone); border: 0; border-radius: 0; }
+.range-ends { display: flex; justify-content: space-between; gap: 16px; font-size: .875rem; color: var(--bone-2); }
+.jumps { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px; }
+.jump { font: 650 .8125rem/1 var(--display); font-stretch: 115%; letter-spacing: .06em; text-transform: uppercase; color: var(--bone);
+  background: transparent; border: 1px solid rgb(239 230 210 / .35); padding: .85em 1em; cursor: pointer; transition: border-color .2s, color .2s; }
+.jump:hover { border-color: var(--marigold); color: var(--marigold); }
+
+/* sectors */
+.sectors { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; }
+.sector { display: grid; grid-template-columns: 7.5rem 1fr 4rem; gap: 18px; align-items: center; padding: 14px 0; border-bottom: 1px solid rgb(239 230 210 / .12); }
+.sector .plate-label { color: var(--bone); font-size: .875rem; }
+.bar { position: relative; height: 22px; background: rgb(239 230 210 / .08); }
+.bar span { position: absolute; inset: 0 auto 0 0; width: calc(var(--v) * 100%); background: var(--bone); }
+.sector:first-child .bar span { background: var(--marigold); }
+.sector-val { text-align: right; font: 800 1.5rem/1 var(--display); font-stretch: 130%; font-variant-numeric: tabular-nums; }
+.sector-axis { display: grid; grid-template-columns: 7.5rem 1fr 4rem; gap: 18px; padding-top: 8px; font-size: .8125rem; color: var(--bone-2); }
+.sector-axis span:nth-child(2) { display: flex; justify-content: space-between; }
+
+/* massed ranks */
+.ranks { overflow: hidden; padding-block: clamp(36px, 5vw, 72px); background: var(--field); border-block: 1px solid rgb(239 230 210 / .12); }
+.rank { margin: 0; white-space: nowrap; font: 800 clamp(1.6rem, 3.6vw, 3.4rem)/1.02 var(--display); font-stretch: 50%; letter-spacing: .01em;
+  text-transform: uppercase; color: rgb(179 220 203 / .3); }
+.rank span { display: inline-block; }
+.rank-accent { color: var(--marigold); font-stretch: 150%; font-weight: 900; padding-left: var(--gut); }
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .rank:not(.rank-accent) span { animation: march linear both; animation-timeline: view(); }
+    @keyframes march { from { transform: translateX(calc(var(--dir) * -4%)); } to { transform: translateX(calc(var(--dir) * 4% - 8%)); } }
+  }
+}
+
+/* record */
+.record-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); gap: clamp(32px, 5vw, 88px); align-items: start; }
+table { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; }
+caption { text-align: left; margin-bottom: 10px; color: var(--bone-2); font-size: .875rem; }
+th, td { text-align: left; padding: 10px 0; border-bottom: 1px solid rgb(239 230 210 / .12); font-weight: 400; }
+thead th { font: 650 .75rem/1.2 var(--display); font-stretch: 120%; letter-spacing: .1em; text-transform: uppercase; color: var(--bone-2); }
+td:last-child, th:last-child { text-align: right; }
+td:nth-child(2), thead th:nth-child(2) { text-align: right; padding-right: 8%; color: var(--bone-2); }
+tbody tr:last-child td:last-child { color: var(--marigold); font-weight: 700; }
+
+/* close */
+.close { background: var(--void); text-align: left; overflow: hidden; }
+.close h2 { max-width: 16ch; }
+.close-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(32px, 5vw, 88px); align-items: center; }
+.legion { display: grid; grid-template-columns: repeat(6, 1fr); gap: 1px; background: rgb(239 230 210 / .1); border: 1px solid rgb(239 230 210 / .1); }
+.unit { background: var(--void); padding: 10px 8px 8px; display: grid; justify-items: center; gap: 6px; }
+.unit img { width: 72%; height: auto; }
+.unit span { font: 600 .625rem/1 var(--display); font-stretch: 110%; letter-spacing: .12em; color: rgb(239 230 210 / .66); font-variant-numeric: tabular-nums; }
+.actions { display: flex; flex-wrap: wrap; gap: 14px 28px; align-items: center; margin-top: 8px; }
+.actions .btn { font-size: .9375rem; padding: 1em 1.3em .95em; }
+.foot { display: flex; flex-wrap: wrap; gap: 8px 28px; justify-content: space-between; padding-block: 22px 28px; border-top: 1px solid rgb(239 230 210 / .12); color: var(--bone-2); font-size: .8125rem; }
+
+/* ---------- motion */
+@media (prefers-reduced-motion: no-preference) {
+  .chart .line { stroke-dasharray: 1; stroke-dashoffset: 0; }
+  .js .chart .line.draw { animation: draw 1.6s cubic-bezier(.16,1,.3,1) .25s both; }
+  @keyframes draw { from { stroke-dashoffset: 1; } }
+}
+
+/* ---------- responsive */
+@media (max-width: 1100px) {
+  .how, .scan-grid, .record-grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 760px) {
+  :root { --cut: 9vw; }
+  .strip { gap: 12px; font-size: .6875rem; white-space: nowrap; }
+  .strip .btn { font-size: .6875rem; padding: .8em .95em .75em; }
+  .mark span, .strip .wk { display: none; }
+  .close-grid { grid-template-columns: 1fr; }
+  .legion { grid-template-columns: repeat(4, 1fr); }
+  .legion .unit:nth-child(n+13) { display: none; }
+  .strip nav { gap: 14px; }
+  .strip nav .meth { display: none; }
+  .title { font-stretch: 56%; font-size: 3.9vw; }
+  .scene { height: auto; display: flex; flex-direction: column; clip-path: polygon(0 0, 100% 0, 100% calc(100% - var(--cut)), 0 100%); }
+  .scene-inner { display: contents; }
+  .scene .title { order: -1; padding: 14px var(--gut) 12px; text-shadow: none; }
+  .scene .verdict { padding-inline: var(--gut); max-width: none; align-self: stretch; }
+  .scene picture { position: relative; display: block; aspect-ratio: 5 / 4; overflow: hidden; }
+  .scene img.bg { inset: -6% 0 0 0; height: 112%; object-position: 24% 50%; }
+  .scene { background: var(--field); }
+  .scene::after { display: none; }
+  .scene picture::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgb(11 59 56 / 0) 52%, var(--field) 100%); }
+  .scene .verdict { display: block; margin-top: -16vw; padding-bottom: calc(var(--cut) + 34px); }
+  .verdict p { background: none; border: 0; padding: 0; }
+  .big { font-size: 29vw; margin-bottom: 14px; }
+  .chart-d { display: none; }
+  .chart-m { display: block; }
+  .chart .tick { font-size: 15px; }
+  .chart .fig-label { font-size: 14px; }
+  .chart .gap-label { font-size: 11px; letter-spacing: .03em; }
+  .chart .end-chg { font-size: 13px; }
+  .sector, .sector-axis { grid-template-columns: 5.2rem 1fr 3.4rem; gap: 12px; }
+  .plates { grid-template-columns: 1fr; }
+  .dossier-body { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+<header class="wrap strip">
+  <a class="mark" href="./" aria-label="Homogenization Tracker, home">
+    <svg viewBox="0 0 18 22" aria-hidden="true"><ellipse cx="9" cy="8" rx="7" ry="8" fill="#3d8a78"/><rect x="8" y="3.5" width="2" height="8" fill="#efe6d2"/><rect x="2" y="17" width="14" height="3" fill="#3d8a78"/></svg>
+    <span>Homogenization Tracker</span>
+  </a>
+  <span class="week num"><span class="wk">Week 8 · </span>16 Nov 2026</span>
+  <nav aria-label="Primary">
+    <a class="meth" href="https://github.com/biddy1618/ai-homogenization/blob/main/tracker/README.md">Methodology</a>
+    <a class="btn" href="../../dashboard/">All 100 questions <svg viewBox="0 0 14 10" aria-hidden="true"><path d="M0 5h12M8 1l4 4-4 4" fill="none" stroke="currentColor" stroke-width="2"/></svg></a>
+  </nav>
+</header>
+
+<main>
+<section class="scene" aria-labelledby="page-title">
+  <picture>
+    <source media="(max-width: 760px)" srcset="assets/scene-sm.webp">
+    <img class="bg" src="assets/scene.webp" alt="" width="2048" height="1152" fetchpriority="high">
+  </picture>
+  <div class="wrap scene-inner">
+    <h1 class="title" id="page-title" data-fit>AI-driven homogenization of expression — real-time tracker</h1>
+    <div class="verdict">
+      <span class="big num" data-resolve aria-hidden="true">0.78</span>
+      <p id="verdict-text"><span class="sr">0.78. </span>This week Google's top 5 answers to 93 everyday questions were <strong>0.78 alike</strong>, on a scale where 1 means identical: <strong>1.96 distinct answers out of 5</strong>.</p>
+    </div>
+  </div>
+</section>
+
+<section class="panel" aria-label="Similarity over time">
+  <div class="wrap">
+    <figure class="chart-wrap" style="margin:0">
+      <svg class="chart chart-d" viewBox="0 0 1200 380" role="img" aria-labelledby="chart-title-d chart-desc-d" preserveAspectRatio="xMidYMid meet">
+<title id="chart-title-d">Average similarity of Google's top 5 answers, week by week</title>
+<desc id="chart-desc-d">Line on a scale from 0 (all five answers different) to 1 (all identical). No data before 4 Oct 2026. 4 Oct 2026: 0.702; 5 Oct 2026: 0.732; 12 Oct 2026: 0.743; 19 Oct 2026: 0.788; 26 Oct 2026: 0.780; 2 Nov 2026: 0.773; 9 Nov 2026: 0.778; 16 Nov 2026: 0.780.</desc>
+<defs><pattern id="hatch-d" width="9" height="9" patternUnits="userSpaceOnUse" patternTransform="rotate(-12)"><line x1="0" y1="0" x2="0" y2="9" class="hatch"/></pattern></defs>
+<rect class="gap" x="64.0" y="74.0" width="237.3" height="264.0" fill="url(#hatch-d)"/>
+<text class="gap-label" x="182.6" y="174.3" text-anchor="middle"><tspan x="182.6" dy="0em">no data</tspan><tspan x="182.6" dy="1.25em">before 04 Oct</tspan></text>
+<line class="grid grid-base" x1="64" x2="1176" y1="338.0" y2="338.0"/>
+<text class="tick" x="54" y="342.0" text-anchor="end">0</text>
+<line class="grid" x1="64" x2="1176" y1="272.0" y2="272.0"/>
+<text class="tick" x="54" y="276.0" text-anchor="end">0.25</text>
+<line class="grid" x1="64" x2="1176" y1="206.0" y2="206.0"/>
+<text class="tick" x="54" y="210.0" text-anchor="end">0.5</text>
+<line class="grid" x1="64" x2="1176" y1="140.0" y2="140.0"/>
+<text class="tick" x="54" y="144.0" text-anchor="end">0.75</text>
+<line class="grid" x1="64" x2="1176" y1="74.0" y2="74.0"/>
+<text class="tick" x="54" y="78.0" text-anchor="end">1</text>
+<line class="axis" x1="64" x2="64" y1="66.0" y2="338.0"/>
+<text class="tick tick-x" x="309.3" y="362.0" text-anchor="middle">04 Oct</text>
+<text class="tick tick-x" x="440.1" y="362.0" text-anchor="middle">12 Oct</text>
+<text class="tick tick-x" x="554.6" y="362.0" text-anchor="middle">19 Oct</text>
+<text class="tick tick-x" x="669.1" y="362.0" text-anchor="middle">26 Oct</text>
+<text class="tick tick-x" x="783.5" y="362.0" text-anchor="middle">02 Nov</text>
+<text class="tick tick-x" x="898.0" y="362.0" text-anchor="middle">09 Nov</text>
+<text class="tick tick-x" x="1012.5" y="362.0" text-anchor="middle">16 Nov</text>
+<path class="line" d="M309.3,152.8 L325.6,144.9 L440.1,141.8 L554.6,130.0 L669.1,132.1 L783.5,133.9 L898.0,132.7 L1012.5,132.1" pathLength="1"/>
+<rect class="pt" x="305.3" y="148.8" width="8" height="8"><title>4 Oct 2026: 0.702</title></rect>
+<rect class="pt" x="321.6" y="140.9" width="8" height="8"><title>5 Oct 2026: 0.732</title></rect>
+<rect class="pt" x="436.1" y="137.8" width="8" height="8"><title>12 Oct 2026: 0.743</title></rect>
+<rect class="pt" x="550.6" y="126.0" width="8" height="8"><title>19 Oct 2026: 0.788</title></rect>
+<rect class="pt" x="665.1" y="128.1" width="8" height="8"><title>26 Oct 2026: 0.780</title></rect>
+<rect class="pt" x="779.5" y="129.9" width="8" height="8"><title>2 Nov 2026: 0.773</title></rect>
+<rect class="pt" x="894.0" y="128.7" width="8" height="8"><title>9 Nov 2026: 0.778</title></rect>
+<rect class="pt" x="1008.5" y="128.1" width="8" height="8"><title>16 Nov 2026: 0.780</title></rect>
+<rect class="pt-last" x="1005.5" y="125.1" width="14" height="14"/>
+<text class="end-val" x="1026.5" y="140.1">0.78</text>
+<text class="end-chg" x="1026.5" y="164.1"><tspan class="end-chg-n">+0.002</tspan> since 09 Nov</text>
+<image class="fig" href="assets/einstein.webp" x="70.0" y="206.8" width="104" height="133.2"/>
+<text class="fig-label" x="184.0" y="324.0">distinct voices</text>
+<g class="fig fig-units">
+<image href="assets/clone-unit.webp" x="942.0" y="21.8" width="54" height="68.2"/>
+<image href="assets/clone-unit.webp" x="1002.0" y="21.8" width="54" height="68.2"/>
+<image href="assets/clone-unit.webp" x="1062.0" y="21.8" width="54" height="68.2"/>
+<image href="assets/clone-unit.webp" x="1122.0" y="21.8" width="54" height="68.2"/>
+</g>
+<text class="fig-label" x="1176.0" y="9.8" text-anchor="end">where we're heading</text>
+</svg>
+      <svg class="chart chart-m" viewBox="0 0 420 440" role="img" aria-labelledby="chart-title-m chart-desc-m" preserveAspectRatio="xMidYMid meet">
+<title id="chart-title-m">Average similarity of Google's top 5 answers, week by week</title>
+<desc id="chart-desc-m">Line on a scale from 0 (all five answers different) to 1 (all identical). No data before 4 Oct 2026. 4 Oct 2026: 0.702; 5 Oct 2026: 0.732; 12 Oct 2026: 0.743; 19 Oct 2026: 0.788; 26 Oct 2026: 0.780; 2 Nov 2026: 0.773; 9 Nov 2026: 0.778; 16 Nov 2026: 0.780.</desc>
+<defs><pattern id="hatch-m" width="9" height="9" patternUnits="userSpaceOnUse" patternTransform="rotate(-12)"><line x1="0" y1="0" x2="0" y2="9" class="hatch"/></pattern></defs>
+<rect class="gap" x="46.0" y="118.0" width="67.4" height="276.0" fill="url(#hatch-m)"/>
+<text class="gap-label" x="79.7" y="126.3" text-anchor="middle"><tspan x="79.7" dy="0em">no data</tspan><tspan x="79.7" dy="1.25em">before</tspan><tspan x="79.7" dy="1.25em">04 Oct</tspan></text>
+<line class="grid grid-base" x1="46" x2="356" y1="394.0" y2="394.0"/>
+<text class="tick" x="36" y="398.0" text-anchor="end">0</text>
+<line class="grid" x1="46" x2="356" y1="325.0" y2="325.0"/>
+<text class="tick" x="36" y="329.0" text-anchor="end">0.25</text>
+<line class="grid" x1="46" x2="356" y1="256.0" y2="256.0"/>
+<text class="tick" x="36" y="260.0" text-anchor="end">0.5</text>
+<line class="grid" x1="46" x2="356" y1="187.0" y2="187.0"/>
+<text class="tick" x="36" y="191.0" text-anchor="end">0.75</text>
+<line class="grid" x1="46" x2="356" y1="118.0" y2="118.0"/>
+<text class="tick" x="36" y="122.0" text-anchor="end">1</text>
+<line class="axis" x1="46" x2="46" y1="110.0" y2="394.0"/>
+<text class="tick tick-x" x="121.4" y="418.0" text-anchor="middle">04 Oct</text>
+<text class="tick tick-x" x="184.2" y="418.0" text-anchor="middle">19 Oct</text>
+<text class="tick tick-x" x="242.9" y="418.0" text-anchor="middle">02 Nov</text>
+<text class="tick tick-x" x="301.5" y="418.0" text-anchor="middle">16 Nov</text>
+<path class="line" d="M121.4,200.3 L125.6,192.1 L154.9,188.8 L184.2,176.6 L213.6,178.7 L242.9,180.7 L272.2,179.4 L301.5,178.7" pathLength="1"/>
+<rect class="pt" x="117.4" y="196.3" width="8" height="8"><title>4 Oct 2026: 0.702</title></rect>
+<rect class="pt" x="121.6" y="188.1" width="8" height="8"><title>5 Oct 2026: 0.732</title></rect>
+<rect class="pt" x="150.9" y="184.8" width="8" height="8"><title>12 Oct 2026: 0.743</title></rect>
+<rect class="pt" x="180.2" y="172.6" width="8" height="8"><title>19 Oct 2026: 0.788</title></rect>
+<rect class="pt" x="209.6" y="174.7" width="8" height="8"><title>26 Oct 2026: 0.780</title></rect>
+<rect class="pt" x="238.9" y="176.7" width="8" height="8"><title>2 Nov 2026: 0.773</title></rect>
+<rect class="pt" x="268.2" y="175.4" width="8" height="8"><title>9 Nov 2026: 0.778</title></rect>
+<rect class="pt" x="297.5" y="174.7" width="8" height="8"><title>16 Nov 2026: 0.780</title></rect>
+<rect class="pt-last" x="294.5" y="171.7" width="14" height="14"/>
+<text class="end-val" x="315.5" y="186.7">0.78</text>
+<text class="end-chg" x="315.5" y="208.7"><tspan class="end-chg-n">+0.002</tspan><tspan x="315.5" dy="1.25em">since 09 Nov</tspan></text>
+<image class="fig" href="assets/einstein.webp" x="52.0" y="278.2" width="92" height="117.8"/>
+<text class="fig-label" x="154.0" y="380.0">distinct voices</text>
+<g class="fig fig-units">
+<image href="assets/clone-unit.webp" x="174.0" y="74.4" width="44" height="55.6"/>
+<image href="assets/clone-unit.webp" x="220.0" y="74.4" width="44" height="55.6"/>
+<image href="assets/clone-unit.webp" x="266.0" y="74.4" width="44" height="55.6"/>
+<image href="assets/clone-unit.webp" x="312.0" y="74.4" width="44" height="55.6"/>
+</g>
+<text class="fig-label" x="356.0" y="62.4" text-anchor="end">where we're heading</text>
+</svg>
+    </figure>
+    <div class="readout">
+      <span class="change num">Weekly change <b>+0.002</b> since 09 Nov, a small move on a 0–1 scale</span>
+      <span class="num">93 of 100 questions read on 16 Nov 2026 · week 8 of the record · <a href="https://github.com/biddy1618/ai-homogenization/blob/main/tracker/README.md">Methodology</a></span>
+    </div>
+  </div>
+</section>
+
+<section class="s-pad" aria-labelledby="how-h">
+  <div class="wrap how">
+    <div>
+      <h2 id="how-h">Five answers. <em>1.96</em> voices.</h2>
+      <p class="lede">Every week the tracker asks Google the same <strong>100 everyday questions</strong> about money, health, law, science and technology. It reads the first 5 readable pages behind each one and measures how much they say the same thing. A score of 0 would mean five different answers; 1 would mean five copies of one.</p>
+      <div class="plates">
+        <div class="plate"><span class="plate-label">Questions above 0.80</span><span class="plate-val num" data-resolve>48%</span><p>of this week's questions return answers that are mostly alike.</p></div>
+        <div class="plate"><span class="plate-label">Fewer than 2 distinct pages</span><span class="plate-val num" data-resolve>59%</span><p>of questions get less than two distinct pages out of five.</p></div>
+      </div>
+    </div>
+    <div>
+      <span class="slots slots-hero" aria-hidden="true"><span class="slot" style="--f:1.000"><img src="assets/clone-unit.webp" alt="" width="52" height="65"></span><span class="slot" style="--f:0.958"><img src="assets/clone-unit.webp" alt="" width="52" height="65"></span><span class="slot" style="--f:0.000"><img src="assets/clone-unit.webp" alt="" width="52" height="65"></span><span class="slot" style="--f:0.000"><img src="assets/clone-unit.webp" alt="" width="52" height="65"></span><span class="slot" style="--f:0.000"><img src="assets/clone-unit.webp" alt="" width="52" height="65"></span></span>
+      <p class="slots-caption num"><span>Top 5 pages this week: marigold is distinct, a helmet is a repeat</span><span><b>1.96</b> of 5 distinct</span></p>
+    </div>
+  </div>
+</section>
+
+<section class="scan s-pad" aria-labelledby="scan-h">
+  <div class="wrap scan-grid">
+    <div>
+      <h2 id="scan-h">Scan the <em>ranks</em></h2>
+      <p class="lede">All 93 questions read this week, lined up from the most varied answers to the most alike. Drag through them.</p>
+      <div class="picker">
+        <label for="q-range" class="plate-label">Question, least to most alike</label>
+        <input id="q-range" class="range" type="range" min="0" max="92" value="46" step="1" aria-describedby="q-out">
+        <div class="range-ends"><span>Most varied</span><span>Most alike</span></div>
+        <div class="jumps">
+          <button class="jump" type="button" data-jump="0">Least alike</button>
+          <button class="jump" type="button" data-jump="92">Most alike</button>
+        </div>
+      </div>
+    </div>
+    <article class="dossier" id="q-out" aria-live="polite">
+      <div class="dossier-head">
+        <span class="plate-label" id="q-cat">Health</span>
+        <span class="plate-label num" id="q-rank">47 of 93</span>
+        <p class="dossier-q" id="q-text">“what causes acid reflux”</p>
+      </div>
+      <div class="dossier-body">
+        <span class="dossier-sim num" id="q-sim">0.80</span>
+        <div>
+          <span class="plate-label">Similarity of its top 5 pages</span>
+          <div class="scale" id="q-scale" style="--v:0.797"><span></span></div>
+          <div class="scale-ends"><span>0 all different</span><span>1 identical</span></div>
+        </div>
+        <span class="slots q-slots" aria-hidden="true"><span class="slot" style="--f:1.000"><img src="assets/clone-unit.webp" alt="" width="52" height="65"></span><span class="slot" style="--f:0.866"><img src="assets/clone-unit.webp" alt="" width="52" height="65"></span><span class="slot" style="--f:0.000"><img src="assets/clone-unit.webp" alt="" width="52" height="65"></span><span class="slot" style="--f:0.000"><img src="assets/clone-unit.webp" alt="" width="52" height="65"></span><span class="slot" style="--f:0.000"><img src="assets/clone-unit.webp" alt="" width="52" height="65"></span></span>
+        <p class="slots-caption num"><span>Distinct pages</span><span><b id="q-distinct">1.87</b> of 5</span></p>
+      </div>
+    </article>
+  </div>
+</section>
+
+<section class="s-pad" aria-labelledby="sec-h">
+  <div class="wrap">
+    <h2 id="sec-h">Five sectors, <em>all above 0.7</em></h2>
+    <p class="lede">Average similarity by topic this week, on the full 0–1 scale. <strong>Health</strong> answers are the most alike; <strong>Finance</strong> the least.</p>
+    <ul class="sectors">
+<li class="sector"><span class="plate-label">Health</span><span class="bar" style="--v:0.822"><span></span></span><span class="sector-val" data-resolve>0.82</span></li>
+<li class="sector"><span class="plate-label">Science</span><span class="bar" style="--v:0.801"><span></span></span><span class="sector-val" data-resolve>0.80</span></li>
+<li class="sector"><span class="plate-label">Tech</span><span class="bar" style="--v:0.775"><span></span></span><span class="sector-val" data-resolve>0.77</span></li>
+<li class="sector"><span class="plate-label">Law</span><span class="bar" style="--v:0.763"><span></span></span><span class="sector-val" data-resolve>0.76</span></li>
+<li class="sector"><span class="plate-label">Finance</span><span class="bar" style="--v:0.741"><span></span></span><span class="sector-val" data-resolve>0.74</span></li>
+    </ul>
+    <div class="sector-axis" aria-hidden="true"><span></span><span><span>0</span><span>0.5</span><span>1</span></span><span></span></div>
+  </div>
+</section>
+
+<div class="ranks" aria-hidden="true">
+<p class="rank" aria-hidden="true" style="--dir:-1"><span>the same answer · the same answer · the same answer · the same answer · the same answer · the same answer · the same answer · the same answer · </span></p>
+<p class="rank" aria-hidden="true" style="--dir:1"><span>the same answer · the same answer · the same answer · the same answer · the same answer · the same answer · the same answer · the same answer · </span></p>
+<p class="rank" aria-hidden="true" style="--dir:-1"><span>the same answer · the same answer · the same answer · the same answer · the same answer · the same answer · the same answer · the same answer · </span></p>
+<p class="rank rank-accent" aria-hidden="true"><span>one distinct voice</span></p>
+<p class="rank" aria-hidden="true" style="--dir:-1"><span>the same answer · the same answer · the same answer · the same answer · the same answer · the same answer · the same answer · the same answer · </span></p>
+<p class="rank" aria-hidden="true" style="--dir:1"><span>the same answer · the same answer · the same answer · the same answer · the same answer · the same answer · the same answer · the same answer · </span></p>
+<p class="rank" aria-hidden="true" style="--dir:-1"><span>the same answer · the same answer · the same answer · the same answer · the same answer · the same answer · the same answer · the same answer · </span></p>
+</div>
+
+<section class="s-pad" aria-labelledby="rec-h">
+  <div class="wrap record-grid">
+    <div>
+      <h2 id="rec-h">The <em>record</em></h2>
+      <p class="lede">Questions are never edited or removed. 45 have been asked since 4 Oct 2026; 55 more joined on 26 Oct 2026. The Questions column counts those read in each run. Week-to-week movement is small and the series is young, so read the line as a level, not a trend.</p>
+      <p class="lede">Most alike this week: <strong>“is intermittent fasting healthy”</strong> at 0.913. Least alike: <strong>“how are capital gains taxed”</strong> at 0.401.</p>
+    </div>
+    <table>
+      <caption>Average similarity of the top 5 pages, per run</caption>
+      <thead><tr><th scope="col">Run</th><th scope="col">Questions</th><th scope="col">Similarity</th></tr></thead>
+      <tbody>
+<tr><th scope="row">4 Oct 2026</th><td>34</td><td>0.702</td></tr>
+<tr><th scope="row">5 Oct 2026</th><td>35</td><td>0.732</td></tr>
+<tr><th scope="row">12 Oct 2026</th><td>38</td><td>0.743</td></tr>
+<tr><th scope="row">19 Oct 2026</th><td>42</td><td>0.788</td></tr>
+<tr><th scope="row">26 Oct 2026</th><td>98</td><td>0.780</td></tr>
+<tr><th scope="row">2 Nov 2026</th><td>96</td><td>0.773</td></tr>
+<tr><th scope="row">9 Nov 2026</th><td>95</td><td>0.778</td></tr>
+<tr><th scope="row">16 Nov 2026</th><td>93</td><td>0.780</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section class="close s-pad" aria-labelledby="close-h">
+  <div class="wrap close-grid">
+    <div>
+    <h2 id="close-h">Measured live, <em>not argued</em></h2>
+    <p class="lede">Real Google results, a fixed panel, a weekly run, and every number public in the repository. The full method, including how pages are chosen and compared, is one click away.</p>
+    <div class="actions">
+      <a class="btn" href="../../dashboard/">All 100 questions <svg viewBox="0 0 14 10" aria-hidden="true"><path d="M0 5h12M8 1l4 4-4 4" fill="none" stroke="currentColor" stroke-width="2"/></svg></a>
+      <a href="https://github.com/biddy1618/ai-homogenization/blob/main/tracker/README.md">Methodology</a>
+      <a href="https://github.com/biddy1618/ai-homogenization">Code and data</a>
+    </div>
+    </div>
+    <div class="legion" aria-hidden="true">
+<span class="unit"><img src="assets/clone-unit.webp" alt="" width="52" height="65" loading="lazy" decoding="async"><span>CU-0001</span></span>
+<span class="unit"><img src="assets/clone-unit.webp" alt="" width="52" height="65" loading="lazy" decoding="async"><span>CU-0002</span></span>
+<span class="unit"><img src="assets/clone-unit.webp" alt="" width="52" height="65" loading="lazy" decoding="async"><span>CU-0003</span></span>
+<span class="unit"><img src="assets/clone-unit.webp" alt="" width="52" height="65" loading="lazy" decoding="async"><span>CU-0004</span></span>
+<span class="unit"><img src="assets/clone-unit.webp" alt="" width="52" height="65" loading="lazy" decoding="async"><span>CU-0005</span></span>
+<span class="unit"><img src="assets/clone-unit.webp" alt="" width="52" height="65" loading="lazy" decoding="async"><span>CU-0006</span></span>
+<span class="unit"><img src="assets/clone-unit.webp" alt="" width="52" height="65" loading="lazy" decoding="async"><span>CU-0007</span></span>
+<span class="unit"><img src="assets/clone-unit.webp" alt="" width="52" height="65" loading="lazy" decoding="async"><span>CU-0008</span></span>
+<span class="unit"><img src="assets/clone-unit.webp" alt="" width="52" height="65" loading="lazy" decoding="async"><span>CU-0009</span></span>
+<span class="unit"><img src="assets/clone-unit.webp" alt="" width="52" height="65" loading="lazy" decoding="async"><span>CU-0010</span></span>
+<span class="unit"><img src="assets/clone-unit.webp" alt="" width="52" height="65" loading="lazy" decoding="async"><span>CU-0011</span></span>
+<span class="unit"><img src="assets/clone-unit.webp" alt="" width="52" height="65" loading="lazy" decoding="async"><span>CU-0012</span></span>
+<span class="unit"><img src="assets/clone-unit.webp" alt="" width="52" height="65" loading="lazy" decoding="async"><span>CU-0013</span></span>
+<span class="unit"><img src="assets/clone-unit.webp" alt="" width="52" height="65" loading="lazy" decoding="async"><span>CU-0014</span></span>
+<span class="unit"><img src="assets/clone-unit.webp" alt="" width="52" height="65" loading="lazy" decoding="async"><span>CU-0015</span></span>
+<span class="unit"><img src="assets/clone-unit.webp" alt="" width="52" height="65" loading="lazy" decoding="async"><span>CU-0016</span></span>
+<span class="unit"><img src="assets/clone-unit.webp" alt="" width="52" height="65" loading="lazy" decoding="async"><span>CU-0017</span></span>
+<span class="unit"><img src="assets/clone-unit.webp" alt="" width="52" height="65" loading="lazy" decoding="async"><span>CU-0018</span></span>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer class="wrap foot">
+  <span class="num">Built from the run of 16 Nov 2026. Updated weekly.</span>
+  <span>Illustrations are generated artwork; the helmeted figure is an original design.</span>
+</footer>
+
+<script>
+(() => {
+  document.documentElement.classList.add('js');
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const Q = [{"q": "how are capital gains taxed", "c": "finance", "s": 0.401, "v": 3.69}, {"q": "how does social security work", "c": "finance", "s": 0.546, "v": 3.05}, {"q": "what is the difference between a debit card and a credit card", "c": "finance", "s": 0.553, "v": 2.2}, {"q": "how does the immune system fight infection", "c": "health", "s": 0.554, "v": 2.59}, {"q": "roth ira vs traditional ira", "c": "finance", "s": 0.608, "v": 2.64}, {"q": "is ai going to replace jobs", "c": "tech", "s": 0.622, "v": 2.61}, {"q": "how does a non-compete agreement work", "c": "law", "s": 0.627, "v": 2.66}, {"q": "how does a computer virus spread", "c": "tech", "s": 0.64, "v": 2.59}, {"q": "what is a living will", "c": "law", "s": 0.651, "v": 2.46}, {"q": "how does a home equity loan work", "c": "finance", "s": 0.662, "v": 2.5}, {"q": "what happens during a divorce proceeding", "c": "law", "s": 0.668, "v": 2.45}, {"q": "what are employee rights when fired", "c": "law", "s": 0.677, "v": 2.46}, {"q": "how do credit cards work", "c": "finance", "s": 0.699, "v": 2.19}, {"q": "what is a trademark and how do you register one", "c": "law", "s": 0.706, "v": 2.32}, {"q": "what is a 401k and how does it work", "c": "finance", "s": 0.71, "v": 2.14}, {"q": "how do black holes form", "c": "science", "s": 0.71, "v": 2.31}, {"q": "what is the big bang theory", "c": "science", "s": 0.714, "v": 2.22}, {"q": "how does small claims court work", "c": "law", "s": 0.72, "v": 2.25}, {"q": "what is a power of attorney", "c": "law", "s": 0.72, "v": 2.23}, {"q": "how do solid state drives work", "c": "tech", "s": 0.724, "v": 2.23}, {"q": "how does nuclear fusion work", "c": "science", "s": 0.731, "v": 2.16}, {"q": "how do search engines rank pages", "c": "tech", "s": 0.732, "v": 2.18}, {"q": "how much water should you drink a day", "c": "health", "s": 0.734, "v": 2.17}, {"q": "how does wifi work", "c": "tech", "s": 0.736, "v": 2.13}, {"q": "what is an annuity", "c": "finance", "s": 0.739, "v": 2.02}, {"q": "how does facial recognition work", "c": "tech", "s": 0.741, "v": 2.12}, {"q": "how does a credit freeze work", "c": "finance", "s": 0.745, "v": 2.09}, {"q": "what is an api", "c": "tech", "s": 0.751, "v": 2.13}, {"q": "what are your rights if arrested", "c": "law", "s": 0.755, "v": 2.04}, {"q": "what causes volcanic eruptions", "c": "science", "s": 0.761, "v": 2.06}, {"q": "what causes the seasons", "c": "science", "s": 0.763, "v": 2.0}, {"q": "how do index funds work", "c": "finance", "s": 0.764, "v": 1.95}, {"q": "how does two factor authentication work", "c": "tech", "s": 0.766, "v": 1.95}, {"q": "how does alcohol affect the liver", "c": "health", "s": 0.766, "v": 2.02}, {"q": "how do you file for bankruptcy", "c": "law", "s": 0.772, "v": 2.01}, {"q": "what causes anxiety", "c": "health", "s": 0.772, "v": 1.97}, {"q": "what is phishing and how to avoid it", "c": "tech", "s": 0.774, "v": 2.01}, {"q": "what are tenant rights during eviction", "c": "law", "s": 0.776, "v": 2.01}, {"q": "how do rainbows form", "c": "science", "s": 0.776, "v": 2.01}, {"q": "how does child custody work", "c": "law", "s": 0.777, "v": 2.01}, {"q": "what causes earthquakes", "c": "science", "s": 0.779, "v": 2.0}, {"q": "how does the probate process work", "c": "law", "s": 0.782, "v": 2.0}, {"q": "how does compound interest work", "c": "finance", "s": 0.783, "v": 1.96}, {"q": "how does a prenuptial agreement work", "c": "law", "s": 0.788, "v": 1.94}, {"q": "how to lower blood pressure naturally", "c": "health", "s": 0.793, "v": 1.87}, {"q": "are electric cars better for the environment", "c": "science", "s": 0.793, "v": 1.93}, {"q": "what causes acid reflux", "c": "health", "s": 0.797, "v": 1.87}, {"q": "what is a large language model", "c": "tech", "s": 0.799, "v": 1.91}, {"q": "how does copyright protect creators", "c": "law", "s": 0.802, "v": 1.92}, {"q": "how to build an emergency fund", "c": "finance", "s": 0.804, "v": 1.86}, {"q": "how does gps work", "c": "tech", "s": 0.805, "v": 1.88}, {"q": "why is the sky blue", "c": "science", "s": 0.806, "v": 1.86}, {"q": "what is dark matter", "c": "science", "s": 0.806, "v": 1.89}, {"q": "what is the difference between a cold and the flu", "c": "health", "s": 0.815, "v": 1.8}, {"q": "what is the difference between a misdemeanor and a felony", "c": "law", "s": 0.818, "v": 1.83}, {"q": "what is the difference between stocks and bonds", "c": "finance", "s": 0.819, "v": 1.81}, {"q": "what is an llc and how is it taxed", "c": "law", "s": 0.822, "v": 1.79}, {"q": "what causes climate change", "c": "science", "s": 0.829, "v": 1.76}, {"q": "what are the early signs of diabetes", "c": "health", "s": 0.831, "v": 1.78}, {"q": "how does photosynthesis work", "c": "science", "s": 0.832, "v": 1.77}, {"q": "how does antibiotic resistance develop", "c": "science", "s": 0.833, "v": 1.76}, {"q": "what is dollar cost averaging", "c": "finance", "s": 0.834, "v": 1.73}, {"q": "how do antibiotics work", "c": "health", "s": 0.837, "v": 1.73}, {"q": "what is a vpn and how does it work", "c": "tech", "s": 0.839, "v": 1.71}, {"q": "what are the benefits of regular exercise", "c": "health", "s": 0.84, "v": 1.71}, {"q": "how do student loans work", "c": "finance", "s": 0.84, "v": 1.72}, {"q": "what is a good credit score", "c": "finance", "s": 0.841, "v": 1.72}, {"q": "what is the statute of limitations", "c": "law", "s": 0.841, "v": 1.72}, {"q": "why do leaves change color in the fall", "c": "science", "s": 0.844, "v": 1.7}, {"q": "what is fair use in copyright", "c": "law", "s": 0.845, "v": 1.71}, {"q": "how does inflation affect your savings", "c": "finance", "s": 0.846, "v": 1.71}, {"q": "what is a password manager", "c": "tech", "s": 0.848, "v": 1.67}, {"q": "what causes migraines", "c": "health", "s": 0.85, "v": 1.67}, {"q": "what is the difference between a will and a trust", "c": "law", "s": 0.85, "v": 1.68}, {"q": "how much sleep do adults need", "c": "health", "s": 0.851, "v": 1.67}, {"q": "how to treat a sprained ankle", "c": "health", "s": 0.852, "v": 1.66}, {"q": "what is machine learning", "c": "tech", "s": 0.856, "v": 1.65}, {"q": "what causes lower back pain", "c": "health", "s": 0.858, "v": 1.6}, {"q": "how does refinancing a mortgage work", "c": "finance", "s": 0.861, "v": 1.62}, {"q": "how does a class action lawsuit work", "c": "law", "s": 0.863, "v": 1.61}, {"q": "how do hurricanes form", "c": "science", "s": 0.865, "v": 1.62}, {"q": "what causes high cholesterol", "c": "health", "s": 0.867, "v": 1.6}, {"q": "what are the symptoms of vitamin d deficiency", "c": "health", "s": 0.869, "v": 1.58}, {"q": "how much protein do you need per day", "c": "health", "s": 0.872, "v": 1.59}, {"q": "what is 5g technology", "c": "tech", "s": 0.874, "v": 1.57}, {"q": "what is a health savings account", "c": "finance", "s": 0.875, "v": 1.58}, {"q": "what are the symptoms of iron deficiency", "c": "health", "s": 0.875, "v": 1.57}, {"q": "how do vaccines work", "c": "science", "s": 0.88, "v": 1.56}, {"q": "how do tides work", "c": "science", "s": 0.886, "v": 1.51}, {"q": "how does caffeine affect the body", "c": "health", "s": 0.889, "v": 1.51}, {"q": "how does end-to-end encryption work", "c": "tech", "s": 0.892, "v": 1.5}, {"q": "what is a mutual fund", "c": "finance", "s": 0.896, "v": 1.48}, {"q": "is intermittent fasting healthy", "c": "health", "s": 0.913, "v": 1.41}];
+
+  // one-line title: fit to its column
+  const title = document.querySelector('[data-fit]');
+  function fit() {
+    title.style.fontSize = '';
+    const cs = getComputedStyle(title);
+    const avail = title.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
+    const span = document.createElement('span');
+    span.textContent = title.textContent;
+    span.style.whiteSpace = 'nowrap';
+    title.textContent = '';
+    title.appendChild(span);
+    const w = span.getBoundingClientRect().width;
+    const size = parseFloat(cs.fontSize) * (avail / w) * 0.995;
+    title.textContent = span.textContent;
+    title.style.fontSize = size + 'px';
+  }
+  document.fonts.ready.then(fit);
+  addEventListener('resize', fit);
+
+  // figures resolve character by character
+  function resolve(el) {
+    const final = el.textContent;
+    if (reduced) return;
+    let t = 0;
+    const steps = 14;
+    const id = setInterval(() => {
+      t++;
+      el.textContent = [...final].map((ch, i) => (/\d/.test(ch) && t < steps - (final.length - i) * 2) ? String((Math.random() * 10) | 0) : ch).join('');
+      if (t >= steps) { clearInterval(id); el.textContent = final; }
+    }, 42);
+  }
+  const io = new IntersectionObserver(entries => {
+    for (const en of entries) if (en.isIntersecting) { resolve(en.target); io.unobserve(en.target); }
+  }, { threshold: .6 });
+  document.querySelectorAll('[data-resolve]').forEach(el => io.observe(el));
+
+  // the line draws once it is on screen
+  const lines = document.querySelectorAll('.chart .line');
+  const lo = new IntersectionObserver(entries => {
+    for (const en of entries) if (en.isIntersecting) { en.target.classList.add('draw'); lo.unobserve(en.target); }
+  }, { threshold: .4 });
+  lines.forEach(l => lo.observe(l));
+
+  // scene parallax
+  const bg = document.querySelector('.scene img.bg');
+  if (!reduced && bg) {
+    let ticking = false;
+    addEventListener('scroll', () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        const y = Math.min(scrollY, innerHeight);
+        bg.style.transform = `translate3d(0, ${y * 0.18}px, 0) scale(${1 + y * 0.00008})`;
+        ticking = false;
+      });
+    }, { passive: true });
+  }
+
+  // question scanner
+  const range = document.getElementById('q-range');
+  const out = {
+    cat: document.getElementById('q-cat'), rank: document.getElementById('q-rank'), text: document.getElementById('q-text'),
+    sim: document.getElementById('q-sim'), scale: document.getElementById('q-scale'), distinct: document.getElementById('q-distinct'),
+    slots: document.querySelectorAll('.q-slots .slot')
+  };
+  function show(i) {
+    const q = Q[i];
+    out.cat.textContent = q.c.charAt(0).toUpperCase() + q.c.slice(1);
+    out.rank.textContent = `${i + 1} of ${Q.length}`;
+    out.text.textContent = `“${q.q}”`;
+    out.sim.textContent = q.s.toFixed(2);
+    out.scale.style.setProperty('--v', q.s);
+    out.distinct.textContent = q.v.toFixed(2);
+    out.slots.forEach((s, k) => s.style.setProperty('--f', Math.max(0, Math.min(1, q.v - k))));
+    range.setAttribute('aria-valuetext', `${q.q}: similarity ${q.s.toFixed(2)}, ${q.v.toFixed(2)} of 5 distinct`);
+  }
+  range.addEventListener('input', () => show(+range.value));
+  document.querySelectorAll('[data-jump]').forEach(b => b.addEventListener('click', () => { range.value = b.dataset.jump; show(+range.value); }));
+  show(+range.value);
+})();
+</script>
+</body>
+</html>
