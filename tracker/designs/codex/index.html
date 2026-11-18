@@ -1,0 +1,518 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI-driven homogenization of expression — real-time tracker</title>
+<meta name="description" content="Every week the tracker asks Google a fixed panel of 100 everyday questions and measures how alike the top 5 answers are. This week: 0.78 on a 0 to 1 scale, across the 93 questions it could read.">
+<meta property="og:title" content="AI-driven homogenization of expression — real-time tracker">
+<meta property="og:description" content="How alike are Google's top 5 answers to everyday questions? This week 0.78 on a 0 to 1 scale: about 2.0 distinct answers out of 5. Measured weekly.">
+<meta property="og:type" content="website">
+<meta name="theme-color" content="#7A2A1B">
+<link rel="preload" href="fonts/Jost.woff2" as="font" type="font/woff2" crossorigin>
+<style>
+@font-face { font-family: Jost; src: url(fonts/Jost.woff2) format('woff2'); font-weight: 100 900; font-style: normal; font-display: swap; }
+@font-face { font-family: Jost; src: url(fonts/Jost-Italic.woff2) format('woff2'); font-weight: 100 900; font-style: italic; font-display: swap; }
+:root {
+  --sanguine: #7A2A1B; --sanguine-deep: #5E1F13; --ink: #1A0B07; --lead: #F7ECDF; --lead-2: #F4BFA6;
+  --gall: #160E0B; --gall-2: #B9A595; --chalk: #DD6A4B;
+  --rule: rgb(26 11 7 / .42); --rule-soft: rgb(26 11 7 / .22);
+  --gut: clamp(16px, 2.2vw, 40px);
+  --ease: cubic-bezier(.16, 1, .3, 1);
+  color-scheme: dark;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { background: var(--sanguine); color: var(--lead); scrollbar-color: var(--lead-2) var(--sanguine-deep); -webkit-text-size-adjust: 100%; }
+body { font-family: Jost, ui-sans-serif, system-ui, sans-serif; font-size: 17px; line-height: 1.5; font-weight: 400; font-variant-numeric: lining-nums; }
+::selection { background: var(--lead); color: var(--sanguine); }
+a { color: inherit; text-decoration-line: underline; text-decoration-thickness: 1px; text-underline-offset: .22em; text-decoration-color: var(--lead-2); }
+a:hover { text-decoration-color: var(--lead); text-decoration-thickness: 2px; }
+:focus-visible { outline: 2px solid var(--lead); outline-offset: 3px; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.num { font-variant-numeric: tabular-nums lining-nums; }
+
+/* Prepared ground: sanguine wash with a chalk grain, never flat. */
+.ground { position: relative; isolation: isolate; }
+.ground::before { content: ''; position: absolute; inset: 0; z-index: -1; pointer-events: none; opacity: .5; mix-blend-mode: soft-light;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .55 0'/%3E%3C/filter%3E%3Crect width='220' height='220' filter='url(%23n)'/%3E%3C/svg%3E"),
+    radial-gradient(120% 90% at 30% 20%, rgb(255 210 180 / .16), transparent 60%),
+    radial-gradient(90% 80% at 90% 100%, rgb(40 8 2 / .45), transparent 70%); }
+.plate { background: var(--gall); color: var(--lead); }
+.plate .ground::before, .plate.ground::before { mix-blend-mode: normal; opacity: .35;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .5 0 0 0 0 .3 0 0 0 0 .2 0 0 0 .18 0'/%3E%3C/filter%3E%3Crect width='220' height='220' filter='url(%23n)'/%3E%3C/svg%3E"); }
+
+/* ---------- The sheet: first viewport ---------- */
+.sheet { min-height: 100svh; max-height: 1180px; height: 100svh; display: grid;
+  grid-template-columns: minmax(280px, 25.5%) 1fr; grid-template-rows: auto auto minmax(0, 1fr);
+  column-gap: clamp(18px, 2.4vw, 44px); padding: 0 var(--gut) clamp(10px, 1.6vh, 22px); }
+.folio { grid-column: 1 / -1; display: flex; align-items: center; justify-content: space-between; gap: 24px; height: clamp(38px, 5.4vh, 50px);
+  border-bottom: 1px solid var(--rule); font-size: 14px; letter-spacing: .14em; text-transform: uppercase; }
+.folio .mark { display: flex; gap: 1.4em; align-items: baseline; white-space: nowrap; }
+.folio .mark b { font-weight: 600; letter-spacing: .16em; }
+.folio .mark span { color: var(--lead-2); }
+.folio nav { display: flex; gap: 2em; white-space: nowrap; }
+.folio nav a { text-decoration: none; padding: .5em 0; border-bottom: 1px solid transparent; }
+.folio nav a:hover { border-bottom-color: var(--lead); }
+h1 { grid-column: 1 / -1; font-weight: 500; font-size: min(3.02vw, 6.2vh); line-height: 1.12; letter-spacing: -.012em; white-space: nowrap;
+  padding: clamp(10px, 2vh, 22px) 0 clamp(8px, 1.6vh, 18px); }
+h1 .dash { font-weight: 300; color: var(--lead-2); }
+
+.margin { grid-row: 3; display: flex; flex-direction: column; min-height: 0; padding-top: clamp(4px, 1vh, 14px); position: relative; }
+.big { position: relative; font-weight: 300; font-size: min(10.4vw, 19vh); line-height: .86; letter-spacing: -.035em; margin-left: -.04em; width: max-content; }
+.big .num { position: relative; z-index: 1; }
+.guide { position: absolute; left: -.5em; right: -.35em; border-top: 1px solid var(--ink); opacity: .7; transform-origin: left; }
+.guide.cap { top: .095em; } .guide.base { top: .8em; }
+.compass { position: absolute; left: .3em; top: .45em; width: .84em; height: .84em; margin: -.42em 0 0 -.42em; border: 1px solid var(--ink); border-radius: 50%; opacity: .6; }
+.compass::before { content: ''; position: absolute; left: 50%; top: -.16em; bottom: -.16em; border-left: 1px solid var(--ink); }
+.compass::after { content: ''; position: absolute; left: 50%; top: 50%; width: 1.7em; border-top: 1px solid var(--ink); transform-origin: left; rotate: -27deg; translate: -.1em .3em; }
+.lede { margin-top: clamp(10px, 2.2vh, 24px); font-size: clamp(15px, min(1.28vw, 2.3vh), 19px); line-height: 1.42; max-width: 30ch; }
+.ledger { margin-top: clamp(10px, 2.2vh, 26px); display: grid; gap: clamp(4px, .9vh, 10px); max-width: 32ch; }
+.ledger div { display: grid; grid-template-columns: 1fr auto; align-items: baseline; gap: .6em; font-size: clamp(14px, min(1.12vw, 2vh), 17px); }
+.ledger dt { color: var(--lead-2); display: flex; align-items: baseline; gap: .5em; }
+.ledger dt::after { content: ''; flex: 1; border-bottom: 1px dotted var(--rule); transform: translateY(-.25em); min-width: 1em; }
+.ledger dd { font-weight: 500; font-size: 1.24em; }
+.actions { margin-top: auto; padding-top: clamp(10px, 2vh, 20px); display: grid; gap: clamp(6px, 1vh, 10px); }
+.actions a { display: flex; justify-content: space-between; align-items: center; gap: 1em; text-decoration: none; font-weight: 500;
+  font-size: clamp(15px, min(1.2vw, 2.2vh), 18px); padding: .55em 0; border-top: 1px solid var(--rule); transition: padding .4s var(--ease), color .2s; }
+.actions a:last-child { border-bottom: 1px solid var(--rule); }
+.actions a:hover { padding-left: .5em; }
+.actions svg { width: 1.6em; height: .7em; flex: none; stroke: currentColor; fill: none; stroke-width: 1.3; }
+
+/* The chart is the plate's drawing. Every length derives from the sheet so the gap matches the portrait. */
+.chart { grid-row: 3; grid-column: 2; position: relative; min-height: 0; container-type: size; outline-offset: 6px; }
+.chart-in { position: absolute; inset: 0;
+  --top: 27cqh; --bot: calc(100cqh - 46px); --ph: calc(var(--bot) - var(--top));
+  --left: 46px; --ew: calc(var(--ph) * .4 * .775); --x0: calc(var(--left) + var(--ew) + 1.4cqw); --x1: calc(100cqw - 2.4cqw); }
+.chart-in > * { position: absolute; }
+.chart-in > .contents { display: contents; }
+.contents > * { position: absolute; }
+.gl { left: var(--left); right: 0; height: 0; border-top: 1px solid var(--rule-soft); top: calc(var(--top) + (1 - var(--v)) * var(--ph)); transform-origin: left; }
+.gl.major { border-top-color: var(--rule); }
+.gl.zero { border-top: 1.5px solid var(--lead); opacity: .85; }
+.gl.one { border-top: 1px solid var(--lead-2); opacity: .7; }
+.yax { left: var(--left); top: calc(var(--top) - 12px); bottom: calc(100cqh - var(--bot)); border-left: 1.5px solid var(--lead); opacity: .85; }
+.yl { left: 0; width: calc(var(--left) - 12px); text-align: right; font-size: 14px; line-height: 1; transform: translateY(-50%); top: calc(var(--top) + (1 - var(--v)) * var(--ph)); }
+.ycap { left: calc(var(--left) + 10px); top: calc(var(--top) - 34px); font-size: 13px; letter-spacing: .12em; text-transform: uppercase; color: var(--lead-2); white-space: nowrap; }
+.xt { top: calc(var(--bot) + 8px); transform: translateX(-50%); font-size: 13.5px; line-height: 1.15; text-align: center; white-space: nowrap; color: var(--lead-2);
+  left: calc(var(--x0) + var(--t) * (var(--x1) - var(--x0))); }
+.xt b { display: block; font-weight: 500; color: var(--lead); font-size: 14.5px; }
+.xt::before { content: ''; position: absolute; left: 50%; top: -9px; height: 6px; border-left: 1px solid var(--lead); }
+.xt.near { display: none; }
+
+.einstein { left: calc(var(--left) + .4cqw); bottom: calc(100cqh - var(--bot) + 1px); height: calc(var(--ph) * .4); width: auto; }
+.file { right: 0; bottom: calc(100cqh - var(--top) + 1px); height: calc(var(--top) - 6px); display: flex; align-items: flex-end; }
+.file img { height: 100%; width: auto; margin-left: calc(var(--top) * -.12); }
+.file img:first-child { margin-left: 0; }
+.note { font-style: italic; font-weight: 400; line-height: 1.25; white-space: nowrap; font-size: 15px; }
+.note-e { left: var(--left); top: calc(var(--bot) + 10px); width: calc(var(--x0) - var(--left) - 14px); text-align: center; white-space: normal; }
+.note-e b, .note-c b { display: block; font-style: normal; font-weight: 600; font-size: 12.5px; letter-spacing: .14em; text-transform: uppercase; }
+.note-c { bottom: calc(100cqh - var(--top) + 10px); right: calc(var(--fw, 220px) + 14px); text-align: right; }
+.gap { left: var(--left); width: calc(var(--x0) - var(--left)); top: calc(var(--top) + .36 * var(--ph)); height: 14px;
+  border-left: 1px solid var(--ink); border-right: 1px solid var(--ink); }
+.gap::before { content: ''; position: absolute; left: 0; right: 0; top: 50%; border-top: 1px solid var(--ink); }
+.gap span { position: absolute; left: 50%; top: 18px; transform: translateX(-50%); font-size: 13px; font-style: italic; color: var(--lead-2); white-space: nowrap; text-align: center; line-height: 1.2; }
+
+.span { left: calc(var(--x1) + 1.2cqw); width: 10px; margin-left: -5px; top: var(--top); height: calc((1 - var(--v)) * var(--ph) - 12px);
+  border-top: 1px solid var(--ink); border-bottom: 1px solid var(--ink); transform-origin: bottom; }
+.span::before { content: ''; position: absolute; left: 50%; top: 0; bottom: 0; border-left: 1px solid var(--ink); }
+.span span { position: absolute; right: 16px; top: 4px; white-space: nowrap; font-style: italic; font-size: 14px; color: var(--lead-2); }
+.chart.probing .steady span { opacity: 0; }
+.steady span { transition: opacity .2s; }
+.ht { left: var(--left); width: 7px; height: 0; border-top: 1px solid var(--lead); opacity: .55; top: calc(var(--top) + (1 - var(--v)) * var(--ph)); }
+.steady { left: calc(var(--x0) + var(--t0) * (var(--x1) - var(--x0))); right: calc(100cqw - var(--x1)); top: calc(var(--top) + (1 - var(--v)) * var(--ph) + 22px); height: 12px;
+  border-left: 1px solid var(--ink); border-right: 1px solid var(--ink); }
+.steady::before { content: ''; position: absolute; left: 0; right: 0; top: 50%; border-top: 1px solid var(--ink); }
+.steady span { position: absolute; left: 50%; top: 16px; transform: translateX(-50%); white-space: nowrap; text-align: center; font-style: italic; font-size: 14px; line-height: 1.25; color: var(--lead-2); }
+
+.trace { left: var(--x0); width: calc(var(--x1) - var(--x0)); top: var(--top); height: var(--ph); overflow: visible; }
+.trace path { fill: none; vector-effect: non-scaling-stroke; stroke-linejoin: round; stroke-linecap: round; }
+.trace .under { stroke: var(--ink); stroke-width: 7; opacity: .35; }
+.trace .stroke { stroke: var(--lead); stroke-width: 3.2; }
+.pt { width: 11px; height: 11px; margin: -5.5px 0 0 -5.5px; border-radius: 50%; background: var(--sanguine); border: 2px solid var(--lead);
+  left: calc(var(--x0) + var(--t) * (var(--x1) - var(--x0))); top: calc(var(--top) + (1 - var(--v)) * var(--ph)); }
+.pt.last { width: 15px; height: 15px; margin: -7.5px 0 0 -7.5px; background: var(--lead); }
+.pt.last::after { content: ''; position: absolute; inset: -9px; border-radius: 50%; border: 1px solid var(--lead); opacity: .7; }
+.val { transform: translate(-50%, -100%); margin-top: -14px; font-size: 15px; font-weight: 500; white-space: nowrap;
+  left: calc(var(--x0) + var(--t) * (var(--x1) - var(--x0))); top: calc(var(--top) + (1 - var(--v)) * var(--ph)); }
+.val.first { transform: translate(calc(-100% - 12px), -50%); margin-top: 0; }
+.val.last { font-size: 22px; transform: translate(-60%, -100%); margin-top: -16px; }
+.plumb { top: calc(var(--top) - 8px); bottom: calc(100cqh - var(--bot)); border-left: 1px dashed var(--lead); opacity: 0; transition: opacity .2s; pointer-events: none; }
+.readout { min-width: 13em; padding: .55em .8em; background: var(--sanguine-deep); border: 1px solid var(--lead-2); font-size: 14px; line-height: 1.35; opacity: 0;
+  transition: opacity .2s; pointer-events: none; box-shadow: 0 10px 30px -10px rgb(20 4 0 / .6); }
+.readout b { font-size: 20px; font-weight: 500; }
+.chart.probing .plumb, .chart.probing .readout { opacity: 1; }
+
+/* The sheet draws itself: construction first, then the line in white lead, then the notes turn readable. */
+@media (prefers-reduced-motion: no-preference) {
+  .js .gl { animation: rule 900ms var(--ease) both; animation-delay: calc(var(--v) * 260ms); }
+  .js .yax { animation: fade 600ms ease-out both; }
+  .js .guide { animation: rule 1100ms var(--ease) both; } .js .guide.base { animation-delay: 120ms; }
+  .js .compass { animation: compass 1300ms var(--ease) 300ms both; }
+  @keyframes compass { from { opacity: 0; scale: .3; rotate: -90deg; } }
+  .js .einstein, .js .file img { animation: bleed 1100ms var(--ease) both; animation-delay: 350ms; }
+  .js .file img:nth-child(2) { animation-delay: 470ms; } .js .file img:nth-child(3) { animation-delay: 590ms; } .js .file img:nth-child(4) { animation-delay: 710ms; }
+  .js .trace { animation: wipe 1700ms cubic-bezier(.5, 0, .2, 1) 700ms both; }
+  .js .pt, .js .val { animation: prick 500ms var(--ease) both; animation-delay: calc(800ms + var(--t) * 1500ms); }
+  .js .span { animation: rise 900ms var(--ease) 2500ms both; }
+  @keyframes rise { from { transform: scaleY(0); } }
+  .js .steady { animation: rule 900ms var(--ease) 2300ms both; transform-origin: left; }
+  .js .note, .js .steady span, .js .span span, .js .gap span { animation: mirror 900ms var(--ease) both; animation-delay: 1500ms; }
+  .js .note-c { animation-delay: 2200ms; }
+  @keyframes rule { from { transform: scaleX(0); } }
+  @keyframes fade { from { opacity: 0; } }
+  @keyframes bleed { from { opacity: 0; filter: blur(6px); } }
+  @keyframes wipe { from { clip-path: inset(-20% 100% -20% -2%); } to { clip-path: inset(-20% -2% -20% -2%); } }
+  @keyframes prick { from { opacity: 0; scale: .2; } }
+  @keyframes mirror { 0% { transform: scaleX(-1); opacity: .2; } 55% { transform: scaleX(-1); opacity: .8; } 100% { transform: none; } }
+}
+
+/* ---------- Below the sheet ---------- */
+.band { padding: clamp(64px, 10vw, 150px) var(--gut); position: relative; }
+.band::after { content: ''; position: absolute; left: var(--gut); right: var(--gut); top: clamp(24px, 3.4vw, 52px); height: 9px; pointer-events: none;
+  border-left: 1px solid currentColor; border-right: 1px solid currentColor; opacity: .32;
+  background: linear-gradient(currentColor, currentColor) 0 50% / 100% 1px no-repeat, linear-gradient(currentColor, currentColor) 50% 0 / 1px 100% no-repeat; }
+.band h2 { font-weight: 500; font-size: clamp(30px, 4.2vw, 64px); line-height: 1.02; letter-spacing: -.02em; max-width: 18ch; text-wrap: balance; }
+.band .say { font-size: clamp(17px, 1.35vw, 21px); line-height: 1.5; max-width: 58ch; margin-top: 1.1em; }
+.band .say + .say { margin-top: .8em; }
+.plate .say { color: var(--lead); }
+.plate .quiet, .plate em.q { color: var(--gall-2); }
+.quiet { color: var(--lead-2); }
+
+/* Scale anchors: two oversized studies and the measured rule between them. */
+.anchors { display: grid; grid-template-columns: 1fr minmax(0, 1.1fr) 1fr; align-items: end; gap: 0 clamp(16px, 3vw, 60px); margin-top: clamp(40px, 6vw, 90px); }
+.study { position: relative; }
+.study img { display: block; width: 100%; height: auto; }
+.study-e img { width: 118%; margin-left: -12%; }
+.study-c img { width: 120%; max-width: none; margin-right: -14%; }
+.study figcaption { margin-top: 10px; font-style: italic; color: var(--gall-2); font-size: 15px; }
+.study figcaption b { display: block; font-style: normal; color: var(--chalk); font-weight: 600; letter-spacing: .14em; text-transform: uppercase; font-size: 13px; }
+.study-c figcaption { text-align: right; }
+.scale { align-self: center; padding-bottom: 8%; }
+.rule { position: relative; height: 140px; margin: 0 4px; }
+.rule .bar, .rule .tk, .rule .mk { translate: 0 20px; }
+.rule .bar { position: absolute; left: 0; right: 0; top: 38px; border-top: 1.5px solid var(--lead); }
+.rule .tk { position: absolute; top: 31px; height: 15px; border-left: 1px solid var(--gall-2); left: calc(var(--v) * 100%); }
+.rule .tk.m { top: 26px; height: 25px; border-left-color: var(--lead); }
+.rule .tk span { position: absolute; top: 20px; left: 0; transform: translateX(-50%); font-size: 13px; color: var(--gall-2); }
+.rule .mk { position: absolute; top: 38px; left: calc(var(--v) * 100%); }
+.rule .mk i { position: absolute; width: 12px; height: 12px; margin: -6px 0 0 -6px; border-radius: 50%; border: 2px solid var(--chalk); background: var(--gall); }
+.rule .mk.now i { width: 18px; height: 18px; margin: -9px 0 0 -9px; background: var(--lead); border-color: var(--lead); }
+.rule .mk span { position: absolute; bottom: 16px; left: 0; transform: translateX(-50%); white-space: nowrap; font-size: 14px; color: var(--chalk); text-align: center; line-height: 1.2; }
+.rule .mk.now span { color: var(--lead); font-size: 20px; font-weight: 500; bottom: auto; top: 44px; }
+.rule .mk.low span { transform: translateX(-80%); }
+.scale p { margin-top: 34px; font-size: 16px; line-height: 1.5; color: var(--gall-2); max-width: 40ch; }
+
+/* Every question on its rule. */
+.measures { display: grid; grid-template-columns: minmax(0, 1fr) minmax(260px, 30%); gap: 32px clamp(24px, 4vw, 72px); margin-top: clamp(36px, 5vw, 70px); align-items: start; }
+.rows { display: grid; gap: 6px; }
+.row { display: grid; grid-template-columns: 7.5em 1fr; align-items: center; gap: 18px; }
+.row h3 { font-size: 15px; font-weight: 500; letter-spacing: .12em; text-transform: uppercase; line-height: 1.2; }
+.row h3 span { display: block; letter-spacing: 0; text-transform: none; font-weight: 400; color: var(--lead-2); font-size: 14px; }
+.track { position: relative; height: 78px; }
+.track::before { content: ''; position: absolute; left: 0; right: 0; top: 50%; border-top: 1px solid var(--rule); }
+.track .tick { position: absolute; top: calc(50% - 5px); height: 10px; border-left: 1px solid var(--rule); left: calc(var(--v) * 100%); }
+.track .mean { position: absolute; top: 8px; bottom: 8px; border-left: 2px solid var(--lead); left: calc(var(--v) * 100%); opacity: .9; }
+.q { position: absolute; width: 22px; height: 22px; margin: -11px 0 0 -11px; border: 0; background: none; cursor: pointer; border-radius: 50%;
+  left: calc(var(--v) * 100%); top: calc(50% + var(--lane) * 11px); }
+.q::before { content: ''; position: absolute; inset: 6px; border-radius: 50%; background: var(--lead); opacity: .82; transition: scale .25s var(--ease), opacity .2s; }
+.q:hover::before, .q[aria-pressed="true"]::before { opacity: 1; scale: 1.7; }
+.q[aria-pressed="true"]::after { content: ''; position: absolute; inset: -2px; border-radius: 50%; border: 1px solid var(--lead); }
+.axis-row { display: grid; grid-template-columns: 7.5em 1fr; gap: 18px; font-size: 13px; color: var(--lead-2); }
+.axis-row div { position: relative; height: 22px; }
+.axis-row em { font-style: normal; }
+.axis-row div span { white-space: nowrap; position: absolute; transform: translateX(-50%); left: calc(var(--v) * 100%); }
+.axis-row div span:first-child { transform: none; } .axis-row div span:last-child { transform: translateX(-100%); }
+.pick { border-top: 1.5px solid var(--lead); padding-top: 16px; min-height: 260px; }
+.pick .kind { font-style: italic; color: var(--lead-2); font-size: 15px; margin-top: 4px; }
+.pick .qq { font-size: clamp(22px, 2vw, 30px); line-height: 1.2; font-weight: 500; text-wrap: balance; }
+.pick .qq::before { content: '\201C'; } .pick .qq::after { content: '\201D'; }
+.pick .facts { margin-top: 14px; display: grid; gap: 4px; font-size: 16px; }
+.pick .facts b { font-weight: 500; font-size: 1.25em; }
+.pick .hint { margin-top: 18px; font-size: 14px; font-style: italic; color: var(--lead-2); }
+.share { margin-top: clamp(36px, 5vw, 64px); max-width: 40ch; font-style: italic; font-size: clamp(20px, 1.9vw, 28px); line-height: 1.4; padding-left: 22px; border-left: 1px solid var(--rule); }
+.share b { font-style: normal; font-weight: 500; }
+details.all { margin-top: clamp(40px, 5vw, 70px); border-top: 1px solid var(--rule); }
+details.all summary { cursor: pointer; list-style: none; padding: 18px 0; font-weight: 500; font-size: 18px; display: flex; justify-content: space-between; gap: 1em; }
+details.all summary::-webkit-details-marker { display: none; }
+details.all summary svg { width: 18px; height: 18px; flex: none; stroke: currentColor; stroke-width: 1.3; fill: none; align-self: center; }
+details.all summary svg .v { transition: scale .3s var(--ease); transform-origin: center; }
+details.all[open] summary svg .v { scale: 1 0; }
+.cols { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 330px), 1fr)); gap: 30px 44px; padding-bottom: 20px; }
+.cols h3 { font-size: 14px; letter-spacing: .14em; text-transform: uppercase; font-weight: 600; border-bottom: 1px solid var(--rule); padding-bottom: 6px; margin-bottom: 4px; }
+.cols ol { list-style: none; }
+.cols li { display: grid; grid-template-columns: 1fr auto; gap: 1em; padding: 5px 0; font-size: 15px; line-height: 1.35; border-bottom: 1px dotted var(--rule-soft); }
+.cols li .v { font-weight: 500; }
+.cols li .v.none { font-weight: 400; font-style: italic; color: var(--lead-2); }
+
+/* Five domains as a sheet of small studies, all on the same full scale. */
+.studies { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 34px clamp(20px, 2.4vw, 40px); margin-top: clamp(36px, 5vw, 70px); }
+.mini { position: relative; padding: 12px 4px 14px; }
+.mini::before { content: ''; position: absolute; left: 0; right: 0; bottom: 0; border-bottom: 1px solid rgb(185 165 149 / .45); pointer-events: none; }
+.mini::after { content: ''; position: absolute; inset: -7px; pointer-events: none;
+  background: linear-gradient(var(--gall-2), var(--gall-2)) 0 7px / 14px 1px no-repeat, linear-gradient(var(--gall-2), var(--gall-2)) 7px 0 / 1px 14px no-repeat,
+    linear-gradient(var(--gall-2), var(--gall-2)) 100% calc(100% - 7px) / 14px 1px no-repeat, linear-gradient(var(--gall-2), var(--gall-2)) calc(100% - 7px) 100% / 1px 14px no-repeat; opacity: .7; }
+.mini .note-m { font-style: italic; font-size: 14px; color: var(--gall-2); margin-top: 8px; }
+.mini h3 { font-size: 14px; letter-spacing: .14em; text-transform: uppercase; font-weight: 600; color: var(--chalk); }
+.mini .now { font-weight: 300; font-size: clamp(34px, 2.8vw, 46px); line-height: 1; letter-spacing: -.03em; margin: 4px 0 2px; }
+.mini .dl { font-size: 14px; color: var(--gall-2); }
+.mini svg { display: block; width: 100%; height: auto; margin-top: 12px; overflow: visible; }
+.mini svg .g { stroke: rgb(185 165 149 / .2); stroke-width: 1; }
+.mini svg .g.ax { stroke: rgb(185 165 149 / .7); }
+.mini svg .ln { fill: none; stroke: var(--chalk); stroke-width: 2.4; stroke-linejoin: round; stroke-linecap: round; }
+.mini svg .end { fill: var(--lead); }
+.mini svg text { fill: var(--gall-2); font-size: 12px; font-family: Jost, sans-serif; }
+.foot { margin-top: 24px; font-size: 15px; color: var(--gall-2); max-width: 70ch; }
+
+/* Method and links. */
+.method { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 40px clamp(32px, 6vw, 110px); margin-top: clamp(30px, 4vw, 56px); }
+.method p { font-size: clamp(17px, 1.3vw, 20px); line-height: 1.55; max-width: 60ch; }
+.method p + p { margin-top: .9em; }
+.method .actions { margin-top: 0; padding-top: 0; align-content: start; }
+.method .actions a { font-size: clamp(18px, 1.6vw, 24px); padding: .75em 0; }
+
+/* Close: a file of identical automata, moving as depth planes. */
+.close { overflow: hidden; padding-bottom: clamp(40px, 5vw, 70px); }
+.close h2 { max-width: 16ch; }
+.ranks { position: relative; height: clamp(260px, 34vw, 520px); margin: clamp(40px, 5vw, 70px) calc(var(--gut) * -1) 0; }
+.ranks .r { position: absolute; left: 0; right: 0; bottom: 0; display: flex; justify-content: center; }
+.ranks img { height: 100%; width: auto; display: block; }
+.ranks .r1 { height: 100%; z-index: 3; gap: 1.2%; }
+.ranks .r2 { height: 70%; bottom: 26%; z-index: 2; opacity: .3; filter: brightness(.55) blur(1px); gap: 3.4%; }
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .ranks .r2 { animation: drift2 linear both; animation-timeline: view(); }
+    .ranks .r1 { animation: drift1 linear both; animation-timeline: view(); }
+    @keyframes drift1 { from { translate: -4% 0; } to { translate: 4% 0; } }
+    @keyframes drift2 { from { translate: 3% 0; } to { translate: -3% 0; } }
+  }
+}
+.colophon { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px 30px; margin-top: 36px; padding-top: 18px; border-top: 1px solid rgb(185 165 149 / .3);
+  font-size: 14px; color: var(--gall-2); }
+.colophon a { text-decoration-color: var(--gall-2); }
+
+/* ---------- Narrow screens ---------- */
+@media (max-width: 1100px) and (min-width: 761px) {
+  .studies { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+@media (max-width: 760px) {
+  body { font-size: 16px; }
+  .sheet { height: auto; max-height: none; min-height: 0; grid-template-columns: 1fr; grid-template-rows: auto; padding-bottom: 28px; }
+  .folio { height: auto; padding: 12px 0; font-size: 12px; flex-wrap: wrap; gap: 6px 16px; }
+  .folio .mark span.wk { display: none; }
+  .folio nav { display: none; }
+  h1 { white-space: normal; font-size: clamp(27px, 8.2vw, 36px); line-height: 1.06; text-wrap: balance; padding: 16px 0 12px; }
+  .margin { grid-row: auto; display: grid; grid-template-columns: auto 1fr; column-gap: 18px; align-items: end; padding-top: 6px; }
+  .big { font-size: clamp(76px, 25vw, 104px); grid-row: 1 / 3; }
+  .lede { margin-top: 0; font-size: 15px; max-width: none; grid-column: 2; grid-row: 1 / 3; align-self: center; }
+  .ledger { grid-column: 1 / -1; max-width: none; margin-top: 18px; }
+  .ledger div { font-size: 15px; }
+  .margin > .actions { display: none; }
+  .chart { grid-row: auto; grid-column: 1; height: clamp(330px, 98vw, 440px); margin: 22px -6px 0 -10px; }
+  .chart-in { --top: 27cqh; --bot: calc(100cqh - 52px); --left: 30px; --x1: calc(100cqw - 5cqw); }
+  .yl { font-size: 12px; width: calc(var(--left) - 7px); }
+  .yl.odd { display: none; }
+  .ycap { display: none; }
+  .xt { font-size: 11.5px; } .xt b { font-size: 12px; }
+  .xt.mid { display: none; }
+  .note { font-size: 12.5px; } .note-e b, .note-c b { font-size: 10.5px; }
+  .note-e { width: auto; text-align: left; white-space: nowrap; top: auto; bottom: calc(100cqh - var(--bot) + var(--ph) * .4 + 6px); left: calc(var(--left) + 4px); }
+  .note-c { right: calc(var(--fw, 120px) + 6px); }
+  .note-c .more { display: none; }
+  .gap span { display: none; }
+  .span span { display: none; }
+  .steady span { left: auto; right: 0; transform: none; text-align: right; font-size: 12px; }
+  .val { font-size: 13px; } .val.last { font-size: 17px; }
+  .band { padding: 64px 18px; }
+  .anchors { grid-template-columns: 1fr 1fr; }
+  .scale { grid-column: 1 / -1; grid-row: 2; padding: 30px 0 0; }
+  .study-e img { width: 112%; margin-left: -8%; }
+  .study-c img { width: 112%; margin-right: -8%; }
+  .measures { grid-template-columns: 1fr; }
+  .pick { position: static; min-height: 0; order: -1; }
+  .row, .axis-row { grid-template-columns: 1fr; gap: 0; }
+  .row h3 { display: flex; justify-content: space-between; }
+  .row h3 span { display: inline; }
+  .axis-row > i, .axis-row em { display: none; }
+  .studies { grid-template-columns: 1fr 1fr; }
+  .method { grid-template-columns: 1fr; }
+  .ranks { height: 64vw; }
+}
+@media (max-width: 380px) {
+  .studies { grid-template-columns: 1fr 1fr; gap: 24px 14px; }
+}
+</style>
+<script>document.documentElement.classList.add('js')</script>
+</head>
+<body>
+<main>
+<section class="sheet ground" aria-labelledby="title">
+  <header class="folio">
+    <p class="mark"><b>Homogenization Tracker</b><span class="wk">Run 8</span><span>16 November 2026</span></p>
+    <nav aria-label="Details"><a href="https://github.com/biddy1618/ai-homogenization/blob/main/tracker/README.md">Methodology and data</a><a href="../../dashboard/">Full dashboard</a></nav>
+  </header>
+  <h1 id="title">AI-driven homogenization of expression <span class="dash">—</span> real-time tracker</h1>
+
+  <div class="margin">
+    <p class="big"><i class="guide cap" aria-hidden="true"></i><i class="guide base" aria-hidden="true"></i><i class="compass" aria-hidden="true"></i><span class="num">0.78</span><span class="sr"> out of 1</span></p>
+    <p class="lede">How alike Google’s top 5 answers are, averaged over the 93 of 100 everyday questions it could read this week. 0 would be five different answers; 1, the same answer five times.</p>
+    <dl class="ledger">
+      <div><dt>Change since 9 Nov</dt><dd class="num">+0.002</dd></div>
+      <div><dt>Distinct answers, of 5</dt><dd class="num">1.96</dd></div>
+      <div><dt>Questions read</dt><dd class="num">93 of 100</dd></div>
+    </dl>
+    <nav class="actions" aria-label="Go deeper"><a href="https://github.com/biddy1618/ai-homogenization/blob/main/tracker/README.md">Methodology and data <svg viewBox="0 0 40 14" aria-hidden="true"><path d="M0 7h38M31 1l7 6-7 6"/></svg></a><a href="../../dashboard/">Full dashboard <svg viewBox="0 0 40 14" aria-hidden="true"><path d="M0 7h38M31 1l7 6-7 6"/></svg></a></nav>
+  </div>
+
+  <figure class="chart" id="chart" tabindex="0" role="group" aria-label="Line chart on a 0 to 1 scale of how alike Google&#x27;s top 5 answers are, averaged over the questions read each run, from 4 Oct to 16 Nov: 4 Oct: 0.70; 5 Oct: 0.73; 12 Oct: 0.74; 19 Oct: 0.79; 26 Oct: 0.78; 2 Nov: 0.77; 9 Nov: 0.78; 16 Nov: 0.78. A portrait of Einstein marks the low end, distinct voices; a row of identical helmeted automata, one face repeated, marks the top, identical copies. Use the left and right arrow keys to read each run.">
+    <div class="chart-in">
+      <i class="gl zero" style="--v:0.0"></i><i class="gl" style="--v:0.1"></i><i class="gl" style="--v:0.2"></i><i class="gl" style="--v:0.3"></i><i class="gl" style="--v:0.4"></i><i class="gl major" style="--v:0.5"></i><i class="gl" style="--v:0.6"></i><i class="gl" style="--v:0.7"></i><i class="gl" style="--v:0.8"></i><i class="gl" style="--v:0.9"></i><i class="gl one" style="--v:1.0"></i>
+      <i class="yax" aria-hidden="true"></i>
+      <div class="contents" aria-hidden="true"><span class="yl" style="--v:0.0">0</span><span class="yl odd" style="--v:0.2">0.2</span><span class="yl" style="--v:0.4">0.4</span><span class="yl odd" style="--v:0.6">0.6</span><span class="yl" style="--v:0.8">0.8</span><span class="yl" style="--v:1.0">1</span></div>
+      <span class="ycap" aria-hidden="true">How alike, 0 to 1</span>
+      <img class="einstein" src="assets/codex-einstein-s-sm.webp" width="300" height="387" alt="Albert Einstein, drawn in ink and chalk: distinct voices">
+      <p class="note note-e" aria-hidden="true"><b>Distinct voices</b></p>
+      <div class="span" aria-hidden="true" style="--v:0.7799"><span>0.22 below 1</span></div>
+      <i class="ht" style="--v:0.05" aria-hidden="true"></i><i class="ht" style="--v:0.15" aria-hidden="true"></i><i class="ht" style="--v:0.25" aria-hidden="true"></i><i class="ht" style="--v:0.35" aria-hidden="true"></i><i class="ht" style="--v:0.45" aria-hidden="true"></i><i class="ht" style="--v:0.55" aria-hidden="true"></i><i class="ht" style="--v:0.65" aria-hidden="true"></i><i class="ht" style="--v:0.75" aria-hidden="true"></i><i class="ht" style="--v:0.85" aria-hidden="true"></i><i class="ht" style="--v:0.95" aria-hidden="true"></i>
+      <div class="steady" aria-hidden="true" style="--t0:0.3488;--v:0.7729"><span>within 0.015 of each other<br>since 19 Oct</span></div>
+      <div class="gap" aria-hidden="true"><span>no runs<br>before 4 Oct</span></div>
+      <div class="file" aria-hidden="true"><img src="assets/codex-automaton-s-sm.webp" width="160" height="450" alt=""><img src="assets/codex-automaton-s-sm.webp" width="160" height="450" alt=""><img src="assets/codex-automaton-s-sm.webp" width="160" height="450" alt=""><img src="assets/codex-automaton-s-sm.webp" width="160" height="450" alt=""></div>
+      <p class="note note-c" aria-hidden="true"><b>Identical copies</b><span class="more">where we’re heading</span></p>
+      <svg class="trace" viewBox="0 0 1000 1000" preserveAspectRatio="none" aria-hidden="true"><path class="under" d="M0.0,298.3 L23.3,268.4 L186.0,256.7 L348.8,212.1 L511.6,220.0 L674.4,227.1 L837.2,222.5 L1000.0,220.1"/><path class="stroke" d="M0.0,298.3 L23.3,268.4 L186.0,256.7 L348.8,212.1 L511.6,220.0 L674.4,227.1 L837.2,222.5 L1000.0,220.1"/></svg>
+      <i class="pt" style="--t:0.0000;--v:0.7017"></i><i class="pt" style="--t:0.0233;--v:0.7316"></i><i class="pt" style="--t:0.1860;--v:0.7433"></i><i class="pt" style="--t:0.3488;--v:0.7879"></i><i class="pt" style="--t:0.5116;--v:0.7800"></i><i class="pt" style="--t:0.6744;--v:0.7729"></i><i class="pt" style="--t:0.8372;--v:0.7775"></i><i class="pt last" style="--t:1.0000;--v:0.7799"></i>
+      <div class="contents" aria-hidden="true"><span class="val first" style="--t:0;--v:0.7017">0.70</span><span class="val last" style="--t:1;--v:0.7799">0.78</span></div>
+      <div class="contents" aria-hidden="true"><span class="xt" style="--t:0.0000"><b>4</b>Oct</span><span class="xt near mid" style="--t:0.0233"><b>5</b>&nbsp;</span><span class="xt" style="--t:0.1860"><b>12</b>&nbsp;</span><span class="xt mid" style="--t:0.3488"><b>19</b>&nbsp;</span><span class="xt" style="--t:0.5116"><b>26</b>&nbsp;</span><span class="xt mid" style="--t:0.6744"><b>2</b>Nov</span><span class="xt" style="--t:0.8372"><b>9</b>&nbsp;</span><span class="xt" style="--t:1.0000"><b>16</b>&nbsp;</span></div>
+      <i class="plumb" aria-hidden="true"></i>
+      <p class="readout" aria-live="polite"></p>
+    </div>
+    <table class="sr"><caption>Weekly average similarity</caption><thead><tr><th>Run</th><th>Similarity, 0 to 1</th><th>Questions read</th></tr></thead><tbody><tr><th scope="row">4 October 2026</th><td>0.702</td><td>34</td></tr><tr><th scope="row">5 October 2026</th><td>0.732</td><td>35</td></tr><tr><th scope="row">12 October 2026</th><td>0.743</td><td>38</td></tr><tr><th scope="row">19 October 2026</th><td>0.788</td><td>42</td></tr><tr><th scope="row">26 October 2026</th><td>0.780</td><td>98</td></tr><tr><th scope="row">2 November 2026</th><td>0.773</td><td>96</td></tr><tr><th scope="row">9 November 2026</th><td>0.778</td><td>95</td></tr><tr><th scope="row">16 November 2026</th><td>0.780</td><td>93</td></tr></tbody></table>
+  </figure>
+</section>
+
+<section class="band plate ground" aria-labelledby="anchors-h">
+  <h2 id="anchors-h">Two ends of one scale.</h2>
+  <p class="say">The pictures are scale anchors, not data. Near 0, the five pages behind an answer each say something of their own: many distinct voices. Near 1, they say the same thing: one face, repeated.</p>
+  <div class="anchors">
+    <figure class="study study-e"><img src="assets/codex-einstein-d.webp" width="640" height="825" alt="Study of Albert Einstein in red chalk and white" loading="lazy" decoding="async"><figcaption><b>Low end · 0</b>Many distinct voices</figcaption></figure>
+    <div class="scale">
+      <div class="rule" role="img" aria-label="This week's average, 0.78, on the 0 to 1 scale, between the least alike question at 0.40 and the most alike at 0.91">
+        <i class="bar"></i><i class="tk m" style="--v:0.0"><span>0</span></i><i class="tk" style="--v:0.1"></i><i class="tk" style="--v:0.2"></i><i class="tk" style="--v:0.3"></i><i class="tk" style="--v:0.4"></i><i class="tk m" style="--v:0.5"><span>0.5</span></i><i class="tk" style="--v:0.6"></i><i class="tk" style="--v:0.7"></i><i class="tk" style="--v:0.8"></i><i class="tk" style="--v:0.9"></i><i class="tk m" style="--v:1.0"><span>1</span></i>
+        <span class="mk low" style="--v:0.4007"><i></i><span>least alike<br>0.40</span></span>
+        <span class="mk" style="--v:0.9134"><i></i><span>most alike<br>0.91</span></span>
+        <span class="mk now" style="--v:0.7799"><i></i><span>this week<br>0.78</span></span>
+      </div>
+      <p>This week’s average sits at 0.78. Its questions range from “how are capital gains taxed” at 0.40 to “is intermittent fasting healthy” at 0.91.</p>
+    </div>
+    <figure class="study study-c"><img src="assets/codex-automaton-head-d.webp" width="900" height="1002" alt="Study of the automaton's helmeted head, its visor one calm sculpted face, in red chalk and white" loading="lazy" decoding="async"><figcaption><b>High end · 1</b>One face, repeated</figcaption></figure>
+  </div>
+</section>
+
+<section class="band ground" aria-labelledby="every-h">
+  <h2 id="every-h">Every question, measured this week.</h2>
+  <p class="say">Each point is one of the 93 questions read on 16 November 2026, placed on the same 0 to 1 rule. The taller stroke is the domain’s average.</p>
+  <div class="measures">
+    <div class="rows">
+      <div class="axis-row" aria-hidden="true"><i></i><div><span style="--v:0">0<em> · all different</em></span><span style="--v:.5">0.5</span><span style="--v:1">1<em> · the same</em></span></div></div>
+      <div class="row"><h3>Health<span>mean 0.82 · 20 read</span></h3><div class="track" role="group" aria-label="Health questions, arrow keys move along the rule"><i class="tick" style="--v:0.0"></i><i class="tick" style="--v:0.1"></i><i class="tick" style="--v:0.2"></i><i class="tick" style="--v:0.3"></i><i class="tick" style="--v:0.4"></i><i class="tick" style="--v:0.5"></i><i class="tick" style="--v:0.6"></i><i class="tick" style="--v:0.7"></i><i class="tick" style="--v:0.8"></i><i class="tick" style="--v:0.9"></i><i class="tick" style="--v:1.0"></i><i class="mean" style="--v:0.8218" aria-hidden="true"></i><button class="q" type="button" data-i="0" data-v="0.5535" tabindex="0" aria-pressed="false" style="--v:0.5535;--lane:0" aria-label="how does the immune system fight infection: 0.55 alike"></button><button class="q" type="button" data-i="1" data-v="0.7343" tabindex="-1" aria-pressed="false" style="--v:0.7343;--lane:0" aria-label="how much water should you drink a day: 0.73 alike"></button><button class="q" type="button" data-i="2" data-v="0.7664" tabindex="-1" aria-pressed="false" style="--v:0.7664;--lane:0" aria-label="how does alcohol affect the liver: 0.77 alike"></button><button class="q" type="button" data-i="3" data-v="0.7721" tabindex="-1" aria-pressed="false" style="--v:0.7721;--lane:-1" aria-label="what causes anxiety: 0.77 alike"></button><button class="q" type="button" data-i="4" data-v="0.7929" tabindex="-1" aria-pressed="false" style="--v:0.7929;--lane:0" aria-label="how to lower blood pressure naturally: 0.79 alike"></button><button class="q" type="button" data-i="5" data-v="0.7975" tabindex="-1" aria-pressed="false" style="--v:0.7975;--lane:-1" aria-label="what causes acid reflux: 0.80 alike"></button><button class="q" type="button" data-i="6" data-v="0.8153" tabindex="-1" aria-pressed="false" style="--v:0.8153;--lane:0" aria-label="what is the difference between a cold and the flu: 0.82 alike"></button><button class="q" type="button" data-i="7" data-v="0.8307" tabindex="-1" aria-pressed="false" style="--v:0.8307;--lane:0" aria-label="what are the early signs of diabetes: 0.83 alike"></button><button class="q" type="button" data-i="8" data-v="0.8371" tabindex="-1" aria-pressed="false" style="--v:0.8371;--lane:-1" aria-label="how do antibiotics work: 0.84 alike"></button><button class="q" type="button" data-i="9" data-v="0.8396" tabindex="-1" aria-pressed="false" style="--v:0.8396;--lane:1" aria-label="what are the benefits of regular exercise: 0.84 alike"></button><button class="q" type="button" data-i="10" data-v="0.8497" tabindex="-1" aria-pressed="false" style="--v:0.8497;--lane:0" aria-label="what causes migraines: 0.85 alike"></button><button class="q" type="button" data-i="11" data-v="0.8508" tabindex="-1" aria-pressed="false" style="--v:0.8508;--lane:-2" aria-label="how much sleep do adults need: 0.85 alike"></button><button class="q" type="button" data-i="12" data-v="0.8522" tabindex="-1" aria-pressed="false" style="--v:0.8522;--lane:-1" aria-label="how to treat a sprained ankle: 0.85 alike"></button><button class="q" type="button" data-i="13" data-v="0.8582" tabindex="-1" aria-pressed="false" style="--v:0.8582;--lane:1" aria-label="what causes lower back pain: 0.86 alike"></button><button class="q" type="button" data-i="14" data-v="0.8675" tabindex="-1" aria-pressed="false" style="--v:0.8675;--lane:0" aria-label="what causes high cholesterol: 0.87 alike"></button><button class="q" type="button" data-i="15" data-v="0.8692" tabindex="-1" aria-pressed="false" style="--v:0.8692;--lane:-1" aria-label="what are the symptoms of vitamin d deficiency: 0.87 alike"></button><button class="q" type="button" data-i="16" data-v="0.8722" tabindex="-1" aria-pressed="false" style="--v:0.8722;--lane:1" aria-label="how much protein do you need per day: 0.87 alike"></button><button class="q" type="button" data-i="17" data-v="0.8749" tabindex="-1" aria-pressed="false" style="--v:0.8749;--lane:-2" aria-label="what are the symptoms of iron deficiency: 0.87 alike"></button><button class="q" type="button" data-i="18" data-v="0.8887" tabindex="-1" aria-pressed="false" style="--v:0.8887;--lane:0" aria-label="how does caffeine affect the body: 0.89 alike"></button><button class="q" type="button" data-i="19" data-v="0.9134" tabindex="-1" aria-pressed="false" style="--v:0.9134;--lane:0" aria-label="is intermittent fasting healthy: 0.91 alike"></button></div></div><div class="row"><h3>Finance<span>mean 0.74 · 20 read</span></h3><div class="track" role="group" aria-label="Finance questions, arrow keys move along the rule"><i class="tick" style="--v:0.0"></i><i class="tick" style="--v:0.1"></i><i class="tick" style="--v:0.2"></i><i class="tick" style="--v:0.3"></i><i class="tick" style="--v:0.4"></i><i class="tick" style="--v:0.5"></i><i class="tick" style="--v:0.6"></i><i class="tick" style="--v:0.7"></i><i class="tick" style="--v:0.8"></i><i class="tick" style="--v:0.9"></i><i class="tick" style="--v:1.0"></i><i class="mean" style="--v:0.7413" aria-hidden="true"></i><button class="q" type="button" data-i="20" data-v="0.4007" tabindex="0" aria-pressed="false" style="--v:0.4007;--lane:0" aria-label="how are capital gains taxed: 0.40 alike"></button><button class="q" type="button" data-i="21" data-v="0.5462" tabindex="-1" aria-pressed="false" style="--v:0.5462;--lane:0" aria-label="how does social security work: 0.55 alike"></button><button class="q" type="button" data-i="22" data-v="0.5532" tabindex="-1" aria-pressed="false" style="--v:0.5532;--lane:-1" aria-label="what is the difference between a debit card and a credit card: 0.55 alike"></button><button class="q" type="button" data-i="23" data-v="0.6079" tabindex="-1" aria-pressed="false" style="--v:0.6079;--lane:0" aria-label="roth ira vs traditional ira: 0.61 alike"></button><button class="q" type="button" data-i="24" data-v="0.6618" tabindex="-1" aria-pressed="false" style="--v:0.6618;--lane:0" aria-label="how does a home equity loan work: 0.66 alike"></button><button class="q" type="button" data-i="25" data-v="0.6987" tabindex="-1" aria-pressed="false" style="--v:0.6987;--lane:0" aria-label="how do credit cards work: 0.70 alike"></button><button class="q" type="button" data-i="26" data-v="0.7097" tabindex="-1" aria-pressed="false" style="--v:0.7097;--lane:-1" aria-label="what is a 401k and how does it work: 0.71 alike"></button><button class="q" type="button" data-i="27" data-v="0.7392" tabindex="-1" aria-pressed="false" style="--v:0.7392;--lane:0" aria-label="what is an annuity: 0.74 alike"></button><button class="q" type="button" data-i="28" data-v="0.7449" tabindex="-1" aria-pressed="false" style="--v:0.7449;--lane:-1" aria-label="how does a credit freeze work: 0.74 alike"></button><button class="q" type="button" data-i="29" data-v="0.7645" tabindex="-1" aria-pressed="false" style="--v:0.7645;--lane:0" aria-label="how do index funds work: 0.76 alike"></button><button class="q" type="button" data-i="30" data-v="0.7828" tabindex="-1" aria-pressed="false" style="--v:0.7828;--lane:0" aria-label="how does compound interest work: 0.78 alike"></button><button class="q" type="button" data-i="31" data-v="0.8038" tabindex="-1" aria-pressed="false" style="--v:0.8038;--lane:0" aria-label="how to build an emergency fund: 0.80 alike"></button><button class="q" type="button" data-i="32" data-v="0.8191" tabindex="-1" aria-pressed="false" style="--v:0.8191;--lane:0" aria-label="what is the difference between stocks and bonds: 0.82 alike"></button><button class="q" type="button" data-i="33" data-v="0.8341" tabindex="-1" aria-pressed="false" style="--v:0.8341;--lane:0" aria-label="what is dollar cost averaging: 0.83 alike"></button><button class="q" type="button" data-i="34" data-v="0.8403" tabindex="-1" aria-pressed="false" style="--v:0.8403;--lane:-1" aria-label="how do student loans work: 0.84 alike"></button><button class="q" type="button" data-i="35" data-v="0.8411" tabindex="-1" aria-pressed="false" style="--v:0.8411;--lane:1" aria-label="what is a good credit score: 0.84 alike"></button><button class="q" type="button" data-i="36" data-v="0.8456" tabindex="-1" aria-pressed="false" style="--v:0.8456;--lane:-2" aria-label="how does inflation affect your savings: 0.85 alike"></button><button class="q" type="button" data-i="37" data-v="0.8615" tabindex="-1" aria-pressed="false" style="--v:0.8615;--lane:0" aria-label="how does refinancing a mortgage work: 0.86 alike"></button><button class="q" type="button" data-i="38" data-v="0.8747" tabindex="-1" aria-pressed="false" style="--v:0.8747;--lane:-1" aria-label="what is a health savings account: 0.87 alike"></button><button class="q" type="button" data-i="39" data-v="0.8961" tabindex="-1" aria-pressed="false" style="--v:0.8961;--lane:0" aria-label="what is a mutual fund: 0.90 alike"></button></div></div><div class="row"><h3>Law<span>mean 0.76 · 20 read</span></h3><div class="track" role="group" aria-label="Law questions, arrow keys move along the rule"><i class="tick" style="--v:0.0"></i><i class="tick" style="--v:0.1"></i><i class="tick" style="--v:0.2"></i><i class="tick" style="--v:0.3"></i><i class="tick" style="--v:0.4"></i><i class="tick" style="--v:0.5"></i><i class="tick" style="--v:0.6"></i><i class="tick" style="--v:0.7"></i><i class="tick" style="--v:0.8"></i><i class="tick" style="--v:0.9"></i><i class="tick" style="--v:1.0"></i><i class="mean" style="--v:0.7630" aria-hidden="true"></i><button class="q" type="button" data-i="40" data-v="0.6273" tabindex="0" aria-pressed="false" style="--v:0.6273;--lane:0" aria-label="how does a non-compete agreement work: 0.63 alike"></button><button class="q" type="button" data-i="41" data-v="0.6512" tabindex="-1" aria-pressed="false" style="--v:0.6512;--lane:0" aria-label="what is a living will: 0.65 alike"></button><button class="q" type="button" data-i="42" data-v="0.6677" tabindex="-1" aria-pressed="false" style="--v:0.6677;--lane:0" aria-label="what happens during a divorce proceeding: 0.67 alike"></button><button class="q" type="button" data-i="43" data-v="0.6769" tabindex="-1" aria-pressed="false" style="--v:0.6769;--lane:-1" aria-label="what are employee rights when fired: 0.68 alike"></button><button class="q" type="button" data-i="44" data-v="0.7057" tabindex="-1" aria-pressed="false" style="--v:0.7057;--lane:0" aria-label="what is a trademark and how do you register one: 0.71 alike"></button><button class="q" type="button" data-i="45" data-v="0.7197" tabindex="-1" aria-pressed="false" style="--v:0.7197;--lane:0" aria-label="how does small claims court work: 0.72 alike"></button><button class="q" type="button" data-i="46" data-v="0.7201" tabindex="-1" aria-pressed="false" style="--v:0.7201;--lane:-1" aria-label="what is a power of attorney: 0.72 alike"></button><button class="q" type="button" data-i="47" data-v="0.7553" tabindex="-1" aria-pressed="false" style="--v:0.7553;--lane:0" aria-label="what are your rights if arrested: 0.76 alike"></button><button class="q" type="button" data-i="48" data-v="0.7720" tabindex="-1" aria-pressed="false" style="--v:0.7720;--lane:0" aria-label="how do you file for bankruptcy: 0.77 alike"></button><button class="q" type="button" data-i="49" data-v="0.7755" tabindex="-1" aria-pressed="false" style="--v:0.7755;--lane:-1" aria-label="what are tenant rights during eviction: 0.78 alike"></button><button class="q" type="button" data-i="50" data-v="0.7769" tabindex="-1" aria-pressed="false" style="--v:0.7769;--lane:1" aria-label="how does child custody work: 0.78 alike"></button><button class="q" type="button" data-i="51" data-v="0.7825" tabindex="-1" aria-pressed="false" style="--v:0.7825;--lane:-2" aria-label="how does the probate process work: 0.78 alike"></button><button class="q" type="button" data-i="52" data-v="0.7881" tabindex="-1" aria-pressed="false" style="--v:0.7881;--lane:0" aria-label="how does a prenuptial agreement work: 0.79 alike"></button><button class="q" type="button" data-i="53" data-v="0.8016" tabindex="-1" aria-pressed="false" style="--v:0.8016;--lane:-1" aria-label="how does copyright protect creators: 0.80 alike"></button><button class="q" type="button" data-i="54" data-v="0.8177" tabindex="-1" aria-pressed="false" style="--v:0.8177;--lane:0" aria-label="what is the difference between a misdemeanor and a felony: 0.82 alike"></button><button class="q" type="button" data-i="55" data-v="0.8221" tabindex="-1" aria-pressed="false" style="--v:0.8221;--lane:-1" aria-label="what is an llc and how is it taxed: 0.82 alike"></button><button class="q" type="button" data-i="56" data-v="0.8415" tabindex="-1" aria-pressed="false" style="--v:0.8415;--lane:0" aria-label="what is the statute of limitations: 0.84 alike"></button><button class="q" type="button" data-i="57" data-v="0.8454" tabindex="-1" aria-pressed="false" style="--v:0.8454;--lane:-1" aria-label="what is fair use in copyright: 0.85 alike"></button><button class="q" type="button" data-i="58" data-v="0.8499" tabindex="-1" aria-pressed="false" style="--v:0.8499;--lane:1" aria-label="what is the difference between a will and a trust: 0.85 alike"></button><button class="q" type="button" data-i="59" data-v="0.8634" tabindex="-1" aria-pressed="false" style="--v:0.8634;--lane:0" aria-label="how does a class action lawsuit work: 0.86 alike"></button></div></div><div class="row"><h3>Science<span>mean 0.80 · 17 read</span></h3><div class="track" role="group" aria-label="Science questions, arrow keys move along the rule"><i class="tick" style="--v:0.0"></i><i class="tick" style="--v:0.1"></i><i class="tick" style="--v:0.2"></i><i class="tick" style="--v:0.3"></i><i class="tick" style="--v:0.4"></i><i class="tick" style="--v:0.5"></i><i class="tick" style="--v:0.6"></i><i class="tick" style="--v:0.7"></i><i class="tick" style="--v:0.8"></i><i class="tick" style="--v:0.9"></i><i class="tick" style="--v:1.0"></i><i class="mean" style="--v:0.8005" aria-hidden="true"></i><button class="q" type="button" data-i="60" data-v="0.7102" tabindex="0" aria-pressed="false" style="--v:0.7102;--lane:0" aria-label="how do black holes form: 0.71 alike"></button><button class="q" type="button" data-i="61" data-v="0.7143" tabindex="-1" aria-pressed="false" style="--v:0.7143;--lane:-1" aria-label="what is the big bang theory: 0.71 alike"></button><button class="q" type="button" data-i="62" data-v="0.7314" tabindex="-1" aria-pressed="false" style="--v:0.7314;--lane:0" aria-label="how does nuclear fusion work: 0.73 alike"></button><button class="q" type="button" data-i="63" data-v="0.7608" tabindex="-1" aria-pressed="false" style="--v:0.7608;--lane:0" aria-label="what causes volcanic eruptions: 0.76 alike"></button><button class="q" type="button" data-i="64" data-v="0.7625" tabindex="-1" aria-pressed="false" style="--v:0.7625;--lane:-1" aria-label="what causes the seasons: 0.76 alike"></button><button class="q" type="button" data-i="65" data-v="0.7760" tabindex="-1" aria-pressed="false" style="--v:0.7760;--lane:0" aria-label="how do rainbows form: 0.78 alike"></button><button class="q" type="button" data-i="66" data-v="0.7791" tabindex="-1" aria-pressed="false" style="--v:0.7791;--lane:-1" aria-label="what causes earthquakes: 0.78 alike"></button><button class="q" type="button" data-i="67" data-v="0.7931" tabindex="-1" aria-pressed="false" style="--v:0.7931;--lane:0" aria-label="are electric cars better for the environment: 0.79 alike"></button><button class="q" type="button" data-i="68" data-v="0.8063" tabindex="-1" aria-pressed="false" style="--v:0.8063;--lane:-1" aria-label="why is the sky blue: 0.81 alike"></button><button class="q" type="button" data-i="69" data-v="0.8063" tabindex="-1" aria-pressed="false" style="--v:0.8063;--lane:1" aria-label="what is dark matter: 0.81 alike"></button><button class="q" type="button" data-i="70" data-v="0.8290" tabindex="-1" aria-pressed="false" style="--v:0.8290;--lane:0" aria-label="what causes climate change: 0.83 alike"></button><button class="q" type="button" data-i="71" data-v="0.8320" tabindex="-1" aria-pressed="false" style="--v:0.8320;--lane:-1" aria-label="how does photosynthesis work: 0.83 alike"></button><button class="q" type="button" data-i="72" data-v="0.8331" tabindex="-1" aria-pressed="false" style="--v:0.8331;--lane:1" aria-label="how does antibiotic resistance develop: 0.83 alike"></button><button class="q" type="button" data-i="73" data-v="0.8442" tabindex="-1" aria-pressed="false" style="--v:0.8442;--lane:0" aria-label="why do leaves change color in the fall: 0.84 alike"></button><button class="q" type="button" data-i="74" data-v="0.8645" tabindex="-1" aria-pressed="false" style="--v:0.8645;--lane:0" aria-label="how do hurricanes form: 0.86 alike"></button><button class="q" type="button" data-i="75" data-v="0.8799" tabindex="-1" aria-pressed="false" style="--v:0.8799;--lane:0" aria-label="how do vaccines work: 0.88 alike"></button><button class="q" type="button" data-i="76" data-v="0.8864" tabindex="-1" aria-pressed="false" style="--v:0.8864;--lane:-1" aria-label="how do tides work: 0.89 alike"></button></div></div><div class="row"><h3>Tech<span>mean 0.77 · 16 read</span></h3><div class="track" role="group" aria-label="Tech questions, arrow keys move along the rule"><i class="tick" style="--v:0.0"></i><i class="tick" style="--v:0.1"></i><i class="tick" style="--v:0.2"></i><i class="tick" style="--v:0.3"></i><i class="tick" style="--v:0.4"></i><i class="tick" style="--v:0.5"></i><i class="tick" style="--v:0.6"></i><i class="tick" style="--v:0.7"></i><i class="tick" style="--v:0.8"></i><i class="tick" style="--v:0.9"></i><i class="tick" style="--v:1.0"></i><i class="mean" style="--v:0.7750" aria-hidden="true"></i><button class="q" type="button" data-i="77" data-v="0.6221" tabindex="0" aria-pressed="false" style="--v:0.6221;--lane:0" aria-label="is ai going to replace jobs: 0.62 alike"></button><button class="q" type="button" data-i="78" data-v="0.6402" tabindex="-1" aria-pressed="false" style="--v:0.6402;--lane:0" aria-label="how does a computer virus spread: 0.64 alike"></button><button class="q" type="button" data-i="79" data-v="0.7242" tabindex="-1" aria-pressed="false" style="--v:0.7242;--lane:0" aria-label="how do solid state drives work: 0.72 alike"></button><button class="q" type="button" data-i="80" data-v="0.7323" tabindex="-1" aria-pressed="false" style="--v:0.7323;--lane:-1" aria-label="how do search engines rank pages: 0.73 alike"></button><button class="q" type="button" data-i="81" data-v="0.7360" tabindex="-1" aria-pressed="false" style="--v:0.7360;--lane:1" aria-label="how does wifi work: 0.74 alike"></button><button class="q" type="button" data-i="82" data-v="0.7407" tabindex="-1" aria-pressed="false" style="--v:0.7407;--lane:0" aria-label="how does facial recognition work: 0.74 alike"></button><button class="q" type="button" data-i="83" data-v="0.7508" tabindex="-1" aria-pressed="false" style="--v:0.7508;--lane:-1" aria-label="what is an api: 0.75 alike"></button><button class="q" type="button" data-i="84" data-v="0.7662" tabindex="-1" aria-pressed="false" style="--v:0.7662;--lane:0" aria-label="how does two factor authentication work: 0.77 alike"></button><button class="q" type="button" data-i="85" data-v="0.7739" tabindex="-1" aria-pressed="false" style="--v:0.7739;--lane:-1" aria-label="what is phishing and how to avoid it: 0.77 alike"></button><button class="q" type="button" data-i="86" data-v="0.7992" tabindex="-1" aria-pressed="false" style="--v:0.7992;--lane:0" aria-label="what is a large language model: 0.80 alike"></button><button class="q" type="button" data-i="87" data-v="0.8052" tabindex="-1" aria-pressed="false" style="--v:0.8052;--lane:-1" aria-label="how does gps work: 0.81 alike"></button><button class="q" type="button" data-i="88" data-v="0.8390" tabindex="-1" aria-pressed="false" style="--v:0.8390;--lane:0" aria-label="what is a vpn and how does it work: 0.84 alike"></button><button class="q" type="button" data-i="89" data-v="0.8483" tabindex="-1" aria-pressed="false" style="--v:0.8483;--lane:-1" aria-label="what is a password manager: 0.85 alike"></button><button class="q" type="button" data-i="90" data-v="0.8558" tabindex="-1" aria-pressed="false" style="--v:0.8558;--lane:0" aria-label="what is machine learning: 0.86 alike"></button><button class="q" type="button" data-i="91" data-v="0.8739" tabindex="-1" aria-pressed="false" style="--v:0.8739;--lane:0" aria-label="what is 5g technology: 0.87 alike"></button><button class="q" type="button" data-i="92" data-v="0.8924" tabindex="-1" aria-pressed="false" style="--v:0.8924;--lane:0" aria-label="how does end-to-end encryption work: 0.89 alike"></button></div></div>
+    </div>
+    <aside class="pick" id="pick" aria-live="polite">
+      <p class="qq">is intermittent fasting healthy</p>
+      <p class="facts"><span><b class="f-sim num">0.91</b> alike, 0 to 1</span><span><b class="f-dis num">1.41</b> distinct answers of 5</span><span class="kind">Health · the most alike question this week</span></p>
+      <p class="hint">Point at, tap or tab to any question to read it here.</p>
+    </aside>
+  </div>
+  <p class="share"><b class="num">48%</b> of the 93 questions read this week score above 0.80, and <b class="num">59%</b> come to fewer than 2 distinct answers out of 5.</p>
+  <details class="all"><summary>Read all 100 questions and this week’s scores<svg viewBox="0 0 20 20" aria-hidden="true"><path d="M2 10h16"/><path class="v" d="M10 2v16"/></svg></summary><div class="cols"><section><h3>Health</h3><ol><li><span>is intermittent fasting healthy</span><span class="v">0.91</span></li><li><span>how does caffeine affect the body</span><span class="v">0.89</span></li><li><span>what are the symptoms of iron deficiency</span><span class="v">0.87</span></li><li><span>how much protein do you need per day</span><span class="v">0.87</span></li><li><span>what are the symptoms of vitamin d deficiency</span><span class="v">0.87</span></li><li><span>what causes high cholesterol</span><span class="v">0.87</span></li><li><span>what causes lower back pain</span><span class="v">0.86</span></li><li><span>how to treat a sprained ankle</span><span class="v">0.85</span></li><li><span>how much sleep do adults need</span><span class="v">0.85</span></li><li><span>what causes migraines</span><span class="v">0.85</span></li><li><span>what are the benefits of regular exercise</span><span class="v">0.84</span></li><li><span>how do antibiotics work</span><span class="v">0.84</span></li><li><span>what are the early signs of diabetes</span><span class="v">0.83</span></li><li><span>what is the difference between a cold and the flu</span><span class="v">0.82</span></li><li><span>what causes acid reflux</span><span class="v">0.80</span></li><li><span>how to lower blood pressure naturally</span><span class="v">0.79</span></li><li><span>what causes anxiety</span><span class="v">0.77</span></li><li><span>how does alcohol affect the liver</span><span class="v">0.77</span></li><li><span>how much water should you drink a day</span><span class="v">0.73</span></li><li><span>how does the immune system fight infection</span><span class="v">0.55</span></li></ol></section><section><h3>Finance</h3><ol><li><span>what is a mutual fund</span><span class="v">0.90</span></li><li><span>what is a health savings account</span><span class="v">0.87</span></li><li><span>how does refinancing a mortgage work</span><span class="v">0.86</span></li><li><span>how does inflation affect your savings</span><span class="v">0.85</span></li><li><span>what is a good credit score</span><span class="v">0.84</span></li><li><span>how do student loans work</span><span class="v">0.84</span></li><li><span>what is dollar cost averaging</span><span class="v">0.83</span></li><li><span>what is the difference between stocks and bonds</span><span class="v">0.82</span></li><li><span>how to build an emergency fund</span><span class="v">0.80</span></li><li><span>how does compound interest work</span><span class="v">0.78</span></li><li><span>how do index funds work</span><span class="v">0.76</span></li><li><span>how does a credit freeze work</span><span class="v">0.74</span></li><li><span>what is an annuity</span><span class="v">0.74</span></li><li><span>what is a 401k and how does it work</span><span class="v">0.71</span></li><li><span>how do credit cards work</span><span class="v">0.70</span></li><li><span>how does a home equity loan work</span><span class="v">0.66</span></li><li><span>roth ira vs traditional ira</span><span class="v">0.61</span></li><li><span>what is the difference between a debit card and a credit card</span><span class="v">0.55</span></li><li><span>how does social security work</span><span class="v">0.55</span></li><li><span>how are capital gains taxed</span><span class="v">0.40</span></li></ol></section><section><h3>Law</h3><ol><li><span>how does a class action lawsuit work</span><span class="v">0.86</span></li><li><span>what is the difference between a will and a trust</span><span class="v">0.85</span></li><li><span>what is fair use in copyright</span><span class="v">0.85</span></li><li><span>what is the statute of limitations</span><span class="v">0.84</span></li><li><span>what is an llc and how is it taxed</span><span class="v">0.82</span></li><li><span>what is the difference between a misdemeanor and a felony</span><span class="v">0.82</span></li><li><span>how does copyright protect creators</span><span class="v">0.80</span></li><li><span>how does a prenuptial agreement work</span><span class="v">0.79</span></li><li><span>how does the probate process work</span><span class="v">0.78</span></li><li><span>how does child custody work</span><span class="v">0.78</span></li><li><span>what are tenant rights during eviction</span><span class="v">0.78</span></li><li><span>how do you file for bankruptcy</span><span class="v">0.77</span></li><li><span>what are your rights if arrested</span><span class="v">0.76</span></li><li><span>what is a power of attorney</span><span class="v">0.72</span></li><li><span>how does small claims court work</span><span class="v">0.72</span></li><li><span>what is a trademark and how do you register one</span><span class="v">0.71</span></li><li><span>what are employee rights when fired</span><span class="v">0.68</span></li><li><span>what happens during a divorce proceeding</span><span class="v">0.67</span></li><li><span>what is a living will</span><span class="v">0.65</span></li><li><span>how does a non-compete agreement work</span><span class="v">0.63</span></li></ol></section><section><h3>Science</h3><ol><li><span>how do tides work</span><span class="v">0.89</span></li><li><span>how do vaccines work</span><span class="v">0.88</span></li><li><span>how do hurricanes form</span><span class="v">0.86</span></li><li><span>why do leaves change color in the fall</span><span class="v">0.84</span></li><li><span>how does antibiotic resistance develop</span><span class="v">0.83</span></li><li><span>how does photosynthesis work</span><span class="v">0.83</span></li><li><span>what causes climate change</span><span class="v">0.83</span></li><li><span>what is dark matter</span><span class="v">0.81</span></li><li><span>why is the sky blue</span><span class="v">0.81</span></li><li><span>are electric cars better for the environment</span><span class="v">0.79</span></li><li><span>what causes earthquakes</span><span class="v">0.78</span></li><li><span>how do rainbows form</span><span class="v">0.78</span></li><li><span>what causes the seasons</span><span class="v">0.76</span></li><li><span>what causes volcanic eruptions</span><span class="v">0.76</span></li><li><span>how does nuclear fusion work</span><span class="v">0.73</span></li><li><span>what is the big bang theory</span><span class="v">0.71</span></li><li><span>how do black holes form</span><span class="v">0.71</span></li><li><span>how does dna replication work</span><span class="v none">not read this week</span></li><li><span>what is quantum entanglement</span><span class="v none">not read this week</span></li><li><span>how does evolution by natural selection work</span><span class="v none">not read this week</span></li></ol></section><section><h3>Tech</h3><ol><li><span>how does end-to-end encryption work</span><span class="v">0.89</span></li><li><span>what is 5g technology</span><span class="v">0.87</span></li><li><span>what is machine learning</span><span class="v">0.86</span></li><li><span>what is a password manager</span><span class="v">0.85</span></li><li><span>what is a vpn and how does it work</span><span class="v">0.84</span></li><li><span>how does gps work</span><span class="v">0.81</span></li><li><span>what is a large language model</span><span class="v">0.80</span></li><li><span>what is phishing and how to avoid it</span><span class="v">0.77</span></li><li><span>how does two factor authentication work</span><span class="v">0.77</span></li><li><span>what is an api</span><span class="v">0.75</span></li><li><span>how does facial recognition work</span><span class="v">0.74</span></li><li><span>how does wifi work</span><span class="v">0.74</span></li><li><span>how do search engines rank pages</span><span class="v">0.73</span></li><li><span>how do solid state drives work</span><span class="v">0.72</span></li><li><span>how does a computer virus spread</span><span class="v">0.64</span></li><li><span>is ai going to replace jobs</span><span class="v">0.62</span></li><li><span>what is retrieval augmented generation</span><span class="v none">not read this week</span></li><li><span>what is the difference between http and https</span><span class="v none">not read this week</span></li><li><span>how does cloud storage work</span><span class="v none">not read this week</span></li><li><span>how does a blockchain work</span><span class="v none">not read this week</span></li></ol></section></div></details>
+</section>
+
+<section class="band plate ground" aria-labelledby="dom-h">
+  <h2 id="dom-h">Five fields, one scale.</h2>
+  <p class="say">The same measure for each domain, run by run, on the full 0 to 1 scale. Week-to-week movement is small; the series is young.</p>
+  <div class="studies"><figure class="mini"><h3>Health</h3><p class="now num">0.82</p><svg viewBox="0 0 300 190" role="img" aria-label="Health, 0 to 1 scale: 4 Oct: 0.69; 5 Oct: 0.69; 12 Oct: 0.75; 19 Oct: 0.83; 26 Oct: 0.83; 2 Nov: 0.79; 9 Nov: 0.82; 16 Nov: 0.82"><line class="g ax" x1="22" x2="300" y1="182.0" y2="182.0"/><line class="g" x1="22" x2="300" y1="147.2" y2="147.2"/><line class="g" x1="22" x2="300" y1="112.4" y2="112.4"/><line class="g" x1="22" x2="300" y1="77.6" y2="77.6"/><line class="g" x1="22" x2="300" y1="42.8" y2="42.8"/><line class="g" x1="22" x2="300" y1="8.0" y2="8.0"/><text x="16" y="186.0" text-anchor="end">0</text><text x="16" y="12.0" text-anchor="end">1</text><line class="g ax" x1="22" x2="22" y1="4" y2="182"/><path class="ln" d="M22.0,61.5 L28.3,61.2 L72.6,51.7 L116.9,36.8 L161.2,37.1 L205.4,44.6 L249.7,38.5 L294.0,39.0"/><circle class="end" cx="294.0" cy="39.0" r="4"/></svg><p class="note-m">−0.003 since 9 Nov</p></figure><figure class="mini"><h3>Finance</h3><p class="now num">0.74</p><svg viewBox="0 0 300 190" role="img" aria-label="Finance, 0 to 1 scale: 4 Oct: 0.68; 5 Oct: 0.78; 12 Oct: 0.74; 19 Oct: 0.78; 26 Oct: 0.78; 2 Nov: 0.77; 9 Nov: 0.77; 16 Nov: 0.74"><line class="g ax" x1="22" x2="300" y1="182.0" y2="182.0"/><line class="g" x1="22" x2="300" y1="147.2" y2="147.2"/><line class="g" x1="22" x2="300" y1="112.4" y2="112.4"/><line class="g" x1="22" x2="300" y1="77.6" y2="77.6"/><line class="g" x1="22" x2="300" y1="42.8" y2="42.8"/><line class="g" x1="22" x2="300" y1="8.0" y2="8.0"/><text x="16" y="186.0" text-anchor="end">0</text><text x="16" y="12.0" text-anchor="end">1</text><line class="g ax" x1="22" x2="22" y1="4" y2="182"/><path class="ln" d="M22.0,63.8 L28.3,46.8 L72.6,53.8 L116.9,45.6 L161.2,45.5 L205.4,47.3 L249.7,48.8 L294.0,53.0"/><circle class="end" cx="294.0" cy="53.0" r="4"/></svg><p class="note-m">−0.024 since 9 Nov</p></figure><figure class="mini"><h3>Law</h3><p class="now num">0.76</p><svg viewBox="0 0 300 190" role="img" aria-label="Law, 0 to 1 scale: 4 Oct: 0.71; 5 Oct: 0.73; 12 Oct: 0.73; 19 Oct: 0.75; 26 Oct: 0.74; 2 Nov: 0.75; 9 Nov: 0.75; 16 Nov: 0.76"><line class="g ax" x1="22" x2="300" y1="182.0" y2="182.0"/><line class="g" x1="22" x2="300" y1="147.2" y2="147.2"/><line class="g" x1="22" x2="300" y1="112.4" y2="112.4"/><line class="g" x1="22" x2="300" y1="77.6" y2="77.6"/><line class="g" x1="22" x2="300" y1="42.8" y2="42.8"/><line class="g" x1="22" x2="300" y1="8.0" y2="8.0"/><text x="16" y="186.0" text-anchor="end">0</text><text x="16" y="12.0" text-anchor="end">1</text><line class="g ax" x1="22" x2="22" y1="4" y2="182"/><path class="ln" d="M22.0,58.7 L28.3,55.0 L72.6,54.9 L116.9,51.8 L161.2,53.4 L205.4,51.0 L249.7,52.0 L294.0,49.2"/><circle class="end" cx="294.0" cy="49.2" r="4"/></svg><p class="note-m">+0.016 since 9 Nov</p></figure><figure class="mini"><h3>Science</h3><p class="now num">0.80</p><svg viewBox="0 0 300 190" role="img" aria-label="Science, 0 to 1 scale: 4 Oct: 0.76; 5 Oct: 0.70; 12 Oct: 0.81; 19 Oct: 0.79; 26 Oct: 0.77; 2 Nov: 0.79; 9 Nov: 0.78; 16 Nov: 0.80"><line class="g ax" x1="22" x2="300" y1="182.0" y2="182.0"/><line class="g" x1="22" x2="300" y1="147.2" y2="147.2"/><line class="g" x1="22" x2="300" y1="112.4" y2="112.4"/><line class="g" x1="22" x2="300" y1="77.6" y2="77.6"/><line class="g" x1="22" x2="300" y1="42.8" y2="42.8"/><line class="g" x1="22" x2="300" y1="8.0" y2="8.0"/><text x="16" y="186.0" text-anchor="end">0</text><text x="16" y="12.0" text-anchor="end">1</text><line class="g ax" x1="22" x2="22" y1="4" y2="182"/><path class="ln" d="M22.0,49.3 L28.3,59.6 L72.6,40.9 L116.9,44.7 L161.2,47.3 L205.4,44.3 L249.7,46.2 L294.0,42.7"/><circle class="end" cx="294.0" cy="42.7" r="4"/></svg><p class="note-m">+0.020 since 9 Nov</p></figure><figure class="mini"><h3>Tech</h3><p class="now num">0.77</p><svg viewBox="0 0 300 190" role="img" aria-label="Tech, 0 to 1 scale: 4 Oct: 0.68; 5 Oct: 0.74; 12 Oct: 0.68; 19 Oct: 0.79; 26 Oct: 0.77; 2 Nov: 0.76; 9 Nov: 0.77; 16 Nov: 0.77"><line class="g ax" x1="22" x2="300" y1="182.0" y2="182.0"/><line class="g" x1="22" x2="300" y1="147.2" y2="147.2"/><line class="g" x1="22" x2="300" y1="112.4" y2="112.4"/><line class="g" x1="22" x2="300" y1="77.6" y2="77.6"/><line class="g" x1="22" x2="300" y1="42.8" y2="42.8"/><line class="g" x1="22" x2="300" y1="8.0" y2="8.0"/><text x="16" y="186.0" text-anchor="end">0</text><text x="16" y="12.0" text-anchor="end">1</text><line class="g ax" x1="22" x2="22" y1="4" y2="182"/><path class="ln" d="M22.0,63.6 L28.3,53.0 L72.6,63.1 L116.9,44.7 L161.2,48.2 L205.4,50.4 L249.7,48.3 L294.0,47.2"/><circle class="end" cx="294.0" cy="47.2" r="4"/></svg><p class="note-m">+0.007 since 9 Nov</p></figure></div>
+  <p class="foot">The panel grew from 45 to 100 questions on 26 Oct. Before then each run read 34–42 of the original 45; since then, 93–98 of 100. A question counts only in weeks when five of its pages could be read.</p>
+</section>
+
+<section class="band ground" aria-labelledby="how-h">
+  <h2 id="how-h">How it’s measured.</h2>
+  <div class="method">
+    <div>
+      <p>Every week the tracker asks Google a fixed panel of everyday questions, now 100: 20 each in health, finance, law, science and tech. It reads the first five pages that answer each one and compares what they say, by meaning rather than exact wording.</p>
+      <p>The score runs from 0, where the five pages share nothing, to 1, where they say the same thing. The line is the average over the questions that could be read that week. The panel started with 45 questions on 4 Oct and grew to 100 on 26 Oct, so earlier points average fewer questions. Questions are never edited or removed, and the data and code are public.</p>
+    </div>
+    <nav class="actions" aria-label="Methodology and dashboard"><a href="https://github.com/biddy1618/ai-homogenization/blob/main/tracker/README.md">Methodology and data <svg viewBox="0 0 40 14" aria-hidden="true"><path d="M0 7h38M31 1l7 6-7 6"/></svg></a><a href="../../dashboard/">Full dashboard <svg viewBox="0 0 40 14" aria-hidden="true"><path d="M0 7h38M31 1l7 6-7 6"/></svg></a><a href="https://github.com/biddy1618/ai-homogenization">Source code <svg viewBox="0 0 40 14" aria-hidden="true"><path d="M0 7h38M31 1l7 6-7 6"/></svg></a></nav>
+  </div>
+</section>
+
+<section class="band close plate ground" aria-labelledby="close-h">
+  <h2 id="close-h">At 1, every answer is the same answer.</h2>
+  <p class="say">This week the web’s answers measure 0.78. The tracker will keep reading, every week, to see which way the line goes.</p>
+  <div class="ranks" aria-hidden="true"><div class="r r2"><img src="assets/codex-automaton-d.webp" width="420" height="1181" alt="" loading="lazy" decoding="async"><img src="assets/codex-automaton-d.webp" width="420" height="1181" alt="" loading="lazy" decoding="async"><img src="assets/codex-automaton-d.webp" width="420" height="1181" alt="" loading="lazy" decoding="async"><img src="assets/codex-automaton-d.webp" width="420" height="1181" alt="" loading="lazy" decoding="async"><img src="assets/codex-automaton-d.webp" width="420" height="1181" alt="" loading="lazy" decoding="async"><img src="assets/codex-automaton-d.webp" width="420" height="1181" alt="" loading="lazy" decoding="async"><img src="assets/codex-automaton-d.webp" width="420" height="1181" alt="" loading="lazy" decoding="async"><img src="assets/codex-automaton-d.webp" width="420" height="1181" alt="" loading="lazy" decoding="async"></div><div class="r r1"><img src="assets/codex-automaton-d.webp" width="420" height="1181" alt="" loading="lazy" decoding="async"><img src="assets/codex-automaton-d.webp" width="420" height="1181" alt="" loading="lazy" decoding="async"><img src="assets/codex-automaton-d.webp" width="420" height="1181" alt="" loading="lazy" decoding="async"><img src="assets/codex-automaton-d.webp" width="420" height="1181" alt="" loading="lazy" decoding="async"><img src="assets/codex-automaton-d.webp" width="420" height="1181" alt="" loading="lazy" decoding="async"><img src="assets/codex-automaton-d.webp" width="420" height="1181" alt="" loading="lazy" decoding="async"><img src="assets/codex-automaton-d.webp" width="420" height="1181" alt="" loading="lazy" decoding="async"></div></div>
+  <footer class="colophon"><span>Updated weekly · last run 16 November 2026 · 8 runs since 4 October 2026</span><span>Drawings generated for this page · <a href="https://github.com/biddy1618/ai-homogenization">ai-homogenization</a></span></footer>
+</section>
+</main>
+<script>
+(() => {
+  const D = {"runs": [{"v": "0.702", "long": "4 October 2026", "n": 34}, {"v": "0.732", "long": "5 October 2026", "n": 35}, {"v": "0.743", "long": "12 October 2026", "n": 38}, {"v": "0.788", "long": "19 October 2026", "n": 42}, {"v": "0.780", "long": "26 October 2026", "n": 98}, {"v": "0.773", "long": "2 November 2026", "n": 96}, {"v": "0.778", "long": "9 November 2026", "n": 95}, {"v": "0.780", "long": "16 November 2026", "n": 93}], "questions": [{"query": "how does the immune system fight infection", "category": "Health", "sim": "0.55", "distinct": "2.59"}, {"query": "how much water should you drink a day", "category": "Health", "sim": "0.73", "distinct": "2.17"}, {"query": "how does alcohol affect the liver", "category": "Health", "sim": "0.77", "distinct": "2.02"}, {"query": "what causes anxiety", "category": "Health", "sim": "0.77", "distinct": "1.97"}, {"query": "how to lower blood pressure naturally", "category": "Health", "sim": "0.79", "distinct": "1.87"}, {"query": "what causes acid reflux", "category": "Health", "sim": "0.80", "distinct": "1.87"}, {"query": "what is the difference between a cold and the flu", "category": "Health", "sim": "0.82", "distinct": "1.80"}, {"query": "what are the early signs of diabetes", "category": "Health", "sim": "0.83", "distinct": "1.78"}, {"query": "how do antibiotics work", "category": "Health", "sim": "0.84", "distinct": "1.73"}, {"query": "what are the benefits of regular exercise", "category": "Health", "sim": "0.84", "distinct": "1.71"}, {"query": "what causes migraines", "category": "Health", "sim": "0.85", "distinct": "1.67"}, {"query": "how much sleep do adults need", "category": "Health", "sim": "0.85", "distinct": "1.67"}, {"query": "how to treat a sprained ankle", "category": "Health", "sim": "0.85", "distinct": "1.66"}, {"query": "what causes lower back pain", "category": "Health", "sim": "0.86", "distinct": "1.60"}, {"query": "what causes high cholesterol", "category": "Health", "sim": "0.87", "distinct": "1.60"}, {"query": "what are the symptoms of vitamin d deficiency", "category": "Health", "sim": "0.87", "distinct": "1.58"}, {"query": "how much protein do you need per day", "category": "Health", "sim": "0.87", "distinct": "1.59"}, {"query": "what are the symptoms of iron deficiency", "category": "Health", "sim": "0.87", "distinct": "1.57"}, {"query": "how does caffeine affect the body", "category": "Health", "sim": "0.89", "distinct": "1.51"}, {"query": "is intermittent fasting healthy", "category": "Health", "sim": "0.91", "distinct": "1.41"}, {"query": "how are capital gains taxed", "category": "Finance", "sim": "0.40", "distinct": "3.69"}, {"query": "how does social security work", "category": "Finance", "sim": "0.55", "distinct": "3.05"}, {"query": "what is the difference between a debit card and a credit card", "category": "Finance", "sim": "0.55", "distinct": "2.20"}, {"query": "roth ira vs traditional ira", "category": "Finance", "sim": "0.61", "distinct": "2.64"}, {"query": "how does a home equity loan work", "category": "Finance", "sim": "0.66", "distinct": "2.50"}, {"query": "how do credit cards work", "category": "Finance", "sim": "0.70", "distinct": "2.19"}, {"query": "what is a 401k and how does it work", "category": "Finance", "sim": "0.71", "distinct": "2.14"}, {"query": "what is an annuity", "category": "Finance", "sim": "0.74", "distinct": "2.02"}, {"query": "how does a credit freeze work", "category": "Finance", "sim": "0.74", "distinct": "2.09"}, {"query": "how do index funds work", "category": "Finance", "sim": "0.76", "distinct": "1.95"}, {"query": "how does compound interest work", "category": "Finance", "sim": "0.78", "distinct": "1.96"}, {"query": "how to build an emergency fund", "category": "Finance", "sim": "0.80", "distinct": "1.86"}, {"query": "what is the difference between stocks and bonds", "category": "Finance", "sim": "0.82", "distinct": "1.81"}, {"query": "what is dollar cost averaging", "category": "Finance", "sim": "0.83", "distinct": "1.73"}, {"query": "how do student loans work", "category": "Finance", "sim": "0.84", "distinct": "1.72"}, {"query": "what is a good credit score", "category": "Finance", "sim": "0.84", "distinct": "1.72"}, {"query": "how does inflation affect your savings", "category": "Finance", "sim": "0.85", "distinct": "1.71"}, {"query": "how does refinancing a mortgage work", "category": "Finance", "sim": "0.86", "distinct": "1.62"}, {"query": "what is a health savings account", "category": "Finance", "sim": "0.87", "distinct": "1.58"}, {"query": "what is a mutual fund", "category": "Finance", "sim": "0.90", "distinct": "1.48"}, {"query": "how does a non-compete agreement work", "category": "Law", "sim": "0.63", "distinct": "2.66"}, {"query": "what is a living will", "category": "Law", "sim": "0.65", "distinct": "2.46"}, {"query": "what happens during a divorce proceeding", "category": "Law", "sim": "0.67", "distinct": "2.45"}, {"query": "what are employee rights when fired", "category": "Law", "sim": "0.68", "distinct": "2.46"}, {"query": "what is a trademark and how do you register one", "category": "Law", "sim": "0.71", "distinct": "2.32"}, {"query": "how does small claims court work", "category": "Law", "sim": "0.72", "distinct": "2.25"}, {"query": "what is a power of attorney", "category": "Law", "sim": "0.72", "distinct": "2.23"}, {"query": "what are your rights if arrested", "category": "Law", "sim": "0.76", "distinct": "2.04"}, {"query": "how do you file for bankruptcy", "category": "Law", "sim": "0.77", "distinct": "2.01"}, {"query": "what are tenant rights during eviction", "category": "Law", "sim": "0.78", "distinct": "2.01"}, {"query": "how does child custody work", "category": "Law", "sim": "0.78", "distinct": "2.01"}, {"query": "how does the probate process work", "category": "Law", "sim": "0.78", "distinct": "2.00"}, {"query": "how does a prenuptial agreement work", "category": "Law", "sim": "0.79", "distinct": "1.94"}, {"query": "how does copyright protect creators", "category": "Law", "sim": "0.80", "distinct": "1.92"}, {"query": "what is the difference between a misdemeanor and a felony", "category": "Law", "sim": "0.82", "distinct": "1.83"}, {"query": "what is an llc and how is it taxed", "category": "Law", "sim": "0.82", "distinct": "1.79"}, {"query": "what is the statute of limitations", "category": "Law", "sim": "0.84", "distinct": "1.72"}, {"query": "what is fair use in copyright", "category": "Law", "sim": "0.85", "distinct": "1.71"}, {"query": "what is the difference between a will and a trust", "category": "Law", "sim": "0.85", "distinct": "1.68"}, {"query": "how does a class action lawsuit work", "category": "Law", "sim": "0.86", "distinct": "1.61"}, {"query": "how do black holes form", "category": "Science", "sim": "0.71", "distinct": "2.31"}, {"query": "what is the big bang theory", "category": "Science", "sim": "0.71", "distinct": "2.22"}, {"query": "how does nuclear fusion work", "category": "Science", "sim": "0.73", "distinct": "2.16"}, {"query": "what causes volcanic eruptions", "category": "Science", "sim": "0.76", "distinct": "2.06"}, {"query": "what causes the seasons", "category": "Science", "sim": "0.76", "distinct": "2.00"}, {"query": "how do rainbows form", "category": "Science", "sim": "0.78", "distinct": "2.01"}, {"query": "what causes earthquakes", "category": "Science", "sim": "0.78", "distinct": "2.00"}, {"query": "are electric cars better for the environment", "category": "Science", "sim": "0.79", "distinct": "1.93"}, {"query": "why is the sky blue", "category": "Science", "sim": "0.81", "distinct": "1.86"}, {"query": "what is dark matter", "category": "Science", "sim": "0.81", "distinct": "1.89"}, {"query": "what causes climate change", "category": "Science", "sim": "0.83", "distinct": "1.76"}, {"query": "how does photosynthesis work", "category": "Science", "sim": "0.83", "distinct": "1.77"}, {"query": "how does antibiotic resistance develop", "category": "Science", "sim": "0.83", "distinct": "1.76"}, {"query": "why do leaves change color in the fall", "category": "Science", "sim": "0.84", "distinct": "1.70"}, {"query": "how do hurricanes form", "category": "Science", "sim": "0.86", "distinct": "1.62"}, {"query": "how do vaccines work", "category": "Science", "sim": "0.88", "distinct": "1.56"}, {"query": "how do tides work", "category": "Science", "sim": "0.89", "distinct": "1.51"}, {"query": "is ai going to replace jobs", "category": "Tech", "sim": "0.62", "distinct": "2.61"}, {"query": "how does a computer virus spread", "category": "Tech", "sim": "0.64", "distinct": "2.59"}, {"query": "how do solid state drives work", "category": "Tech", "sim": "0.72", "distinct": "2.23"}, {"query": "how do search engines rank pages", "category": "Tech", "sim": "0.73", "distinct": "2.18"}, {"query": "how does wifi work", "category": "Tech", "sim": "0.74", "distinct": "2.13"}, {"query": "how does facial recognition work", "category": "Tech", "sim": "0.74", "distinct": "2.12"}, {"query": "what is an api", "category": "Tech", "sim": "0.75", "distinct": "2.13"}, {"query": "how does two factor authentication work", "category": "Tech", "sim": "0.77", "distinct": "1.95"}, {"query": "what is phishing and how to avoid it", "category": "Tech", "sim": "0.77", "distinct": "2.01"}, {"query": "what is a large language model", "category": "Tech", "sim": "0.80", "distinct": "1.91"}, {"query": "how does gps work", "category": "Tech", "sim": "0.81", "distinct": "1.88"}, {"query": "what is a vpn and how does it work", "category": "Tech", "sim": "0.84", "distinct": "1.71"}, {"query": "what is a password manager", "category": "Tech", "sim": "0.85", "distinct": "1.67"}, {"query": "what is machine learning", "category": "Tech", "sim": "0.86", "distinct": "1.65"}, {"query": "what is 5g technology", "category": "Tech", "sim": "0.87", "distinct": "1.57"}, {"query": "how does end-to-end encryption work", "category": "Tech", "sim": "0.89", "distinct": "1.50"}], "most": 19, "least": 20};
+  const chart = document.getElementById('chart');
+  const plumb = chart.querySelector('.plumb');
+  const readout = chart.querySelector('.readout');
+  const pts = [...chart.querySelectorAll('.pt')];
+  let k = -1;
+  function place(i) {
+    k = i;
+    const p = pts[i], r = D.runs[i];
+    plumb.style.left = getComputedStyle(p).left;
+    readout.innerHTML = `<b>${r.v}</b> on ${r.long}<br>${r.n} questions read`;
+    const box = chart.getBoundingClientRect();
+    const px = p.getBoundingClientRect();
+    const x = px.left - box.left + px.width / 2, y = px.top - box.top;
+    const w = readout.offsetWidth;
+    readout.style.left = Math.min(Math.max(x - w / 2, 0), box.width - w) + 'px';
+    readout.style.top = (y > box.height * .55 ? y - readout.offsetHeight - 22 : y + 26) + 'px';
+    chart.classList.add('probing');
+  }
+  function nearest(clientX) {
+    let best = 0, bd = Infinity;
+    pts.forEach((p, i) => { const r = p.getBoundingClientRect(); const d = Math.abs(r.left + r.width / 2 - clientX); if (d < bd) { bd = d; best = i; } });
+    return best;
+  }
+  chart.addEventListener('pointermove', ev => place(nearest(ev.clientX)));
+  chart.addEventListener('pointerleave', () => { if (document.activeElement !== chart) chart.classList.remove('probing'); });
+  chart.addEventListener('focus', () => place(k < 0 ? pts.length - 1 : k));
+  chart.addEventListener('blur', () => chart.classList.remove('probing'));
+  chart.addEventListener('keydown', ev => {
+    if (ev.key === 'ArrowRight' || ev.key === 'ArrowLeft') {
+      ev.preventDefault();
+      place(Math.min(Math.max((k < 0 ? pts.length - 1 : k) + (ev.key === 'ArrowRight' ? 1 : -1), 0), pts.length - 1));
+    } else if (ev.key === 'Home' || ev.key === 'End') { ev.preventDefault(); place(ev.key === 'Home' ? 0 : pts.length - 1); }
+  });
+  const file = chart.querySelector('.file');
+  const fit = () => chart.style.setProperty('--fw', file.offsetWidth + 'px');
+  new ResizeObserver(fit).observe(file); fit();
+
+  const pick = document.getElementById('pick');
+  const qs = [...document.querySelectorAll('.q')];
+  function show(btn, kind) {
+    qs.forEach(b => b.setAttribute('aria-pressed', String(b === btn)));
+    const q = D.questions[btn.dataset.i];
+    pick.querySelector('.kind').textContent = kind;
+    pick.querySelector('.qq').textContent = q.query;
+    pick.querySelector('.f-sim').textContent = q.sim;
+    pick.querySelector('.f-dis').textContent = q.distinct;
+  }
+  qs.forEach(b => {
+    b.addEventListener('click', () => show(b, D.questions[b.dataset.i].category + (b.dataset.i == D.most ? ' · the most alike question this week' : b.dataset.i == D.least ? ' · the least alike question this week' : '')));
+    b.addEventListener('mouseenter', () => show(b, D.questions[b.dataset.i].category + (b.dataset.i == D.most ? ' · the most alike question this week' : b.dataset.i == D.least ? ' · the least alike question this week' : '')));
+    b.addEventListener('focus', () => show(b, D.questions[b.dataset.i].category + (b.dataset.i == D.most ? ' · the most alike question this week' : b.dataset.i == D.least ? ' · the least alike question this week' : '')));
+    b.addEventListener('keydown', ev => {
+      const row = [...b.parentElement.querySelectorAll('.q')].sort((a, c) => a.dataset.v - c.dataset.v);
+      const i = row.indexOf(b);
+      let j = null;
+      if (ev.key === 'ArrowRight') j = Math.min(i + 1, row.length - 1);
+      if (ev.key === 'ArrowLeft') j = Math.max(i - 1, 0);
+      if (j !== null) { ev.preventDefault(); b.tabIndex = -1; row[j].tabIndex = 0; row[j].focus(); }
+    });
+  });
+})();
+</script>
+</body>
+</html>

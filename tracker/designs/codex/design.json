@@ -1,0 +1,149 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-11-19T01:30:00+05:00",
+  "title": "Design System: Homogenization Tracker, Codex",
+  "extensions": {
+    "colorMeta": {
+      "sanguine": { "role": "primary", "displayName": "Sanguine Ground", "canonical": "#7A2A1B", "tonalRamp": ["#1B100D", "#391E19", "#612D23", "#973C2B", "#D15038", "#D6897B", "#E2BDB6", "#F3E9E7"] },
+      "sanguine-deep": { "role": "primary", "displayName": "Deep Sanguine", "canonical": "#5E1F13", "tonalRamp": ["#1C0F0D", "#3A1D18", "#632C22", "#993B29", "#D44F35", "#D88879", "#E3BDB5", "#F3E9E7"] },
+      "gall": { "role": "secondary", "displayName": "Iron-Gall Plate", "canonical": "#160E0B", "tonalRamp": ["#181311", "#312520", "#533B32", "#7D5445", "#AD725D", "#C09D90", "#D7C7C1", "#F0ECEA"] },
+      "chalk": { "role": "secondary", "displayName": "Red Chalk", "canonical": "#DD6A4B", "tonalRamp": ["#1C100D", "#3A1F17", "#642F21", "#9A4028", "#D65633", "#D98C78", "#E3BFB5", "#F4E9E7"] },
+      "lead": { "role": "neutral", "displayName": "White Lead", "canonical": "#F7ECDF", "tonalRamp": ["#1B150E", "#382A19", "#604525", "#93652E", "#CC8B3D", "#D3AC7D", "#E1CEB7", "#F3EEE8"] },
+      "lead-2": { "role": "neutral", "displayName": "Warm Lead", "canonical": "#F4BFA6", "tonalRamp": ["#1D110C", "#3D2215", "#68351C", "#A3491F", "#E26327", "#E09471", "#E7C2B1", "#F4EBE6"] },
+      "gall-2": { "role": "neutral", "displayName": "Gall Wash", "canonical": "#B9A595", "tonalRamp": ["#171412", "#2E2824", "#4C4138", "#725F50", "#9D826C", "#B7A79A", "#D3CBC5", "#EFEDEB"] },
+      "ink": { "role": "neutral", "displayName": "Iron-Gall Ink", "canonical": "#1A0B07", "tonalRamp": ["#1B110E", "#38201A", "#5E3226", "#914530", "#CA5D40", "#D1907F", "#E0C1B8", "#F3EAE8"] }
+    },
+    "typographyMeta": {
+      "numeral": { "displayName": "Numeral", "purpose": "The headline number in the sheet margin, drawn over guide lines and a compass circle." },
+      "sheet-title": { "displayName": "Sheet Title", "purpose": "The one-line page title across the sheet; never wraps on desktop." },
+      "headline": { "displayName": "Headline", "purpose": "Band headings, declarative sentences, max 18ch." },
+      "study-numeral": { "displayName": "Study Numeral", "purpose": "Current value in each domain study." },
+      "lead-in": { "displayName": "Lead-in", "purpose": "Band introductions, max 58ch." },
+      "body": { "displayName": "Body", "purpose": "Running text; 16px under 760px; tabular figures in numeric cells." },
+      "margin-note": { "displayName": "Margin Note", "purpose": "Italic chart notes, dimension labels, captions and hints." },
+      "label": { "displayName": "Label", "purpose": "Spaced caps for domain, index and study names; folio at weight 400." }
+    },
+    "shadows": [
+      { "name": "readout-lift", "value": "0 10px 30px -10px rgb(20 4 0 / .6)", "purpose": "Only on the transient chart readout." },
+      { "name": "ink-under-stroke", "value": "stroke: #1A0B07; stroke-width: 7; opacity: .35", "purpose": "Seats the measured line into the ground beneath its 3.2px lead stroke." },
+      { "name": "depth-plane-back", "value": "opacity: .3; filter: brightness(.55) blur(1px)", "purpose": "Back rank of automata in the closing multiplane." }
+    ],
+    "motion": [
+      { "name": "ease", "value": "cubic-bezier(.16, 1, .3, 1)", "purpose": "House ease for draw-in, hover slides and scale changes." },
+      { "name": "ease-wipe", "value": "cubic-bezier(.5, 0, .2, 1)", "purpose": "The measured line's left-to-right clip-path wipe (1700ms, 700ms delay)." },
+      { "name": "rule", "value": "scaleX(0) to none, 900ms ease, delay = value × 260ms", "purpose": "Graticule and dimension lines ruling out from the left." },
+      { "name": "compass", "value": "opacity 0, scale .3, rotate -90deg, 1300ms ease, 300ms delay", "purpose": "Compass circle constructing on the numeral." },
+      { "name": "bleed", "value": "opacity 0, blur(6px), 1100ms ease, 350ms delay, staggered 120ms", "purpose": "Drawings emerging on the sheet." },
+      { "name": "prick", "value": "opacity 0, scale .2, 500ms ease, delay = 800ms + t × 1500ms", "purpose": "Points and values pricked in along the line's time." },
+      { "name": "mirror", "value": "scaleX(-1) to none, 900ms ease, 1500ms delay", "purpose": "Margin notes turn from mirror script to readable." },
+      { "name": "hover-fade", "value": "opacity 200ms", "purpose": "Plumb, readout and note visibility." },
+      { "name": "hover-slide", "value": "padding 400ms ease", "purpose": "Action link label slides in 0.5em." },
+      { "name": "dot-scale", "value": "scale 1.7, 250ms ease", "purpose": "Question dot hover and pressed state." },
+      { "name": "drift", "value": "translate ±4% (front) / ∓3% (back), linear, animation-timeline: view()", "purpose": "Scroll-driven parallax of the closing automata ranks." },
+      { "name": "reduced-motion", "value": "@media (prefers-reduced-motion: no-preference)", "purpose": "Gates every draw-in and parallax animation; the static sheet is complete." }
+    ],
+    "breakpoints": [
+      { "name": "narrow", "value": "380px" },
+      { "name": "mobile", "value": "760px" },
+      { "name": "tablet", "value": "761px–1100px" },
+      { "name": "sheet-max-height", "value": "1180px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Action Link",
+      "kind": "button",
+      "refersTo": "action-link",
+      "description": "Ruled index-style link with a drawn arrow; slides in on hover.",
+      "html": "<nav class=\"ds-actions\"><a href=\"#\">Methodology and data <svg viewBox=\"0 0 40 14\" aria-hidden=\"true\"><path d=\"M0 7h38M31 1l7 6-7 6\"/></svg></a><a href=\"#\">Full dashboard <svg viewBox=\"0 0 40 14\" aria-hidden=\"true\"><path d=\"M0 7h38M31 1l7 6-7 6\"/></svg></a></nav>",
+      "css": ".ds-actions { display: grid; gap: 8px; max-width: 360px; background: #7A2A1B; padding: 16px; font-family: Jost, ui-sans-serif, system-ui, sans-serif; } .ds-actions a { display: flex; justify-content: space-between; align-items: center; gap: 1em; color: #F7ECDF; text-decoration: none; font-weight: 500; font-size: 17px; padding: .55em 0; border-top: 1px solid rgb(26 11 7 / .42); transition: padding .4s cubic-bezier(.16,1,.3,1), color .2s; } .ds-actions a:last-child { border-bottom: 1px solid rgb(26 11 7 / .42); } .ds-actions a:hover { padding-left: .5em; } .ds-actions a:focus-visible { outline: 2px solid #F7ECDF; outline-offset: 3px; } .ds-actions svg { width: 1.6em; height: .7em; flex: none; stroke: currentColor; fill: none; stroke-width: 1.3; }"
+    },
+    {
+      "name": "Folio Navigation",
+      "kind": "nav",
+      "refersTo": "folio-link",
+      "description": "Ruled folio strip: tracker mark, run date and two caps links.",
+      "html": "<header class=\"ds-folio\"><p class=\"ds-mark\"><b>Homogenization Tracker</b><span>16 November 2026</span></p><nav><a href=\"#\">Methodology and data</a><a href=\"#\">Full dashboard</a></nav></header>",
+      "css": ".ds-folio { display: flex; align-items: center; justify-content: space-between; gap: 24px; height: 46px; padding: 0 16px; background: #7A2A1B; color: #F7ECDF; border-bottom: 1px solid rgb(26 11 7 / .42); font-family: Jost, ui-sans-serif, system-ui, sans-serif; font-size: 14px; letter-spacing: .14em; text-transform: uppercase; } .ds-mark { display: flex; gap: 1.4em; align-items: baseline; margin: 0; } .ds-mark b { font-weight: 600; letter-spacing: .16em; } .ds-mark span { color: #F4BFA6; } .ds-folio nav { display: flex; gap: 2em; } .ds-folio nav a { color: inherit; text-decoration: none; padding: .5em 0; border-bottom: 1px solid transparent; } .ds-folio nav a:hover { border-bottom-color: #F7ECDF; } .ds-folio nav a:focus-visible { outline: 2px solid #F7ECDF; outline-offset: 3px; }"
+    },
+    {
+      "name": "Inline Link",
+      "kind": "custom",
+      "refersTo": "body",
+      "description": "Warm Lead hairline underline that turns Lead and thickens on hover.",
+      "html": "<p class=\"ds-p\">The data and code are <a href=\"#\">public on GitHub</a>.</p>",
+      "css": ".ds-p { background: #7A2A1B; color: #F7ECDF; padding: 16px; font-family: Jost, ui-sans-serif, system-ui, sans-serif; font-size: 17px; line-height: 1.5; } .ds-p a { color: inherit; text-decoration-line: underline; text-decoration-thickness: 1px; text-underline-offset: .22em; text-decoration-color: #F4BFA6; } .ds-p a:hover { text-decoration-color: #F7ECDF; text-decoration-thickness: 2px; } .ds-p a:focus-visible { outline: 2px solid #F7ECDF; outline-offset: 3px; }"
+    },
+    {
+      "name": "Chart Readout",
+      "kind": "custom",
+      "refersTo": "readout",
+      "description": "The only filled box: transient probe readout over the chart.",
+      "html": "<div class=\"ds-stage\"><p class=\"ds-readout\"><b>0.780</b> on 16 November 2026<br>58 questions read</p></div>",
+      "css": ".ds-stage { background: #7A2A1B; padding: 24px; font-family: Jost, ui-sans-serif, system-ui, sans-serif; } .ds-readout { display: inline-block; min-width: 13em; margin: 0; padding: .55em .8em; background: #5E1F13; color: #F7ECDF; border: 1px solid #F4BFA6; font-size: 14px; line-height: 1.35; box-shadow: 0 10px 30px -10px rgb(20 4 0 / .6); } .ds-readout b { font-size: 20px; font-weight: 500; font-variant-numeric: tabular-nums lining-nums; }"
+    },
+    {
+      "name": "Question Rule",
+      "kind": "custom",
+      "refersTo": "question-dot",
+      "description": "A domain row: caps label, hairline 0–1 track, mean stroke and pressable question dots.",
+      "html": "<div class=\"ds-row\"><h3>Health<span>mean 0.82 · 12 read</span></h3><div class=\"ds-track\"><i class=\"ds-mean\" style=\"left:82%\"></i><button class=\"ds-q\" type=\"button\" aria-pressed=\"false\" aria-label=\"Question A\" style=\"left:71%\"></button><button class=\"ds-q\" type=\"button\" aria-pressed=\"true\" aria-label=\"Question B\" style=\"left:91%\"></button></div></div>",
+      "css": ".ds-row { display: grid; grid-template-columns: 7.5em 1fr; align-items: center; gap: 18px; background: #7A2A1B; color: #F7ECDF; padding: 8px 16px; font-family: Jost, ui-sans-serif, system-ui, sans-serif; } .ds-row h3 { margin: 0; font-size: 15px; font-weight: 500; letter-spacing: .12em; text-transform: uppercase; line-height: 1.2; } .ds-row h3 span { display: block; letter-spacing: 0; text-transform: none; font-weight: 400; color: #F4BFA6; font-size: 14px; } .ds-track { position: relative; height: 78px; } .ds-track::before { content: ''; position: absolute; left: 0; right: 0; top: 50%; border-top: 1px solid rgb(26 11 7 / .42); } .ds-mean { position: absolute; top: 8px; bottom: 8px; border-left: 2px solid #F7ECDF; opacity: .9; } .ds-q { position: absolute; top: 50%; width: 22px; height: 22px; margin: -11px 0 0 -11px; border: 0; background: none; cursor: pointer; border-radius: 50%; padding: 0; } .ds-q::before { content: ''; position: absolute; inset: 6px; border-radius: 50%; background: #F7ECDF; opacity: .82; transition: scale .25s cubic-bezier(.16,1,.3,1), opacity .2s; } .ds-q:hover::before, .ds-q[aria-pressed=\"true\"]::before { opacity: 1; scale: 1.7; } .ds-q[aria-pressed=\"true\"]::after { content: ''; position: absolute; inset: -2px; border-radius: 50%; border: 1px solid #F7ECDF; } .ds-q:focus-visible { outline: 2px solid #F7ECDF; outline-offset: 3px; }"
+    },
+    {
+      "name": "Domain Study",
+      "kind": "card",
+      "refersTo": "study",
+      "description": "A small study on the gall plate: registration crosses, chalk caps name, light numeral, full-scale chalk sparkline.",
+      "html": "<div class=\"ds-plate\"><figure class=\"ds-mini\"><h3>Health</h3><p class=\"ds-now\">0.82</p><svg viewBox=\"0 0 300 120\" role=\"img\" aria-label=\"Health, 0 to 1 scale\"><line class=\"g\" x1=\"22\" x2=\"300\" y1=\"8\" y2=\"8\"/><line class=\"g\" x1=\"22\" x2=\"300\" y1=\"60\" y2=\"60\"/><line class=\"g ax\" x1=\"22\" x2=\"300\" y1=\"112\" y2=\"112\"/><path class=\"ln\" d=\"M22,40 L90,34 L160,26 L230,28 L294,27\"/><circle class=\"end\" cx=\"294\" cy=\"27\" r=\"4\"/></svg><p class=\"ds-note\">+0.004 since 9 Nov</p></figure></div>",
+      "css": ".ds-plate { background: #160E0B; padding: 28px; font-family: Jost, ui-sans-serif, system-ui, sans-serif; color: #F7ECDF; } .ds-mini { position: relative; margin: 0; padding: 12px 4px 14px; max-width: 260px; } .ds-mini::before { content: ''; position: absolute; left: 0; right: 0; bottom: 0; border-bottom: 1px solid rgb(185 165 149 / .45); } .ds-mini::after { content: ''; position: absolute; inset: -7px; pointer-events: none; background: linear-gradient(#B9A595, #B9A595) 0 7px / 14px 1px no-repeat, linear-gradient(#B9A595, #B9A595) 7px 0 / 1px 14px no-repeat, linear-gradient(#B9A595, #B9A595) 100% calc(100% - 7px) / 14px 1px no-repeat, linear-gradient(#B9A595, #B9A595) calc(100% - 7px) 100% / 1px 14px no-repeat; opacity: .7; } .ds-mini h3 { margin: 0; font-size: 14px; letter-spacing: .14em; text-transform: uppercase; font-weight: 600; color: #DD6A4B; } .ds-now { margin: 4px 0 2px; font-weight: 300; font-size: 42px; line-height: 1; letter-spacing: -.03em; font-variant-numeric: tabular-nums lining-nums; } .ds-mini svg { display: block; width: 100%; height: auto; margin-top: 12px; overflow: visible; } .ds-mini .g { stroke: rgb(185 165 149 / .2); stroke-width: 1; } .ds-mini .g.ax { stroke: rgb(185 165 149 / .7); } .ds-mini .ln { fill: none; stroke: #DD6A4B; stroke-width: 2.4; stroke-linejoin: round; stroke-linecap: round; } .ds-mini .end { fill: #F7ECDF; } .ds-note { margin: 8px 0 0; font-style: italic; font-size: 14px; color: #B9A595; }"
+    },
+    {
+      "name": "Disclosure",
+      "kind": "custom",
+      "refersTo": "body",
+      "description": "Ruled summary with a drawn plus that collapses to a minus when open.",
+      "html": "<details class=\"ds-all\"><summary>Read all 60 questions and this week’s scores<svg viewBox=\"0 0 20 20\" aria-hidden=\"true\"><path d=\"M2 10h16\"/><path class=\"v\" d=\"M10 2v16\"/></svg></summary><ol><li><span>is intermittent fasting healthy</span><b>0.91</b></li><li><span>how are capital gains taxed</span><b>0.40</b></li></ol></details>",
+      "css": ".ds-all { background: #7A2A1B; color: #F7ECDF; padding: 0 16px; border-top: 1px solid rgb(26 11 7 / .42); font-family: Jost, ui-sans-serif, system-ui, sans-serif; } .ds-all summary { cursor: pointer; list-style: none; padding: 18px 0; font-weight: 500; font-size: 18px; display: flex; justify-content: space-between; gap: 1em; } .ds-all summary::-webkit-details-marker { display: none; } .ds-all summary:focus-visible { outline: 2px solid #F7ECDF; outline-offset: 3px; } .ds-all svg { width: 18px; height: 18px; flex: none; stroke: currentColor; stroke-width: 1.3; fill: none; align-self: center; } .ds-all svg .v { transition: scale .3s cubic-bezier(.16,1,.3,1); transform-origin: center; } .ds-all[open] svg .v { scale: 1 0; } .ds-all ol { list-style: none; margin: 0; padding: 0 0 16px; } .ds-all li { display: grid; grid-template-columns: 1fr auto; gap: 1em; padding: 5px 0; font-size: 15px; line-height: 1.35; border-bottom: 1px dotted rgb(26 11 7 / .22); } .ds-all li b { font-weight: 500; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Codex Sheet",
+    "overview": "The page is one leaf from an inventor's notebook, drawn on red-prepared ground. The data is the drawing and every word is a margin note around it. Two media do all the work: iron-gall ink builds the construction (hairlines, compass arcs, dimension marks, pricked points) and white lead heightens whatever carries meaning (the measured line, the numbers, the text). Deeper sections turn over to the reverse of the sheet, an iron-gall plate drawn in red chalk.\n\nDensity is a draughtsman's: generous ground, fine lines, nothing boxed. Regions are told apart by construction lines and by switching ground (sanguine sheet, gall plate), never by cards. One constructed geometric face, Jost, carries every role through weight, caps and italic alone. The motion grammar is drawing: construction appears first, then the line in white lead, then the margin notes turn from mirror script to readable.\n\nThe world rejects the dashboard hero (metric cards over a boxed chart) and the cream-parchment antique souvenir. The ground is dark red chalk, not aged paper.",
+    "keyCharacteristics": [
+      "Drenched sanguine ground with a chalk grain, never flat colour.",
+      "Two media: ink for construction, white lead for meaning.",
+      "Gall plates in red chalk for the deeper sections.",
+      "No boxes or cards; construction lines and dimension marks separate regions.",
+      "One face (Jost): light for big numerals, medium for headings, spaced caps for labels, italic for notes.",
+      "Drawings (red chalk and white heightening studies) act as scale anchors, never as decoration or data."
+    ],
+    "rules": [
+      { "name": "The Two Media Rule", "body": "Ink draws how something is built; white lead draws what it means. If removing a mark would lose information, it is lead. If it only shows construction, it is ink.", "section": "colors" },
+      { "name": "The Chalk Stays on the Plate Rule", "body": "Red chalk is used only on gall grounds. On a sanguine ground, secondary emphasis is Warm Lead.", "section": "colors" },
+      { "name": "The Ground Swap Rule", "body": "On a plate, Warm Lead gives way to Gall Wash for quiet text; Lead stays the primary text on both grounds.", "section": "colors" },
+      { "name": "The One Face Rule", "body": "Jost carries every role. Hierarchy comes from weight (300 / 400 / 500 / 600), caps and italic, never from a second family.", "section": "typography" },
+      { "name": "The Drawn Numeral Rule", "body": "Large figures are set at weight 300 with tight negative tracking, so they read as drawn strokes. Medium weight is for headings and inline values.", "section": "typography" },
+      { "name": "The Flat Sheet Rule", "body": "Nothing at rest casts a shadow. Only the readout, which appears while the chart is probed, is lifted.", "section": "elevation" }
+    ],
+    "dos": [
+      "Do cover every surface in a grained ground (sanguine or gall). Never leave a flat colour field.",
+      "Do draw construction (guides, dimension marks, gridlines, leaders) in ink or ink alpha, and everything meaningful in Lead.",
+      "Do separate regions with hairline rules, dimension marks or a switch of ground.",
+      "Do set big figures in Jost 300 with tabular lining numerals and negative tracking.",
+      "Do use italic for margin notes and spaced caps (0.12–0.16em) for scale and section labels.",
+      "Do keep the chart on the full 0–1 scale, every graticule line a measured division.",
+      "Do gate all draw-in and parallax motion behind `prefers-reduced-motion: no-preference`, so the static sheet is complete.",
+      "Do keep text at 4.5:1 or better on its own ground (Lead and Warm Lead on sanguine or Deep Sanguine; Lead, Gall Wash and Red Chalk on gall)."
+    ],
+    "donts": [
+      "Don't put content in filled cards or boxes. The readout is the only filled box, and only while the chart is probed.",
+      "Don't use Red Chalk on a sanguine ground (2.87:1), or ink for any text (1.99:1).",
+      "Don't introduce a second typeface or a system display face.",
+      "Don't round corners. Curves are reserved for points, dots and compass circles.",
+      "Don't lean on a cream or parchment ground; the sheet is red-prepared paper.",
+      "Don't add drop shadows to resting elements.",
+      "Don't use glyph or icon-font arrows. Arrows and plus marks are stroked SVG."
+    ]
+  }
+}
