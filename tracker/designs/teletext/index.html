@@ -1,0 +1,301 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI-driven homogenization of expression — real-time tracker</title>
+<meta name="description" content="Every week the tracker asks Google the same 100 everyday questions and measures how alike the top 5 answers are. This week: 0.78 on a 0 to 1 scale.">
+<meta property="og:title" content="AI-driven homogenization of expression — real-time tracker">
+<meta property="og:description" content="Google's top 5 answers to everyday questions now add up to 1.96 distinct answers out of 5. Measured weekly.">
+<meta property="og:type" content="website">
+<meta name="theme-color" content="#080808">
+<style>
+@font-face { font-family: 'Jersey 15'; src: url(fonts/Jersey15-400.woff2) format('woff2'); font-weight: 400; font-display: block; }
+:root {
+  --black: #080808; --yellow: #ECD517; --cyan: #17A6C2; --white: #F3F2F2; --grey: #9A9A9A;
+  --red: #B11314; --red-ink: #FF5A4D; --green: #1F6C20; --blue: #082799;
+  --u: calc(100cqw / 1280);
+  --font: 'Jersey 15', ui-monospace, monospace;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { background: var(--black); color: var(--white); scrollbar-color: var(--cyan) var(--black); }
+body { container-type: inline-size; font-family: var(--font); font-weight: 400; text-transform: uppercase; }
+::selection { background: var(--cyan); color: var(--black); }
+a { color: inherit; text-decoration: none; }
+button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; text-transform: inherit; letter-spacing: inherit; }
+:focus-visible { outline: max(2px, calc(3 * var(--u))) solid var(--yellow); outline-offset: max(2px, calc(2 * var(--u))); }
+.cy { color: var(--cyan); }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+/* First viewport: the P100 screen, laid out on the approved 1280 x 720 frame. */
+.screen { position: relative; width: 100%; aspect-ratio: 1280 / 720; overflow: hidden; }
+.screen > * { position: absolute; }
+.layer { display: none; }
+.layer.on { display: block; }
+.mosaic {
+  -webkit-mask: repeating-linear-gradient(90deg, #000 0 calc(3.4 * var(--u)), transparent calc(3.4 * var(--u)) calc(3.75 * var(--u))),
+                repeating-linear-gradient(0deg, #000 0 calc(3.4 * var(--u)), transparent calc(3.4 * var(--u)) calc(3.75 * var(--u)));
+  -webkit-mask-composite: source-in; mask-composite: intersect;
+}
+.big.mosaic {
+  -webkit-mask: repeating-linear-gradient(90deg, #000 0 calc(6.5 * var(--u)), transparent calc(6.5 * var(--u)) calc(7.6 * var(--u))),
+                repeating-linear-gradient(0deg, #000 0 calc(6.5 * var(--u)), transparent calc(6.5 * var(--u)) calc(7.6 * var(--u)));
+  -webkit-mask-composite: source-in; mask-composite: intersect;
+}
+.header { left: calc(10 * var(--u)); top: calc(-2 * var(--u)); font-size: calc(45 * var(--u)); line-height: 1.05; color: var(--yellow); letter-spacing: .06em; white-space: nowrap; }
+.subpage { right: calc(12 * var(--u)); top: calc(13 * var(--u)); font-size: calc(18 * var(--u)); letter-spacing: .04em; white-space: nowrap; display: flex; gap: calc(30 * var(--u)); align-items: baseline; }
+.hold[aria-pressed="true"] { color: var(--black); background: var(--yellow); padding: 0 calc(4 * var(--u)); }
+.hold:hover { color: var(--yellow); }
+.nav { left: calc(10 * var(--u)); top: calc(52 * var(--u)); height: calc(28 * var(--u)); width: calc(480 * var(--u)); background: var(--blue); display: flex; align-items: center; justify-content: space-between; padding: 0 calc(14 * var(--u)); font-size: calc(22 * var(--u)); letter-spacing: .1em; box-shadow: inset 0 0 0 calc(1 * var(--u)) #2a4fd6; }
+.nav a:hover, .nav .hi, .nav .next:hover { color: var(--yellow); }
+.title { left: calc(10 * var(--u)); top: calc(86 * var(--u)); width: calc(1250 * var(--u)); font-weight: 400; font-size: calc(51 * var(--u)); line-height: 1.1; color: var(--yellow); letter-spacing: .02em; white-space: nowrap; }
+.rule { left: 0; top: calc(147 * var(--u)); width: 100%; height: calc(2 * var(--u)); background: var(--cyan); opacity: .55; }
+.heads { left: 0; top: 0; width: 100%; height: 100%; pointer-events: none; }
+.big { position: absolute; left: calc(10 * var(--u)); top: calc(150 * var(--u)); font-size: calc(105 * var(--u)); line-height: 1; color: var(--cyan); }
+.deck { position: absolute; left: calc(208 * var(--u)); top: calc(164 * var(--u)); font-size: calc(30 * var(--u)); line-height: 1.3; letter-spacing: .05em; white-space: nowrap; }
+
+.plot { left: 0; top: 0; width: 100%; height: 100%; container-type: inline-size; pointer-events: none; }
+.plot-in { position: absolute; left: 0; top: 0; width: 100%; height: 100%; }
+.plot-in > * { position: absolute; }
+.plate { display: block; }
+.clones { left: calc(964 * var(--u)); top: calc(152 * var(--u)); width: calc(308 * var(--u)); height: calc(80 * var(--u)); object-fit: cover; }
+.einstein { left: calc(50 * var(--u)); top: calc(494 * var(--u)); width: calc(137 * var(--u)); height: calc(142 * var(--u)); object-fit: contain; }
+.label { font-size: calc(25 * var(--u)); letter-spacing: .03em; white-space: nowrap; }
+.clones-label { left: calc(1000 * var(--u)); top: calc(234 * var(--u)); letter-spacing: .05em; }
+.einstein-label { left: calc(28 * var(--u)); top: calc(640 * var(--u)); }
+.gap-label { left: calc(70 * var(--u)); top: calc(426 * var(--u)); font-size: calc(21 * var(--u)); letter-spacing: .02em; white-space: nowrap; }
+.yaxis { left: calc(12 * var(--u)); top: calc(248 * var(--u)); width: calc(56 * var(--u)); height: calc(340 * var(--u)); }
+.yaxis::after { content: ''; position: absolute; right: calc(1 * var(--u)); top: calc(6 * var(--u)); bottom: calc(12 * var(--u)); width: calc(2 * var(--u)); background: var(--white); }
+.ytick { position: absolute; right: calc(26 * var(--u)); font-size: calc(22.5 * var(--u)); line-height: 1; letter-spacing: .02em; }
+.ytick::after { content: ''; position: absolute; left: calc(100% + calc(6 * var(--u))); top: 50%; width: calc(16 * var(--u)); height: calc(2 * var(--u)); background: var(--white); }
+.baseline { left: calc(218 * var(--u)); top: calc(575 * var(--u)); width: calc(1048 * var(--u)); height: calc(2 * var(--u)); background: var(--white); opacity: .75; }
+.plot-layer { left: 0; top: 0; width: 100%; height: 100%; }
+.chart, .vals { position: absolute; inset: 0; }
+.chart i { position: absolute; background:
+  repeating-linear-gradient(90deg, transparent 0 calc(8 * var(--u)), rgb(8 8 8 / .7) calc(8 * var(--u)) calc(9 * var(--u))),
+  var(--cyan); }
+.val { position: absolute; transform: translateX(-50%); white-space: nowrap; color: var(--cyan); font-size: calc(30 * var(--u)); letter-spacing: .04em; }
+.val.last { transform: translateX(-100%); }
+.dates { left: 0; top: calc(584 * var(--u)); width: 100%; }
+.tick { position: absolute; transform: translateX(-50%); text-align: center; font-size: calc(22.5 * var(--u)); line-height: 1.05; letter-spacing: .04em; }
+
+.keys { left: calc(240 * var(--u)); top: calc(644 * var(--u)); display: flex; gap: calc(14 * var(--u)); }
+.key { height: calc(40 * var(--u)); display: inline-flex; align-items: center; justify-content: center; padding: 0 calc(12 * var(--u)); font-size: calc(22.5 * var(--u)); letter-spacing: .06em; color: var(--white); white-space: nowrap;
+  background-image: repeating-linear-gradient(90deg, transparent 0 calc(2 * var(--u)), rgb(0 0 0 / .16) calc(2 * var(--u)) calc(2.5 * var(--u))),
+                    repeating-linear-gradient(0deg, transparent 0 calc(2 * var(--u)), rgb(0 0 0 / .16) calc(2 * var(--u)) calc(2.5 * var(--u)));
+  box-shadow: inset 0 0 0 calc(2 * var(--u)) rgb(0 0 0 / .45); }
+.key-red { width: calc(314 * var(--u)); background-color: var(--red); }
+.key-green { width: calc(242 * var(--u)); background-color: var(--green); }
+.key-yellow { width: calc(182 * var(--u)); background-color: var(--yellow); color: var(--black); }
+.key-cyan { width: calc(238 * var(--u)); background-color: var(--cyan); color: var(--black); }
+.key:hover { filter: brightness(1.15); }
+.key-red[aria-expanded="true"] { box-shadow: inset 0 0 0 calc(3 * var(--u)) var(--white); }
+
+.reveal { left: calc(270 * var(--u)); top: calc(266 * var(--u)); width: calc(996 * var(--u)); height: calc(304 * var(--u)); background: var(--black); border: calc(2 * var(--u)) solid var(--red); padding: calc(22 * var(--u)) calc(28 * var(--u)); display: grid; grid-template-columns: 1fr 1fr; gap: calc(40 * var(--u)); }
+.reveal[hidden] { display: none; }
+.reveal-n .kind { color: var(--red-ink); }
+.reveal-q .pg { color: var(--black); background: var(--yellow); padding: 0 .15em; margin-right: .2em; }
+.reveal-q { margin-top: 0; font-size: calc(45 * var(--u)); line-height: 1.15; color: var(--yellow); text-wrap: balance; }
+.reveal-n { margin-top: calc(16 * var(--u)); font-size: calc(22.5 * var(--u)); letter-spacing: .05em; line-height: 1.3; }
+
+@media (prefers-reduced-motion: no-preference) {
+  .wipe { animation: wipe 420ms steps(12, end); }
+  @keyframes wipe { from { clip-path: inset(0 0 100% 0); } to { clip-path: inset(0 0 0 0); } }
+}
+
+/* Below the first viewport: the facts behind the screen. */
+.page { --s: max(16px, calc(22.5 * var(--u))); font-size: var(--s); letter-spacing: .05em; line-height: 1.25; padding: 0 calc(12 * var(--u)) calc(60 * var(--u)); }
+.band { border-top: calc(2 * var(--u)) solid rgb(23 166 194 / .55); padding-top: max(28px, calc(44 * var(--u))); margin-top: max(36px, calc(56 * var(--u))); }
+.band-head { display: flex; align-items: baseline; gap: 1.2em; flex-wrap: wrap; margin-bottom: max(18px, calc(28 * var(--u))); }
+.band-head h2 { font-weight: 400; color: var(--yellow); font-size: max(30px, calc(51 * var(--u))); line-height: 1; letter-spacing: .02em; }
+.band-head .pg { color: var(--black); background: var(--yellow); padding: 0 .3em; }
+.band-head p { color: var(--grey); }
+.facts { display: grid; grid-template-columns: repeat(4, 1fr); gap: max(14px, calc(20 * var(--u))); }
+.fact { padding-top: .4em; }
+.fact b { display: block; font-weight: 400; color: var(--cyan); font-size: max(40px, calc(75 * var(--u))); line-height: 1; }
+.fact span { display: block; margin-top: .35em; max-width: 22ch; }
+.extremes { display: grid; grid-template-columns: 1fr 1fr; gap: max(14px, calc(20 * var(--u))); margin-top: max(22px, calc(32 * var(--u))); }
+.extremes .reveal-q { font-size: max(24px, calc(45 * var(--u))); }
+.extremes .reveal-n { font-size: var(--s); }
+.domains { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 420px), 1fr)); gap: max(22px, calc(32 * var(--u))) max(22px, calc(40 * var(--u))); }
+.domain h3 { display: flex; justify-content: space-between; font-weight: 400; font-size: max(24px, calc(37.5 * var(--u))); color: var(--yellow); border-bottom: 2px solid var(--blue); padding-bottom: .15em; margin-bottom: .35em; }
+.domain ol { list-style: none; }
+.domain li { display: grid; grid-template-columns: 3.2ch 1fr 4.5em 2.6ch; align-items: center; gap: .6em; padding: .18em 0; font-size: max(15px, calc(19.5 * var(--u))); letter-spacing: .04em; }
+.domain li:hover { background: rgb(8 39 153 / .45); }
+.q-pg { color: var(--yellow); font-variant-numeric: tabular-nums; }
+.q-text { min-width: 0; }
+.q-bar { height: .55em; background:
+  repeating-linear-gradient(90deg, transparent 0 calc(var(--s) * .3), var(--black) calc(var(--s) * .3) calc(var(--s) * .36)),
+  linear-gradient(90deg, var(--cyan) calc(var(--v) * 100%), rgb(243 242 242 / .12) 0); }
+.q-val { color: var(--cyan); text-align: right; font-variant-numeric: tabular-nums; }
+.q-val.none { grid-column: 3 / 5; color: var(--grey); }
+.how { display: grid; grid-template-columns: 1.3fr 1fr; gap: max(22px, calc(40 * var(--u))); }
+.how p + p { margin-top: .8em; }
+.how p { max-width: 62ch; text-transform: none; letter-spacing: .03em; font-size: max(17px, calc(24 * var(--u))); line-height: 1.3; }
+.links { list-style: none; display: grid; gap: .5em; align-content: start; }
+.links a { display: inline-block; padding: .2em .6em; background: var(--blue); }
+.links a:hover { color: var(--yellow); }
+.links .pg { color: var(--yellow); margin-right: .6em; }
+.colophon { margin-top: max(28px, calc(44 * var(--u))); color: var(--grey); }
+
+/* Narrow screens: the P100 screen stacks; the plot keeps its own scale with legible floors. */
+@container (max-width: 760px) {
+  .screen { aspect-ratio: auto; overflow: visible; display: flex; flex-direction: column; gap: 10px; padding: 10px 12px 4px; }
+  .screen > * { position: static; }
+  .header { font-size: 18px; white-space: normal; order: 0; }
+  .subpage { font-size: 16px; order: 1; justify-content: space-between; }
+  .nav { width: 100%; height: 34px; font-size: 16px; order: 2; padding: 0 10px; }
+  .title { width: auto; white-space: normal; font-size: 34px; line-height: 1; order: 3; }
+  .rule { height: 2px; order: 4; }
+  .heads { height: auto; order: 5; }
+  .layer.head.on { display: grid; grid-template-columns: auto 1fr; gap: 12px; align-items: center; }
+  .big { position: static; font-size: 64px; }
+  .deck { position: static; font-size: 17px; white-space: normal; line-height: 1.3; }
+  .mosaic, .big.mosaic { -webkit-mask: none; mask: none; }
+  .plot { position: relative; order: 6; aspect-ratio: 1280 / 560; margin: 0 -12px; width: calc(100% + 24px); }
+  .gl-more { display: none; }
+  .ytick:not(:first-child) { visibility: hidden; }
+  .einstein { top: calc(468 * var(--u)); }
+  .einstein-label { top: calc(632 * var(--u)); }
+  .plot-in { top: calc(-140 * var(--u)); height: calc(720 * var(--u)); }
+  .val, .tick, .label, .gap-label, .ytick { font-size: max(11px, calc(22.5 * var(--u))); }
+  .label { letter-spacing: .04em; }
+  .gap-label { top: calc(400 * var(--u)); }
+  .keys { order: 7; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .key { width: auto; height: 44px; font-size: 16px; padding: 0 8px; white-space: normal; text-align: center; line-height: 1; }
+  .reveal { position: static; order: 8; width: auto; height: auto; grid-template-columns: 1fr; gap: 18px; padding: 14px; border-width: 2px; }
+  .reveal-q { font-size: 26px; }
+  .reveal-n { font-size: 15px; }
+  .page { padding: 0 12px 40px; }
+  .facts { grid-template-columns: 1fr 1fr; }
+  .extremes, .how { grid-template-columns: 1fr; }
+  .domain li { grid-template-columns: 3.2ch minmax(0, 1fr) auto; }
+  .q-bar { display: none; }
+  .q-val.none { grid-column: 3; white-space: nowrap; font-size: 13px; }
+  .q-text { overflow-wrap: anywhere; }
+}
+</style>
+</head>
+<body>
+<main class="screen" id="top" aria-labelledby="title">
+  <p class="header">P100 HOMOGENIZATION TRACKER &nbsp;WK 8 &nbsp;16 NOV</p>
+  <p class="subpage"><span>SUBPAGE <span class="sub-n">1</span>/6</span><button class="hold" type="button" aria-pressed="false" hidden>HOLD</button></p>
+  <nav class="nav" aria-label="Site">
+    <a href="#top" aria-current="page">&lt;&lt; <span class="hi">100</span> HOME</a>
+    <a class="hi" href="../../dashboard/">DASHBOARD</a>
+    <a href="https://github.com/biddy1618/ai-homogenization/blob/main/tracker/README.md">METHODOLOGY</a>
+    <button class="next" type="button" aria-label="Next subpage" hidden>&gt;&gt;</button>
+  </nav>
+  <h1 id="title" class="title mosaic">AI-driven homogenization of expression — real-time tracker</h1>
+  <div class="rule" aria-hidden="true"></div>
+  <div class="heads"><div class="layer head on" data-sub="0"><p class="big mosaic" aria-hidden="true">0.78</p><p class="deck">How alike Google&#x27;s top 5 answers are this week.<br>They add up to 1.96 distinct answers out of 5.</p></div><div class="layer head" data-sub="1"><p class="big mosaic" aria-hidden="true">0.82</p><p class="deck">HEALTH: how alike the top 5 answers are.<br>They add up to 1.77 distinct answers out of 5.</p></div><div class="layer head" data-sub="2"><p class="big mosaic" aria-hidden="true">0.74</p><p class="deck">FINANCE: how alike the top 5 answers are.<br>They add up to 2.08 distinct answers out of 5.</p></div><div class="layer head" data-sub="3"><p class="big mosaic" aria-hidden="true">0.76</p><p class="deck">LAW: how alike the top 5 answers are.<br>They add up to 2.06 distinct answers out of 5.</p></div><div class="layer head" data-sub="4"><p class="big mosaic" aria-hidden="true">0.80</p><p class="deck">SCIENCE: how alike the top 5 answers are.<br>They add up to 1.89 distinct answers out of 5.</p></div><div class="layer head" data-sub="5"><p class="big mosaic" aria-hidden="true">0.77</p><p class="deck">TECH: how alike the top 5 answers are.<br>They add up to 1.99 distinct answers out of 5.</p></div></div>
+  <div class="plot">
+    <div class="plot-in">
+      <img class="plate clones" src="assets/plates/clones.png" alt="Four identical helmeted figures: identical copies">
+      <p class="label clones-label" aria-hidden="true">IDENTICAL COPIES</p>
+      <div class="yaxis" aria-hidden="true"><span class="ytick" style="top:calc(1 * var(--u))">1</span><span class="ytick mid" style="top:calc(65 * var(--u))">0.8</span><span class="ytick mid" style="top:calc(128 * var(--u))">0.6</span><span class="ytick mid" style="top:calc(192 * var(--u))">0.4</span><span class="ytick mid" style="top:calc(255 * var(--u))">0.2</span><span class="ytick" style="top:calc(319 * var(--u))">0</span></div>
+      <div class="baseline" aria-hidden="true"></div>
+      <div class="layer plot-layer on" data-sub="0"><div class="chart" role="img" aria-label="Line chart, all questions, on a 0 to 1 scale of how alike Google&#x27;s top 5 answers are, weekly from 04 OCT to 16 NOV: 04 OCT: 0.70; 05 OCT: 0.73; 12 OCT: 0.74; 19 OCT: 0.79; 26 OCT: 0.78; 02 NOV: 0.77; 09 NOV: 0.78; 16 NOV: 0.78. 0 means distinct voices, 1 means identical copies."><i style="left:calc(248 * var(--u));top:calc(346 * var(--u));width:calc(144 * var(--u));height:calc(9 * var(--u))"></i><i style="left:calc(382 * var(--u));top:calc(338 * var(--u));width:calc(9 * var(--u));height:calc(18 * var(--u))"></i><i style="left:calc(382 * var(--u));top:calc(338 * var(--u));width:calc(153 * var(--u));height:calc(9 * var(--u))"></i><i style="left:calc(526 * var(--u));top:calc(338 * var(--u));width:calc(153 * var(--u));height:calc(9 * var(--u))"></i><i style="left:calc(670 * var(--u));top:calc(320 * var(--u));width:calc(9 * var(--u));height:calc(27 * var(--u))"></i><i style="left:calc(670 * var(--u));top:calc(320 * var(--u));width:calc(144 * var(--u));height:calc(9 * var(--u))"></i><i style="left:calc(806 * var(--u));top:calc(320 * var(--u));width:calc(153 * var(--u));height:calc(9 * var(--u))"></i><i style="left:calc(950 * var(--u));top:calc(320 * var(--u));width:calc(9 * var(--u));height:calc(18 * var(--u))"></i><i style="left:calc(950 * var(--u));top:calc(328 * var(--u));width:calc(153 * var(--u));height:calc(9 * var(--u))"></i><i style="left:calc(1094 * var(--u));top:calc(328 * var(--u));width:calc(144 * var(--u));height:calc(9 * var(--u))"></i><i style="left:calc(1228 * var(--u));top:calc(320 * var(--u));width:calc(9 * var(--u));height:calc(18 * var(--u))"></i><i style="left:calc(1228 * var(--u));top:calc(320 * var(--u));width:calc(9 * var(--u));height:calc(9 * var(--u))"></i></div><div class="vals" aria-hidden="true"><span class="val" style="left:calc(320 * var(--u));top:calc(363 * var(--u))">0.70</span><span class="val" style="left:calc(459 * var(--u));top:calc(354 * var(--u))">0.73</span><span class="val" style="left:calc(603 * var(--u));top:calc(354 * var(--u))">0.74</span><span class="val" style="left:calc(742 * var(--u));top:calc(336 * var(--u))">0.79</span><span class="val" style="left:calc(882 * var(--u));top:calc(336 * var(--u))">0.78</span><span class="val" style="left:calc(1026 * var(--u));top:calc(345 * var(--u))">0.77</span><span class="val" style="left:calc(1166 * var(--u));top:calc(345 * var(--u))">0.78</span><span class="val last" style="left:calc(1238 * var(--u));top:calc(284 * var(--u))">0.78</span></div></div><div class="layer plot-layer" data-sub="1"><div class="chart" role="img" aria-label="Line chart, health questions, on a 0 to 1 scale of how alike Google&#x27;s top 5 answers are, weekly from 04 OCT to 16 NOV: 04 OCT: 0.69; 05 OCT: 0.69; 12 OCT: 0.75; 19 OCT: 0.83; 26 OCT: 0.83; 02 NOV: 0.79; 09 NOV: 0.82; 16 NOV: 0.82. 0 means distinct voices, 1 means identical copies."><i style="left:calc(248 * var(--u));top:calc(356 * var(--u));width:calc(144 * var(--u));height:calc(9 * var(--u))"></i><i style="left:calc(382 * var(--u));top:calc(346 * var(--u));width:calc(9 * var(--u));height:calc(18 * var(--u))"></i><i style="left:calc(382 * var(--u));top:calc(346 * var(--u));width:calc(153 * var(--u));height:calc(9 * var(--u))"></i><i style="left:calc(526 * var(--u));top:calc(338 * var(--u));width:calc(9 * var(--u));height:calc(18 * var(--u))"></i><i style="left:calc(526 * var(--u));top:calc(338 * var(--u));width:calc(153 * var(--u));height:calc(9 * var(--u))"></i><i style="left:calc(670 * var(--u));top:calc(310 * var(--u));width:calc(9 * var(--u));height:calc(36 * var(--u))"></i><i style="left:calc(670 * var(--u));top:calc(310 * var(--u));width:calc(144 * var(--u));height:calc(9 * var(--u))"></i><i style="left:calc(806 * var(--u));top:calc(310 * var(--u));width:calc(153 * var(--u));height:calc(9 * var(--u))"></i><i style="left:calc(950 * var(--u));top:calc(310 * var(--u));width:calc(9 * var(--u));height:calc(18 * var(--u))"></i><i style="left:calc(950 * var(--u));top:calc(320 * var(--u));width:calc(153 * var(--u));height:calc(9 * var(--u))"></i><i style="left:calc(1094 * var(--u));top:calc(310 * var(--u));width:calc(9 * var(--u));height:calc(18 * var(--u))"></i><i style="left:calc(1094 * var(--u));top:calc(310 * var(--u));width:calc(144 * var(--u));height:calc(9 * var(--u))"></i><i style="left:calc(1228 * var(--u));top:calc(310 * var(--u));width:calc(9 * var(--u));height:calc(9 * var(--u))"></i></div><div class="vals" aria-hidden="true"><span class="val" style="left:calc(320 * var(--u));top:calc(372 * var(--u))">0.69</span><span class="val" style="left:calc(459 * var(--u));top:calc(363 * var(--u))">0.69</span><span class="val" style="left:calc(603 * var(--u));top:calc(354 * var(--u))">0.75</span><span class="val" style="left:calc(742 * var(--u));top:calc(327 * var(--u))">0.83</span><span class="val" style="left:calc(882 * var(--u));top:calc(327 * var(--u))">0.83</span><span class="val" style="left:calc(1026 * var(--u));top:calc(336 * var(--u))">0.79</span><span class="val" style="left:calc(1166 * var(--u));top:calc(327 * var(--u))">0.82</span><span class="val last" style="left:calc(1238 * var(--u));top:calc(275 * var(--u))">0.82</span></div></div><div class="layer plot-layer" data-sub="2"><div class="chart" role="img" aria-label="Line chart, finance questions, on a 0 to 1 scale of how alike Google&#x27;s top 5 answers are, weekly from 04 OCT to 16 NOV: 04 OCT: 0.68; 05 OCT: 0.78; 12 OCT: 0.74; 19 OCT: 0.78; 26 OCT: 0.78; 02 NOV: 0.77; 09 NOV: 0.77; 16 NOV: 0.74. 0 means distinct voices, 1 means identical copies."><i style="left:calc(248 * var(--u));top:calc(356 * var(--u));width:calc(144 * var(--u));height:calc(9 * var(--u))"></i><i style="left:calc(382 * var(--u));top:calc(328 * var(--u));width:calc(9 * var(--u));height:calc(36 * var(--u))"></i><i style="left:calc(382 * var(--u));top:calc(328 * var(--u));width:calc(153 * var(--u));height:calc(9 * var(--u))"></i><i style="left:calc(526 * var(--u));top:calc(328 * var(--u));width:calc(9 * var(--u));height:calc(18 * var(--u))"></i><i style="left:calc(526 * var(--u));top:calc(338 * var(--u));width:calc(153 * var(--u));height:calc(9 * var(--u))"></i><i style="left:calc(670 * var(--u));top:calc(320 * var(--u));width:calc(9 * var(--u));height:calc(27 * var(--u))"></i><i style="left:calc(670 * var(--u));top:calc(320 * var(--u));width:calc(144 * var(--u));height:calc(9 * var(--u))"></i><i style="left:calc(806 * var(--u));top:calc(320 * var(--u));width:calc(153 * var(--u));height:calc(9 * var(--u))"></i><i style="left:calc(950 * var(--u));top:calc(320 * var(--u));width:calc(9 * var(--u));height:calc(18 * var(--u))"></i><i style="left:calc(950 * var(--u));top:calc(328 * var(--u));width:calc(153 * var(--u));height:calc(9 * var(--u))"></i><i style="left:calc(1094 * var(--u));top:calc(328 * var(--u));width:calc(144 * var(--u));height:calc(9 * var(--u))"></i><i style="left:calc(1228 * var(--u));top:calc(328 * var(--u));width:calc(9 * var(--u));height:calc(18 * var(--u))"></i><i style="left:calc(1228 * var(--u));top:calc(338 * var(--u));width:calc(9 * var(--u));height:calc(9 * var(--u))"></i></div><div class="vals" aria-hidden="true"><span class="val" style="left:calc(320 * var(--u));top:calc(372 * var(--u))">0.68</span><span class="val" style="left:calc(459 * var(--u));top:calc(345 * var(--u))">0.78</span><span class="val" style="left:calc(603 * var(--u));top:calc(354 * var(--u))">0.74</span><span class="val" style="left:calc(742 * var(--u));top:calc(336 * var(--u))">0.78</span><span class="val" style="left:calc(882 * var(--u));top:calc(336 * var(--u))">0.78</span><span class="val" style="left:calc(1026 * var(--u));top:calc(345 * var(--u))">0.77</span><span class="val" style="left:calc(1166 * var(--u));top:calc(345 * var(--u))">0.77</span><span class="val last" style="left:calc(1238 * var(--u));top:calc(302 * var(--u))">0.74</span></div></div><div class="layer plot-layer" data-sub="3"><div class="chart" role="img" aria-label="Line chart, law questions, on a 0 to 1 scale of how alike Google&#x27;s top 5 answers are, weekly from 04 OCT to 16 NOV: 04 OCT: 0.71; 05 OCT: 0.73; 12 OCT: 0.73; 19 OCT: 0.75; 26 OCT: 0.74; 02 NOV: 0.75; 09 NOV: 0.75; 16 NOV: 0.76. 0 means distinct voices, 1 means identical copies."><i style="left:calc(248 * var(--u));top:calc(346 * var(--u));width:calc(144 * var(--u));height:calc(9 * var(--u))"></i><i style="left:calc(382 * var(--u));top:calc(338 * var(--u));width:calc(9 * var(--u));height:calc(18 * var(--u))"></i><i style="left:calc(382 * var(--u));top:calc(338 * var(--u));width:calc(153 * var(--u));height:calc(9 * var(--u))"></i><i style="left:calc(526 * var(--u));top:calc(338 * var(--u));width:calc(153 * var(--u));height:calc(9 * var(--u))"></i><i style="left:calc(670 * var(--u));top:calc(338 * var(--u));width:calc(144 * var(--u));height:calc(9 * var(--u))"></i><i style="left:calc(806 * var(--u));top:calc(338 * var(--u));width:calc(153 * var(--u));height:calc(9 * var(--u))"></i><i style="left:calc(950 * var(--u));top:calc(328 * var(--u));width:calc(9 * var(--u));height:calc(18 * var(--u))"></i><i style="left:calc(950 * var(--u));top:calc(328 * var(--u));width:calc(153 * var(--u));height:calc(9 * var(--u))"></i><i style="left:calc(1094 * var(--u));top:calc(328 * var(--u));width:calc(9 * var(--u));height:calc(18 * var(--u))"></i><i style="left:calc(1094 * var(--u));top:calc(338 * var(--u));width:calc(144 * var(--u));height:calc(9 * var(--u))"></i><i style="left:calc(1228 * var(--u));top:calc(328 * var(--u));width:calc(9 * var(--u));height:calc(18 * var(--u))"></i><i style="left:calc(1228 * var(--u));top:calc(328 * var(--u));width:calc(9 * var(--u));height:calc(9 * var(--u))"></i></div><div class="vals" aria-hidden="true"><span class="val" style="left:calc(320 * var(--u));top:calc(363 * var(--u))">0.71</span><span class="val" style="left:calc(459 * var(--u));top:calc(354 * var(--u))">0.73</span><span class="val" style="left:calc(603 * var(--u));top:calc(354 * var(--u))">0.73</span><span class="val" style="left:calc(742 * var(--u));top:calc(354 * var(--u))">0.75</span><span class="val" style="left:calc(882 * var(--u));top:calc(354 * var(--u))">0.74</span><span class="val" style="left:calc(1026 * var(--u));top:calc(345 * var(--u))">0.75</span><span class="val" style="left:calc(1166 * var(--u));top:calc(354 * var(--u))">0.75</span><span class="val last" style="left:calc(1238 * var(--u));top:calc(293 * var(--u))">0.76</span></div></div><div class="layer plot-layer" data-sub="4"><div class="chart" role="img" aria-label="Line chart, science questions, on a 0 to 1 scale of how alike Google&#x27;s top 5 answers are, weekly from 04 OCT to 16 NOV: 04 OCT: 0.76; 05 OCT: 0.70; 12 OCT: 0.81; 19 OCT: 0.79; 26 OCT: 0.77; 02 NOV: 0.79; 09 NOV: 0.78; 16 NOV: 0.80. 0 means distinct voices, 1 means identical copies."><i style="left:calc(248 * var(--u));top:calc(328 * var(--u));width:calc(144 * var(--u));height:calc(9 * var(--u))"></i><i style="left:calc(382 * var(--u));top:calc(328 * var(--u));width:calc(9 * var(--u));height:calc(27 * var(--u))"></i><i style="left:calc(382 * var(--u));top:calc(346 * var(--u));width:calc(153 * var(--u));height:calc(9 * var(--u))"></i><i style="left:calc(526 * var(--u));top:calc(310 * var(--u));width:calc(9 * var(--u));height:calc(45 * var(--u))"></i><i style="left:calc(526 * var(--u));top:calc(310 * var(--u));width:calc(153 * var(--u));height:calc(9 * var(--u))"></i><i style="left:calc(670 * var(--u));top:calc(310 * var(--u));width:calc(9 * var(--u));height:calc(18 * var(--u))"></i><i style="left:calc(670 * var(--u));top:calc(320 * var(--u));width:calc(144 * var(--u));height:calc(9 * var(--u))"></i><i style="left:calc(806 * var(--u));top:calc(320 * var(--u));width:calc(9 * var(--u));height:calc(18 * var(--u))"></i><i style="left:calc(806 * var(--u));top:calc(328 * var(--u));width:calc(153 * var(--u));height:calc(9 * var(--u))"></i><i style="left:calc(950 * var(--u));top:calc(320 * var(--u));width:calc(9 * var(--u));height:calc(18 * var(--u))"></i><i style="left:calc(950 * var(--u));top:calc(320 * var(--u));width:calc(153 * var(--u));height:calc(9 * var(--u))"></i><i style="left:calc(1094 * var(--u));top:calc(320 * var(--u));width:calc(144 * var(--u));height:calc(9 * var(--u))"></i><i style="left:calc(1228 * var(--u));top:calc(320 * var(--u));width:calc(9 * var(--u));height:calc(9 * var(--u))"></i></div><div class="vals" aria-hidden="true"><span class="val" style="left:calc(320 * var(--u));top:calc(345 * var(--u))">0.76</span><span class="val" style="left:calc(459 * var(--u));top:calc(363 * var(--u))">0.70</span><span class="val" style="left:calc(603 * var(--u));top:calc(327 * var(--u))">0.81</span><span class="val" style="left:calc(742 * var(--u));top:calc(336 * var(--u))">0.79</span><span class="val" style="left:calc(882 * var(--u));top:calc(345 * var(--u))">0.77</span><span class="val" style="left:calc(1026 * var(--u));top:calc(336 * var(--u))">0.79</span><span class="val" style="left:calc(1166 * var(--u));top:calc(336 * var(--u))">0.78</span><span class="val last" style="left:calc(1238 * var(--u));top:calc(284 * var(--u))">0.80</span></div></div><div class="layer plot-layer" data-sub="5"><div class="chart" role="img" aria-label="Line chart, tech questions, on a 0 to 1 scale of how alike Google&#x27;s top 5 answers are, weekly from 04 OCT to 16 NOV: 04 OCT: 0.68; 05 OCT: 0.74; 12 OCT: 0.68; 19 OCT: 0.79; 26 OCT: 0.77; 02 NOV: 0.76; 09 NOV: 0.77; 16 NOV: 0.77. 0 means distinct voices, 1 means identical copies."><i style="left:calc(248 * var(--u));top:calc(356 * var(--u));width:calc(144 * var(--u));height:calc(9 * var(--u))"></i><i style="left:calc(382 * var(--u));top:calc(338 * var(--u));width:calc(9 * var(--u));height:calc(27 * var(--u))"></i><i style="left:calc(382 * var(--u));top:calc(338 * var(--u));width:calc(153 * var(--u));height:calc(9 * var(--u))"></i><i style="left:calc(526 * var(--u));top:calc(338 * var(--u));width:calc(9 * var(--u));height:calc(27 * var(--u))"></i><i style="left:calc(526 * var(--u));top:calc(356 * var(--u));width:calc(153 * var(--u));height:calc(9 * var(--u))"></i><i style="left:calc(670 * var(--u));top:calc(320 * var(--u));width:calc(9 * var(--u));height:calc(45 * var(--u))"></i><i style="left:calc(670 * var(--u));top:calc(320 * var(--u));width:calc(144 * var(--u));height:calc(9 * var(--u))"></i><i style="left:calc(806 * var(--u));top:calc(320 * var(--u));width:calc(9 * var(--u));height:calc(18 * var(--u))"></i><i style="left:calc(806 * var(--u));top:calc(328 * var(--u));width:calc(153 * var(--u));height:calc(9 * var(--u))"></i><i style="left:calc(950 * var(--u));top:calc(328 * var(--u));width:calc(153 * var(--u));height:calc(9 * var(--u))"></i><i style="left:calc(1094 * var(--u));top:calc(328 * var(--u));width:calc(144 * var(--u));height:calc(9 * var(--u))"></i><i style="left:calc(1228 * var(--u));top:calc(328 * var(--u));width:calc(9 * var(--u));height:calc(9 * var(--u))"></i></div><div class="vals" aria-hidden="true"><span class="val" style="left:calc(320 * var(--u));top:calc(372 * var(--u))">0.68</span><span class="val" style="left:calc(459 * var(--u));top:calc(354 * var(--u))">0.74</span><span class="val" style="left:calc(603 * var(--u));top:calc(372 * var(--u))">0.68</span><span class="val" style="left:calc(742 * var(--u));top:calc(336 * var(--u))">0.79</span><span class="val" style="left:calc(882 * var(--u));top:calc(345 * var(--u))">0.77</span><span class="val" style="left:calc(1026 * var(--u));top:calc(345 * var(--u))">0.76</span><span class="val" style="left:calc(1166 * var(--u));top:calc(345 * var(--u))">0.77</span><span class="val last" style="left:calc(1238 * var(--u));top:calc(293 * var(--u))">0.77</span></div></div>
+      <p class="gap-label" aria-hidden="true">NO DATA<span class="gl-more"> BEFORE 04 OCT</span></p>
+      <div class="dates" aria-hidden="true"><span class="tick" style="left:calc(252 * var(--u))">04<br>OCT</span><span class="tick" style="left:calc(387 * var(--u))">05<br>OCT</span><span class="tick" style="left:calc(531 * var(--u))">12<br>OCT</span><span class="tick" style="left:calc(675 * var(--u))">19<br>OCT</span><span class="tick" style="left:calc(810 * var(--u))">26<br>OCT</span><span class="tick" style="left:calc(954 * var(--u))">02<br>NOV</span><span class="tick" style="left:calc(1098 * var(--u))">09<br>NOV</span><span class="tick" style="left:calc(1233 * var(--u))">16<br>NOV</span></div>
+      <img class="plate einstein" src="assets/plates/einstein.png" alt="Albert Einstein: distinct voices">
+      <p class="label einstein-label" aria-hidden="true">DISTINCT<span class="gl-more"> VOICES</span></p>
+    </div>
+  </div>
+  <div class="keys">
+    <a class="key key-red" href="#this-week" aria-controls="reveal">REVEAL MOST ALIKE QUESTION</a>
+    <a class="key key-green" href="#questions">ALL 100 QUESTIONS</a>
+    <a class="key key-yellow" href="../../dashboard/">DASHBOARD</a>
+    <a class="key key-cyan" href="#how">HOW IT'S MEASURED</a>
+  </div>
+  <p class="sr" id="sub-status" aria-live="polite"></p>
+  <section class="reveal" id="reveal" aria-label="Most and least alike questions this week" hidden><div class="reveal-item"><p class="reveal-q"><span class="pg">P104</span> is intermittent fasting healthy</p><p class="reveal-n"><span class="kind">Most alike this week</span> · <span class="cy">0.91</span> alike · 1.41 distinct answers out of 5 · health</p></div><div class="reveal-item"><p class="reveal-q"><span class="pg">P132</span> how are capital gains taxed</p><p class="reveal-n"><span class="kind">Least alike this week</span> · <span class="cy">0.40</span> alike · 3.69 distinct answers out of 5 · finance</p></div></section>
+</main>
+
+<div class="page">
+  <section class="band" id="this-week" aria-labelledby="this-week-h">
+    <div class="band-head"><h2 id="this-week-h"><span class="pg">P300</span> This week</h2><p>Run of 16 NOV 2026</p></div>
+    <div class="facts">
+      <p class="fact"><b>0.78</b><span>How alike the top 5 answers are, 0 to 1</span></p>
+      <p class="fact"><b>+0.00</b><span>Change since 09 NOV</span></p>
+      <p class="fact"><b>1.96</b><span>Distinct answers out of 5</span></p>
+      <p class="fact"><b>93</b><span>Of 100 questions readable this week</span></p>
+    </div>
+    <div class="extremes"><div class="reveal-item"><p class="reveal-q"><span class="pg">P104</span> is intermittent fasting healthy</p><p class="reveal-n"><span class="kind">Most alike this week</span> · <span class="cy">0.91</span> alike · 1.41 distinct answers out of 5 · health</p></div><div class="reveal-item"><p class="reveal-q"><span class="pg">P132</span> how are capital gains taxed</p><p class="reveal-n"><span class="kind">Least alike this week</span> · <span class="cy">0.40</span> alike · 3.69 distinct answers out of 5 · finance</p></div></div>
+  </section>
+
+  <section class="band" id="questions" aria-labelledby="questions-h">
+    <div class="band-head"><h2 id="questions-h"><span class="pg">P101–200</span> All 100 questions</h2><p>Latest run · higher means the top 5 answers say more of the same thing</p></div>
+    <div class="domains"><section class="domain" aria-labelledby="d-health"><h3 id="d-health"><span>HEALTH</span><span class="cy">0.82</span></h3><ol><li><span class="q-pg">101</span><span class="q-text">what are the symptoms of iron deficiency</span><span class="q-bar" style="--v:0.875"></span><span class="q-val">0.87</span></li><li><span class="q-pg">102</span><span class="q-text">how to lower blood pressure naturally</span><span class="q-bar" style="--v:0.793"></span><span class="q-val">0.79</span></li><li><span class="q-pg">103</span><span class="q-text">what causes migraines</span><span class="q-bar" style="--v:0.850"></span><span class="q-val">0.85</span></li><li><span class="q-pg">104</span><span class="q-text">is intermittent fasting healthy</span><span class="q-bar" style="--v:0.913"></span><span class="q-val">0.91</span></li><li><span class="q-pg">105</span><span class="q-text">how much water should you drink a day</span><span class="q-bar" style="--v:0.734"></span><span class="q-val">0.73</span></li><li><span class="q-pg">106</span><span class="q-text">what are the early signs of diabetes</span><span class="q-bar" style="--v:0.831"></span><span class="q-val">0.83</span></li><li><span class="q-pg">107</span><span class="q-text">how does the immune system fight infection</span><span class="q-bar" style="--v:0.554"></span><span class="q-val">0.55</span></li><li><span class="q-pg">108</span><span class="q-text">what causes high cholesterol</span><span class="q-bar" style="--v:0.867"></span><span class="q-val">0.87</span></li><li><span class="q-pg">109</span><span class="q-text">how much sleep do adults need</span><span class="q-bar" style="--v:0.851"></span><span class="q-val">0.85</span></li><li><span class="q-pg">110</span><span class="q-text">what causes acid reflux</span><span class="q-bar" style="--v:0.797"></span><span class="q-val">0.80</span></li><li><span class="q-pg">111</span><span class="q-text">how does caffeine affect the body</span><span class="q-bar" style="--v:0.889"></span><span class="q-val">0.89</span></li><li><span class="q-pg">112</span><span class="q-text">what are the symptoms of vitamin d deficiency</span><span class="q-bar" style="--v:0.869"></span><span class="q-val">0.87</span></li><li><span class="q-pg">113</span><span class="q-text">how do antibiotics work</span><span class="q-bar" style="--v:0.837"></span><span class="q-val">0.84</span></li><li><span class="q-pg">114</span><span class="q-text">what causes anxiety</span><span class="q-bar" style="--v:0.772"></span><span class="q-val">0.77</span></li><li><span class="q-pg">115</span><span class="q-text">how to treat a sprained ankle</span><span class="q-bar" style="--v:0.852"></span><span class="q-val">0.85</span></li><li><span class="q-pg">116</span><span class="q-text">what is the difference between a cold and the flu</span><span class="q-bar" style="--v:0.815"></span><span class="q-val">0.82</span></li><li><span class="q-pg">117</span><span class="q-text">how does alcohol affect the liver</span><span class="q-bar" style="--v:0.766"></span><span class="q-val">0.77</span></li><li><span class="q-pg">118</span><span class="q-text">what causes lower back pain</span><span class="q-bar" style="--v:0.858"></span><span class="q-val">0.86</span></li><li><span class="q-pg">119</span><span class="q-text">how much protein do you need per day</span><span class="q-bar" style="--v:0.872"></span><span class="q-val">0.87</span></li><li><span class="q-pg">120</span><span class="q-text">what are the benefits of regular exercise</span><span class="q-bar" style="--v:0.840"></span><span class="q-val">0.84</span></li></ol></section><section class="domain" aria-labelledby="d-finance"><h3 id="d-finance"><span>FINANCE</span><span class="cy">0.74</span></h3><ol><li><span class="q-pg">121</span><span class="q-text">how does compound interest work</span><span class="q-bar" style="--v:0.783"></span><span class="q-val">0.78</span></li><li><span class="q-pg">122</span><span class="q-text">what is a good credit score</span><span class="q-bar" style="--v:0.841"></span><span class="q-val">0.84</span></li><li><span class="q-pg">123</span><span class="q-text">roth ira vs traditional ira</span><span class="q-bar" style="--v:0.608"></span><span class="q-val">0.61</span></li><li><span class="q-pg">124</span><span class="q-text">how does refinancing a mortgage work</span><span class="q-bar" style="--v:0.861"></span><span class="q-val">0.86</span></li><li><span class="q-pg">125</span><span class="q-text">how to build an emergency fund</span><span class="q-bar" style="--v:0.804"></span><span class="q-val">0.80</span></li><li><span class="q-pg">126</span><span class="q-text">what is a 401k and how does it work</span><span class="q-bar" style="--v:0.710"></span><span class="q-val">0.71</span></li><li><span class="q-pg">127</span><span class="q-text">how does inflation affect your savings</span><span class="q-bar" style="--v:0.846"></span><span class="q-val">0.85</span></li><li><span class="q-pg">128</span><span class="q-text">how do index funds work</span><span class="q-bar" style="--v:0.764"></span><span class="q-val">0.76</span></li><li><span class="q-pg">129</span><span class="q-text">what is the difference between stocks and bonds</span><span class="q-bar" style="--v:0.819"></span><span class="q-val">0.82</span></li><li><span class="q-pg">130</span><span class="q-text">how do credit cards work</span><span class="q-bar" style="--v:0.699"></span><span class="q-val">0.70</span></li><li><span class="q-pg">131</span><span class="q-text">what is a mutual fund</span><span class="q-bar" style="--v:0.896"></span><span class="q-val">0.90</span></li><li><span class="q-pg">132</span><span class="q-text">how are capital gains taxed</span><span class="q-bar" style="--v:0.401"></span><span class="q-val">0.40</span></li><li><span class="q-pg">133</span><span class="q-text">how does a home equity loan work</span><span class="q-bar" style="--v:0.662"></span><span class="q-val">0.66</span></li><li><span class="q-pg">134</span><span class="q-text">what is dollar cost averaging</span><span class="q-bar" style="--v:0.834"></span><span class="q-val">0.83</span></li><li><span class="q-pg">135</span><span class="q-text">how does social security work</span><span class="q-bar" style="--v:0.546"></span><span class="q-val">0.55</span></li><li><span class="q-pg">136</span><span class="q-text">what is an annuity</span><span class="q-bar" style="--v:0.739"></span><span class="q-val">0.74</span></li><li><span class="q-pg">137</span><span class="q-text">how do student loans work</span><span class="q-bar" style="--v:0.840"></span><span class="q-val">0.84</span></li><li><span class="q-pg">138</span><span class="q-text">what is a health savings account</span><span class="q-bar" style="--v:0.875"></span><span class="q-val">0.87</span></li><li><span class="q-pg">139</span><span class="q-text">how does a credit freeze work</span><span class="q-bar" style="--v:0.745"></span><span class="q-val">0.74</span></li><li><span class="q-pg">140</span><span class="q-text">what is the difference between a debit card and a credit card</span><span class="q-bar" style="--v:0.553"></span><span class="q-val">0.55</span></li></ol></section><section class="domain" aria-labelledby="d-law"><h3 id="d-law"><span>LAW</span><span class="cy">0.76</span></h3><ol><li><span class="q-pg">141</span><span class="q-text">what is a power of attorney</span><span class="q-bar" style="--v:0.720"></span><span class="q-val">0.72</span></li><li><span class="q-pg">142</span><span class="q-text">what are tenant rights during eviction</span><span class="q-bar" style="--v:0.776"></span><span class="q-val">0.78</span></li><li><span class="q-pg">143</span><span class="q-text">how does the probate process work</span><span class="q-bar" style="--v:0.782"></span><span class="q-val">0.78</span></li><li><span class="q-pg">144</span><span class="q-text">what is the difference between a will and a trust</span><span class="q-bar" style="--v:0.850"></span><span class="q-val">0.85</span></li><li><span class="q-pg">145</span><span class="q-text">how does a class action lawsuit work</span><span class="q-bar" style="--v:0.863"></span><span class="q-val">0.86</span></li><li><span class="q-pg">146</span><span class="q-text">what happens during a divorce proceeding</span><span class="q-bar" style="--v:0.668"></span><span class="q-val">0.67</span></li><li><span class="q-pg">147</span><span class="q-text">what is an llc and how is it taxed</span><span class="q-bar" style="--v:0.822"></span><span class="q-val">0.82</span></li><li><span class="q-pg">148</span><span class="q-text">what are your rights if arrested</span><span class="q-bar" style="--v:0.755"></span><span class="q-val">0.76</span></li><li><span class="q-pg">149</span><span class="q-text">how does copyright protect creators</span><span class="q-bar" style="--v:0.802"></span><span class="q-val">0.80</span></li><li><span class="q-pg">150</span><span class="q-text">what is the statute of limitations</span><span class="q-bar" style="--v:0.841"></span><span class="q-val">0.84</span></li><li><span class="q-pg">151</span><span class="q-text">how does small claims court work</span><span class="q-bar" style="--v:0.720"></span><span class="q-val">0.72</span></li><li><span class="q-pg">152</span><span class="q-text">what is fair use in copyright</span><span class="q-bar" style="--v:0.845"></span><span class="q-val">0.85</span></li><li><span class="q-pg">153</span><span class="q-text">how does a non-compete agreement work</span><span class="q-bar" style="--v:0.627"></span><span class="q-val">0.63</span></li><li><span class="q-pg">154</span><span class="q-text">what is the difference between a misdemeanor and a felony</span><span class="q-bar" style="--v:0.818"></span><span class="q-val">0.82</span></li><li><span class="q-pg">155</span><span class="q-text">how does child custody work</span><span class="q-bar" style="--v:0.777"></span><span class="q-val">0.78</span></li><li><span class="q-pg">156</span><span class="q-text">what is a living will</span><span class="q-bar" style="--v:0.651"></span><span class="q-val">0.65</span></li><li><span class="q-pg">157</span><span class="q-text">how do you file for bankruptcy</span><span class="q-bar" style="--v:0.772"></span><span class="q-val">0.77</span></li><li><span class="q-pg">158</span><span class="q-text">what is a trademark and how do you register one</span><span class="q-bar" style="--v:0.706"></span><span class="q-val">0.71</span></li><li><span class="q-pg">159</span><span class="q-text">what are employee rights when fired</span><span class="q-bar" style="--v:0.677"></span><span class="q-val">0.68</span></li><li><span class="q-pg">160</span><span class="q-text">how does a prenuptial agreement work</span><span class="q-bar" style="--v:0.788"></span><span class="q-val">0.79</span></li></ol></section><section class="domain" aria-labelledby="d-science"><h3 id="d-science"><span>SCIENCE</span><span class="cy">0.80</span></h3><ol><li><span class="q-pg">161</span><span class="q-text">how do vaccines work</span><span class="q-bar" style="--v:0.880"></span><span class="q-val">0.88</span></li><li><span class="q-pg">162</span><span class="q-text">what causes climate change</span><span class="q-bar" style="--v:0.829"></span><span class="q-val">0.83</span></li><li><span class="q-pg">163</span><span class="q-text">how do hurricanes form</span><span class="q-bar" style="--v:0.865"></span><span class="q-val">0.86</span></li><li><span class="q-pg">164</span><span class="q-text">why is the sky blue</span><span class="q-bar" style="--v:0.806"></span><span class="q-val">0.81</span></li><li><span class="q-pg">165</span><span class="q-text">how do black holes form</span><span class="q-bar" style="--v:0.710"></span><span class="q-val">0.71</span></li><li><span class="q-pg">166</span><span class="q-text">what causes earthquakes</span><span class="q-bar" style="--v:0.779"></span><span class="q-val">0.78</span></li><li><span class="q-pg">167</span><span class="q-text">how does photosynthesis work</span><span class="q-bar" style="--v:0.832"></span><span class="q-val">0.83</span></li><li><span class="q-pg">168</span><span class="q-text">are electric cars better for the environment</span><span class="q-bar" style="--v:0.793"></span><span class="q-val">0.79</span></li><li><span class="q-pg">169</span><span class="q-text">what is dark matter</span><span class="q-bar" style="--v:0.806"></span><span class="q-val">0.81</span></li><li><span class="q-pg">170</span><span class="q-text">how does dna replication work</span><span class="q-val none">Not read this week</span></li><li><span class="q-pg">171</span><span class="q-text">what causes the seasons</span><span class="q-bar" style="--v:0.763"></span><span class="q-val">0.76</span></li><li><span class="q-pg">172</span><span class="q-text">how do tides work</span><span class="q-bar" style="--v:0.886"></span><span class="q-val">0.89</span></li><li><span class="q-pg">173</span><span class="q-text">what is quantum entanglement</span><span class="q-val none">Not read this week</span></li><li><span class="q-pg">174</span><span class="q-text">how does evolution by natural selection work</span><span class="q-val none">Not read this week</span></li><li><span class="q-pg">175</span><span class="q-text">what causes volcanic eruptions</span><span class="q-bar" style="--v:0.761"></span><span class="q-val">0.76</span></li><li><span class="q-pg">176</span><span class="q-text">how does antibiotic resistance develop</span><span class="q-bar" style="--v:0.833"></span><span class="q-val">0.83</span></li><li><span class="q-pg">177</span><span class="q-text">what is the big bang theory</span><span class="q-bar" style="--v:0.714"></span><span class="q-val">0.71</span></li><li><span class="q-pg">178</span><span class="q-text">how does nuclear fusion work</span><span class="q-bar" style="--v:0.731"></span><span class="q-val">0.73</span></li><li><span class="q-pg">179</span><span class="q-text">why do leaves change color in the fall</span><span class="q-bar" style="--v:0.844"></span><span class="q-val">0.84</span></li><li><span class="q-pg">180</span><span class="q-text">how do rainbows form</span><span class="q-bar" style="--v:0.776"></span><span class="q-val">0.78</span></li></ol></section><section class="domain" aria-labelledby="d-tech"><h3 id="d-tech"><span>TECH</span><span class="cy">0.77</span></h3><ol><li><span class="q-pg">181</span><span class="q-text">what is a vpn and how does it work</span><span class="q-bar" style="--v:0.839"></span><span class="q-val">0.84</span></li><li><span class="q-pg">182</span><span class="q-text">how does two factor authentication work</span><span class="q-bar" style="--v:0.766"></span><span class="q-val">0.77</span></li><li><span class="q-pg">183</span><span class="q-text">what is retrieval augmented generation</span><span class="q-val none">Not read this week</span></li><li><span class="q-pg">184</span><span class="q-text">how does end-to-end encryption work</span><span class="q-bar" style="--v:0.892"></span><span class="q-val">0.89</span></li><li><span class="q-pg">185</span><span class="q-text">is ai going to replace jobs</span><span class="q-bar" style="--v:0.622"></span><span class="q-val">0.62</span></li><li><span class="q-pg">186</span><span class="q-text">how does facial recognition work</span><span class="q-bar" style="--v:0.741"></span><span class="q-val">0.74</span></li><li><span class="q-pg">187</span><span class="q-text">what is the difference between http and https</span><span class="q-val none">Not read this week</span></li><li><span class="q-pg">188</span><span class="q-text">how does cloud storage work</span><span class="q-val none">Not read this week</span></li><li><span class="q-pg">189</span><span class="q-text">what is a large language model</span><span class="q-bar" style="--v:0.799"></span><span class="q-val">0.80</span></li><li><span class="q-pg">190</span><span class="q-text">how does a blockchain work</span><span class="q-val none">Not read this week</span></li><li><span class="q-pg">191</span><span class="q-text">what is machine learning</span><span class="q-bar" style="--v:0.856"></span><span class="q-val">0.86</span></li><li><span class="q-pg">192</span><span class="q-text">how does wifi work</span><span class="q-bar" style="--v:0.736"></span><span class="q-val">0.74</span></li><li><span class="q-pg">193</span><span class="q-text">what is a password manager</span><span class="q-bar" style="--v:0.848"></span><span class="q-val">0.85</span></li><li><span class="q-pg">194</span><span class="q-text">how does gps work</span><span class="q-bar" style="--v:0.805"></span><span class="q-val">0.81</span></li><li><span class="q-pg">195</span><span class="q-text">what is phishing and how to avoid it</span><span class="q-bar" style="--v:0.774"></span><span class="q-val">0.77</span></li><li><span class="q-pg">196</span><span class="q-text">how do search engines rank pages</span><span class="q-bar" style="--v:0.732"></span><span class="q-val">0.73</span></li><li><span class="q-pg">197</span><span class="q-text">what is 5g technology</span><span class="q-bar" style="--v:0.874"></span><span class="q-val">0.87</span></li><li><span class="q-pg">198</span><span class="q-text">how does a computer virus spread</span><span class="q-bar" style="--v:0.640"></span><span class="q-val">0.64</span></li><li><span class="q-pg">199</span><span class="q-text">what is an api</span><span class="q-bar" style="--v:0.751"></span><span class="q-val">0.75</span></li><li><span class="q-pg">200</span><span class="q-text">how do solid state drives work</span><span class="q-bar" style="--v:0.724"></span><span class="q-val">0.72</span></li></ol></section></div>
+  </section>
+
+  <section class="band" id="how" aria-labelledby="how-h">
+    <div class="band-head"><h2 id="how-h"><span class="pg">P400</span> How it's measured</h2></div>
+    <div class="how">
+      <div>
+        <p>Every week the tracker asks Google the same 100 everyday questions, twenty each in finance, health, law, science and tech. It reads the first five pages that answer each one and compares what they say, by meaning rather than exact wording.</p>
+        <p>The score runs from 0, where the five pages share nothing, to 1, where they say the same thing. The line is the average across all questions; the subpages show each domain. The panel of questions never changes, so weeks can be compared. Movement week to week is still small, and the series is young.</p>
+      </div>
+      <ul class="links">
+        <li><a href="https://github.com/biddy1618/ai-homogenization/blob/main/tracker/README.md"><span class="pg">401</span>Methodology and data</a></li>
+        <li><a href="../../dashboard/"><span class="pg">402</span>Full dashboard</a></li>
+        <li><a href="https://github.com/biddy1618/ai-homogenization"><span class="pg">403</span>Source code</a></li>
+      </ul>
+    </div>
+    <p class="colophon">Updated weekly · last run 16 NOV 2026 · 8 runs since 4 OCT 2026</p>
+  </section>
+</div>
+
+<script>
+(() => {
+  const layers = [...document.querySelectorAll('.layer')];
+  const count = 6;
+  const subN = document.querySelector('.sub-n');
+  const hold = document.querySelector('.hold');
+  const next = document.querySelector('.next');
+  const key = document.querySelector('.key-red');
+  const reveal = document.getElementById('reveal');
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let k = 0, timer = null;
+
+  function show(n) {
+    k = (n + count) % count;
+    for (const el of layers) {
+      const on = Number(el.dataset.sub) === k;
+      el.classList.toggle('on', on);
+      if (on) { el.classList.remove('wipe'); void el.offsetWidth; el.classList.add('wipe'); }
+    }
+    subN.textContent = k + 1;
+  }
+  const status = document.getElementById('sub-status');
+  function announce() { status.textContent = `Subpage ${k + 1} of ${count}: ` + layers.find(l => l.classList.contains('head') && l.classList.contains('on')).textContent; }
+  function held() { return hold.getAttribute('aria-pressed') === 'true'; }
+  function schedule() {
+    clearInterval(timer);
+    if (!held() && reveal.hidden && !document.hidden) timer = setInterval(() => show(k + 1), 8000);
+  }
+
+  hold.hidden = false; next.hidden = false;
+  if (reduced) hold.setAttribute('aria-pressed', 'true');
+  hold.addEventListener('click', () => { hold.setAttribute('aria-pressed', String(!held())); schedule(); });
+  next.addEventListener('click', () => { show(k + 1); announce(); schedule(); });
+  document.addEventListener('visibilitychange', schedule);
+
+  key.setAttribute('role', 'button');
+  key.setAttribute('aria-expanded', 'false');
+  function toggleReveal(open) {
+    reveal.hidden = !open;
+    key.setAttribute('aria-expanded', String(open));
+    if (open && !reduced) { reveal.classList.remove('wipe'); void reveal.offsetWidth; reveal.classList.add('wipe'); }
+    schedule();
+  }
+  key.addEventListener('click', ev => { ev.preventDefault(); toggleReveal(reveal.hidden); });
+  key.addEventListener('keydown', ev => { if (ev.key === ' ') { ev.preventDefault(); toggleReveal(reveal.hidden); } });
+  document.addEventListener('keydown', ev => { if (ev.key === 'Escape' && !reveal.hidden) { toggleReveal(false); key.focus(); } });
+
+  schedule();
+})();
+</script>
+</body>
+</html>
