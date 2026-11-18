@@ -47,7 +47,8 @@ a:hover { text-decoration-color: var(--lead); text-decoration-thickness: 2px; }
   column-gap: clamp(18px, 2.4vw, 44px); padding: 0 var(--gut) clamp(10px, 1.6vh, 22px); }
 .folio { grid-column: 1 / -1; display: flex; align-items: center; justify-content: space-between; gap: 24px; height: clamp(38px, 5.4vh, 50px);
   border-bottom: 1px solid var(--rule); font-size: 14px; letter-spacing: .14em; text-transform: uppercase; }
-.folio .mark { display: flex; gap: 1.4em; align-items: baseline; white-space: nowrap; }
+.folio .mark { display: flex; flex-wrap: wrap; gap: 2px 1.4em; align-items: baseline; }
+.folio .mark > * { white-space: nowrap; }
 .folio .mark b { font-weight: 600; letter-spacing: .16em; }
 .folio .mark span { color: var(--lead-2); }
 .folio nav { display: flex; gap: 2em; white-space: nowrap; }
@@ -167,7 +168,8 @@ h1 .dash { font-weight: 300; color: var(--lead-2); }
 }
 
 /* ---------- Below the sheet ---------- */
-.band { padding: clamp(64px, 10vw, 150px) var(--gut); position: relative; }
+.band { padding: clamp(64px, 10vw, 150px) var(--gut); position: relative; overflow-x: clip; }
+.sheet { overflow-x: clip; }
 .band::after { content: ''; position: absolute; left: var(--gut); right: var(--gut); top: clamp(24px, 3.4vw, 52px); height: 9px; pointer-events: none;
   border-left: 1px solid currentColor; border-right: 1px solid currentColor; opacity: .32;
   background: linear-gradient(currentColor, currentColor) 0 50% / 100% 1px no-repeat, linear-gradient(currentColor, currentColor) 50% 0 / 1px 100% no-repeat; }
@@ -291,15 +293,16 @@ details.all[open] summary svg .v { scale: 1 0; }
 .colophon a { text-decoration-color: var(--gall-2); }
 
 /* ---------- Narrow screens ---------- */
-@media (max-width: 1100px) and (min-width: 761px) {
+@media (max-width: 1100px) and (min-width: 901px) {
   .studies { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 }
-@media (max-width: 760px) {
+@media (max-width: 900px), (orientation: portrait) and (max-width: 1100px), (max-height: 560px) {
   body { font-size: 16px; }
   .sheet { height: auto; max-height: none; min-height: 0; grid-template-columns: 1fr; grid-template-rows: auto; padding-bottom: 28px; }
   .folio { height: auto; padding: 12px 0; font-size: 12px; flex-wrap: wrap; gap: 6px 16px; }
   .folio .mark span.wk { display: none; }
-  .folio nav { display: none; }
+  .folio nav { gap: 1.6em; font-size: 12px; }
+  .folio nav a { padding: .7em 0; }
   h1 { white-space: normal; font-size: clamp(27px, 8.2vw, 36px); line-height: 1.06; text-wrap: balance; padding: 16px 0 12px; }
   .margin { grid-row: auto; display: grid; grid-template-columns: auto 1fr; column-gap: 18px; align-items: end; padding-top: 6px; }
   .big { font-size: clamp(76px, 25vw, 104px); grid-row: 1 / 3; }
