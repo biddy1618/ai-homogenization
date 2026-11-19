@@ -203,6 +203,11 @@ tbody tr:last-child td:last-child { color: var(--marigold); font-weight: 700; }
   .chart .line { stroke-dasharray: 1; stroke-dashoffset: 0; }
   .js .chart .line.draw { animation: draw 1.6s cubic-bezier(.16,1,.3,1) .25s both; }
   @keyframes draw { from { stroke-dashoffset: 1; } }
+  .chart .pt-last { animation: live-dot 1.1s steps(1, end) infinite; }
+  @keyframes live-dot {
+    0%, 49% { fill: var(--marigold); opacity: 1; }
+    50%, 100% { fill: var(--void); opacity: 1; }
+  }
 }
 
 /* ---------- responsive */
@@ -247,7 +252,7 @@ tbody tr:last-child td:last-child { color: var(--marigold); font-weight: 700; }
 <body>
 <header class="wrap strip">
   <a class="mark" href="./" aria-label="Homogenization Tracker, home">
-    <svg viewBox="0 0 18 22" aria-hidden="true"><ellipse cx="9" cy="8" rx="7" ry="8" fill="#3d8a78"/><rect x="8" y="3.5" width="2" height="8" fill="#efe6d2"/><rect x="2" y="17" width="14" height="3" fill="#3d8a78"/></svg>
+    <svg viewBox="0 0 18 22" aria-hidden="true"><ellipse cx="9" cy="8" rx="7.2" ry="7.6" fill="#efe6d2"/><rect x="8.2" y="1.2" width="1.6" height="5.2" fill="#e8a317"/><rect x="3.2" y="6.2" width="11.6" height="2.4" rx="0.6" fill="#1a3d36"/><path d="M4.2 10.2 Q9 13.2 13.8 10.2 L12.6 14.2 Q9 15.4 5.4 14.2 Z" fill="#efe6d2"/><rect x="4" y="16.2" width="10" height="2.2" fill="#1a3d36"/><rect x="2" y="18.8" width="14" height="2.4" fill="#efe6d2"/></svg>
     <span>Homogenization Tracker</span>
   </a>
   <span class="week num"><span class="wk">Week 8 · </span>16 Nov 2026</span>
@@ -314,12 +319,12 @@ tbody tr:last-child td:last-child { color: var(--marigold); font-weight: 700; }
 <image class="fig" href="assets/einstein.webp" x="70.0" y="206.8" width="104" height="133.2"/>
 <text class="fig-label" x="184.0" y="324.0">distinct voices</text>
 <g class="fig fig-units">
-<image href="assets/clone-unit.webp" x="942.0" y="21.8" width="54" height="68.2"/>
-<image href="assets/clone-unit.webp" x="1002.0" y="21.8" width="54" height="68.2"/>
-<image href="assets/clone-unit.webp" x="1062.0" y="21.8" width="54" height="68.2"/>
-<image href="assets/clone-unit.webp" x="1122.0" y="21.8" width="54" height="68.2"/>
+<image href="assets/clone-unit.webp" x="942.0" y="29.2" width="54" height="60.8"/>
+<image href="assets/clone-unit.webp" x="1002.0" y="29.2" width="54" height="60.8"/>
+<image href="assets/clone-unit.webp" x="1062.0" y="29.2" width="54" height="60.8"/>
+<image href="assets/clone-unit.webp" x="1122.0" y="29.2" width="54" height="60.8"/>
 </g>
-<text class="fig-label" x="1176.0" y="9.8" text-anchor="end">where we're heading</text>
+<text class="fig-label" x="1176.0" y="17.2" text-anchor="end">where we're heading</text>
 </svg>
       <svg class="chart chart-m" viewBox="0 0 420 440" role="img" aria-labelledby="chart-title-m chart-desc-m" preserveAspectRatio="xMidYMid meet">
 <title id="chart-title-m">Average similarity of Google's top 5 answers, week by week</title>
@@ -357,12 +362,12 @@ tbody tr:last-child td:last-child { color: var(--marigold); font-weight: 700; }
 <image class="fig" href="assets/einstein.webp" x="52.0" y="278.2" width="92" height="117.8"/>
 <text class="fig-label" x="154.0" y="380.0">distinct voices</text>
 <g class="fig fig-units">
-<image href="assets/clone-unit.webp" x="174.0" y="74.4" width="44" height="55.6"/>
-<image href="assets/clone-unit.webp" x="220.0" y="74.4" width="44" height="55.6"/>
-<image href="assets/clone-unit.webp" x="266.0" y="74.4" width="44" height="55.6"/>
-<image href="assets/clone-unit.webp" x="312.0" y="74.4" width="44" height="55.6"/>
+<image href="assets/clone-unit.webp" x="174.0" y="80.5" width="44" height="49.5"/>
+<image href="assets/clone-unit.webp" x="220.0" y="80.5" width="44" height="49.5"/>
+<image href="assets/clone-unit.webp" x="266.0" y="80.5" width="44" height="49.5"/>
+<image href="assets/clone-unit.webp" x="312.0" y="80.5" width="44" height="49.5"/>
 </g>
-<text class="fig-label" x="356.0" y="62.4" text-anchor="end">where we're heading</text>
+<text class="fig-label" x="356.0" y="68.5" text-anchor="end">where we're heading</text>
 </svg>
     </figure>
     <div class="readout">
@@ -383,7 +388,7 @@ tbody tr:last-child td:last-child { color: var(--marigold); font-weight: 700; }
       </div>
     </div>
     <div>
-      <span class="slots slots-hero" aria-hidden="true"><span class="slot" style="--f:1.000"><img src="assets/clone-unit.webp" alt="" width="52" height="65"></span><span class="slot" style="--f:0.958"><img src="assets/clone-unit.webp" alt="" width="52" height="65"></span><span class="slot" style="--f:0.000"><img src="assets/clone-unit.webp" alt="" width="52" height="65"></span><span class="slot" style="--f:0.000"><img src="assets/clone-unit.webp" alt="" width="52" height="65"></span><span class="slot" style="--f:0.000"><img src="assets/clone-unit.webp" alt="" width="52" height="65"></span></span>
+      <span class="slots slots-hero" aria-hidden="true"><span class="slot" style="--f:1.000"><img src="assets/clone-unit.webp" alt="" width="52" height="59"></span><span class="slot" style="--f:0.958"><img src="assets/clone-unit.webp" alt="" width="52" height="59"></span><span class="slot" style="--f:0.000"><img src="assets/clone-unit.webp" alt="" width="52" height="59"></span><span class="slot" style="--f:0.000"><img src="assets/clone-unit.webp" alt="" width="52" height="59"></span><span class="slot" style="--f:0.000"><img src="assets/clone-unit.webp" alt="" width="52" height="59"></span></span>
       <p class="slots-caption num"><span>Top 5 pages this week: marigold is distinct, a helmet is a repeat</span><span><b>1.96</b> of 5 distinct</span></p>
     </div>
   </div>
@@ -417,7 +422,7 @@ tbody tr:last-child td:last-child { color: var(--marigold); font-weight: 700; }
           <div class="scale" id="q-scale" style="--v:0.797"><span></span></div>
           <div class="scale-ends"><span>0 all different</span><span>1 identical</span></div>
         </div>
-        <span class="slots q-slots" aria-hidden="true"><span class="slot" style="--f:1.000"><img src="assets/clone-unit.webp" alt="" width="52" height="65"></span><span class="slot" style="--f:0.866"><img src="assets/clone-unit.webp" alt="" width="52" height="65"></span><span class="slot" style="--f:0.000"><img src="assets/clone-unit.webp" alt="" width="52" height="65"></span><span class="slot" style="--f:0.000"><img src="assets/clone-unit.webp" alt="" width="52" height="65"></span><span class="slot" style="--f:0.000"><img src="assets/clone-unit.webp" alt="" width="52" height="65"></span></span>
+        <span class="slots q-slots" aria-hidden="true"><span class="slot" style="--f:1.000"><img src="assets/clone-unit.webp" alt="" width="52" height="59"></span><span class="slot" style="--f:0.866"><img src="assets/clone-unit.webp" alt="" width="52" height="59"></span><span class="slot" style="--f:0.000"><img src="assets/clone-unit.webp" alt="" width="52" height="59"></span><span class="slot" style="--f:0.000"><img src="assets/clone-unit.webp" alt="" width="52" height="59"></span><span class="slot" style="--f:0.000"><img src="assets/clone-unit.webp" alt="" width="52" height="59"></span></span>
         <p class="slots-caption num"><span>Distinct pages</span><span><b id="q-distinct">1.87</b> of 5</span></p>
       </div>
     </article>
@@ -485,24 +490,24 @@ tbody tr:last-child td:last-child { color: var(--marigold); font-weight: 700; }
     </div>
     </div>
     <div class="legion" aria-hidden="true">
-<span class="unit"><img src="assets/clone-unit.webp" alt="" width="52" height="65" loading="lazy" decoding="async"><span>CU-0001</span></span>
-<span class="unit"><img src="assets/clone-unit.webp" alt="" width="52" height="65" loading="lazy" decoding="async"><span>CU-0002</span></span>
-<span class="unit"><img src="assets/clone-unit.webp" alt="" width="52" height="65" loading="lazy" decoding="async"><span>CU-0003</span></span>
-<span class="unit"><img src="assets/clone-unit.webp" alt="" width="52" height="65" loading="lazy" decoding="async"><span>CU-0004</span></span>
-<span class="unit"><img src="assets/clone-unit.webp" alt="" width="52" height="65" loading="lazy" decoding="async"><span>CU-0005</span></span>
-<span class="unit"><img src="assets/clone-unit.webp" alt="" width="52" height="65" loading="lazy" decoding="async"><span>CU-0006</span></span>
-<span class="unit"><img src="assets/clone-unit.webp" alt="" width="52" height="65" loading="lazy" decoding="async"><span>CU-0007</span></span>
-<span class="unit"><img src="assets/clone-unit.webp" alt="" width="52" height="65" loading="lazy" decoding="async"><span>CU-0008</span></span>
-<span class="unit"><img src="assets/clone-unit.webp" alt="" width="52" height="65" loading="lazy" decoding="async"><span>CU-0009</span></span>
-<span class="unit"><img src="assets/clone-unit.webp" alt="" width="52" height="65" loading="lazy" decoding="async"><span>CU-0010</span></span>
-<span class="unit"><img src="assets/clone-unit.webp" alt="" width="52" height="65" loading="lazy" decoding="async"><span>CU-0011</span></span>
-<span class="unit"><img src="assets/clone-unit.webp" alt="" width="52" height="65" loading="lazy" decoding="async"><span>CU-0012</span></span>
-<span class="unit"><img src="assets/clone-unit.webp" alt="" width="52" height="65" loading="lazy" decoding="async"><span>CU-0013</span></span>
-<span class="unit"><img src="assets/clone-unit.webp" alt="" width="52" height="65" loading="lazy" decoding="async"><span>CU-0014</span></span>
-<span class="unit"><img src="assets/clone-unit.webp" alt="" width="52" height="65" loading="lazy" decoding="async"><span>CU-0015</span></span>
-<span class="unit"><img src="assets/clone-unit.webp" alt="" width="52" height="65" loading="lazy" decoding="async"><span>CU-0016</span></span>
-<span class="unit"><img src="assets/clone-unit.webp" alt="" width="52" height="65" loading="lazy" decoding="async"><span>CU-0017</span></span>
-<span class="unit"><img src="assets/clone-unit.webp" alt="" width="52" height="65" loading="lazy" decoding="async"><span>CU-0018</span></span>
+<span class="unit"><img src="assets/clone-unit.webp" alt="" width="52" height="59" loading="lazy" decoding="async"><span>TU-0001</span></span>
+<span class="unit"><img src="assets/clone-unit.webp" alt="" width="52" height="59" loading="lazy" decoding="async"><span>TU-0002</span></span>
+<span class="unit"><img src="assets/clone-unit.webp" alt="" width="52" height="59" loading="lazy" decoding="async"><span>TU-0003</span></span>
+<span class="unit"><img src="assets/clone-unit.webp" alt="" width="52" height="59" loading="lazy" decoding="async"><span>TU-0004</span></span>
+<span class="unit"><img src="assets/clone-unit.webp" alt="" width="52" height="59" loading="lazy" decoding="async"><span>TU-0005</span></span>
+<span class="unit"><img src="assets/clone-unit.webp" alt="" width="52" height="59" loading="lazy" decoding="async"><span>TU-0006</span></span>
+<span class="unit"><img src="assets/clone-unit.webp" alt="" width="52" height="59" loading="lazy" decoding="async"><span>TU-0007</span></span>
+<span class="unit"><img src="assets/clone-unit.webp" alt="" width="52" height="59" loading="lazy" decoding="async"><span>TU-0008</span></span>
+<span class="unit"><img src="assets/clone-unit.webp" alt="" width="52" height="59" loading="lazy" decoding="async"><span>TU-0009</span></span>
+<span class="unit"><img src="assets/clone-unit.webp" alt="" width="52" height="59" loading="lazy" decoding="async"><span>TU-0010</span></span>
+<span class="unit"><img src="assets/clone-unit.webp" alt="" width="52" height="59" loading="lazy" decoding="async"><span>TU-0011</span></span>
+<span class="unit"><img src="assets/clone-unit.webp" alt="" width="52" height="59" loading="lazy" decoding="async"><span>TU-0012</span></span>
+<span class="unit"><img src="assets/clone-unit.webp" alt="" width="52" height="59" loading="lazy" decoding="async"><span>TU-0013</span></span>
+<span class="unit"><img src="assets/clone-unit.webp" alt="" width="52" height="59" loading="lazy" decoding="async"><span>TU-0014</span></span>
+<span class="unit"><img src="assets/clone-unit.webp" alt="" width="52" height="59" loading="lazy" decoding="async"><span>TU-0015</span></span>
+<span class="unit"><img src="assets/clone-unit.webp" alt="" width="52" height="59" loading="lazy" decoding="async"><span>TU-0016</span></span>
+<span class="unit"><img src="assets/clone-unit.webp" alt="" width="52" height="59" loading="lazy" decoding="async"><span>TU-0017</span></span>
+<span class="unit"><img src="assets/clone-unit.webp" alt="" width="52" height="59" loading="lazy" decoding="async"><span>TU-0018</span></span>
     </div>
   </div>
 </section>
@@ -510,7 +515,7 @@ tbody tr:last-child td:last-child { color: var(--marigold); font-weight: 700; }
 
 <footer class="wrap foot">
   <span class="num">Built from the run of 16 Nov 2026. Updated weekly.</span>
-  <span>Illustrations are generated artwork; the helmeted figure is an original design.</span>
+  <span>Illustrations are generated artwork; the helmeted trooper is an original design, not a franchise character.</span>
 </footer>
 
 <script>

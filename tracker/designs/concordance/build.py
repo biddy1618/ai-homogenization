@@ -224,7 +224,7 @@ def chart_svg(data, w, h, variant):
 
     # figure: four identical units, top right, at the 1.0 end of the scale
     cw = 44 if mobile else 54
-    ch = cw * 657 / 520
+    ch = cw * 585 / 520
     gapc = 2 if mobile else 6
     group_w = 4 * cw + 3 * gapc
     cx = x1 - group_w
@@ -245,15 +245,15 @@ def slots_html(distinct, cls=""):
     cells = []
     for i in range(5):
         f = max(0.0, min(1.0, distinct - i))
-        cells.append(f'<span class="slot" style="--f:{f:.3f}"><img src="assets/clone-unit.webp" alt="" width="52" height="65"></span>')
+        cells.append(f'<span class="slot" style="--f:{f:.3f}"><img src="assets/clone-unit.webp" alt="" width="52" height="59"></span>')
     return f'<span class="slots {cls}" aria-hidden="true">{"".join(cells)}</span>'
 
 
 def legion_html(cols=6, rows=3):
     cells = []
     for i in range(cols * rows):
-        cells.append(f'<span class="unit"><img src="assets/clone-unit.webp" alt="" width="52" height="65" loading="lazy" decoding="async">'
-                     f'<span>CU-{i + 1:04d}</span></span>')
+        cells.append(f'<span class="unit"><img src="assets/clone-unit.webp" alt="" width="52" height="59" loading="lazy" decoding="async">'
+                     f'<span>TU-{i + 1:04d}</span></span>')
     return "\n".join(cells)
 
 
@@ -501,6 +501,11 @@ tbody tr:last-child td:last-child {{ color: var(--marigold); font-weight: 700; }
   .chart .line {{ stroke-dasharray: 1; stroke-dashoffset: 0; }}
   .js .chart .line.draw {{ animation: draw 1.6s cubic-bezier(.16,1,.3,1) .25s both; }}
   @keyframes draw {{ from {{ stroke-dashoffset: 1; }} }}
+  .chart .pt-last {{ animation: live-dot 1.1s steps(1, end) infinite; }}
+  @keyframes live-dot {{
+    0%, 49% {{ fill: var(--marigold); opacity: 1; }}
+    50%, 100% {{ fill: var(--void); opacity: 1; }}
+  }}
 }}
 
 /* ---------- responsive */
@@ -545,7 +550,7 @@ tbody tr:last-child td:last-child {{ color: var(--marigold); font-weight: 700; }
 <body>
 <header class="wrap strip">
   <a class="mark" href="./" aria-label="Homogenization Tracker, home">
-    <svg viewBox="0 0 18 22" aria-hidden="true"><ellipse cx="9" cy="8" rx="7" ry="8" fill="#3d8a78"/><rect x="8" y="3.5" width="2" height="8" fill="#efe6d2"/><rect x="2" y="17" width="14" height="3" fill="#3d8a78"/></svg>
+    <svg viewBox="0 0 18 22" aria-hidden="true"><ellipse cx="9" cy="8" rx="7.2" ry="7.6" fill="#efe6d2"/><rect x="8.2" y="1.2" width="1.6" height="5.2" fill="#e8a317"/><rect x="3.2" y="6.2" width="11.6" height="2.4" rx="0.6" fill="#1a3d36"/><path d="M4.2 10.2 Q9 13.2 13.8 10.2 L12.6 14.2 Q9 15.4 5.4 14.2 Z" fill="#efe6d2"/><rect x="4" y="16.2" width="10" height="2.2" fill="#1a3d36"/><rect x="2" y="18.8" width="14" height="2.4" fill="#efe6d2"/></svg>
     <span>Homogenization Tracker</span>
   </a>
   <span class="week num"><span class="wk">Week {d['week']} · </span>{d_long(d['latest'])}</span>
@@ -687,7 +692,7 @@ tbody tr:last-child td:last-child {{ color: var(--marigold); font-weight: 700; }
 
 <footer class="wrap foot">
   <span class="num">Built from the run of {d_long(d['latest'])}. Updated weekly.</span>
-  <span>Illustrations are generated artwork; the helmeted figure is an original design.</span>
+  <span>Illustrations are generated artwork; the helmeted trooper is an original design, not a franchise character.</span>
 </footer>
 
 <script>

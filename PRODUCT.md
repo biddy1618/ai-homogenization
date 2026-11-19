@@ -45,7 +45,7 @@ It measures this live rather than arguing it. The panel is fixed, the data is re
 
 - **The client's core idea is binding:** a single line over time, with the low end evoking distinct human genius and the high end evoking identical copies.
 - **Low end:** Albert Einstein, as the client suggested. Dauren will clear the rights to Einstein's likeness with the client before the page goes public. His likeness is commercially licensed.
-- **High end:** "identical copies", shown as an original helmeted figure repeated identically. This carries Mark's "clone army" image without being a Stormtrooper or any other franchise character (Disney/Lucasfilm IP on a public site). The helmet design must be clearly distinct from any franchise design.
+- **High end:** "identical copies", shown as an original helmeted trooper repeated identically. This carries Mark's "clone army" / stormtrooper image without being a franchise character (Disney/Lucasfilm IP on a public site). Bone armour, one horizontal wrap-around visor, viridian joints, marigold hazard stripes — clearly distinct from stormtrooper trade dress (no T-visor, twin lenses, frown grille, ear caps).
 - **Mark's composition (2026-11-09):** only two images, so the chart doesn't get crowded: Einstein at the lower left, just right of where the axes meet, and the identical copies at the top right ("where we're heading"). No figures stacked along the axis; he disliked that. The line starts a little right of the y-axis, leaving a gap for the period before 2026-10-04 with no data.
 
 ## Evidence on Hand
