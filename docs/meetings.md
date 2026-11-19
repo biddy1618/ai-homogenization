@@ -4,6 +4,56 @@ Running log of client meetings, newest entry first.
 
 ---
 
+## 2026-11-09 (live call with Mark — held)
+
+Recording: tl;dv transcript "AI Project - update". The 2026-11-08 slot didn't happen (I couldn't
+join), so we met Monday morning his time. Mark joined from his computer; his screen froze a few
+times.
+
+### What I showed / said
+- **The three one-pager drafts** (A: trend chart with figures on the axis, B: "two of five" cards,
+  C: question grid), plus the main dashboard behind them. Placeholders, not final design.
+- **Mark picked A.** "All of them are good ideas ... but I really like this one." He liked
+  everything except "the stuff on the left" (the figures on the axis) — we need to work on what
+  that means.
+- **Last Monday's run (2026-11-02):** a bit down, 0.78 → 0.77. Mark: "that's okay."
+- **Designer friend:** told Mark I've set up a meeting with a friend who's a designer (ex-director
+  of a design company; graphic, web and UI design). Mark: "Perfect."
+
+### Changes to draft A
+- **Images (Mark emailed them during the call):** Stormtroopers in the **top right** (high end,
+  "where we're heading"); **Einstein** at the **lower left**, just right of where the axes meet
+  ("everybody will recognize Einstein"). Only these two, so it doesn't get crowded.
+- **Start of the line:** move 2026-10-04 a little to the right of the y-axis, to show the period
+  we have no data for. Gap about the width of the Einstein picture.
+- **Remove the "search provider changed" line** from the one-pager. Details like that go in the
+  methodology page (one-pager links: "Methodology and data", "Full dashboard").
+- **Title on one line:** "AI-driven homogenization of expression — real-time tracker".
+
+### Other
+- **Update more often?** Mark asked if it could update more frequently (e.g. twice a week). I said
+  it's possible; the limit is the Serper free quota (enough for 100 queries a week). Twice a week
+  probably needs a paid plan, likely under $5/month. To research.
+- Mark is working on feedback on the paper, and will give Toptal good feedback on my work.
+
+### Action items
+
+| # | Owner | Item | Status |
+|---|-------|------|--------|
+| 1 | Dauren | Revise draft A: Stormtroopers top right, Einstein lower left, gap before 2026-10-04, no provider-change line, one-line title | Open |
+| 2 | Dauren | Meet the designer friend, brainstorm, send Mark a summary midweek | Open |
+| 3 | Dauren | Research cost/options for running the tracker more often (twice a week) | Open |
+| 4 | Dauren | Send Mark a calendar invite for Wednesday (2026-11-11) | Open |
+| 5 | Mark | Feedback on the paper | Open (Mark) |
+
+### Note to self
+- Stormtroopers are Disney/Lucasfilm IP, and Einstein's likeness is commercially licensed (see
+  `tracker/onepager/HANDOFF.md`). Fine for a draft; raise with Mark before the page goes public.
+- The biggest step in the line sits on the provider change. Taking the marker off the one-pager is
+  fine, but the methodology page must say it.
+
+---
+
 ## 2026-11-07 (async — meeting moved to 2026-11-08; Mark's sketch)
 
 No call. Mark texted the pencil sketch on Monday 2026-11-02, 06:38. On 2026-11-07, ~20:18, he
@@ -37,8 +87,8 @@ them within 30 minutes. The chart design is later, not part of this send.
 | # | Owner | Item | Status |
 |---|-------|------|--------|
 | 1 | Dauren | Send Mark two paragraphs on the tracker methodology, for the paper | Open |
-| 2 | Dauren | Chart design (his sketch) | Later |
-| 3 | Both | Call 2026-11-08, same time | Open |
+| 2 | Dauren | Chart design (his sketch) | In progress — Mark picked draft A on 2026-11-09 |
+| 3 | Both | Call 2026-11-08, same time | Held 2026-11-09 instead |
 
 ---
 
@@ -72,7 +122,7 @@ Mark had still not read paper v0.2.
 
 | # | Owner | Item | Status |
 |---|-------|------|--------|
-| 1 | Dauren | Tell Mark how the Monday tracker run goes | Open |
+| 1 | Dauren | Tell Mark how the Monday tracker run goes | Done — told him on the 2026-11-09 call |
 | 2 | Dauren | During the week, send design ideas for a single public chart (methodology one click away) | Later — design deferred on 2026-11-07 |
 | 3 | Mark | Pencil sketch of that page; text a photo | Done (texted 2026-11-02) |
 | 4 | Mark | Ask Emmett for design ideas | Open (Mark) |
