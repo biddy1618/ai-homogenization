@@ -22,9 +22,6 @@
 % Open framing decisions for Mark -- delete the boxes once resolved.
 \newtcolorbox{framing}{colback=orange!8, colframe=orange!70!black, fonttitle=\bfseries\small,
   title=Framing decision (open), fontupper=\small, left=4pt, right=4pt, top=2pt, bottom=2pt}
-\newtcolorbox{notemark}{colback=blue!5, colframe=blue!50!black, fonttitle=\bfseries\small,
-  title=Note for Mark (draft only -- remove before release), fontupper=\small, left=4pt, right=4pt,
-  top=2pt, bottom=2pt}
 \newtcolorbox{pending}{colback=orange!8, colframe=orange!70!black, fonttitle=\bfseries\small,
   title=Pending update, fontupper=\small, left=4pt, right=4pt, top=2pt, bottom=2pt}
 
@@ -129,18 +126,11 @@ External (HN, PubMed, arXiv CS, arXiv Math) & 4 & 0.21M & 0.13M & 2016Q1--2026Q2
 
 \paragraph{Turning texts into vectors.} A sentence encoder---here all-MiniLM-L6-v2
 \citep{reimers2019,wang2020minilm}---maps a passage to a vector of 384 numbers such that passages
-with similar meaning get vectors pointing in similar directions. The encoder reads at most 128 tokens
-(about 90 words) at a time, so to represent a whole answer we clean it of URLs, DOIs, e-mail
-addresses and machine strings, split it into sentences, pack the sentences into chunks of at most
-120 tokens, embed each chunk, and average the chunk vectors, weighting each by its length.
-
-\begin{notemark}
-Draft v0.1 embedded only the first 128 tokens of each text, so it measured how answers \emph{open};
-every embedding result in this draft is recomputed on whole texts. Two results changed: the
-cognitive-load comparison (Section~\ref{sec:where}) now shows a clear difference, where v0.1 found
-none, and same-subject convergence (Section~\ref{sec:what}) is now found on many sites. This note,
-and any mention of v0.1, will be removed in the release version.
-\end{notemark}
+with similar meaning get vectors pointing in similar directions. To represent a whole answer we clean
+it of URLs, DOIs, e-mail addresses and machine strings, split it into sentences, pack the sentences
+into chunks, embed each chunk, and average the chunk vectors, weighting each by its length. The
+encoder's window is 128 tokens (about 90 words), so each chunk is capped at 120 tokens; short answers
+fit in one chunk, and longer ones become several chunks that are averaged.
 
 \paragraph{Measuring how alike texts are.} The similarity of two texts is the \emph{cosine
 similarity} of their vectors: the cosine of the angle between them, from about 0 for unrelated

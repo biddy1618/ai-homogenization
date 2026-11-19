@@ -1,0 +1,87 @@
+Subject: Re: two questions on the paper — Methods tweak + clean tables
+
+Hey Mark,
+
+Thanks — both useful.
+
+(1) Methods. You're right that the wording next to the old draft note was easy to
+misread. I've removed that note and rewritten the opening of Methods so it states
+the current procedure first: we embed whole answers by chunking, then average.
+The model's window is still 128 tokens, which is why each chunk is capped at 120 —
+that is an encoder limit, not a truncation of the text we analyse. Updated PDF
+coming once I recompile.
+
+(2) Tables + Exploratory analyses. They are in the draft (Tables 1–4 and
+Appendix A). Pasting clean copies below in case the PDF layout was hard to read.
+
+Happy to walk through any of them.
+
+- Dauren
+
+
+────────────────────────────────────────
+Table 1. Corpora
+(Up to 800 texts sampled per quarter; quarters with fewer than 30 dropped.)
+
+Group                                         | Corpora | Texts | Sampled | Span
+----------------------------------------------|---------|-------|---------|----------------
+Stack Exchange, high cognitive load           | 14      | 1.80M | 0.54M   | 2008Q3–2026Q2
+Stack Exchange, low cognitive load            | 12      | 1.08M | 0.50M   | 2009Q4–2026Q2
+External (HN, PubMed, arXiv CS, arXiv Math)   | 4       | 0.21M | 0.13M   | 2016Q1–2026Q2
+
+
+────────────────────────────────────────
+Table 2. Questions, tests, and the corpora each test uses
+
+Question            | Family | Test                                                                 | Corpora
+--------------------|--------|----------------------------------------------------------------------|--------
+1. More similar?    | 5, 8   | Average similarity between texts each quarter; slope change at 2022Q4 | all 30
+2. Where stronger?  | 9      | Slope change, scaled by each site's pre-2022 variability, high vs low | 26 SE
+3. What changed?    | 13     | Same-subject similarity, # subjects and subject mix (50 embedding topics) | all 30
+                    | 14     | The same, with subjects = Stack Exchange tags                        | 26 SE
+                    | 11     | Similarity between answers to the same question                      | 26 SE
+4. Like the model?  | 12     | Similarity of each answer to gpt-4o-mini's answer to the same question | 26 SE
+
+
+────────────────────────────────────────
+Table 3. Number of corpora with a significant change after ChatGPT (p < 0.05)
+
+Same subject defined as…   | Out of      | Same-subject texts converge | Subject mix shifts | Fewer subjects
+---------------------------|-------------|-----------------------------|--------------------|---------------
+Embedding topics           | 30          | 16                          | 25                 | 27
+  high / low / external    | 14 / 12 / 4  | 11 / 3 / 2                  | 12 / 9 / 4         | 13 / 10 / 4
+Stack Exchange tags        | 26          | 18                          | 24                 | 13
+  high / low load          | 14 / 12     | 9 / 9                       | 12 / 12            | 8 / 5
+The same question          | 26          | 6 (a)                       | n/a (b)            | n/a (b)
+  high / low load          | 14 / 12     | 4 / 2                       |                    |
+
+(a) 4 remain significant after the Benjamini–Hochberg correction.
+(b) Each question is asked once, so there is no mix of questions to compare across quarters.
+
+
+────────────────────────────────────────
+Table 4. Robustness checks
+
+Check              | Result
+-------------------|--------
+Answer length      | First 120 tokens only: same verdict in 26/30 corpora; the 4 differences are significant only at fixed length. Only each text's first K chunks (Cross Validated K=3, PubMed K=4): still significant.
+Second encoder     | BGE-small on all 30 corpora: same verdict in 21/30 (whole text) and 20/30 (first 120 tokens); quarterly series correlate at a median of 0.66. High load: 11/14 agree (9 significant with both). External: 4/4. Low load: 6/12 agree; BGE finds 2 significant rises and 3 significant falls. High vs low (family 9): 9/14 vs 2/12, p=0.019.
+Number of topics   | 25 and 100 instead of 50 topics: same conclusions (within-topic convergence 9–12/14 high vs 3–5/12 low; diversity falls in 24–26/30).
+Sample size        | Topic diversity and drift on fixed 100-text samples, as volumes fell after 2022: conclusions unchanged.
+Model answers      | One versus three answers per question (Economics): mean similarity between answers 0.92, so one is enough.
+
+
+────────────────────────────────────────
+Appendix A. Exploratory analyses
+
+Before the main analysis we ran several simpler measures. They are kept in the
+code and results (folder artifacts/exploratory) but superseded:
+
+Family | Measure                              | Finding and why superseded
+-------|--------------------------------------|---------------------------
+1      | Lexical diversity and surface features | Rises after ChatGPT only because answers got longer; flat at fixed length.
+2      | Length-window sweep                  | Confirms family 1 at 50–200-token windows.
+3      | LSA (bag-of-words) similarity        | Length artifact like family 1; replaced by sentence embeddings.
+4      | LDA topics                           | Topic mix nearly unchanged; replaced by embedding and tag topics.
+6      | BERTopic topics                      | Leaves about half of the texts unassigned, so within-topic results describe a selected half; replaced by families 13 and 14, kept for topic labels.
+7      | High- vs low-score answers           | Both tiers rise (two sites); the rise is not confined to low-quality answers.
