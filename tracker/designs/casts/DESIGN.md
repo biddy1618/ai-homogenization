@@ -89,7 +89,7 @@ Display and the carved headline number use self-hosted **Big Shoulders Stencil**
 
 ## Layout
 
-The hero is a 1280×720 design frame scaled with `--u: min(100cqw / 1280, 100svh / 720)` so title, number, casts, and full chart stay in the first viewport from 1280×720 through 1440×900 and wider. Below the fold: oxblood band ("This week's pull"), then calliper strips, ledger, and methodology in a max-width wrap. From `@container (max-width: 760px)` the frame stacks; whole casts drop as units — never crop a cast. No horizontal overflow from 320px up.
+The hero is a 1280×720 design frame scaled with `--u: min(100cqw / 1280, 100svh / 720)` so title, number, casts, and full chart stay in the first viewport from 1280×720 through 1440×900 and wider. Below the fold: oxblood band ("This week's pull"), then calliper strips, ledger, and methodology in a max-width wrap. From `@container (max-width: 960px)` the frame stacks; whole casts drop as units — never crop a cast. Chart Einstein width (`--ew`) and series inset stay locked so the line does not collapse on narrow viewports. No horizontal overflow from 320px up.
 
 ## Elevation & Depth
 

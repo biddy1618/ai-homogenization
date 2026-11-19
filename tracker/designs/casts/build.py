@@ -324,17 +324,17 @@ img {{ display: block; }}
 .stage, .face {{ position: static; }}
 .casts, .casts-label, .chart, .einstein-label {{ position: absolute; }}
 .chart {{ left: calc(84 * var(--u)); top: calc(348 * var(--u)); width: calc(1116 * var(--u)); height: calc(220 * var(--u)); container-type: size;
-  --eh: calc(222 * var(--u)); --el: 0px; --eg: calc(26 * var(--u)); }}
+  --eh: calc(222 * var(--u)); --ew: calc(190 * var(--u)); --el: 0px; --eg: calc(26 * var(--u)); }}
 .axis {{ position: absolute; left: 0; top: 0; bottom: 0; width: 0; border-left: 1.5px solid rgb(236 230 221 / .7); }}
 .tick {{ position: absolute; right: 0; width: calc(7 * var(--u)); height: 0; border-top: 1px solid rgb(236 230 221 / .55); }}
 .tick.major {{ width: calc(12 * var(--u)); border-top-width: 1.5px; border-top-color: rgb(236 230 221 / .8); }}
 .tick b {{ position: absolute; right: calc(18 * var(--u)); top: 0; transform: translateY(-52%); font-size: calc(22 * var(--u)); font-weight: 600; line-height: 1; color: var(--plaster); font-variant-numeric: tabular-nums; }}
 .baseline {{ position: absolute; left: 0; right: calc(-14 * var(--u)); bottom: 0; border-top: 1.5px solid rgb(236 230 221 / .6); }}
 .jaw {{ position: absolute; left: calc(-9 * var(--u)); width: calc(18 * var(--u)); height: 0; border-top: calc(4 * var(--u)) solid var(--oxblood-ink); transform: translateY(-50%); transition: top .45s cubic-bezier(.16, 1, .3, 1); }}
-.einstein {{ position: absolute; left: var(--el); bottom: calc(-6 * var(--u)); width: calc(190 * var(--u)); height: var(--eh); overflow: hidden; background: transparent; }}
+.einstein {{ position: absolute; left: var(--el); bottom: calc(-6 * var(--u)); width: var(--ew); height: var(--eh); overflow: hidden; background: transparent; }}
 .einstein img {{ width: 100%; height: 100%; object-fit: contain; object-position: bottom left; display: block; }}
 .einstein-label {{ left: calc(76 * var(--u)); top: calc(574 * var(--u)); width: calc(188 * var(--u)); padding: calc(6 * var(--u)) 0; background: rgb(14 14 15 / .82); box-shadow: 0 calc(2 * var(--u)) calc(6 * var(--u)) rgb(0 0 0 / .5); text-align: center; font-size: calc(22 * var(--u)); font-weight: 700; letter-spacing: .02em; line-height: 1.1; }}
-.series {{ position: absolute; left: calc(var(--eh) * 570 / 666 + var(--el) + var(--eg)); right: calc(10 * var(--u)); top: 0; bottom: 0; }}
+.series {{ position: absolute; left: calc(var(--ew) + var(--el) + var(--eg)); right: calc(10 * var(--u)); top: 0; bottom: 0; }}
 .series .seg {{ position: absolute; height: 0; border-top: 2px solid var(--plaster); transform-origin: 0 50%; filter: drop-shadow(0 1.5px 1px rgb(0 0 0 / .8)); pointer-events: none; }}
 .run {{ position: absolute; width: 30px; height: 30px; margin: -15px 0 0 -15px; border: 0; background: none; cursor: pointer; display: grid; place-items: center; }}
 .run i {{ width: calc(9 * var(--u)); height: calc(9 * var(--u)); min-width: 7px; min-height: 7px; border-radius: 50%; background: var(--plaster); box-shadow: 0 1px 2px rgb(0 0 0 / .8); transition: transform .3s cubic-bezier(.16, 1, .3, 1); }}
@@ -448,7 +448,7 @@ footer {{ margin-top: clamp(64px, 8vw, 112px); padding: 22px clamp(16px, 4vw, 56
 footer .wrap {{ display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px 24px; }}
 
 /* Narrow screens: the plinth stacks; the chart keeps its full 0-1 scale. */
-@container (max-width: 760px) {{
+@container (max-width: 960px) {{
   .frame {{ width: auto; height: auto; padding: 18px 16px 0; display: flex; flex-direction: column; }}
   .frame > * {{ position: relative; left: auto; top: auto; }}
   .studio {{ position: absolute; inset: 0 0 auto 0; height: 430px; width: 100%; overflow: hidden; -webkit-mask: linear-gradient(#000 70%, transparent); mask: linear-gradient(#000 70%, transparent); }}
@@ -460,21 +460,29 @@ footer .wrap {{ display: flex; flex-wrap: wrap; justify-content: space-between; 
   .links {{ position: relative; left: auto; top: auto; width: auto; font-size: 17px; gap: 8px 12px; margin-top: 10px; }}
   .links li + li::before {{ margin-right: 12px; }}
   .links a {{ padding: 4px 0; color: var(--plaster); }}
-  .stage {{ margin: 22px -16px 0; position: relative; }}
-  .casts {{ position: relative; left: auto; top: auto; width: min(70%, 340px); margin: 0 12px -7px auto; z-index: 1; }}
-  .cast-nos {{ font-size: clamp(22px, 6vw, 32px); height: auto; padding-bottom: 2px; }}
-  .face {{ position: relative; padding: 46px 14px 54px 50px; background: url(assets/plates/studio.webp) 4% 93.5% / auto 205% no-repeat, var(--slate); box-shadow: inset 0 1px 0 rgb(236 230 221 / .25); }}
+  .stage {{ margin: 22px -16px 0; position: relative; padding-top: clamp(28px, 7vw, 40px); }}
+  .casts {{ position: relative; left: auto; top: auto; width: min(72%, 340px); margin: 0 12px -7px auto; z-index: 1; }}
+  .cast-nos {{
+    position: absolute; left: auto; right: 12px; top: 0; width: min(72%, 340px);
+    font-size: clamp(22px, 6vw, 32px); height: auto; padding-bottom: 2px;
+  }}
+  .face {{ position: relative; padding: 46px 14px 36px 36px; background: url(assets/plates/studio.webp) 4% 93.5% / auto 205% no-repeat, var(--slate); box-shadow: inset 0 1px 0 rgb(236 230 221 / .25); }}
   .casts-label {{ position: absolute; left: auto; right: 14px; top: 12px; font-size: 16px; white-space: normal; text-align: right; }}
-  .chart {{ position: relative; left: auto; top: auto; width: 100%; height: clamp(190px, 56vw, 260px); }}
-  .tick b {{ font-size: 13px; right: 14px; }}
+  .chart {{
+    position: relative; left: auto; top: auto; width: 100%;
+    height: clamp(200px, 54vw, 280px); margin-bottom: 22px; container-type: size;
+    --ew: clamp(72px, 26%, 108px); --eh: 100%; --el: 0px; --eg: 10px;
+  }}
+  .tick b {{ font-size: 13px; right: 10px; }}
   .tick {{ width: 5px; }} .tick.major {{ width: 9px; }}
-  .chart {{ --eh: 54cqh; --el: 4px; --eg: 12px; }}
-  .einstein {{ bottom: -3px; }}
-  .einstein-label {{ position: absolute; left: 40px; top: auto; bottom: 10px; width: auto; padding: 3px 8px; font-size: 14px; }}
-  .series {{ right: 6px; }}
+  .einstein {{ bottom: 0; width: var(--ew); height: var(--eh); }}
+  .einstein-label {{ position: absolute; left: 8px; top: auto; bottom: 8px; width: auto; max-width: calc(var(--ew) + 24px); padding: 3px 8px; font-size: 13px; }}
+  .series {{ left: calc(var(--ew) + var(--el) + var(--eg)); right: 4px; }}
+  .dates {{ top: calc(100% + 8px); }}
   .date {{ font-size: 12px; }}
   .date:nth-child(even) {{ display: none; }}
-  .readout {{ font-size: 13px; margin-top: 10px; }}
+  .readout {{ font-size: 13px; margin-top: 8px; }}
+  .run {{ width: 28px; height: 28px; margin: -14px 0 0 -14px; }}
   .jaw {{ left: -6px; width: 12px; border-top-width: 3px; }}
   .band {{ position: relative; left: auto; top: auto; height: auto; margin: 0 -16px; padding: 22px 16px 4px; background: var(--oxblood); place-items: start; }}
   .hero::after {{ display: none; }}
@@ -496,6 +504,9 @@ footer .wrap {{ display: flex; flex-wrap: wrap; justify-content: space-between; 
   .links li + li {{ border-left: 0; padding-left: 0; }}
   .strip-name {{ grid-template-columns: auto 1fr; }}
   .strip-name small {{ grid-column: 1 / -1; text-align: left; }}
+  .chart {{ --ew: 64px; --eg: 8px; height: 190px; }}
+  .face {{ padding-left: 28px; }}
+  .einstein-label {{ font-size: 12px; left: 4px; }}
 }}
 </style>
 </head>
