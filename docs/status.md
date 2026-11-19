@@ -2,7 +2,19 @@
 
 *Running "what's done / current state / open threads" tracker. Newest state at top.*
 
-## Current state (2026-10-27; tracker v2 live ? see rows T2/T3 below)
+## Current state (2026-11-19)
+
+**Paper v0.3 (2026-11-19)** reframed after the placebo tests (rows P1-P4): answers are becoming more
+alike in recent years, more on high-load sites (now also by an objective index), through a change in
+which questions are asked; ChatGPT's release is the a-priori reference date, "consistent with, not
+specific to" ChatGPT. New Section 4.2 (timing/placebo), placebo figure, robustness rows, discussion
+(tracker 100 questions), limitations. Reply to Mark's 2 questions + heads-up on the reframing:
+`deliverables/2026-11-19-mark/` (email-body.txt, paper-v0.3.pdf). **Mark has not yet heard the
+reframing.** Tracker: weekly runs 11-02/09/16 complete, page texts in S3; one-pager draft A being
+designed with Mark (see `docs/meetings.md` 2026-11-09). Open: placebo check for families 11/13/14;
+control-group design; the framing box in the Discussion.
+
+## Earlier state (2026-10-27)
 
 **Analysis complete; paper v0.2 sent to Mark (meeting Wed 2026-10-21).** All 30 sources (26 SE: 14 high-
 and 12 low-cognitive-load; 4 external) are embedded on whole text (sentence chunks of <=120 tokens,

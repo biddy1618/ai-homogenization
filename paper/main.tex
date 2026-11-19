@@ -25,31 +25,31 @@
 \newtcolorbox{pending}{colback=orange!8, colframe=orange!70!black, fonttitle=\bfseries\small,
   title=Pending update, fontupper=\small, left=4pt, right=4pt, top=2pt, bottom=2pt}
 
-\title{Did Generative AI Homogenize Online Writing?\\[4pt]
+\title{Are Online Answers Becoming More Alike?\\[4pt]
   \large Evidence from 30 Corpora, 2008--2026}
 \author{Mark Nomellini}
-\date{Draft v0.2 --- \today}
+\date{Draft v0.3 --- \today}
 
 \begin{document}
 \maketitle
 
 \begin{abstract}
-We test whether online writing became more homogeneous after the public release of ChatGPT
-(2022Q4). We embed the full text of about 1.2 million sampled answers and abstracts from 30 dated
+We ask whether online answers are becoming more alike, where most strongly, and through what route.
+We embed the full text of about 1.2 million sampled answers and abstracts from 30 dated
 corpora---26 Stack Exchange communities (14 high- and 12 low-cognitive-load) plus Hacker News,
-PubMed oncology, arXiv computer science and arXiv mathematics---and test, quarter by quarter, for a
-change in trend at 2022Q4. Four findings. (1) Answers became more similar to each other: the similarity trend turns
-upward after ChatGPT in 24 of 26 Stack Exchange communities, significantly in 15, and in all 4
-external corpora; with a second, independent text encoder the rise holds in expert communities and in
-all external corpora, but not in everyday ones. (2) The turn is stronger in high-cognitive-load
-communities, where AI saves more effort (11 of 14 versus 4 of 12, and 9 of 14 versus 2 of 12 with
-the second encoder; $p\approx0.002$--$0.03$). (3) The change is mainly in \emph{what}
-is asked and discussed: the mix of subjects shifts in 24 of 26 communities and answers within the same
-subject converge in 18 of 26, but answers to the \emph{same question} converge in only 6. (4) Human
-answers do not move towards what a language model would write for the same question. We conclude
-that generative AI is associated with a real but specific form of homogenization---a narrowing and
-convergence of the questions people bring and the subjects they discuss, strongest in expert
-communities---rather than people writing like the model.
+PubMed oncology, arXiv computer science and arXiv mathematics---and follow their similarity quarter
+by quarter, using the public release of ChatGPT (2022Q4) as an a-priori reference date. Four
+findings. (1) After years of slow decline, the similarity between answers written in the same quarter
+has turned upward in most corpora. Placebo analyses at fake pre-2022 dates show that this upturn
+cannot be pinned to 2022Q4: on several sites it began earlier, on most it is gradual, and only Cross
+Validated shows a separable break at ChatGPT's release. (2) The rise is larger in
+high-cognitive-load communities, both by our own labels and by an objective text-complexity index.
+(3) The change is mainly in \emph{what} is asked: the mix of subjects shifts and answers on the same
+subject converge, but answers to the \emph{same question} mostly do not; on high-load sites the
+questions that remain are longer and keep their answers. (4) Human answers do not move towards what
+a language model would write for the same question. We conclude that online answers are converging,
+especially in demanding fields, through a change in which questions are still asked in public. The
+pattern is consistent with the spread of generative AI but is not specific to ChatGPT's release.
 \end{abstract}
 
 % ---------------------------------------------------------------------------------------------
@@ -71,8 +71,8 @@ always-available, fluent default answer is exactly the kind of anchor people con
 ``Did AI homogenize writing?'' is too coarse to test. We split it into four questions, each with its
 own test:
 \begin{enumerate}
-  \item \textbf{Did texts become more similar to each other?} Are two answers from the same quarter more similar after
-  ChatGPT than the earlier trend predicts?
+  \item \textbf{Did texts become more similar to each other?} Are two answers from the same quarter
+  more similar than they used to be, and does the change line up with ChatGPT's release?
   \item \textbf{Where is it stronger?} If AI saves the most effort on demanding questions, the effect
   should be larger in high-cognitive-load communities.
   \item \textbf{What changed?} Texts can become more alike because people discuss a narrower or
@@ -139,16 +139,25 @@ score about 0.05--0.2). For each corpus and quarter we sample up to 800 texts an
 cosine similarity over all pairs of them. A rising average means that texts written in the same
 quarter are becoming more similar to one another.
 
-\paragraph{Testing for a change at ChatGPT.} For each corpus we fit a straight trend line to the
+\paragraph{Testing for a change at a reference date.} We fix ChatGPT's release (2022Q4) in
+advance as the reference date. For each corpus we fit a straight trend line to the
 quarterly similarity before 2022Q4 and another after it (an \emph{interrupted time series}, or
 segmented regression \citep{wagner2002}), with standard errors that allow for correlation between
 neighbouring quarters \citep{newey1987}. Our main statistic is the \emph{slope change}: the slope of
-the line after ChatGPT minus the slope before, in similarity units per quarter. A positive, significant
-slope change means similarity began rising faster (or stopped falling) after ChatGPT;
+the line after 2022Q4 minus the slope before, in similarity units per quarter. A positive, significant
+slope change means similarity rises faster (or stops falling) after the reference date than before it;
 Figure~\ref{fig:its} shows an example. The same test is applied to every measure below. Because we
 test many corpora, we also report how many results survive the Benjamini--Hochberg correction
 \citep{benjamini1995}, which limits the expected share of false positives among the results called
 significant to 5\%.
+
+\paragraph{Placebo dates.} A slope change can also appear where a series simply bends gradually.
+To check whether the test can tell a turn at 2022Q4 from a gradual bend, we apply it to fake break
+quarters before ChatGPT (2016--2020), using pre-2022Q4 data only and giving each fake break as many
+following quarters as the real one (15). If the test were well calibrated, a fake date would show a
+significant rise about 2.5\% of the time. We also refit with a curved (quadratic) underlying trend,
+compare each corpus's real slope change with its own placebo distribution, and pool all sites in
+one model with site-specific trends and a shared slope change at the reference date.
 
 \begin{figure}[H]
   \centering
@@ -227,17 +236,18 @@ answers were generated for 157,495 human answers.
 % ---------------------------------------------------------------------------------------------
 \section{Results}
 
-\subsection{Answers became more similar to each other after ChatGPT}
+\subsection{Answers became more similar to each other in recent years}
 \label{sec:alike}
 
 This section asks whether answers written in the same quarter resemble \emph{each other} more than
 they used to (comparison with the model's own answers comes in Section~\ref{sec:model}). In 24 of 26
-Stack Exchange communities the slope of answer-to-answer similarity increases after 2022Q4; the
-increase is significant in 15 (all 15 survive the multiple-testing correction) and in all 4 external
-corpora (Figure~\ref{fig:significance}). The typical pattern is a flat or slowly declining similarity
-before ChatGPT that turns upward afterwards: 13 of the 19 significant corpora had a falling pre-2022
-trend, 7 of them significantly. Two external corpora (PubMed, arXiv CS) were already rising before
-2022; there the change is an acceleration rather than a reversal.
+Stack Exchange communities the slope of answer-to-answer similarity is higher after 2022Q4 than
+before, significantly so by the standard test in 15 and in all 4 external corpora
+(Figure~\ref{fig:significance}). The typical pattern is a flat or slowly declining similarity that
+turns upward: 13 of the 19 significant corpora had a falling earlier trend, 7 of them significantly.
+Two external corpora (PubMed, arXiv CS) were already rising before 2022; there the change is an
+acceleration rather than a reversal. Section~\ref{sec:timing} shows that these counts describe the
+direction of the change well but overstate how precisely it can be dated.
 
 \textbf{Is it just longer answers?} Answers got longer after ChatGPT on several sites, and length
 alone can raise similarity: a long answer's vector is the average of many chunk vectors, and
@@ -258,13 +268,54 @@ robust in expert and academic writing, and encoder-dependent in everyday communi
 \begin{figure}[H]
   \centering
   \includegraphics[width=0.8\linewidth]{fig_significance.png}
-  \caption{Slope change in answer-to-answer similarity after ChatGPT, per corpus. Circles: whole
+  \caption{Slope change in answer-to-answer similarity after 2022Q4, per corpus (standard test; see Section~\ref{sec:timing} for placebo calibration). Circles: whole
   answers (filled $=p<0.05$); diamonds: first 120 tokens only. Blue: high-load Stack Exchange;
   orange: low-load; green: external.}
   \label{fig:significance}
 \end{figure}
 
-\subsection{The turn is stronger where AI saves more effort}
+\subsection{When did it start? The timing cannot be pinned to ChatGPT}
+\label{sec:timing}
+
+The standard slope-change test is far too willing to find a break. Applied at fake quarters before
+ChatGPT, it reports a significant rise 57\% of the time (53\% without matching the post-break length),
+against the 2.5\% expected: most similarity series bend slowly, and a straight earlier trend reads any
+bend as a break. Allowing a curved underlying trend lowers the false-rise rate to 10\%, but the test
+then loses its power: when we add an upturn as large as the observed ones to the pre-2022 data at a
+random quarter, it detects only about one in five.
+
+Calibrated against placebos, the evidence for a break specific to 2022Q4 is thin
+(Figure~\ref{fig:placebo}):
+\begin{itemize}
+  \item The real slope change exceeds every placebo of the same corpus in 12 of 30 corpora: 6 of 14
+  high-load sites (Cross Validated, Philosophy, Economics, Biology, Chemistry, English), 2 of 12
+  low-load sites (The Workplace, Arqade) and all 4 external corpora, though the externals have only
+  five placebo dates each.
+  \item On Software Engineering, Physics, Travel, Seasoned Advice, Board Games and Law the real
+  change is \emph{smaller} than most placebos: the upturn was already under way before ChatGPT.
+  \item Only Cross Validated passes every version (straight and curved trend, placebo-calibrated,
+  multiple-testing corrected).
+  \item Pooling all Stack Exchange sites (site-specific curved trends, a shared slope change),
+  2022Q4 is not unusual among placebo dates ($p=0.11$); for high-load sites alone $p=0.08$.
+\end{itemize}
+Question volume tells the same story: Stack Exchange was already shrinking from its 2021 peak, and
+the volume after 2022Q4 is no further below its earlier trend than at placebo dates.
+
+We therefore read the result as a recent upturn in similarity whose timing is consistent with, but
+not specific to, ChatGPT's release. The figures for 2022Q4 throughout this paper describe the
+direction and size of the change around that reference date; they are not evidence that the change
+began there.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.8\linewidth]{fig_placebo.png}
+  \caption{Placebo dates. Grey: slope changes at fake break quarters before ChatGPT (pre-2022 data
+  only, 15 following quarters each); dark grey = significant rise by the standard test. Coloured:
+  the real 2022Q4 slope change (filled = significant by the standard test).}
+  \label{fig:placebo}
+\end{figure}
+
+\subsection{The rise is larger where AI saves more effort}
 \label{sec:where}
 
 High-cognitive-load communities turn up more than low-load ones (Figure~\ref{fig:cogload}): the
@@ -276,6 +327,17 @@ tokens alone more high-load sites are significant (13/14 vs 6/12, $p=0.021$), bu
 are closer ($p=0.06$). With the second encoder the difference is larger: 9 of 14 versus 2 of 12
 significant (Fisher $p=0.019$), median scaled slope change 0.11 versus $-0.02$ (Mann--Whitney
 $p=0.002$).
+
+Two checks address the weaknesses of this comparison. \textbf{Timing:} counts of significant
+sites inherit the over-sized test of Section~\ref{sec:timing}, and after placebo calibration too
+few sites remain to compare counts (1 of 14 versus 0 of 12 with a curved trend). The difference in
+\emph{size} survives: with a curved trend, each site's 2022Q4 change, measured against its own
+placebo dates, is larger on high-load sites (median $z$ 0.67 versus 0.04; Mann--Whitney $p=0.013$).
+\textbf{Labels:} instead of our own high/low split, we score each site by the complexity of its
+pre-2022 text (question and answer length, word length, share of long words, sentence length and
+Flesch--Kincaid grade). This index separates our two groups well (AUC 0.86; the share of words with
+seven or more letters alone separates them perfectly), and it predicts the size of a site's rise
+(Spearman $\rho=0.51$, $p=0.007$).
 
 \begin{figure}[H]
   \centering
@@ -295,7 +357,7 @@ the Method section.
 
 \begin{table}[H]
 \centering
-\caption{Number of corpora with a significant change after ChatGPT ($p<0.05$).}
+\caption{Number of corpora with a significant change after 2022Q4 (standard test, $p<0.05$; directions of change, not dated breaks).}
 \label{tab:what}
 \small
 \begin{tabularx}{\linewidth}{>{\raggedright\arraybackslash}Xcccc}
@@ -340,6 +402,18 @@ Read together: when the question is held fixed, people answer it no more alike t
 convergence appears when the subject is broad, which means the \emph{questions} within a subject have
 themselves become more similar---narrower, more standard, or concentrated on fewer issues. The change
 is in what is asked and discussed, more than in how people answer.
+
+The questions themselves changed in a way that fits this reading. Comparing 2023Q1 onwards with
+2021Q1--2022Q3, question volume fell by about half on high- and low-load sites alike, so volume alone
+does not explain the difference between them. But on high-load sites the remaining questions became
+longer (median $+10\%$ versus $0\%$, Mann--Whitney $p=0.002$) and kept their answers (answers per
+question $-0.02$ versus $-0.17$, $p=0.001$), and sites whose questions lengthened more show a larger
+rise in answer similarity (Spearman $\rho=0.46$, $p=0.019$). Simple questions appear to have left, and
+the harder ones that remain draw more similar answers.
+
+The counts in Table~\ref{tab:what} come from the same slope-change test as
+Section~\ref{sec:alike}, so, like those, they describe the direction of change around 2022Q4 rather
+than a break dated there.
 
 Two cautions. Embedding topics are found in the same vector space in which similarity is measured,
 so they can mistake answers that converge in wording for ``fewer topics''. Tags, chosen by askers, do
@@ -397,6 +471,8 @@ Second encoder & BGE-small \citep{xiao2023cpack} on all 30 corpora: same verdict
 Number of topics & 25 and 100 instead of 50 topics: the same conclusions (within-topic convergence 9--12/14 high vs 3--5/12 low; diversity falls in 24--26/30). \\
 Sample size & Topic diversity and drift on fixed 100-text samples, as volumes fell after 2022: conclusions unchanged. \\
 Model answers & One versus three answers per question (Economics): mean similarity between answers 0.92, so one is enough. \\
+Placebo dates & Fake pre-2022 breaks: standard test finds a significant rise 57\% of the time (curved trend 10\%). Real change above all own placebos in 12/30; only Cross Validated passes every version; pooled SE $p=0.11$, high-load $p=0.08$ (Section~\ref{sec:timing}). \\
+Objective load index & Text-complexity index agrees with our labels (AUC 0.86) and predicts the size of the rise ($\rho=0.51$, $p=0.007$). High vs low on curved-trend, placebo-scaled change: $p=0.013$. \\
 \bottomrule
 \end{tabularx}
 \end{table}
@@ -404,38 +480,56 @@ Model answers & One versus three answers per question (Economics): mean similari
 % ---------------------------------------------------------------------------------------------
 \section{Discussion}
 
-The pattern is consistent across tests. Online answers became more similar to one another after
-ChatGPT---robustly in expert and academic communities, less clearly in everyday ones---mainly because
-the questions people bring and the subjects they discuss narrowed and shifted. People answering the same question do not converge, and they do not converge on the
-model's own answers.
+The pattern is consistent across tests. Online answers have become more similar to one another in
+recent years---robustly in expert and academic communities, less clearly in everyday ones---mainly
+because the questions people bring and the subjects they discuss narrowed and shifted. People
+answering the same question do not converge, and they do not converge on the model's own answers.
 
-One plausible mechanism is substitution: routine, well-defined questions that a chatbot can answer
-privately no longer reach public forums, which shifts and narrows what remains---especially in
-expert communities, where a model saves the most effort. That would explain why the subject mix moves
-almost everywhere, why same-subject answers converge, and why same-question answers do not. Our data
-are consistent with this reading but do not prove it.
+When this began is less clear than what happened. ChatGPT's release is a natural reference date and
+we fixed it in advance, but placebo analyses show that our data cannot separate a turn at that date
+from a gradual upturn, and on several sites the upturn started earlier. Generative AI is one candidate
+cause; others act on the same communities over the same years: shrinking participation, earlier
+writing and search tools, moderation policy and the pandemic. Separating them would need a comparison
+group that AI reached later or not at all.
+
+One plausible mechanism is substitution: routine, well-defined questions that a chatbot (or a search
+engine) can answer privately no longer reach public forums, which shifts and narrows what
+remains---especially in expert communities, where such tools save the most effort. That would explain
+why the subject mix moves almost everywhere, why same-subject answers converge, why same-question
+answers do not, and why the questions that remain on high-load sites are longer. Our data are
+consistent with this reading but do not prove it.
 
 This form of homogenization matters. A shrinking, shifting set of public questions is a narrowing of
 the public conversation itself: the long tail of unusual questions, and the record of how people
 reasoned about them, is what search engines, students and future models draw on. Because the change
-is measurable, it can be monitored. We maintain an open tracker that weekly collects Google's top
-results for 45 informational questions in five domains, fetches the full pages, and measures how much
-they repeat one another \citep{friedman2023vendi}; it began in October 2026 and will need several
-months before trends can be read.
+is measurable, it can be monitored, and monitoring is how timing questions can be settled going forward. We maintain an open
+tracker that every week collects Google's top results for 100 informational questions in five
+domains (health, finance, law, science, technology), reads the first five pages that can be read in
+full, and measures how alike they are with the same similarity measure as this paper, alongside the
+Vendi score \citep{friedman2023vendi}; it began in October 2026 and will need several months before
+trends can be read.
 
 \begin{framing}
-How strong a claim should this section make? From most to least cautious: (a) ``a specific, measurable
-narrowing worth monitoring''; (b) ``an early-warning sign of a narrowing public conversation'';
-(c) ``evidence that AI is reshaping what people ask in public''.
+How strong a claim should this section make, given that the timing cannot be pinned to ChatGPT?
+From most to least cautious: (a) ``a specific, measurable narrowing worth monitoring'';
+(b) ``an early-warning sign of a narrowing public conversation, consistent with the spread of
+AI tools''; (c) ``evidence that AI is reshaping what people ask in public'' (no longer supported
+by the timing analysis).
 \end{framing}
 
 % ---------------------------------------------------------------------------------------------
 \section{Limitations}
 
 \begin{itemize}
-  \item \textbf{Timing is not causation.} The break is fixed at ChatGPT's release; other changes
+  \item \textbf{Timing, and causation.} The reference date is fixed at ChatGPT's release, but placebo
+  analyses show the upturn cannot be dated to it (Section~\ref{sec:timing}), and other changes
   happened in the same period (falling Stack Exchange volumes, platform policies, the pandemic, which
-  is visible as a 2020 jump in Travel).
+  is visible as a 2020 jump in Travel). We have no comparison group that AI did not reach, so we make
+  no causal claim.
+  \item \textbf{Counts use an over-sized test.} Per-site significance counts (Sections
+  \ref{sec:alike}--\ref{sec:what}) come from a slope-change test that also flags most placebo dates;
+  read them as directions of change, not as dated breaks. Placebo calibration has been applied to
+  the main similarity measure only.
   \item \textbf{Small effects.} Slope changes are on the order of $10^{-3}$ per quarter; with many
   quarters, small effects become significant. They accumulate to a meaningful share of the
   between-quarter variation, but they are not large.
@@ -443,7 +537,8 @@ narrowing worth monitoring''; (b) ``an early-warning sign of a narrowing public 
   second agrees in expert and academic corpora, but in low-load communities the rise depends on the
   encoder (Section~\ref{sec:alike}); claims about everyday writing are therefore weaker.
   \item \textbf{Our own labels.} The high/low cognitive-load split is our classification of each
-  community; the 26 sites are a small sample for a group comparison.
+  community, though an objective text-complexity index agrees with it (Section~\ref{sec:where}); the
+  26 sites are a small sample for a group comparison.
   \item \textbf{Low load is Stack Exchange only.} All external corpora are high-load.
   \item \textbf{The model anchor is a proxy.} gpt-4o-mini stands in for the different chatbots people
   actually used between 2022 and 2026.
@@ -454,11 +549,12 @@ narrowing worth monitoring''; (b) ``an early-warning sign of a narrowing public 
 % ---------------------------------------------------------------------------------------------
 \section{Conclusion}
 
-Generative AI did not make everyone write the same way, and people do not write like the model. But
-online answers did become more similar to one another after ChatGPT---clearly in expert and
-academic communities, less clearly in everyday ones---because what people ask and discuss in public
-narrowed and shifted. That is a specific, measurable form of
-homogenization, and one worth watching.
+People do not write like the model, and answers to the same question have not converged. But online
+answers have become more similar to one another in recent years---clearly in expert and academic
+communities, less clearly in everyday ones---because what people ask and discuss in public narrowed
+and shifted. The change is consistent with the spread of generative AI, but our data cannot tie its
+start to ChatGPT's release. It is a specific, measurable form of homogenization, and one worth
+watching.
 
 \appendix
 \section{Exploratory analyses}

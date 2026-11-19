@@ -1,22 +1,39 @@
-Subject: Re: two questions on the paper — Methods tweak + clean tables
+Subject: Re: two questions on the paper — Methods fix, clean tables, and draft v0.3
 
-Hey Mark,
+Hi Mark,
 
-Thanks — both useful.
+Thanks, both points were right. Updated draft attached (v0.3).
 
-(1) Methods. You're right that the wording next to the old draft note was easy to
-misread. I've removed that note and rewritten the opening of Methods so it states
-the current procedure first: we embed whole answers by chunking, then average.
-The model's window is still 128 tokens, which is why each chunk is capped at 120 —
-that is an encoder limit, not a truncation of the text we analyse. Updated PDF
-coming once I recompile.
+(1) Methods. I removed the draft note and rewrote the passage so it describes what we actually do:
+clean each answer, split it into sentences, pack them into chunks, embed each chunk and average.
+The 128 tokens now appear only as the model's reading limit, which is why chunks are capped at 120
+tokens. Nothing in the analysis is truncated.
 
-(2) Tables + Exploratory analyses. They are in the draft (Tables 1–4 and
-Appendix A). Pasting clean copies below in case the PDF layout was hard to read.
+(2) Tables and Exploratory analyses. Clean copies are below. They match the attached PDF.
 
-Happy to walk through any of them.
+(3) One substantive change I should flag. While preparing v0.3 I ran a robustness check reviewers
+usually ask for: placing the "ChatGPT break" at fake dates before 2022. The test we used finds a
+"significant rise" at most of those fake dates too, because the similarity series bend slowly rather
+than turn sharply. So the data show that answers are becoming more alike, but they cannot pin the
+start of that to ChatGPT's launch: on several sites it began earlier, and only Cross Validated shows
+a clear turn right at 2022Q4.
 
-- Dauren
+What still holds, and is now better supported:
+  - answers are converging in recent years, mostly in expert and academic communities;
+  - the rise is larger on high-cognitive-load sites, confirmed with an objective text-complexity
+    measure, not only our own labels;
+  - the change is in which questions are asked: on demanding sites the questions that remain are
+    longer and harder, consistent with simple questions moving to AI tools;
+  - people still do not write like the model.
+
+So v0.3 keeps ChatGPT's release as the reference date we chose in advance, but presents it as
+"consistent with, not specific to" ChatGPT (new Section 4.2, and the abstract, discussion and
+limitations are updated). I'd rather we say this ourselves than have a reviewer find it. Happy to
+walk you through it on our next call; the remaining choice of how strong the headline should be is
+in the orange box in the Discussion.
+
+Best,
+Dauren
 
 
 ────────────────────────────────────────
@@ -44,7 +61,7 @@ Question            | Family | Test                                             
 
 
 ────────────────────────────────────────
-Table 3. Number of corpora with a significant change after ChatGPT (p < 0.05)
+Table 3. Number of corpora with a significant change after 2022Q4 (standard test, p < 0.05; directions of change, not dated breaks)
 
 Same subject defined as…   | Out of      | Same-subject texts converge | Subject mix shifts | Fewer subjects
 ---------------------------|-------------|-----------------------------|--------------------|---------------
@@ -69,6 +86,8 @@ Second encoder     | BGE-small on all 30 corpora: same verdict in 21/30 (whole t
 Number of topics   | 25 and 100 instead of 50 topics: same conclusions (within-topic convergence 9–12/14 high vs 3–5/12 low; diversity falls in 24–26/30).
 Sample size        | Topic diversity and drift on fixed 100-text samples, as volumes fell after 2022: conclusions unchanged.
 Model answers      | One versus three answers per question (Economics): mean similarity between answers 0.92, so one is enough.
+Placebo dates      | Fake pre-2022 breaks: the standard test finds a significant rise 57% of the time (curved trend 10%). Real change above all of its own placebos in 12/30; only Cross Validated passes every version; pooled SE p=0.11, high-load p=0.08 (Section 4.2).
+Objective load index | Text-complexity index agrees with our labels (AUC 0.86) and predicts the size of the rise (rho=0.51, p=0.007). High vs low on the curved-trend, placebo-scaled change: p=0.013.
 
 
 ────────────────────────────────────────
