@@ -1,0 +1,418 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI-driven homogenization of expression — real-time tracker</title>
+<meta name="description" content="Every week the tracker asks Google the same 100 everyday questions and measures how alike the top 5 answers are. This week: 0.78 on a 0 to 1 scale.">
+<meta property="og:title" content="AI-driven homogenization of expression — real-time tracker">
+<meta property="og:description" content="Google's top 5 answers to everyday questions now add up to 1.96 distinct answers out of 5. Measured weekly.">
+<meta property="og:type" content="website">
+<meta name="theme-color" content="#0e1014">
+<style>
+@font-face { font-family: 'Passero One'; src: url(fonts/PasseroOne-Regular.ttf) format('truetype'); font-weight: 400; font-display: swap; }
+@font-face { font-family: 'Saira'; src: url(fonts/Saira-variable.ttf) format('truetype'); font-weight: 100 900; font-display: swap; }
+@font-face { font-family: 'Saira Semi Condensed'; src: url(fonts/SairaSemiCondensed-500.ttf) format('truetype'); font-weight: 500; font-display: swap; }
+@font-face { font-family: 'Saira Semi Condensed'; src: url(fonts/SairaSemiCondensed-700.ttf) format('truetype'); font-weight: 700; font-display: swap; }
+@font-face { font-family: 'Share Tech Mono'; src: url(fonts/ShareTechMono-Regular.ttf) format('truetype'); font-weight: 400; font-display: swap; }
+:root {
+  --void: #0e1014;
+  --horizon: #30271a;
+  --ember: #4c2f1d;
+  --bone: #dbd8cf;
+  --amber: #e18f2a;
+  --amber-hot: #f0a84a;
+  --navy: #1a2740;
+  --steel: #a8b0bc;
+  --font-display: 'Passero One', 'Saira Semi Condensed', system-ui, sans-serif;
+  --font-figure: 'Saira', 'Saira Semi Condensed', system-ui, sans-serif;
+  --font-ui: 'Saira Semi Condensed', system-ui, sans-serif;
+  --font-readout: 'Share Tech Mono', ui-monospace, monospace;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { background: var(--void); color: var(--bone); }
+body { font-family: var(--font-ui); font-weight: 500; line-height: 1.45; overflow-x: hidden; }
+::selection { background: var(--amber); color: var(--void); }
+.scan {
+  background-image: repeating-linear-gradient(0deg, transparent 0 2px, rgb(0 0 0 / .28) 2px 3px);
+  background-size: 100% 3px;
+}
+a { color: inherit; }
+a:hover { color: var(--amber-hot); }
+:focus-visible { outline: 3px solid var(--amber); outline-offset: 3px; }
+img { display: block; max-width: 100%; height: auto; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+/* First viewport: establishing shot at 1280×720 proportions. */
+.viewport {
+  position: relative;
+  width: 100%;
+  max-width: 1440px;
+  margin: 0 auto;
+  aspect-ratio: 1280 / 720;
+  overflow: hidden;
+  background: var(--void);
+  container-type: inline-size;
+}
+.backdrop {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  object-fit: cover; object-position: center 60%;
+  z-index: 0;
+}
+.scrim {
+  position: absolute; inset: 0; z-index: 1; pointer-events: none;
+  background:
+    linear-gradient(180deg, rgb(14 16 20 / .72) 0%, rgb(14 16 20 / .28) 22%, rgb(14 16 20 / .15) 48%, rgb(14 16 20 / .55) 100%),
+    linear-gradient(90deg, rgb(14 16 20 / .35) 0%, transparent 28%, transparent 72%, rgb(14 16 20 / .2) 100%);
+}
+.layer { position: absolute; z-index: 2; }
+.brand {
+  left: 1.56%; top: 1.94%; width: 19.53%; height: 3.61%;
+  display: flex; align-items: center;
+  font-size: calc(19 * 100cqw / 1280); letter-spacing: .08em; text-transform: uppercase;
+  color: var(--amber); font-weight: 500; white-space: nowrap;
+}
+.week {
+  left: 23.44%; top: 1.94%; width: 20%; height: 3.61%;
+  display: flex; align-items: center;
+  font-size: calc(18 * 100cqw / 1280); letter-spacing: .08em; text-transform: uppercase;
+  color: var(--bone); font-weight: 500; white-space: nowrap;
+}
+.link-method, .link-dash {
+  top: 1.94%; height: 3.89%;
+  display: flex; align-items: center;
+  font-size: clamp(10px, 1.1cqw, 13px); letter-spacing: .02em; font-weight: 500;
+  color: var(--bone); text-decoration: underline; text-underline-offset: .22em; white-space: nowrap;
+}
+.link-method { left: 72.5%; width: 13.44%; }
+.link-dash { left: 88.28%; width: 9.22%; }
+.rule {
+  left: 0; top: 6.11%; width: 100%; height: calc(6 * 100cqw / 1280);
+  background: #c9883a;
+}
+.title {
+  left: 2.2%; top: 8.2%; width: 95%;
+  font-family: var(--font-display); font-weight: 400;
+  font-size: clamp(18px, 3.55cqw, 46px); line-height: 1.05;
+  letter-spacing: .01em; color: var(--bone); white-space: nowrap;
+  text-shadow: 0 1px 18px rgb(14 16 20 / .75);
+}
+.figure {
+  left: 2.97%; top: 18.33%; width: 22.97%; height: 16.11%;
+  font-family: var(--font-figure); font-weight: 700;
+  font-size: clamp(56px, 11cqw, 140px); line-height: .92;
+  color: var(--amber); letter-spacing: .02em;
+  font-variant-numeric: tabular-nums;
+  
+}
+.figure-label {
+  left: 2.97%; top: 35.28%; width: 40.94%; height: 3.89%;
+  display: flex; align-items: center;
+  font-size: clamp(12px, 1.55cqw, 18px); color: var(--bone); letter-spacing: .03em; font-weight: 500;
+  white-space: nowrap; overflow: hidden;
+}
+.change-box {
+  left: 29.22%; top: 17.78%; width: 17.03%; height: 16.67%;
+  border: 2px solid rgb(225 143 42 / .85);
+  background: rgb(14 16 20 / .55); z-index: 3;
+}
+.change-value {
+  left: 31.56%; top: 20.56%; width: 12.34%; height: 7.5%;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-figure); font-weight: 700;
+  font-size: calc(48 * 100cqw / 1280); line-height: 1;
+  color: var(--amber); font-variant-numeric: tabular-nums; z-index: 4;
+}
+.change-since {
+  left: 32.34%; top: 28.61%; width: 10.78%; height: 3.89%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: calc(22 * 100cqw / 1280); color: var(--bone); letter-spacing: .06em; font-weight: 500; z-index: 4;
+}
+.formation {
+  left: 66.9%; top: 16.4%; width: 32%; height: 24%;
+  object-fit: contain; object-position: right center;
+  filter: drop-shadow(0 8px 18px rgb(0 0 0 / .55));
+}
+.formation-label {
+  left: 80.94%; top: 38.61%; width: 13.75%; height: 3.33%;
+  font-size: clamp(11px, 1.4cqw, 17px); color: var(--amber); letter-spacing: .04em; white-space: nowrap; font-weight: 500;
+}
+.einstein {
+  left: 5.9%; top: 53.9%; width: 17.3%; height: 33%;
+  object-fit: contain; object-position: bottom center;
+  filter: drop-shadow(0 6px 14px rgb(0 0 0 / .55));
+}
+.einstein-label {
+  left: 8.28%; top: 82.22%; width: 9.84%; height: 3.33%;
+  display: flex; align-items: center;
+  font-size: calc(20 * 100cqw / 1280); color: var(--amber); letter-spacing: .04em; white-space: nowrap; font-weight: 700;
+}
+.chart-wrap {
+  left: 0; top: 0; width: 100%; height: 100%;
+  z-index: 2; pointer-events: none;
+}
+.plot-line { position: absolute; inset: 0; }
+.plot-line .seg {
+  position: absolute; height: 3.5px; background: var(--amber); transform-origin: 0 50%;
+  border-radius: 2px; 
+}
+.plot-line .dot {
+  position: absolute; width: 10px; height: 10px; margin: -5px 0 0 -5px;
+  border-radius: 50%; background: var(--amber); border: 2px solid var(--void);
+}
+.yticks {
+  left: 3.44%; top: 41.11%; width: 3.75%; height: 46.39%;
+  display: flex; flex-direction: column; justify-content: space-between; align-items: flex-end;
+  font-size: clamp(10px, 1.2cqw, 15px); color: var(--bone); letter-spacing: .04em;
+  font-variant-numeric: tabular-nums; z-index: 3;
+}
+.xticks {
+  left: 6.09%; top: 87.5%; width: 90.94%; height: 3.61%;
+  display: flex; justify-content: space-between; align-items: flex-start;
+  font-size: clamp(10px, 1.2cqw, 15px); color: var(--bone); letter-spacing: .06em; z-index: 3;
+}
+.gap-label {
+  left: 27.97%; top: 76.94%; width: 8.28%; height: 6.39%;
+  font-size: calc(19 * 100cqw / 1280); line-height: 1.15; color: var(--bone); z-index: 3; font-weight: 500;
+}
+.y-axis { left: 7.19%; top: 41.67%; width: calc(4 * 100cqw / 1280); height: 45.28%; background: #e18f2a; z-index: 2; }
+.baseline { left: 7.19%; top: 85.56%; width: 88.44%; height: calc(4 * 100cqw / 1280); background: #e18f2a; z-index: 2; }
+.frame-right { left: 94.69%; top: 41.67%; width: calc(4 * 100cqw / 1280); height: 45.28%; background: #e18f2a; z-index: 2; }
+.gridline { height: 2px; background: repeating-linear-gradient(90deg, #9a968c 0 4px, transparent 4px 11px); z-index: 2; }
+.grid-1 { left: 7.81%; top: 41.94%; width: 86.88%; }
+.grid-mid { left: 23.44%; top: 62.5%; width: 71.25%; }
+.grid-low { left: 23.44%; top: 73.33%; width: 71.25%; }
+.gap-hatch {
+  left: 21.09%; top: 73.61%; width: 6.41%; height: 12.78%; z-index: 2;
+  background: repeating-linear-gradient(-28deg, rgb(225 143 42 / .55) 0 2px, transparent 2px 8px);
+  border: 1px solid rgb(225 143 42 / .35);
+}
+
+/* Below the fold */
+.below {
+  max-width: 1100px; margin: 0 auto;
+  padding: clamp(40px, 7vw, 88px) clamp(16px, 4vw, 40px) clamp(64px, 10vw, 120px);
+}
+.wipe { margin: 0 0 clamp(28px, 5vw, 56px); transform-origin: center; }
+.wipe-h { height: 3px; background: linear-gradient(90deg, transparent, var(--amber), transparent); }
+.wipe-d {
+  height: 28px; background:
+    linear-gradient(135deg, transparent 46%, var(--amber) 46%, var(--amber) 54%, transparent 54%);
+  opacity: .85;
+}
+.wipe-iris {
+  height: 36px;
+  background: radial-gradient(ellipse at 50% 50%, transparent 28%, var(--amber) 28%, var(--amber) 32%, transparent 32%);
+  opacity: .7;
+}
+.crawl {
+  perspective: 480px; overflow: hidden;
+  max-height: 280px; margin-bottom: clamp(40px, 7vw, 72px);
+  mask-image: linear-gradient(180deg, transparent, #000 18%, #000 78%, transparent);
+}
+.crawl-inner {
+  transform: rotateX(28deg) translateY(12%);
+  transform-origin: 50% 0;
+  text-align: center; color: var(--bone);
+  font-family: var(--font-ui); font-weight: 500;
+  font-size: clamp(1.05rem, 2.2vw, 1.35rem); line-height: 1.55;
+  letter-spacing: .02em;
+}
+.crawl-inner p { margin: 0 auto 1.1em; max-width: 42ch; }
+.band { margin-top: clamp(36px, 6vw, 72px); padding-top: clamp(28px, 4vw, 40px); border-top: 1px solid rgb(219 216 207 / .14); }
+.band h2 {
+  font-family: var(--font-display); font-weight: 400;
+  font-size: clamp(1.6rem, 3.4vw, 2.6rem); line-height: 1.05;
+  color: var(--bone); margin-bottom: .6em;
+}
+.facts { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; }
+.fact {
+  padding: 1rem 1rem 1.1rem; background: rgb(26 39 64 / .55);
+  border: 1px solid rgb(219 216 207 / .18);
+  box-shadow: inset 0 0 0 1px rgb(225 143 42 / .12);
+  position: relative;
+}
+.fact::before {
+  content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 4px;
+  background: repeating-linear-gradient(180deg, var(--amber) 0 6px, #1a2740 6px 12px);
+}
+.fact b {
+  display: block; font-family: var(--font-figure); font-weight: 700;
+  font-size: clamp(1.8rem, 3.5vw, 2.6rem); color: var(--amber);
+  font-variant-numeric: tabular-nums; line-height: 1;
+}
+.fact span { display: block; margin-top: .45em; color: var(--bone); font-size: .95rem; max-width: 22ch; }
+.extremes { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1.2rem; }
+.extreme {
+  padding: 1rem 1.1rem 1.15rem; border: 1px solid rgb(225 143 42 / .45);
+  background: linear-gradient(180deg, rgb(26 39 64 / .55), rgb(14 16 20 / .7));
+  box-shadow: inset 0 0 0 1px rgb(219 216 207 / .08);
+}
+.extreme .k { color: var(--amber); font-size: .8rem; letter-spacing: .12em; text-transform: uppercase; font-weight: 700; }
+.extreme .q { margin-top: .45em; font-size: clamp(1.1rem, 2.2vw, 1.45rem); color: var(--bone); text-wrap: balance; }
+.extreme .n { margin-top: .5em; color: var(--steel); font-size: .95rem; }
+.domains { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr)); gap: 1.5rem 2rem; }
+.domain h3 {
+  display: flex; justify-content: space-between; gap: 1em;
+  font-size: 1.15rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase;
+  color: var(--amber); border-bottom: 1px solid rgb(225 143 42 / .35); padding-bottom: .35em; margin-bottom: .55em;
+}
+.domain ol { list-style: none; }
+.domain li {
+  display: grid; grid-template-columns: 1fr 4.5em 2.6ch; align-items: center; gap: .55em;
+  padding: .22em 0; font-size: .92rem;
+}
+.domain .bar {
+  height: .45em;
+  background: linear-gradient(90deg, var(--amber) calc(var(--v) * 100%), rgb(219 216 207 / .12) 0);
+}
+.domain .v { color: var(--amber); text-align: right; font-variant-numeric: tabular-nums; font-family: var(--font-readout); }
+.domain .muted { color: var(--steel); grid-column: 2 / 4; white-space: nowrap; }
+.domain .q { min-width: 0; overflow-wrap: anywhere; }
+.how { display: grid; grid-template-columns: 1.4fr 1fr; gap: 2rem; }
+.how p { max-width: 58ch; font-size: 1.05rem; margin-bottom: .9em; color: var(--bone); }
+.links { list-style: none; display: grid; gap: .55em; align-content: start; }
+.links a {
+  display: inline-block; padding: .55em .9em;
+  background: var(--amber); color: var(--void); font-weight: 700;
+  letter-spacing: .06em; text-transform: uppercase; text-decoration: none;
+  font-size: .85rem;
+}
+.links a:hover { background: var(--bone); color: var(--void); }
+.colophon { margin-top: 2rem; color: var(--steel); font-size: .9rem; }
+
+@media (prefers-reduced-motion: no-preference) {
+  .wipe-h, .wipe-d, .wipe-iris { animation: wipeIn .7s cubic-bezier(.16,1,.3,1) both; }
+  .crawl-inner { animation: crawl 48s linear infinite; }
+  @keyframes wipeIn { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+  @keyframes crawl { from { transform: rotateX(28deg) translateY(28%); } to { transform: rotateX(28deg) translateY(-70%); } }
+}
+@media (prefers-reduced-motion: reduce) {
+  .crawl { max-height: none; mask-image: none; perspective: none; }
+  .crawl-inner { transform: none; }
+}
+
+@container (max-width: 760px) {
+  .viewport { aspect-ratio: auto; min-height: 0; display: flex; flex-direction: column; gap: 10px; padding: 12px 14px 8px; overflow: visible; }
+  .backdrop { position: absolute; inset: 0; opacity: .55; }
+  .scrim { background: linear-gradient(180deg, rgb(14 16 20 / .7), rgb(14 16 20 / .92)); }
+  .layer { position: relative; left: auto !important; top: auto !important; right: auto !important; width: auto !important; height: auto !important; }
+  .brand, .week, .link-method, .link-dash { order: 0; }
+  .rule { order: 1; height: 1px; width: 100%; }
+  .title { order: 2; white-space: normal; font-size: clamp(1.35rem, 7vw, 1.85rem); line-height: 1.1; width: 100%; }
+  .figure { order: 3; font-size: 4.2rem; }
+  .figure-label { order: 4; width: 100%; }
+  .change-box, .change-value, .change-since { order: 5; position: relative !important; width: auto !important; height: auto !important; left: auto !important; top: auto !important; }
+  .change-box { display: none; }
+  .yticks, .xticks, .y-axis, .baseline, .frame-right, .gridline, .gap-hatch { display: none; }
+  .gap-label { order: 6; position: relative !important; left: auto !important; top: auto !important; }
+  .chart-wrap { order: 6; position: relative; width: calc(100% + 28px); margin: 8px -14px 0; aspect-ratio: 5 / 4; height: auto; pointer-events: auto; }
+  .formation { order: 0; position: absolute !important; left: auto !important; right: 2% !important; top: 8% !important; width: 42% !important; height: auto !important; z-index: 3; }
+  .formation-label { position: absolute !important; right: 4% !important; top: 2% !important; left: auto !important; z-index: 4; }
+  .einstein { position: absolute !important; left: 6% !important; bottom: 14% !important; top: auto !important; width: 28% !important; height: auto !important; z-index: 3; }
+  .einstein-label { position: absolute !important; left: 6% !important; bottom: 8% !important; top: auto !important; z-index: 4; }
+}
+@media (max-width: 760px) {
+  .facts, .extremes, .how { grid-template-columns: 1fr; }
+  .domain li { grid-template-columns: 1fr auto; }
+  .domain .bar { display: none; }
+}
+@media (max-width: 420px) {
+  .header { font-size: 11px; letter-spacing: .08em; }
+  .title { font-size: 1.25rem; }
+}
+</style>
+</head>
+<body>
+<main class="viewport" id="top" aria-labelledby="title">
+  <img class="backdrop" src="assets/plates/backdrop.jpg" alt="" width="1920" height="1080" decoding="async">
+  <div class="scrim" aria-hidden="true"></div>
+  <p class="layer brand scan">HOMOGENIZATION TRACKER</p>
+  <p class="layer week scan">WEEK 8 · RUN OF 16 NOV 2026</p>
+  <a class="layer link-method" href="https://github.com/biddy1618/ai-homogenization/blob/main/tracker/README.md">Methodology and data</a>
+  <a class="layer link-dash" href="../../dashboard/">Full dashboard</a>
+  <div class="layer rule" aria-hidden="true"></div>
+  <h1 id="title" class="layer title">AI-driven homogenization of expression — real-time tracker</h1>
+  <p class="layer figure" aria-hidden="true">0.78</p>
+  <p class="layer figure-label">how alike Google's top 5 answers are this week, 0 to 1</p>
+  <div class="layer change-box" aria-hidden="true"></div>
+  <p class="layer change-value scan">+0.00</p>
+  <p class="layer change-since">since 09 Nov</p>
+  <img class="layer formation" src="assets/plates/formation.png" width="1107" height="507"
+       alt="Identical armoured troopers in navy and matte grey with hazard-yellow markings: where we're heading">
+  <p class="layer formation-label" aria-hidden="true">where we're heading</p>
+  <div class="layer y-axis" aria-hidden="true"></div>
+  <div class="layer baseline" aria-hidden="true"></div>
+  <div class="layer frame-right" aria-hidden="true"></div>
+  <div class="layer gridline grid-1" aria-hidden="true"></div>
+  <div class="layer gridline grid-mid" aria-hidden="true"></div>
+  <div class="layer gridline grid-low" aria-hidden="true"></div>
+  <div class="layer gap-hatch" aria-hidden="true"></div>
+  <p class="layer gap-label" aria-hidden="true">no data<br>before 04 Oct</p>
+  <div class="layer yticks scan" aria-hidden="true"><span>1</span><span>0.75</span><span>0.50</span><span>0.25</span><span>0</span></div>
+  <div class="layer chart-wrap" role="img" aria-label="Line chart on a 0 to 1 scale of how alike Google&#x27;s top 5 answers are, weekly from 04 Oct to 16 Nov: 04 Oct: 0.70; 05 Oct: 0.73; 12 Oct: 0.74; 19 Oct: 0.79; 26 Oct: 0.78; 02 Nov: 0.77; 09 Nov: 0.78; 16 Nov: 0.78. 0 means distinct voices, 1 means identical copies.">
+    <div class="plot-line" aria-hidden="true"><i class="seg" style="left:23.438%;top:54.955%;width:10.183%;transform:rotate(-4.138deg)"></i><i class="seg" style="left:33.594%;top:53.649%;width:10.160%;transform:rotate(-1.622deg)"></i><i class="seg" style="left:43.750%;top:53.138%;width:10.215%;transform:rotate(-6.138deg)"></i><i class="seg" style="left:53.906%;top:51.196%;width:10.158%;transform:rotate(1.083deg)"></i><i class="seg" style="left:64.062%;top:51.538%;width:10.158%;transform:rotate(0.983deg)"></i><i class="seg" style="left:74.219%;top:51.848%;width:10.157%;transform:rotate(-0.636deg)"></i><i class="seg" style="left:84.375%;top:51.647%;width:10.156%;transform:rotate(-0.332deg)"></i><i class="dot" style="left:23.438%;top:54.955%"></i><i class="dot" style="left:33.594%;top:53.649%"></i><i class="dot" style="left:43.750%;top:53.138%"></i><i class="dot" style="left:53.906%;top:51.196%"></i><i class="dot" style="left:64.062%;top:51.538%"></i><i class="dot" style="left:74.219%;top:51.848%"></i><i class="dot" style="left:84.375%;top:51.647%"></i><i class="dot" style="left:94.531%;top:51.543%"></i></div>
+  </div>
+  <div class="layer xticks scan" aria-hidden="true"><span>04 Oct</span><span>05 Oct</span><span>12 Oct</span><span>19 Oct</span><span>26 Oct</span><span>02 Nov</span><span>09 Nov</span><span>16 Nov</span></div>
+  <img class="layer einstein" src="assets/plates/einstein.png" width="560" height="596"
+       alt="Albert Einstein: distinct voices">
+  <p class="layer einstein-label" aria-hidden="true">distinct voices</p>
+</main>
+
+<div class="below">
+  <div class="wipe wipe-h" aria-hidden="true"></div>
+  <section class="crawl" aria-label="This week's story">
+    <div class="crawl-inner"><p>Week 8. The tracker asked Google the same 100 everyday questions and read the first five pages behind each answer.</p><p>This week the pages add up to 1.96 distinct answers out of 5, and a mean similarity of 0.78 on a 0 to 1 scale.</p><p>The weekly change is +0.00 since 09 Nov. Movement week to week is still small, and the series is young.</p><p>The panel grew from 45 to 100 questions on 26 Oct. This week 93 of 100 questions were readable.</p><p>Most alike: “is intermittent fasting healthy” at 0.91. Least alike: “how are capital gains taxed” at 0.40.</p></div>
+  </section>
+
+  <div class="wipe wipe-d" aria-hidden="true"></div>
+  <section class="band" id="this-week" aria-labelledby="this-week-h">
+    <h2 id="this-week-h">This week</h2>
+    <div class="facts">
+      <p class="fact"><b>0.78</b><span>How alike the top 5 answers are, 0 to 1</span></p>
+      <p class="fact"><b>+0.00</b><span>Change since 09 Nov</span></p>
+      <p class="fact"><b>1.96</b><span>Distinct answers out of 5</span></p>
+      <p class="fact"><b>93</b><span>Of 100 questions readable this week</span></p>
+    </div>
+    <div class="extremes">
+      <article class="extreme">
+        <p class="k">Most alike this week</p>
+        <p class="q">is intermittent fasting healthy</p>
+        <p class="n">0.91 alike · 1.41 distinct out of 5 · health</p>
+      </article>
+      <article class="extreme">
+        <p class="k">Least alike this week</p>
+        <p class="q">how are capital gains taxed</p>
+        <p class="n">0.40 alike · 3.69 distinct out of 5 · finance</p>
+      </article>
+    </div>
+  </section>
+
+  <div class="wipe wipe-iris" aria-hidden="true"></div>
+  <section class="band" id="questions" aria-labelledby="questions-h">
+    <h2 id="questions-h">All 100 questions</h2>
+    <p style="margin:-.2em 0 1.2em;color:var(--steel)">Latest run · higher means the top 5 answers say more of the same thing</p>
+    <div class="domains"><section class="domain" aria-labelledby="d-health"><h3 id="d-health"><span>Health</span><span class="v">0.82</span></h3><ol><li><span class="q">what are the symptoms of iron deficiency</span><span class="bar" style="--v:0.875"></span><span class="v scan">0.87</span></li><li><span class="q">how to lower blood pressure naturally</span><span class="bar" style="--v:0.793"></span><span class="v scan">0.79</span></li><li><span class="q">what causes migraines</span><span class="bar" style="--v:0.850"></span><span class="v scan">0.85</span></li><li><span class="q">is intermittent fasting healthy</span><span class="bar" style="--v:0.913"></span><span class="v scan">0.91</span></li><li><span class="q">how much water should you drink a day</span><span class="bar" style="--v:0.734"></span><span class="v scan">0.73</span></li><li><span class="q">what are the early signs of diabetes</span><span class="bar" style="--v:0.831"></span><span class="v scan">0.83</span></li><li><span class="q">how does the immune system fight infection</span><span class="bar" style="--v:0.554"></span><span class="v scan">0.55</span></li><li><span class="q">what causes high cholesterol</span><span class="bar" style="--v:0.867"></span><span class="v scan">0.87</span></li><li><span class="q">how much sleep do adults need</span><span class="bar" style="--v:0.851"></span><span class="v scan">0.85</span></li><li><span class="q">what causes acid reflux</span><span class="bar" style="--v:0.797"></span><span class="v scan">0.80</span></li><li><span class="q">how does caffeine affect the body</span><span class="bar" style="--v:0.889"></span><span class="v scan">0.89</span></li><li><span class="q">what are the symptoms of vitamin d deficiency</span><span class="bar" style="--v:0.869"></span><span class="v scan">0.87</span></li><li><span class="q">how do antibiotics work</span><span class="bar" style="--v:0.837"></span><span class="v scan">0.84</span></li><li><span class="q">what causes anxiety</span><span class="bar" style="--v:0.772"></span><span class="v scan">0.77</span></li><li><span class="q">how to treat a sprained ankle</span><span class="bar" style="--v:0.852"></span><span class="v scan">0.85</span></li><li><span class="q">what is the difference between a cold and the flu</span><span class="bar" style="--v:0.815"></span><span class="v scan">0.82</span></li><li><span class="q">how does alcohol affect the liver</span><span class="bar" style="--v:0.766"></span><span class="v scan">0.77</span></li><li><span class="q">what causes lower back pain</span><span class="bar" style="--v:0.858"></span><span class="v scan">0.86</span></li><li><span class="q">how much protein do you need per day</span><span class="bar" style="--v:0.872"></span><span class="v scan">0.87</span></li><li><span class="q">what are the benefits of regular exercise</span><span class="bar" style="--v:0.840"></span><span class="v scan">0.84</span></li></ol></section><section class="domain" aria-labelledby="d-finance"><h3 id="d-finance"><span>Finance</span><span class="v">0.74</span></h3><ol><li><span class="q">how does compound interest work</span><span class="bar" style="--v:0.783"></span><span class="v scan">0.78</span></li><li><span class="q">what is a good credit score</span><span class="bar" style="--v:0.841"></span><span class="v scan">0.84</span></li><li><span class="q">roth ira vs traditional ira</span><span class="bar" style="--v:0.608"></span><span class="v scan">0.61</span></li><li><span class="q">how does refinancing a mortgage work</span><span class="bar" style="--v:0.861"></span><span class="v scan">0.86</span></li><li><span class="q">how to build an emergency fund</span><span class="bar" style="--v:0.804"></span><span class="v scan">0.80</span></li><li><span class="q">what is a 401k and how does it work</span><span class="bar" style="--v:0.710"></span><span class="v scan">0.71</span></li><li><span class="q">how does inflation affect your savings</span><span class="bar" style="--v:0.846"></span><span class="v scan">0.85</span></li><li><span class="q">how do index funds work</span><span class="bar" style="--v:0.764"></span><span class="v scan">0.76</span></li><li><span class="q">what is the difference between stocks and bonds</span><span class="bar" style="--v:0.819"></span><span class="v scan">0.82</span></li><li><span class="q">how do credit cards work</span><span class="bar" style="--v:0.699"></span><span class="v scan">0.70</span></li><li><span class="q">what is a mutual fund</span><span class="bar" style="--v:0.896"></span><span class="v scan">0.90</span></li><li><span class="q">how are capital gains taxed</span><span class="bar" style="--v:0.401"></span><span class="v scan">0.40</span></li><li><span class="q">how does a home equity loan work</span><span class="bar" style="--v:0.662"></span><span class="v scan">0.66</span></li><li><span class="q">what is dollar cost averaging</span><span class="bar" style="--v:0.834"></span><span class="v scan">0.83</span></li><li><span class="q">how does social security work</span><span class="bar" style="--v:0.546"></span><span class="v scan">0.55</span></li><li><span class="q">what is an annuity</span><span class="bar" style="--v:0.739"></span><span class="v scan">0.74</span></li><li><span class="q">how do student loans work</span><span class="bar" style="--v:0.840"></span><span class="v scan">0.84</span></li><li><span class="q">what is a health savings account</span><span class="bar" style="--v:0.875"></span><span class="v scan">0.87</span></li><li><span class="q">how does a credit freeze work</span><span class="bar" style="--v:0.745"></span><span class="v scan">0.74</span></li><li><span class="q">what is the difference between a debit card and a credit card</span><span class="bar" style="--v:0.553"></span><span class="v scan">0.55</span></li></ol></section><section class="domain" aria-labelledby="d-law"><h3 id="d-law"><span>Law</span><span class="v">0.76</span></h3><ol><li><span class="q">what is a power of attorney</span><span class="bar" style="--v:0.720"></span><span class="v scan">0.72</span></li><li><span class="q">what are tenant rights during eviction</span><span class="bar" style="--v:0.776"></span><span class="v scan">0.78</span></li><li><span class="q">how does the probate process work</span><span class="bar" style="--v:0.782"></span><span class="v scan">0.78</span></li><li><span class="q">what is the difference between a will and a trust</span><span class="bar" style="--v:0.850"></span><span class="v scan">0.85</span></li><li><span class="q">how does a class action lawsuit work</span><span class="bar" style="--v:0.863"></span><span class="v scan">0.86</span></li><li><span class="q">what happens during a divorce proceeding</span><span class="bar" style="--v:0.668"></span><span class="v scan">0.67</span></li><li><span class="q">what is an llc and how is it taxed</span><span class="bar" style="--v:0.822"></span><span class="v scan">0.82</span></li><li><span class="q">what are your rights if arrested</span><span class="bar" style="--v:0.755"></span><span class="v scan">0.76</span></li><li><span class="q">how does copyright protect creators</span><span class="bar" style="--v:0.802"></span><span class="v scan">0.80</span></li><li><span class="q">what is the statute of limitations</span><span class="bar" style="--v:0.841"></span><span class="v scan">0.84</span></li><li><span class="q">how does small claims court work</span><span class="bar" style="--v:0.720"></span><span class="v scan">0.72</span></li><li><span class="q">what is fair use in copyright</span><span class="bar" style="--v:0.845"></span><span class="v scan">0.85</span></li><li><span class="q">how does a non-compete agreement work</span><span class="bar" style="--v:0.627"></span><span class="v scan">0.63</span></li><li><span class="q">what is the difference between a misdemeanor and a felony</span><span class="bar" style="--v:0.818"></span><span class="v scan">0.82</span></li><li><span class="q">how does child custody work</span><span class="bar" style="--v:0.777"></span><span class="v scan">0.78</span></li><li><span class="q">what is a living will</span><span class="bar" style="--v:0.651"></span><span class="v scan">0.65</span></li><li><span class="q">how do you file for bankruptcy</span><span class="bar" style="--v:0.772"></span><span class="v scan">0.77</span></li><li><span class="q">what is a trademark and how do you register one</span><span class="bar" style="--v:0.706"></span><span class="v scan">0.71</span></li><li><span class="q">what are employee rights when fired</span><span class="bar" style="--v:0.677"></span><span class="v scan">0.68</span></li><li><span class="q">how does a prenuptial agreement work</span><span class="bar" style="--v:0.788"></span><span class="v scan">0.79</span></li></ol></section><section class="domain" aria-labelledby="d-science"><h3 id="d-science"><span>Science</span><span class="v">0.80</span></h3><ol><li><span class="q">how do vaccines work</span><span class="bar" style="--v:0.880"></span><span class="v scan">0.88</span></li><li><span class="q">what causes climate change</span><span class="bar" style="--v:0.829"></span><span class="v scan">0.83</span></li><li><span class="q">how do hurricanes form</span><span class="bar" style="--v:0.865"></span><span class="v scan">0.86</span></li><li><span class="q">why is the sky blue</span><span class="bar" style="--v:0.806"></span><span class="v scan">0.81</span></li><li><span class="q">how do black holes form</span><span class="bar" style="--v:0.710"></span><span class="v scan">0.71</span></li><li><span class="q">what causes earthquakes</span><span class="bar" style="--v:0.779"></span><span class="v scan">0.78</span></li><li><span class="q">how does photosynthesis work</span><span class="bar" style="--v:0.832"></span><span class="v scan">0.83</span></li><li><span class="q">are electric cars better for the environment</span><span class="bar" style="--v:0.793"></span><span class="v scan">0.79</span></li><li><span class="q">what is dark matter</span><span class="bar" style="--v:0.806"></span><span class="v scan">0.81</span></li><li><span class="q">how does dna replication work</span><span class="v muted">Not read this week</span></li><li><span class="q">what causes the seasons</span><span class="bar" style="--v:0.763"></span><span class="v scan">0.76</span></li><li><span class="q">how do tides work</span><span class="bar" style="--v:0.886"></span><span class="v scan">0.89</span></li><li><span class="q">what is quantum entanglement</span><span class="v muted">Not read this week</span></li><li><span class="q">how does evolution by natural selection work</span><span class="v muted">Not read this week</span></li><li><span class="q">what causes volcanic eruptions</span><span class="bar" style="--v:0.761"></span><span class="v scan">0.76</span></li><li><span class="q">how does antibiotic resistance develop</span><span class="bar" style="--v:0.833"></span><span class="v scan">0.83</span></li><li><span class="q">what is the big bang theory</span><span class="bar" style="--v:0.714"></span><span class="v scan">0.71</span></li><li><span class="q">how does nuclear fusion work</span><span class="bar" style="--v:0.731"></span><span class="v scan">0.73</span></li><li><span class="q">why do leaves change color in the fall</span><span class="bar" style="--v:0.844"></span><span class="v scan">0.84</span></li><li><span class="q">how do rainbows form</span><span class="bar" style="--v:0.776"></span><span class="v scan">0.78</span></li></ol></section><section class="domain" aria-labelledby="d-tech"><h3 id="d-tech"><span>Tech</span><span class="v">0.77</span></h3><ol><li><span class="q">what is a vpn and how does it work</span><span class="bar" style="--v:0.839"></span><span class="v scan">0.84</span></li><li><span class="q">how does two factor authentication work</span><span class="bar" style="--v:0.766"></span><span class="v scan">0.77</span></li><li><span class="q">what is retrieval augmented generation</span><span class="v muted">Not read this week</span></li><li><span class="q">how does end-to-end encryption work</span><span class="bar" style="--v:0.892"></span><span class="v scan">0.89</span></li><li><span class="q">is ai going to replace jobs</span><span class="bar" style="--v:0.622"></span><span class="v scan">0.62</span></li><li><span class="q">how does facial recognition work</span><span class="bar" style="--v:0.741"></span><span class="v scan">0.74</span></li><li><span class="q">what is the difference between http and https</span><span class="v muted">Not read this week</span></li><li><span class="q">how does cloud storage work</span><span class="v muted">Not read this week</span></li><li><span class="q">what is a large language model</span><span class="bar" style="--v:0.799"></span><span class="v scan">0.80</span></li><li><span class="q">how does a blockchain work</span><span class="v muted">Not read this week</span></li><li><span class="q">what is machine learning</span><span class="bar" style="--v:0.856"></span><span class="v scan">0.86</span></li><li><span class="q">how does wifi work</span><span class="bar" style="--v:0.736"></span><span class="v scan">0.74</span></li><li><span class="q">what is a password manager</span><span class="bar" style="--v:0.848"></span><span class="v scan">0.85</span></li><li><span class="q">how does gps work</span><span class="bar" style="--v:0.805"></span><span class="v scan">0.81</span></li><li><span class="q">what is phishing and how to avoid it</span><span class="bar" style="--v:0.774"></span><span class="v scan">0.77</span></li><li><span class="q">how do search engines rank pages</span><span class="bar" style="--v:0.732"></span><span class="v scan">0.73</span></li><li><span class="q">what is 5g technology</span><span class="bar" style="--v:0.874"></span><span class="v scan">0.87</span></li><li><span class="q">how does a computer virus spread</span><span class="bar" style="--v:0.640"></span><span class="v scan">0.64</span></li><li><span class="q">what is an api</span><span class="bar" style="--v:0.751"></span><span class="v scan">0.75</span></li><li><span class="q">how do solid state drives work</span><span class="bar" style="--v:0.724"></span><span class="v scan">0.72</span></li></ol></section></div>
+  </section>
+
+  <div class="wipe wipe-h" aria-hidden="true"></div>
+  <section class="band" id="how" aria-labelledby="how-h">
+    <h2 id="how-h">How it's measured</h2>
+    <div class="how">
+      <div>
+        <p>Every week the tracker asks Google the same 100 everyday questions, twenty each in finance, health, law, science and tech. It reads the first five pages that answer each one and compares what they say, by meaning rather than exact wording.</p>
+        <p>The score runs from 0, where the five pages share nothing, to 1, where they say the same thing. The line is the average across the questions readable that week. The first 45 questions have been tracked since 04 Oct; the panel grew to 100 on 26 Oct. Movement week to week is still small, and the series is young.</p>
+      </div>
+      <ul class="links">
+        <li><a href="https://github.com/biddy1618/ai-homogenization/blob/main/tracker/README.md">Methodology and data</a></li>
+        <li><a href="../../dashboard/">Full dashboard</a></li>
+        <li><a href="https://github.com/biddy1618/ai-homogenization">Source code</a></li>
+      </ul>
+    </div>
+    <p class="colophon">Updated weekly · last run 16 Nov 2026 · 8 runs since 4 Oct 2026</p>
+  </section>
+</div>
+</body>
+</html>

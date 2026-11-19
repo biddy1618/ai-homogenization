@@ -1,0 +1,291 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-11-19T15:08:00Z",
+  "title": "Design System: Homogenization Tracker — Saga",
+  "seededFrom": {
+    "world": "saga",
+    "seed": "7551e84671ca62eb"
+  },
+  "extensions": {
+    "colorMeta": {
+      "void": {
+        "role": "neutral",
+        "displayName": "Void",
+        "canonical": "#0e1014",
+        "tonalRamp": ["#07080a", "#0e1014", "#1a1d24", "#2a2e38", "#454a56", "#6a707c", "#9aa0aa", "#dbd8cf"]
+      },
+      "horizon": {
+        "role": "neutral",
+        "displayName": "Horizon Dust",
+        "canonical": "#30271a",
+        "tonalRamp": ["#14100c", "#30271a", "#4c2f1d", "#6a4a32", "#8c6a4a", "#b09070", "#d0b898", "#ebe0d0"]
+      },
+      "ember": {
+        "role": "neutral",
+        "displayName": "Ember",
+        "canonical": "#4c2f1d",
+        "tonalRamp": ["#1a100a", "#2e1c12", "#4c2f1d", "#6e452c", "#926244", "#b88866", "#d4b090", "#efe0d0"]
+      },
+      "bone": {
+        "role": "neutral",
+        "displayName": "Bone",
+        "canonical": "#dbd8cf",
+        "tonalRamp": ["#3a3834", "#5c5952", "#7e7a72", "#9e9a90", "#b8b4aa", "#cbc8be", "#dbd8cf", "#f2f0ea"]
+      },
+      "amber": {
+        "role": "primary",
+        "displayName": "Twin-Sun Amber",
+        "canonical": "#e18f2a",
+        "tonalRamp": ["#3a2208", "#6a4010", "#9a5c18", "#c47420", "#e18f2a", "#f0a84a", "#f5c47a", "#fbe8c4"]
+      },
+      "amber-hot": {
+        "role": "primary",
+        "displayName": "Amber Hot",
+        "canonical": "#f0a84a",
+        "tonalRamp": ["#402608", "#704010", "#a06018", "#d08028", "#e18f2a", "#f0a84a", "#f6c878", "#fce8c0"]
+      },
+      "navy": {
+        "role": "secondary",
+        "displayName": "Hull Navy",
+        "canonical": "#1a2740",
+        "tonalRamp": ["#0a1018", "#1a2740", "#2a3a58", "#3e5478", "#5a7298", "#7e94b0", "#a8b0bc", "#d4dae4"]
+      },
+      "steel": {
+        "role": "neutral",
+        "displayName": "Steel",
+        "canonical": "#a8b0bc",
+        "tonalRamp": ["#2a3038", "#454c58", "#626a78", "#7e8794", "#a8b0bc", "#c0c6d0", "#d8dce4", "#eef0f4"]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "Page title (one line on desktop) and below-fold band headlines in Passero One."
+      },
+      "headline": {
+        "displayName": "Band Headline",
+        "purpose": "Section heads in the below-fold bands (This week, All 100 questions, How it's measured)."
+      },
+      "figure": {
+        "displayName": "Figure",
+        "purpose": "Establishing-shot headline number, weekly change, and fact-plate numerals — tabular Saira 700."
+      },
+      "title": {
+        "displayName": "Supporting Label",
+        "purpose": "Figure captions and plain-language chart labels."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Perspective crawl and methodology prose; max ~58ch."
+      },
+      "label": {
+        "displayName": "Hull Stencil",
+        "purpose": "Brand strip, week stamp, uppercase domain heads, primary CTA tracking."
+      },
+      "readout": {
+        "displayName": "Phosphor Readout",
+        "purpose": "Scored domain and question values in Share Tech Mono with scanlines."
+      }
+    },
+    "shadows": [
+      {
+        "name": "formation-cast",
+        "value": "drop-shadow(0 8px 18px rgb(0 0 0 / .55))",
+        "purpose": "Grounds the trooper ranks plate in the matte painting."
+      },
+      {
+        "name": "einstein-cast",
+        "value": "drop-shadow(0 6px 14px rgb(0 0 0 / .55))",
+        "purpose": "Grounds the Einstein plate at the chart origin."
+      },
+      {
+        "name": "hull-inset",
+        "value": "inset 0 0 0 1px rgb(225 143 42 / .12)",
+        "purpose": "Instrument bezel on fact plates; not lift."
+      }
+    ],
+    "motion": [
+      {
+        "name": "wipe-in",
+        "value": "0.7s cubic-bezier(.16, 1, .3, 1)",
+        "purpose": "Hard optical wipe scale-in between below-fold shots."
+      },
+      {
+        "name": "crawl",
+        "value": "48s linear infinite",
+        "purpose": "Perspective crawl translate; disabled under prefers-reduced-motion."
+      },
+      {
+        "name": "link-color",
+        "value": "color to amber-hot on hover",
+        "purpose": "Text-link hover brightening only."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "viewport-stack",
+        "value": "760px",
+        "purpose": "Container query: establishing shot stacks; axes hide; formation edge-crops."
+      },
+      {
+        "name": "below-fold-stack",
+        "value": "760px",
+        "purpose": "Facts, extremes, and how-grid collapse to one column."
+      },
+      {
+        "name": "phone-tight",
+        "value": "420px",
+        "purpose": "Tighter title size for very narrow phones."
+      },
+      {
+        "name": "stage-max",
+        "value": "1440px",
+        "purpose": "Max width of the desktop establishing-shot stage."
+      },
+      {
+        "name": "stage-ratio",
+        "value": "1280 / 720",
+        "purpose": "Desktop first-viewport aspect ratio."
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Hull CTA — amber fill, void type, uppercase stencil tracking.",
+      "html": "<a class=\"ds-btn-primary\" href=\"#\">Methodology and data</a>",
+      "css": ".ds-btn-primary { display: inline-block; padding: 0.55em 0.9em; background: var(--amber, #e18f2a); color: var(--void, #0e1014); font-family: 'Saira Semi Condensed', system-ui, sans-serif; font-weight: 700; font-size: 0.85rem; letter-spacing: 0.06em; text-transform: uppercase; text-decoration: none; border: none; border-radius: 0; transition: background 0.15s ease, color 0.15s ease; } .ds-btn-primary:hover { background: var(--bone, #dbd8cf); color: var(--void, #0e1014); } .ds-btn-primary:focus-visible { outline: 3px solid var(--amber, #e18f2a); outline-offset: 3px; }"
+    },
+    {
+      "name": "Text Link",
+      "kind": "nav",
+      "refersTo": "label",
+      "description": "Strip and inline links — bone type, underline, amber-hot on hover.",
+      "html": "<a class=\"ds-link\" href=\"#\">Full dashboard</a>",
+      "css": ".ds-link { color: var(--bone, #dbd8cf); font-family: 'Saira Semi Condensed', system-ui, sans-serif; font-weight: 500; font-size: clamp(10px, 1.1cqw, 13px); letter-spacing: 0.02em; text-decoration: underline; text-underline-offset: 0.22em; } .ds-link:hover { color: var(--amber-hot, #f0a84a); } .ds-link:focus-visible { outline: 3px solid var(--amber, #e18f2a); outline-offset: 3px; }"
+    },
+    {
+      "name": "Fact Plate",
+      "kind": "card",
+      "refersTo": "fact-plate",
+      "description": "Navy hull instrument with left hazard stripe and amber tabular figure.",
+      "html": "<p class=\"ds-fact\"><b>0.78</b><span>How alike the top 5 answers are, 0 to 1</span></p>",
+      "css": ".ds-fact { position: relative; margin: 0; padding: 1rem 1rem 1.1rem; background: rgb(26 39 64 / 0.55); border: 1px solid rgb(219 216 207 / 0.18); box-shadow: inset 0 0 0 1px rgb(225 143 42 / 0.12); border-radius: 0; font-family: 'Saira Semi Condensed', system-ui, sans-serif; color: var(--bone, #dbd8cf); } .ds-fact::before { content: \"\"; position: absolute; left: 0; top: 0; bottom: 0; width: 4px; background: repeating-linear-gradient(180deg, var(--amber, #e18f2a) 0 6px, #1a2740 6px 12px); } .ds-fact b { display: block; font-family: 'Saira', 'Saira Semi Condensed', system-ui, sans-serif; font-weight: 700; font-size: clamp(1.8rem, 3.5vw, 2.6rem); color: var(--amber, #e18f2a); font-variant-numeric: tabular-nums; line-height: 1; } .ds-fact span { display: block; margin-top: 0.45em; font-size: 0.95rem; max-width: 22ch; }"
+    },
+    {
+      "name": "Extreme Plate",
+      "kind": "card",
+      "refersTo": "extreme-plate",
+      "description": "Most/least-alike hull plate with amber stencil stamp and steel meta.",
+      "html": "<article class=\"ds-extreme\"><p class=\"ds-extreme-k\">Most alike this week</p><p class=\"ds-extreme-q\">is intermittent fasting healthy</p><p class=\"ds-extreme-n\">0.91 alike · health</p></article>",
+      "css": ".ds-extreme { padding: 1rem 1.1rem 1.15rem; border: 1px solid rgb(225 143 42 / 0.45); background: linear-gradient(180deg, rgb(26 39 64 / 0.55), rgb(14 16 20 / 0.7)); box-shadow: inset 0 0 0 1px rgb(219 216 207 / 0.08); border-radius: 0; font-family: 'Saira Semi Condensed', system-ui, sans-serif; } .ds-extreme-k { margin: 0; color: var(--amber, #e18f2a); font-size: 0.8rem; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 700; } .ds-extreme-q { margin: 0.45em 0 0; font-size: clamp(1.1rem, 2.2vw, 1.45rem); color: var(--bone, #dbd8cf); text-wrap: balance; } .ds-extreme-n { margin: 0.5em 0 0; color: var(--steel, #a8b0bc); font-size: 0.95rem; }"
+    },
+    {
+      "name": "Change Box",
+      "kind": "custom",
+      "refersTo": "change-box",
+      "description": "Amber-framed weekly-change instrument beside the headline figure.",
+      "html": "<div class=\"ds-change\"><span class=\"ds-change-value\">+0.00</span><span class=\"ds-change-since\">since 09 Nov</span></div>",
+      "css": ".ds-change { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.35em; padding: 0.75em 1em; border: 2px solid rgb(225 143 42 / 0.85); background: rgb(14 16 20 / 0.55); border-radius: 0; } .ds-change-value { font-family: 'Saira', 'Saira Semi Condensed', system-ui, sans-serif; font-weight: 700; font-size: 2rem; line-height: 1; color: var(--amber, #e18f2a); font-variant-numeric: tabular-nums; background-image: repeating-linear-gradient(0deg, transparent 0 2px, rgb(0 0 0 / 0.28) 2px 3px); background-size: 100% 3px; } .ds-change-since { font-family: 'Saira Semi Condensed', system-ui, sans-serif; font-weight: 500; font-size: 0.95rem; letter-spacing: 0.06em; color: var(--bone, #dbd8cf); }"
+    },
+    {
+      "name": "Domain Readout Row",
+      "kind": "custom",
+      "refersTo": "readout",
+      "description": "Question row with amber fill bar and phosphor score.",
+      "html": "<li class=\"ds-row\"><span class=\"ds-row-q\">is intermittent fasting healthy</span><span class=\"ds-row-bar\" style=\"--v:0.913\"></span><span class=\"ds-row-v\">0.91</span></li>",
+      "css": ".ds-row { display: grid; grid-template-columns: 1fr 4.5em 2.6ch; align-items: center; gap: 0.55em; padding: 0.22em 0; list-style: none; font-family: 'Saira Semi Condensed', system-ui, sans-serif; font-size: 0.92rem; color: var(--bone, #dbd8cf); } .ds-row-q { min-width: 0; overflow-wrap: anywhere; } .ds-row-bar { height: 0.45em; background: linear-gradient(90deg, var(--amber, #e18f2a) calc(var(--v) * 100%), rgb(219 216 207 / 0.12) 0); } .ds-row-v { color: var(--amber, #e18f2a); text-align: right; font-variant-numeric: tabular-nums; font-family: 'Share Tech Mono', ui-monospace, monospace; background-image: repeating-linear-gradient(0deg, transparent 0 2px, rgb(0 0 0 / 0.28) 2px 3px); background-size: 100% 3px; }"
+    },
+    {
+      "name": "Optical Wipe Horizontal",
+      "kind": "custom",
+      "refersTo": "button-primary",
+      "description": "Hard horizontal wipe separator — amber band fading to transparent.",
+      "html": "<div class=\"ds-wipe-h\" aria-hidden=\"true\"></div>",
+      "css": ".ds-wipe-h { height: 3px; margin: 0 0 2rem; background: linear-gradient(90deg, transparent, var(--amber, #e18f2a), transparent); transform-origin: center; } @media (prefers-reduced-motion: no-preference) { .ds-wipe-h { animation: ds-wipeIn 0.7s cubic-bezier(0.16, 1, 0.3, 1) both; } @keyframes ds-wipeIn { from { transform: scaleX(0); } to { transform: scaleX(1); } } }"
+    },
+    {
+      "name": "Brand Strip Mark",
+      "kind": "nav",
+      "refersTo": "label",
+      "description": "Amber uppercase brand with phosphor scanlines.",
+      "html": "<p class=\"ds-brand\">HOMOGENIZATION TRACKER</p>",
+      "css": ".ds-brand { margin: 0; font-family: 'Saira Semi Condensed', system-ui, sans-serif; font-weight: 500; font-size: 0.95rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--amber, #e18f2a); white-space: nowrap; background-image: repeating-linear-gradient(0deg, transparent 0 2px, rgb(0 0 0 / 0.28) 2px 3px); background-size: 100% 3px; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Optical Wipe",
+    "overview": "The page is one edited sequence from a 1977-style practical-effects space epic: deep-space void, a dusty matte-painted twin-sun horizon, and shots joined by hard optical wipes. The establishing shot is the chart itself — Einstein low-left, identical armoured ranks top-right, one warm amber line on a full 0–1 axis. It refuses both the neon data dashboard and the painted one-sheet with a chart pasted under it.\n\nHardware language runs through every surface below the fold: navy hull plates, hazard striping, stencilled markings, and scanline phosphor readouts. Twin-sun amber owns the live number, the plot, the axes, and the CTAs; bone carries readable body; steel is mute metadata only.",
+    "keyCharacteristics": [
+      "Deep void black with a matte twin-sun horizon, never a flat dashboard canvas",
+      "One amber light source for every live figure, axis, and wipe",
+      "Squared display face (Passero One) + condensed UI + mono phosphor readouts",
+      "Hard wipes (horizontal, diagonal, iris) as the only transitions",
+      "Square hull plates; almost no corner radius",
+      "Original navy / matte-grey / hazard-yellow troopers — never franchise armour"
+    ],
+    "rules": [
+      {
+        "name": "The Twin-Sun Rule",
+        "body": "Amber is the only live accent. It paints the headline figure, weekly change, plot, axes, hazard accents, and primary CTAs. No second chroma for “emphasis.”",
+        "section": "colors"
+      },
+      {
+        "name": "The Exposure-Ramp Rule",
+        "body": "Neutrals stay on one stepped dark-to-bone ramp (void → horizon/ember → navy → steel → bone). Do not introduce cool greys or teal fills that break the matte-painting grade.",
+        "section": "colors"
+      },
+      {
+        "name": "The Split-Flap Rule",
+        "body": "Live figures change inside fixed tabular cells (font-variant-numeric: tabular-nums). Never proportional digits for the headline number, change, or scored lists.",
+        "section": "typography"
+      },
+      {
+        "name": "The Phosphor Rule",
+        "body": "Scanline overlay (.scan) belongs on brand, week, change value, tick labels, and scored readouts — not on long body prose.",
+        "section": "typography"
+      },
+      {
+        "name": "The Establishing-Shot Rule",
+        "body": "Desktop first viewport must hold the one-line title, the headline number, and the full chart with both figures. Do not demote the chart to a card under the fold.",
+        "section": "layout"
+      },
+      {
+        "name": "The Edge-Crop Rule",
+        "body": "Trooper ranks and Einstein crop from the edges on narrow screens; never shrink the whole formation to a tiny sticker.",
+        "section": "layout"
+      },
+      {
+        "name": "The Flat-Hull Rule",
+        "body": "Interactive surfaces do not float. Depth comes from the backdrop, scrim, and plate insets — not stacked card shadows.",
+        "section": "elevation"
+      },
+      {
+        "name": "The Hull-Plate Rule",
+        "body": "Content containers are squared instrument plates with 1px borders — never rounded cards or soft chips.",
+        "section": "shapes"
+      }
+    ],
+    "dos": [
+      "Do keep twin-sun amber as the sole live accent for figures, plot, axes, and primary CTAs.",
+      "Do set the chart on a full 0–1 axis and state weekly change as a labelled number.",
+      "Do place only Einstein (low-left) and identical original troopers (top-right) on the chart — no stacked axis figures, no search-provider marker.",
+      "Do leave a no-data gap (~one Einstein-width) before 04 Oct, marked with the hatch.",
+      "Do use Passero One for display, Saira for figures, Saira Semi Condensed for UI, Share Tech Mono for scored readouts.",
+      "Do join below-fold sections with hard optical wipes only.",
+      "Do edge-crop the formation on narrow viewports; keep tabular figures in fixed cells.",
+      "Do use an original helmeted trooper: single wrap-around visor; navy, matte-grey, and hazard-yellow armour with an original plate layout; every image generated for the page."
+    ],
+    "donts": [
+      "Don't use white-and-black armour, ear-caps, frown grille, twin lenses, T-visor, or any helmet silhouette near Halo, Cylons, Destiny, Mass Effect, Starship Troopers, or Daft Punk.",
+      "Don't introduce franchise weapons, ships, backdrops, droids, creatures, names, words, logo lettering, music, sound, or stills.",
+      "Don't use the franchise crawl typeface or its yellow-on-black logo treatment — the perspective crawl stays bone on void in the UI face.",
+      "Don't zoom the chart axis to dramatize small weekly movement.",
+      "Don't add rounded cards, neon dashboard glows, purple accents, or soft Material elevation.",
+      "Don't put marketing kickers/eyebrows above headlines; stencil uppercase is hull marking only (brand strip, domain heads, extreme plate stamps).",
+      "Don't scale the trooper ranks down uniformly on mobile — crop from the edge."
+    ]
+  }
+}
