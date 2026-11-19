@@ -10,7 +10,9 @@
 <meta property="og:type" content="website">
 <meta name="theme-color" content="#0e1014">
 <style>
-@font-face { font-family: 'Passero One'; src: url(fonts/PasseroOne-Regular.ttf) format('truetype'); font-weight: 400; font-display: swap; }
+@font-face { font-family: 'Teko'; src: url(fonts/Teko-variable.ttf) format('truetype'); font-weight: 300 700; font-display: swap; }
+@font-face { font-family: 'Barlow Condensed'; src: url(fonts/BarlowCondensed-Bold.ttf) format('truetype'); font-weight: 700; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Barlow Condensed'; src: url(fonts/BarlowCondensed-BoldItalic.ttf) format('truetype'); font-weight: 700; font-style: italic; font-display: swap; }
 @font-face { font-family: 'Saira'; src: url(fonts/Saira-variable.ttf) format('truetype'); font-weight: 100 900; font-display: swap; }
 @font-face { font-family: 'Saira Semi Condensed'; src: url(fonts/SairaSemiCondensed-500.ttf) format('truetype'); font-weight: 500; font-display: swap; }
 @font-face { font-family: 'Saira Semi Condensed'; src: url(fonts/SairaSemiCondensed-700.ttf) format('truetype'); font-weight: 700; font-display: swap; }
@@ -24,9 +26,11 @@
   --amber-hot: #f0a84a;
   --navy: #1a2740;
   --steel: #a8b0bc;
-  --font-display: 'Passero One', 'Saira Semi Condensed', system-ui, sans-serif;
+  --crawl-gold: #f2d06b;
+  --font-display: 'Teko', 'Saira Semi Condensed', system-ui, sans-serif;
   --font-figure: 'Saira', 'Saira Semi Condensed', system-ui, sans-serif;
   --font-ui: 'Saira Semi Condensed', system-ui, sans-serif;
+  --font-crawl: 'Barlow Condensed', 'Saira Semi Condensed', system-ui, sans-serif;
   --font-readout: 'Share Tech Mono', ui-monospace, monospace;
   color-scheme: dark;
 }
@@ -94,9 +98,9 @@ img { display: block; max-width: 100%; height: auto; }
 }
 .title {
   left: 2.2%; top: 8.2%; width: 95%;
-  font-family: var(--font-display); font-weight: 400;
-  font-size: clamp(18px, 3.55cqw, 46px); line-height: 1.05;
-  letter-spacing: .01em; color: var(--bone); white-space: nowrap;
+  font-family: var(--font-display); font-weight: 600;
+  font-size: clamp(22px, 3.9cqw, 52px); line-height: 1.02;
+  letter-spacing: .02em; text-transform: uppercase; color: var(--bone); white-space: nowrap;
   text-shadow: 0 1px 18px rgb(14 16 20 / .75);
 }
 .figure {
@@ -208,24 +212,25 @@ img { display: block; max-width: 100%; height: auto; }
   opacity: .7;
 }
 .crawl {
-  perspective: 480px; overflow: hidden;
-  max-height: 280px; margin-bottom: clamp(40px, 7vw, 72px);
-  mask-image: linear-gradient(180deg, transparent, #000 18%, #000 78%, transparent);
+  perspective: 520px; overflow: hidden;
+  max-height: min(42vh, 320px); margin-bottom: clamp(40px, 7vw, 72px);
+  mask-image: linear-gradient(180deg, transparent, #000 14%, #000 82%, transparent);
 }
 .crawl-inner {
-  transform: rotateX(28deg) translateY(12%);
+  transform: rotateX(30deg) translateY(18%);
   transform-origin: 50% 0;
-  text-align: center; color: var(--bone);
-  font-family: var(--font-ui); font-weight: 500;
-  font-size: clamp(1.05rem, 2.2vw, 1.35rem); line-height: 1.55;
-  letter-spacing: .02em;
+  text-align: center; color: var(--crawl-gold);
+  font-family: var(--font-crawl); font-weight: 700; font-style: italic;
+  font-size: clamp(1.2rem, 2.6vw, 1.65rem); line-height: 1.45;
+  letter-spacing: .04em;
 }
-.crawl-inner p { margin: 0 auto 1.1em; max-width: 42ch; }
-.band { margin-top: clamp(36px, 6vw, 72px); padding-top: clamp(28px, 4vw, 40px); border-top: 1px solid rgb(219 216 207 / .14); }
+.crawl-inner p { margin: 0 auto 1.15em; max-width: 36ch; text-wrap: pretty; }
+.band { margin-top: clamp(36px, 6vw, 72px); padding-top: clamp(36px, 5vw, 48px); border-top: 1px solid rgb(219 216 207 / .14); }
 .band h2 {
-  font-family: var(--font-display); font-weight: 400;
-  font-size: clamp(1.6rem, 3.4vw, 2.6rem); line-height: 1.05;
-  color: var(--bone); margin-bottom: .6em;
+  font-family: var(--font-display); font-weight: 600;
+  font-size: clamp(1.85rem, 3.8vw, 2.9rem); line-height: 1.02;
+  letter-spacing: .03em; text-transform: uppercase;
+  color: var(--bone); margin-bottom: .55em;
 }
 .facts { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; }
 .fact {
@@ -285,13 +290,16 @@ img { display: block; max-width: 100%; height: auto; }
 
 @media (prefers-reduced-motion: no-preference) {
   .wipe-h, .wipe-d, .wipe-iris { animation: wipeIn .7s cubic-bezier(.16,1,.3,1) both; }
-  .crawl-inner { animation: crawl 48s linear infinite; }
+  .crawl-inner { animation: crawl 34s linear infinite; }
   @keyframes wipeIn { from { transform: scaleX(0); } to { transform: scaleX(1); } }
-  @keyframes crawl { from { transform: rotateX(28deg) translateY(28%); } to { transform: rotateX(28deg) translateY(-70%); } }
+  @keyframes crawl {
+    from { transform: rotateX(30deg) translateY(32%); }
+    to { transform: rotateX(30deg) translateY(-78%); }
+  }
 }
 @media (prefers-reduced-motion: reduce) {
   .crawl { max-height: none; mask-image: none; perspective: none; }
-  .crawl-inner { transform: none; }
+  .crawl-inner { transform: none; color: var(--crawl-gold); }
 }
 
 @container (max-width: 760px) {
@@ -340,8 +348,8 @@ img { display: block; max-width: 100%; height: auto; }
   <div class="layer change-box" aria-hidden="true"></div>
   <p class="layer change-value scan">+0.00</p>
   <p class="layer change-since">since 09 Nov</p>
-  <img class="layer formation" src="assets/plates/formation.png" width="1107" height="507"
-       alt="Identical armoured troopers in navy and matte grey with hazard-yellow markings: where we're heading">
+  <img class="layer formation" src="assets/plates/formation.png" width="1261" height="741"
+       alt="Identical bone-armoured troopers with navy joints and amber hazard stripes: where we're heading">
   <p class="layer formation-label" aria-hidden="true">where we're heading</p>
   <div class="layer y-axis" aria-hidden="true"></div>
   <div class="layer baseline" aria-hidden="true"></div>

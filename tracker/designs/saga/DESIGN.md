@@ -9,20 +9,27 @@ colors:
   bone: "#dbd8cf"
   amber: "#e18f2a"
   amber-hot: "#f0a84a"
+  crawl-gold: "#f2d06b"
   navy: "#1a2740"
   steel: "#a8b0bc"
 typography:
   display:
-    fontFamily: "Passero One, Saira Semi Condensed, system-ui, sans-serif"
-    fontSize: "clamp(18px, 3.55cqw, 46px)"
-    fontWeight: 400
-    lineHeight: 1.05
-    letterSpacing: "0.01em"
+    fontFamily: "Teko, Saira Semi Condensed, system-ui, sans-serif"
+    fontSize: "clamp(22px, 3.9cqw, 52px)"
+    fontWeight: 600
+    lineHeight: 1.02
+    letterSpacing: "0.02em"
   headline:
-    fontFamily: "Passero One, Saira Semi Condensed, system-ui, sans-serif"
-    fontSize: "clamp(1.6rem, 3.4vw, 2.6rem)"
-    fontWeight: 400
-    lineHeight: 1.05
+    fontFamily: "Teko, Saira Semi Condensed, system-ui, sans-serif"
+    fontSize: "clamp(1.85rem, 3.8vw, 2.9rem)"
+    fontWeight: 600
+    lineHeight: 1.02
+  crawl:
+    fontFamily: "Barlow Condensed, Saira Semi Condensed, system-ui, sans-serif"
+    fontSize: "clamp(1.2rem, 2.6vw, 1.65rem)"
+    fontWeight: 700
+    fontStyle: italic
+    color: "#f2d06b"
   figure:
     fontFamily: "Saira, Saira Semi Condensed, system-ui, sans-serif"
     fontSize: "clamp(56px, 11cqw, 140px)"
@@ -101,10 +108,10 @@ Hardware language runs through every surface below the fold: navy hull plates, h
 **Key Characteristics:**
 - Deep void black with a matte twin-sun horizon, never a flat dashboard canvas
 - One amber light source for every live figure, axis, and wipe
-- Squared display face (Passero One) + condensed UI + mono phosphor readouts
+- Condensed epic display (Teko) + italic Barlow Condensed crawl + mono phosphor readouts
 - Hard wipes (horizontal, diagonal, iris) as the only transitions
 - Square hull plates; almost no corner radius
-- Original navy / matte-grey / hazard-yellow troopers — never franchise armour
+- Original bone-armour ranks with navy joints and amber hazard stripes — never franchise armour
 
 ## Colors
 
@@ -113,6 +120,7 @@ A dark practical-effects palette: void sky, warm horizon dust, twin-sun amber as
 ### Primary
 - **Twin-Sun Amber** (`amber`): Live figures, plot line and dots, axes, domain scores, CTA fills, focus rings, selection. Owns every “this is the number” moment.
 - **Amber Hot** (`amber-hot`): Hover brightening on text links only — the sun flaring, not a second brand color.
+- **Crawl Gold** (`crawl-gold`): Perspective crawl type only — warmer than franchise `#ffe81f`, tied to the twin-sun grade.
 
 ### Secondary
 - **Hull Navy** (`navy`): Fact plates, extreme cards, hazard-stripe gaps — armour and instrument housing.
@@ -130,18 +138,20 @@ A dark practical-effects palette: void sky, warm horizon dust, twin-sun amber as
 
 ## Typography
 
-**Display Font:** Passero One (with Saira Semi Condensed, system-ui)
+**Display Font:** Teko (with Saira Semi Condensed, system-ui)
+**Crawl Font:** Barlow Condensed Bold Italic
 **Body Font:** Saira Semi Condensed (system-ui)
 **Figure Font:** Saira (tabular nums, weight 700)
 **Readout Font:** Share Tech Mono (ui-monospace)
 
-**Character:** A wide, squared saga display for the title and section heads; condensed stencil UI for hull markings; heavy Saira for cockpit figures; mono phosphor for small scored data.
+**Character:** A condensed epic display for the title and section heads; italic condensed gothic for the perspective crawl (genre-adjacent, not franchise logo lettering and not News Gothic); stencil UI for hull markings; heavy Saira for cockpit figures; mono phosphor for small scored data.
 
 ### Hierarchy
-- **Display** (400, `clamp(18px, 3.55cqw, 46px)` / `clamp(1.6rem, 3.4vw, 2.6rem)`, lh 1.05): Page title (one line on desktop) and band headlines.
+- **Display** (600, uppercase, `clamp(22px, 3.9cqw, 52px)` / `clamp(1.85rem, 3.8vw, 2.9rem)`, lh 1.02): Page title (one line on desktop) and band headlines.
+- **Crawl** (700 italic Barlow Condensed, twin-sun gold `#f2d06b`): Perspective story block under the establishing shot.
 - **Figure** (700, `clamp(56px, 11cqw, 140px)`, lh 0.92, tabular): Establishing-shot headline number and change value; fact plate numerals.
 - **Title** (500, `clamp(12px, 1.55cqw, 18px)`): Figure labels and supporting chart copy.
-- **Body** (500, ~1.05rem, lh 1.45, max ~58ch in methodology): Crawl and how-it-works prose.
+- **Body** (500, ~1.05rem, lh 1.45, max ~58ch in methodology): How-it-works prose.
 - **Label** (500, uppercase, tracking ~0.08em): Brand strip, week stamp, link strip, domain heads.
 - **Readout** (Share Tech Mono, tabular): Domain and per-question scores — fixed character cells.
 
@@ -216,10 +226,11 @@ Almost entirely square. Fact plates, extreme cards, change box, and primary link
 
 ### Wipes
 - Horizontal, diagonal, and iris amber optical wipes between below-fold shots
-- Motion: `wipeIn` 0.7s `cubic-bezier(.16,1,.3,1)`; crawl 48s linear; both gated by `prefers-reduced-motion`
+- Motion: `wipeIn` 0.7s `cubic-bezier(.16,1,.3,1)`; crawl 34s linear; both gated by `prefers-reduced-motion`
 
 ### Perspective crawl
-- Bone condensed UI on void, `rotateX(28deg)`, masked fade — **not** franchise yellow-on-black crawl typography
+- Twin-sun gold (`#f2d06b`) Barlow Condensed italic on void, `rotateX(30deg)`, masked fade — **not** franchise logo lettering, **not** News Gothic, **not** `#ffe81f` crawl yellow
+- Auto-flows only (no pause/scroll control). Reduced-motion: static untransformed text.
 
 ## Do's and Don'ts
 
@@ -228,15 +239,15 @@ Almost entirely square. Fact plates, extreme cards, change box, and primary link
 - **Do** set the chart on a full 0–1 axis and state weekly change as a labelled number.
 - **Do** place only Einstein (low-left) and identical original troopers (top-right) on the chart — no stacked axis figures, no search-provider marker.
 - **Do** leave a no-data gap (~one Einstein-width) before 04 Oct, marked with the hatch.
-- **Do** use Passero One for display, Saira for figures, Saira Semi Condensed for UI, Share Tech Mono for scored readouts.
+- **Do** use Teko for display, Barlow Condensed for the crawl, Saira for figures, Saira Semi Condensed for UI, Share Tech Mono for scored readouts.
 - **Do** join below-fold sections with hard optical wipes only.
 - **Do** edge-crop the formation on narrow viewports; keep tabular figures in fixed cells.
-- **Do** use an **original** helmeted trooper: single wrap-around visor; navy, matte-grey, and hazard-yellow armour with an original plate layout; every image generated for the page.
+- **Do** use an **original** helmeted trooper: single wrap-around visor; bone / ivory armour with navy or charcoal joints and amber hazard stripes; original plate layout; every image generated for the page.
 
 ### Don't:
-- **Don't** use white-and-black armour, ear-caps, frown grille, twin lenses, T-visor, or any helmet silhouette near Halo, Cylons, Destiny, Mass Effect, Starship Troopers, or Daft Punk.
-- **Don't** introduce franchise weapons, ships, backdrops, droids, creatures, names, words, logo lettering, music, sound, or stills.
-- **Don't** use the franchise crawl typeface or its yellow-on-black logo treatment — the perspective crawl stays bone on void in the UI face.
+- **Don't** use pure white-and-black stormtrooper trade dress, ear-caps, frown grille, twin lenses, T-visor, or any helmet silhouette near Halo, Cylons, Destiny, Mass Effect, Starship Troopers, or Daft Punk.
+- **Don't** introduce franchise weapons, ships, backdrops, droids, creatures, names, words, logo lettering (including Star Jedi), music, sound, or stills.
+- **Don't** use the franchise crawl typeface (News Gothic / Trade Gothic / News Cycle) or `#ffe81f` yellow-on-black logo treatment.
 - **Don't** zoom the chart axis to dramatize small weekly movement.
 - **Don't** add rounded cards, neon dashboard glows, purple accents, or soft Material elevation.
 - **Don't** put marketing kickers/eyebrows above headlines; stencil uppercase is hull marking only (brand strip, domain heads, extreme plate stamps).

@@ -60,7 +60,7 @@
     "typographyMeta": {
       "display": {
         "displayName": "Display",
-        "purpose": "Page title (one line on desktop) and below-fold band headlines in Passero One."
+        "purpose": "Page title (one line on desktop) and below-fold band headlines in Teko."
       },
       "headline": {
         "displayName": "Band Headline",
@@ -76,7 +76,7 @@
       },
       "body": {
         "displayName": "Body",
-        "purpose": "Perspective crawl and methodology prose; max ~58ch."
+        "purpose": "Methodology prose; max ~58ch. Crawl uses Barlow Condensed italic in twin-sun gold."
       },
       "label": {
         "displayName": "Hull Stencil",
