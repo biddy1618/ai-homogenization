@@ -4,16 +4,46 @@
   "replacesRootDesign": false,
   "northStar": "Cast workshop dispatch floor: one unnumbered carved original versus identical numbered casts under hard raking light on graphite slate.",
   "colorMeta": {
-    "graphite": { "role": "page-ground", "displayName": "Graphite" },
-    "slate": { "role": "plinth-wall", "displayName": "Slate" },
-    "plaster": { "role": "bright-only", "displayName": "Plaster" },
-    "oxblood": { "role": "band-recess", "displayName": "Oxblood" },
-    "oxblood-cut": { "role": "stencil-fill", "displayName": "Oxblood cut" }
+    "graphite": {
+      "role": "page-ground",
+      "displayName": "Graphite"
+    },
+    "slate": {
+      "role": "plinth-wall",
+      "displayName": "Slate"
+    },
+    "plaster": {
+      "role": "bright-only",
+      "displayName": "Plaster"
+    },
+    "oxblood": {
+      "role": "band-recess",
+      "displayName": "Oxblood"
+    },
+    "oxblood-cut": {
+      "role": "stencil-fill",
+      "displayName": "Oxblood cut"
+    }
   },
   "typographyMeta": {
-    "display": { "files": ["fonts/BigShouldersStencil-var.woff2"], "role": "crate-mark title" },
-    "stencil-number": { "files": ["fonts/BigShouldersStencil-var.woff2"], "role": "carved headline" },
-    "body": { "files": ["fonts/SofiaSansCondensed-var.woff2"], "role": "workshop grotesk" }
+    "display": {
+      "files": [
+        "fonts/BigShouldersStencil-var.woff2"
+      ],
+      "role": "crate-mark title"
+    },
+    "stencil-number": {
+      "files": [
+        "fonts/BigShouldersStencil-var.woff2"
+      ],
+      "role": "carved headline"
+    },
+    "body": {
+      "files": [
+        "fonts/SofiaSansCondensed-var.woff2"
+      ],
+      "role": "workshop grotesk"
+    }
   },
   "motion": [
     {
@@ -33,12 +63,19 @@
     }
   ],
   "breakpoints": [
-    { "name": "hero-frame", "value": "1280×720 via --u" },
-    { "name": "stack", "value": "@container (max-width: 760px)" }
+    {
+      "name": "hero-frame",
+      "value": "1280\u00d7720 via --u"
+    },
+    {
+      "name": "stack",
+      "value": "@container (max-width: 760px)"
+    }
   ],
   "rules": [
+    "Headline number is live stencil type from the CSV, not a raster plate.",
     "Plaster white is the only bright.",
-    "Whole casts only — drop units on small screens, never crop one.",
+    "Whole casts only \u2014 drop units on small screens, never crop one.",
     "Chart holds only Einstein and the line; identical-copy metaphor lives in the cast rank and labels.",
     "Every number from tracker/data CSVs via build.py."
   ]
