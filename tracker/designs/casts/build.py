@@ -310,16 +310,22 @@ img {{ display: block; }}
 }}
 .links a:hover {{ color: #fff; text-decoration-color: var(--oxblood-ink); outline: none; }}
 
-.casts {{ left: calc(716 * var(--u)); top: calc(160 * var(--u)); width: calc(512 * var(--u)); position: absolute; }}
-.cast-nos {{ position: absolute; left: calc(744 * var(--u)); top: calc(96 * var(--u)); z-index: 3; width: calc(444 * var(--u)); display: grid; grid-template-columns: repeat(6, 1fr); font-family: var(--stencil); font-weight: 700; font-size: calc(46 * var(--u)); line-height: 1; color: #6a2420; text-align: center; height: calc(48 * var(--u)); text-shadow: calc(-1 * var(--u)) calc(-1 * var(--u)) 0 rgb(236 230 221 / .22), 0 1px 2px rgb(0 0 0 / .8); }}
+.casts {{ left: calc(820 * var(--u)); top: calc(148 * var(--u)); width: calc(400 * var(--u)); position: absolute; }}
+.cast-nos {{
+  position: absolute; left: 0; right: 0; top: calc(-52 * var(--u)); z-index: 3; width: 100%;
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: calc(10 * var(--u));
+  font-family: var(--stencil); font-weight: 700; font-size: calc(46 * var(--u)); line-height: 1;
+  color: #6a2420; text-align: center; height: calc(48 * var(--u)); pointer-events: none;
+  text-shadow: calc(-1 * var(--u)) calc(-1 * var(--u)) 0 rgb(236 230 221 / .22), 0 1px 2px rgb(0 0 0 / .8);
+}}
 .cast-row {{
-  position: relative; display: grid; grid-template-columns: repeat(6, 1fr); gap: calc(10 * var(--u));
+  position: relative; display: grid; grid-template-columns: repeat(4, 1fr); gap: calc(10 * var(--u));
   align-items: end; background: transparent;
 }}
 .cast-row figure {{ margin: 0; background: transparent; }}
 .cast-row img {{ width: 100%; height: auto; display: block; background: transparent; vertical-align: bottom; }}
 .cast-row::after {{ content: none; }}
-.casts-label {{ left: calc(786 * var(--u)); top: calc(333 * var(--u)); font-size: calc(25 * var(--u)); font-weight: 700; letter-spacing: .02em; color: var(--plaster); white-space: nowrap; }}
+.casts-label {{ left: calc(820 * var(--u)); top: calc(333 * var(--u)); width: calc(400 * var(--u)); text-align: right; font-size: calc(25 * var(--u)); font-weight: 700; letter-spacing: .02em; color: var(--plaster); white-space: nowrap; }}
 
 .stage, .face {{ position: static; }}
 .casts, .casts-label, .chart, .einstein-label {{ position: absolute; }}
@@ -457,17 +463,20 @@ footer .wrap {{ display: flex; flex-wrap: wrap; justify-content: space-between; 
   .big {{ width: auto; height: auto; font-size: clamp(88px, 28vw, 140px); margin-top: 8px; }}
   .deck {{ width: auto; font-size: 20px; margin-top: 6px; max-width: 24ch; }}
   .change {{ font-size: 19px; margin-top: 8px; white-space: normal; }}
-  .links {{ position: relative; left: auto; top: auto; width: auto; font-size: 17px; gap: 8px 12px; margin-top: 10px; }}
+  .links {{ position: relative; left: auto; top: auto; width: auto; max-width: 100%; font-size: 17px; gap: 8px 12px; margin-top: 10px; margin-bottom: 8px; z-index: 2; }}
   .links li + li::before {{ margin-right: 12px; }}
   .links a {{ padding: 4px 0; color: var(--plaster); }}
-  .stage {{ margin: 22px -16px 0; position: relative; padding-top: clamp(28px, 7vw, 40px); }}
-  .casts {{ position: relative; left: auto; top: auto; width: min(72%, 340px); margin: 0 12px -7px auto; z-index: 1; }}
+  .stage {{ margin: 28px -16px 0; position: relative; clear: both; }}
+  .casts {{
+    position: relative; left: auto; top: auto; width: min(58%, 260px);
+    margin: 0 14px -7px auto; z-index: 1; padding-top: clamp(26px, 7vw, 34px);
+  }}
   .cast-nos {{
-    position: absolute; left: auto; right: 12px; top: 0; width: min(72%, 340px);
-    font-size: clamp(22px, 6vw, 32px); height: auto; padding-bottom: 2px;
+    position: absolute; left: 0; right: 0; top: 0; width: auto;
+    font-size: clamp(20px, 5.5vw, 28px); height: auto; gap: inherit;
   }}
   .face {{ position: relative; padding: 46px 14px 36px 36px; background: url(assets/plates/studio.webp) 4% 93.5% / auto 205% no-repeat, var(--slate); box-shadow: inset 0 1px 0 rgb(236 230 221 / .25); }}
-  .casts-label {{ position: absolute; left: auto; right: 14px; top: 12px; font-size: 16px; white-space: normal; text-align: right; }}
+  .casts-label {{ position: absolute; left: auto; right: 14px; top: 12px; width: auto; font-size: 16px; white-space: normal; text-align: right; }}
   .chart {{
     position: relative; left: auto; top: auto; width: 100%;
     height: clamp(200px, 54vw, 280px); margin-bottom: 22px; container-type: size;
@@ -523,11 +532,9 @@ footer .wrap {{ display: flex; flex-wrap: wrap; justify-content: space-between; 
       <li><a href="{DASHBOARD_URL}">Full dashboard</a></li>
     </ul>
     <div class="stage">
-      <p class="cast-nos" aria-hidden="true"><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span></p>
       <div class="casts">
-        <div class="cast-row" role="img" aria-label="Six identical plaster casts of one helmeted figure: identical copies, where we're heading">
-          <figure><picture><source srcset="assets/plates/cast.webp" type="image/webp"><img src="assets/plates/cast.png" alt="" width="321" height="420"></picture></figure>
-          <figure><picture><source srcset="assets/plates/cast.webp" type="image/webp"><img src="assets/plates/cast.png" alt="" width="321" height="420"></picture></figure>
+        <p class="cast-nos" aria-hidden="true"><span>1</span><span>2</span><span>3</span><span>4</span></p>
+        <div class="cast-row" role="img" aria-label="Four identical plaster casts of one helmeted figure: identical copies, where we're heading">
           <figure><picture><source srcset="assets/plates/cast.webp" type="image/webp"><img src="assets/plates/cast.png" alt="" width="321" height="420"></picture></figure>
           <figure><picture><source srcset="assets/plates/cast.webp" type="image/webp"><img src="assets/plates/cast.png" alt="" width="321" height="420"></picture></figure>
           <figure><picture><source srcset="assets/plates/cast.webp" type="image/webp"><img src="assets/plates/cast.png" alt="" width="321" height="420"></picture></figure>

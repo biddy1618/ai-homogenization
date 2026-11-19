@@ -102,7 +102,7 @@ Square and hard. No card radii, no pill buttons, no soft dashboard tiles. Mould 
 ## Components
 
 - **Headline number** — live Big Shoulders Stencil digits in oxblood (`{sim}` from CSV), with soft neutral depth shadow — not a raster plate.
-- **Cast rank** — one helmeted cast asset repeated whole; stencilled 1–6 above.
+- **Cast rank** — one helmeted cast asset repeated whole; stencilled 1–4 above, clear of the hero links.
 - **Chart** — CSS segments on the plinth face; Einstein lower-left (scale anchor), gap ~bust width before first run, identical-cast metaphor only in imagery elsewhere / label at top-right of the line.
 - **Run markers** — focus/hover sets jaw + readout; latest run is the default "now".
 - **Calliper strips** — pointer reading per question on a 0–1 rule.
