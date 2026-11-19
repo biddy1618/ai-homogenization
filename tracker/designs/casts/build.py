@@ -297,7 +297,7 @@ img {{ display: block; }}
 .links {{
   left: calc(408 * var(--u)); top: calc(248 * var(--u)); width: calc(360 * var(--u));
   list-style: none; display: flex; flex-wrap: wrap; align-items: baseline; gap: calc(10 * var(--u)) calc(14 * var(--u));
-  font-size: calc(22 * var(--u)); font-weight: 600; line-height: 1.2; background: none;
+  font-size: calc(22 * var(--u)); font-weight: 600; line-height: 1.2; background: transparent;
 }}
 .links li {{ position: static; display: inline; }}
 .links li + li {{ left: auto; }}
@@ -312,8 +312,12 @@ img {{ display: block; }}
 
 .casts {{ left: calc(716 * var(--u)); top: calc(160 * var(--u)); width: calc(512 * var(--u)); position: absolute; }}
 .cast-nos {{ position: absolute; left: calc(744 * var(--u)); top: calc(96 * var(--u)); z-index: 3; width: calc(444 * var(--u)); display: grid; grid-template-columns: repeat(6, 1fr); font-family: var(--stencil); font-weight: 700; font-size: calc(46 * var(--u)); line-height: 1; color: #6a2420; text-align: center; height: calc(48 * var(--u)); text-shadow: calc(-1 * var(--u)) calc(-1 * var(--u)) 0 rgb(236 230 221 / .22), 0 1px 2px rgb(0 0 0 / .8); }}
-.cast-row {{ position: relative; aspect-ratio: 1200 / 272; }}
-.cast-row img {{ width: 100%; height: 100%; display: block; }}
+.cast-row {{
+  position: relative; display: grid; grid-template-columns: repeat(6, 1fr); gap: calc(10 * var(--u));
+  align-items: end; background: transparent;
+}}
+.cast-row figure {{ margin: 0; background: transparent; }}
+.cast-row img {{ width: 100%; height: auto; display: block; background: transparent; vertical-align: bottom; }}
 .cast-row::after {{ content: none; }}
 .casts-label {{ left: calc(786 * var(--u)); top: calc(333 * var(--u)); font-size: calc(25 * var(--u)); font-weight: 700; letter-spacing: .02em; color: var(--plaster); white-space: nowrap; }}
 
@@ -510,7 +514,14 @@ footer .wrap {{ display: flex; flex-wrap: wrap; justify-content: space-between; 
     <div class="stage">
       <p class="cast-nos" aria-hidden="true"><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span></p>
       <div class="casts">
-        <div class="cast-row"><picture><source srcset="assets/plates/casts.webp" type="image/webp"><img src="assets/plates/casts.png" alt="Six identical plaster casts of one helmeted figure: identical copies, where we're heading" width="1200" height="272"></picture></div>
+        <div class="cast-row" role="img" aria-label="Six identical plaster casts of one helmeted figure: identical copies, where we're heading">
+          <figure><picture><source srcset="assets/plates/cast.webp" type="image/webp"><img src="assets/plates/cast.png" alt="" width="321" height="420"></picture></figure>
+          <figure><picture><source srcset="assets/plates/cast.webp" type="image/webp"><img src="assets/plates/cast.png" alt="" width="321" height="420"></picture></figure>
+          <figure><picture><source srcset="assets/plates/cast.webp" type="image/webp"><img src="assets/plates/cast.png" alt="" width="321" height="420"></picture></figure>
+          <figure><picture><source srcset="assets/plates/cast.webp" type="image/webp"><img src="assets/plates/cast.png" alt="" width="321" height="420"></picture></figure>
+          <figure><picture><source srcset="assets/plates/cast.webp" type="image/webp"><img src="assets/plates/cast.png" alt="" width="321" height="420"></picture></figure>
+          <figure><picture><source srcset="assets/plates/cast.webp" type="image/webp"><img src="assets/plates/cast.png" alt="" width="321" height="420"></picture></figure>
+        </div>
       </div>
       <div class="face">
         <p class="casts-label" aria-hidden="true">Identical copies — where we're heading</p>
