@@ -1,0 +1,58 @@
+[
+  {
+    "position": 1,
+    "title": "Large language model",
+    "link": "https://en.wikipedia.org/wiki/Large_language_model",
+    "domain": "en.wikipedia.org",
+    "snippet": "A large language model (LLM) is a machine learning model (typically a neural network) trained on a vast amount of text for natural language processing tasks, ..."
+  },
+  {
+    "position": 2,
+    "title": "What is a Large Language Model (LLM)? | Stanford HAI",
+    "link": "https://hai.stanford.edu/ai-definitions/what-is-a-llm",
+    "domain": "hai.stanford.edu",
+    "snippet": "A Large Language Model is an AI system trained on massive amounts of text data to understand and generate human-like language. It uses deep learning techniques, ..."
+  },
+  {
+    "position": 3,
+    "title": "What Are Large Language Models (LLMs)?",
+    "link": "https://www.ibm.com/think/topics/large-language-models",
+    "domain": "www.ibm.com",
+    "snippet": "Large language models are AI systems capable of understanding and generating human language by processing vast amounts of text data."
+  },
+  {
+    "position": 4,
+    "title": "What are large language models (LLMs)?",
+    "link": "https://azure.microsoft.com/en-us/resources/cloud-computing-dictionary/what-are-large-language-models-llms",
+    "domain": "azure.microsoft.com",
+    "snippet": "Large language models (LLMs) are advanced AI systems that understand and generate natural language, or human-like text, using the data they've been trained on ..."
+  },
+  {
+    "position": 5,
+    "title": "What are Large Language Models (LLM)?",
+    "link": "https://www.databricks.com/blog/what-are-large-language-models",
+    "domain": "www.databricks.com",
+    "snippet": "Language models are a type of generative AI (GenAI) that use natural language processing (NLP) to understand and generate human language. Large language ..."
+  },
+  {
+    "position": 6,
+    "title": "Large Language Model - Artificial Intelligence: The Basics",
+    "link": "https://itlc.northwoodtech.edu/introduction/ai/llm",
+    "domain": "itlc.northwoodtech.edu",
+    "snippet": "A Large Language Model (LLM) is a type of artificial intelligence that has been trained on a massive dataset of text and code."
+  },
+  {
+    "position": 7,
+    "title": "What is a Large Language Model (LLM)? | Glossary",
+    "link": "https://www.hpe.com/us/en/what-is/large-language-model.html",
+    "domain": "www.hpe.com",
+    "snippet": "A large language model (LLM) is an advanced AI technology focusing on understanding and analyzing text. It is more accurate than traditional machine learning ..."
+  },
+  {
+    "position": 8,
+    "title": "Introduction to Large Language Models | Machine Learning",
+    "link": "https://developers.google.com/machine-learning/crash-course/llm",
+    "domain": "developers.google.com",
+    "snippet": "What is a language model? A language model estimates the probability of a token or sequence of tokens occurring within a longer sequence of ..."
+  }
+]
